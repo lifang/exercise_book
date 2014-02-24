@@ -131,7 +131,6 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 
 		if (file.exists()) {
 			file.delete();
-
 		}
 
 		exerciseBook = (ExerciseBook) getApplication();
