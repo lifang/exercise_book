@@ -21,17 +21,26 @@ import java.util.regex.Pattern;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
@@ -445,6 +454,52 @@ public class ExerciseBookTool implements Urlinterface {
 			}
 		}
 		return false;
+	}
+	
+	
+	/*
+	 * 设置头像
+	 */
+	public static void set_background(final String uri, final ImageView imageView) {
+
+		final Handler mHandler = new Handler() {
+			public void handleMessage(android.os.Message msg) {
+				switch (msg.what) {
+				case 0:
+					Drawable drawable = (Drawable) msg.obj;
+					imageView.setImageDrawable(drawable);
+					break;
+				default:
+					break;
+				}
+			}
+		};
+
+		Thread thread = new Thread() {
+			public void run() {
+				HttpClient hc = new DefaultHttpClient();
+
+				HttpGet hg = new HttpGet(uri);//
+				Drawable face_drawable;
+				try {
+					HttpResponse hr = hc.execute(hg);
+					Bitmap bm = BitmapFactory.decodeStream(hr.getEntity()
+							.getContent());
+					face_drawable = new BitmapDrawable(bm);
+					Message msg = new Message();// 创建Message 对象
+					msg.what = 0;
+					msg.obj = face_drawable;
+					mHandler.sendMessage(msg);
+				} catch (Exception e) {
+
+				}
+
+			}
+		};		
+
+			thread.start();
+	
+
 	}
 
 }

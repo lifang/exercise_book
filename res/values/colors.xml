@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+
+    <color name="top_qianlv">#35D090</color>
+    <color name="top_shenlv">#1FBA7A</color>
+    <color name="top_huise">#D2D3D4</color>
+    <color name="before_click">#FEFEFE</color>
+    <color name="after_click">#EBEBEB</color>
+
+</resources>
