@@ -169,7 +169,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 				.setContent(intent2);
 		tabhost.addTab(spec2);
 
-		Intent intent3 = new Intent(this, SettingPhoto.class);
+		Intent intent3 = new Intent(this, HomePageSendMessage.class);
 		spec3 = tabhost.newTabSpec("spec3")
 				.setIndicator("", res.getDrawable(R.drawable.sender_1))
 				.setContent(intent3);

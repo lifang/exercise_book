@@ -49,7 +49,12 @@
             android:name=".HomepageMyselfActivity"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity android:name=".HomeWorkIngActivity" >
-          
+            
+        </activity>
+        <activity
+            android:name="com.comdosoft.ExerciseBook.HomePageSendMessage" 
+            >
+ 
         </activity>
     </application>
 
