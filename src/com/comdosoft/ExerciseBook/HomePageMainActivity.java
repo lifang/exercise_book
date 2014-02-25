@@ -229,7 +229,8 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 
 				}
 			}
-			img.setPadding(264, 50, 0, 0);
+			img.setPadding(254, 30, 0, 0);
+//			img.setPadding(0, 0, 0, 0);
 			/**
 			 * 此方法是为了去掉系统默认的色白的底角
 			 * 
@@ -348,7 +349,8 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 								break;
 							}
 						}
-						img.setPadding(264, 50, 0, 0);
+						img.setPadding(254, 30, 0, 0);
+//						img.setPadding(0, 0, 0, 0);
 					}
 				}
 			});

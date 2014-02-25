@@ -36,7 +36,6 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -57,7 +56,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 public class HomepageAllActivity extends Activity implements
 		OnHeaderRefreshListener, OnFooterRefreshListener, Urlinterface,
-		OnItemClickListener, OnGestureListener {
+		OnGestureListener {
 	private ExerciseBook exerciseBook;
 	private String user_id = "10"; // 学生 id 上面 会传过来的 学生student_id，
 	private String id = "2";
@@ -80,19 +79,22 @@ public class HomepageAllActivity extends Activity implements
 	private String micropost_id = "";
 	private int list_item;// list集合的最后一位索引
 	private int user_types = 1;
-	public List<Boolean> gk_list;// 回复开关集合
+	public List<Boolean> gk_list;// 主消息 点击操作 开关集合
+	public List<Boolean> reply_gk_list;// 回复 点击操作 开关集合
 	public List<RelativeLayout> item_huifu;// 回复开关集合
 	public List<Button> button_list;// 隐藏内容中的 回复 集合
 	private int micropost_type;// 微博类型 0表是全部 1表示我的
 	private List<Micropost> list;
 	private List<String> care;
-	private List<ImageView> guanzhu_list;//  关注 小图标 集合  
-	private List<TextView> guanzhu_count_list;//  关注数   集合  
-	private List<TextView> huifu_count_list;//  回复数 集合  
+	private List<ImageView> guanzhu_list;// 关注按钮 集合
+	private List<TextView> guanzhu_count_list;// 关注数 集合
+	private List<TextView> huifu_count_list;// 回复数 集合
+	private List<HorizontalScrollView> HorizontalScrollView_list;// 主消息 滑动块 集合
+
 	private List<ListView> list_list;
-	private List<Button> btlist;  //主消息 回复按钮集合
+
 	private List<ZiAdapter> ziAdapter_list;
-	private List<EditText> Reply_edit_list;
+	// private List<EditText> Reply_edit_list;
 	private String avatar_url;
 	private String user_name;
 	private String nick_name;
@@ -173,15 +175,16 @@ public class HomepageAllActivity extends Activity implements
 		item_huifu = new ArrayList<RelativeLayout>();
 		guanzhu_list = new ArrayList<ImageView>();
 		guanzhu_count_list = new ArrayList<TextView>();
-		huifu_count_list= new ArrayList<TextView>();
+		huifu_count_list = new ArrayList<TextView>();
 		button_list = new ArrayList<Button>();
 		ziAdapter_list = new ArrayList<ZiAdapter>();
-		btlist = new ArrayList<Button>();
-		Reply_edit_list = new ArrayList<EditText>();
+
+		// Reply_edit_list = new ArrayList<EditText>();
 		list = new ArrayList<Micropost>();
 		list_list = new ArrayList<ListView>();
 		gk_list = new ArrayList<Boolean>();
-
+		HorizontalScrollView_list = new ArrayList<HorizontalScrollView>();
+		reply_gk_list = new ArrayList<Boolean>();
 	}
 
 	protected void onResume() {
@@ -237,8 +240,7 @@ public class HomepageAllActivity extends Activity implements
 		LayoutParams lp = re.getLayoutParams();
 		lp.width = dm.widthPixels;
 		ImageView face = (ImageView) convertView.findViewById(R.id.user_face); // 头像
-		ImageView guanzhu_img = (ImageView) convertView
-				.findViewById(R.id.guanzhu_item); // 关注图标
+
 		ImageView huifu_img = (ImageView) convertView
 				.findViewById(R.id.huifu_item); // 回复图标
 		TextView Micropost_senderName = (TextView) convertView
@@ -250,9 +252,9 @@ public class HomepageAllActivity extends Activity implements
 		ImageView button1 = (ImageView) convertView
 				.findViewById(R.id.shanchu_button); // 删除按钮
 		ImageView button2 = (ImageView) convertView
-		.findViewById(R.id.guanzhu_button); // 关注按钮
+				.findViewById(R.id.guanzhu_button); // 关注按钮
 		ImageView button3 = (ImageView) convertView
-		.findViewById(R.id.huifu_button); // 回复按钮
+				.findViewById(R.id.huifu_button); // 回复按钮
 		TextView Micropost_content = (TextView) convertView
 				.findViewById(R.id.micropost_content); // 消息内容
 		TextView Micropost_date = (TextView) convertView
@@ -261,13 +263,14 @@ public class HomepageAllActivity extends Activity implements
 		final ListView listView2 = (ListView) convertView// 子消息的list
 				.findViewById(R.id.aa);//
 		list_list.add(listView2);
-		final EditText Reply_edit = (EditText) convertView
-				.findViewById(R.id.reply_edit);
-		Reply_edit_list.add(Reply_edit);
-		guanzhu_list.add(guanzhu_img);
+		// final EditText Reply_edit = (EditText) convertView
+		// .findViewById(R.id.reply_edit);
+		// Reply_edit_list.add(Reply_edit);
+		guanzhu_list.add(button2);
 		guanzhu_count_list.add(guanzhu_count);
 		huifu_count_list.add(huifu_count);
 		gk_list.add(true);
+		HorizontalScrollView_list.add(hSView);
 
 		final Button lookMore = (Button) convertView
 				.findViewById(R.id.lookMore); // 查看更多
@@ -277,16 +280,14 @@ public class HomepageAllActivity extends Activity implements
 			}
 		});
 
-		Button huifu = (Button) convertView.findViewById(R.id.micropost_huifu);// 回复,用于显示隐藏的内容
-		btlist.add(huifu);
-		Button Button_huifu = (Button) convertView
-				.findViewById(R.id.Button_huifu); // 隐藏内容中的回复按钮
-		button_list.add(Button_huifu);
-		Button_huifu.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				setButton_huifu(listView2, mess, Reply_edit);
-			}
-		});
+		// Button Button_huifu = (Button) convertView
+		// .findViewById(R.id.Button_huifu); // 隐藏内容中的回复按钮
+		// button_list.add(Button_huifu);
+		// Button_huifu.setOnClickListener(new View.OnClickListener() {
+		// public void onClick(View v) {
+		// setButton_huifu(listView2, mess);
+		// }
+		// });
 
 		// guanzhu_count.setText(mess.getCareCount); // 关注数
 		huifu_count.setText(mess.getReply_microposts_count()); // 回复数
@@ -296,7 +297,7 @@ public class HomepageAllActivity extends Activity implements
 		if (mess.getAvatar_url().equals("")
 				|| mess.getAvatar_url().equals("null")) {
 		} else {
-			
+
 			ExerciseBookTool.set_background(IP + mess.getAvatar_url(), face);
 		}
 
@@ -308,19 +309,19 @@ public class HomepageAllActivity extends Activity implements
 			String a = (String) care.get(j);
 			if (a.equals(mic_id)) {
 				// guanzhu.setText("已关注"); // 显示 已关注
-				guanzhu_img.setBackgroundResource(R.drawable.after_care);
+				button2.setBackgroundResource(R.drawable.homepage_guanzhu2);
 			}
 		}
-		//  回复  
+		// 回复
 		button3.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Toast.makeText(getApplicationContext(),  "回复功能还没有实现", 0).show();
+				Toast.makeText(getApplicationContext(), "回复功能还没有实现", 0).show();
 			}
 		});
 		/**
 		 * 关注
 		 */
-	
+
 		// 点击关注
 		button2.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -350,7 +351,6 @@ public class HomepageAllActivity extends Activity implements
 									public void onClick(DialogInterface dialog,
 											int which) {
 										del_micropost(i, mess);
-
 									}
 								})
 						.setNegativeButton("取消",
@@ -359,7 +359,6 @@ public class HomepageAllActivity extends Activity implements
 									@Override
 									public void onClick(DialogInterface dialog,
 											int which) {
-
 										dialog.dismiss();
 									}
 								}).create();
@@ -369,30 +368,9 @@ public class HomepageAllActivity extends Activity implements
 		final RelativeLayout layout1 = (RelativeLayout) convertView
 				.findViewById(R.id.child_micropost); // 回复界面
 		item_huifu.add(layout1);
-		// 隐藏部分的内容
-		huifu.setOnClickListener(new View.OnClickListener() {
 
-			public void onClick(View v) {
-				setHuiFu(i, mess, layout1, Reply_edit, listView2, lookMore);
-			}
-		});
-
-		if (mess.getReply_microposts_count() != null) {
-			huifu.setText(ExerciseBookParams.REPLY + "("
-					+ mess.getReply_microposts_count() + ")");
-		}
-		//
-		convertView.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Toast.makeText(getApplicationContext(), i + "----", 0).show();
-			}
-		});
-		//
 		// 设置监听事件
-		convertView.setOnTouchListener(new View.OnTouchListener() {
+		hSView.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				switch (event.getAction()) {
@@ -400,38 +378,32 @@ public class HomepageAllActivity extends Activity implements
 
 					switch (flingState) {
 					case FLING_LEFT:
-//						Toast.makeText(getApplicationContext(), i + "----向左滑动",
-//								0).show();
-						flingState = FLING_CLICK;
-						re.setBackgroundResource(R.color.after_click);
-//						return false;
-						break;
-						// 处理右滑事件
 					case FLING_RIGHT:
-//						Toast.makeText(getApplicationContext(), i + "----向右滑动",
-//								0).show();
-						flingState = FLING_CLICK;
-						re.setBackgroundResource(R.color.before_click);
-						hSView.smoothScrollTo(0, 0);
-//						return false;
-						break;
-						// 处理点击事件
 					case FLING_CLICK:
-
-						hSView.smoothScrollTo(action.getWidth(), 0);
-						// Toast.makeText( getApplicationContext(),
-						// "Click Item:"+i, Toast.LENGTH_SHORT).show();
-						re.setBackgroundResource(R.color.after_click);
-						focus=i;
-//						return false;
+						focus = i;
+						if (gk_list.get(i) == true) {
+							hSView.smoothScrollTo(action.getWidth(), 0);
+							for (int j = 0; j < gk_list.size(); j++) {
+								if (j != i) {
+									HorizontalScrollView_list.get(j)
+											.smoothScrollTo(0, 0);
+								}
+							}
+						} else {
+							hSView.smoothScrollTo(0, 0);
+						}
+						setHuiFu(i, mess, layout1, listView2, lookMore);
 						break;
-
 					}
-
 				}
 				return false;
 			}
 		});
+		if (i % 2 == 0) {
+			re.setBackgroundResource(R.color.before_click);
+		} else {
+			re.setBackgroundResource(R.color.after_click);
+		}
 		Linear_layout.addView(convertView);
 	}
 
@@ -508,35 +480,112 @@ public class HomepageAllActivity extends Activity implements
 					.getLayoutInflater();
 			View child_view = inflater.inflate(R.layout.child_micropost_item,
 					null);
+			final HorizontalScrollView hSView2 = (HorizontalScrollView) child_view
+					.findViewById(R.id.hsv2);
+			final View action2 = child_view.findViewById(R.id.ll_action2);
+			DisplayMetrics dm = new DisplayMetrics();
+			getWindowManager().getDefaultDisplay().getMetrics(dm);
+			final RelativeLayout re = (RelativeLayout) child_view
+					.findViewById(R.id.child_user_left);
+			LayoutParams lp = re.getLayoutParams();
+			lp.width = dm.widthPixels;
+
+			child_view.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					Toast.makeText(getApplicationContext(), "----", 0).show();
+				}
+			});
+			// 设置监听事件
+			hSView2.setOnTouchListener(new View.OnTouchListener() {
+				@Override
+				public boolean onTouch(View v, MotionEvent event) {
+
+					switch (event.getAction()) {
+					case MotionEvent.ACTION_UP:
+
+						switch (flingState) {
+						case FLING_LEFT:
+							Toast.makeText(getApplicationContext(),
+									"回复----向左滑动", 0).show();
+							flingState = FLING_CLICK;
+							// return false;
+							break;
+						// 处理右滑事件
+						case FLING_RIGHT:
+							Toast.makeText(getApplicationContext(),
+									"回复----向右滑动", 0).show();
+							flingState = FLING_CLICK;
+
+							hSView2.smoothScrollTo(0, 0);
+							// return false;
+							break;
+						// 处理点击事件
+						case FLING_CLICK:
+
+							// hSView2.smoothScrollTo(action2.getWidth(), 0);
+							Toast.makeText(getApplicationContext(),
+									"Click Item:" + position2,
+									Toast.LENGTH_SHORT).show();
+
+							if (reply_gk_list.get(position2) == true) {
+
+								hSView2.smoothScrollTo(action2.getWidth(), 0);
+								reply_gk_list.set(position2, false);
+								for (int j = 0; j < reply_gk_list.size(); j++) {
+									if (j != position2) {
+										reply_gk_list.set(j, true);
+										((HorizontalScrollView) list_list
+												.get(focus).getChildAt(j)
+												.findViewById(R.id.hsv2))
+												.smoothScrollTo(0, 0);
+									}
+								}
+							} else {
+								reply_gk_list.set(position2, true);
+								hSView2.smoothScrollTo(0, 0);
+							}
+							break;
+
+						}
+
+					}
+					return false;
+				}
+			});
+
 			ImageView face = (ImageView) child_view
 					.findViewById(R.id.child_user_face); // 头像
-			TextView Micropost_whoToWho = (TextView) child_view
-					.findViewById(R.id.child_message_senderName); // 张三 回复李四
+			TextView Micropost_who = (TextView) child_view
+					.findViewById(R.id.child_message_senderName); // 回复人 张三
+			TextView Micropost_ToWho = (TextView) child_view
+					.findViewById(R.id.child_message_reciverName); // 接收人 李四
+			TextView Micropost_date = (TextView) child_view
+					.findViewById(R.id.child_message_date); // 时间
 			TextView Micropost_content = (TextView) child_view
 					.findViewById(R.id.child_micropost_content); // 内容
-			Button delete = (Button) child_view
+			ImageView delete = (ImageView) child_view
 					.findViewById(R.id.child_micropost_delete); // 删除
-			Button reply = (Button) child_view
+			ImageView reply = (ImageView) child_view
 					.findViewById(R.id.child_micropost_huifu); // 回复
 
-			if (child_list.size() == 1) {
-				EditText child_bottom = (EditText) child_view
-						.findViewById(R.id.child_bottom);
+			if (position2 != 0) {
+				ImageView child_bottom = (ImageView) child_view
+						.findViewById(R.id.child_jiantou);
 				child_bottom.setVisibility(View.GONE);
 			}
 			final Child_Micropost child_Micropost = child_list.get(position2);
 			if (child_Micropost.getSender_avatar_url() != null) { // 设置头像
-				// face.setScaleType(ImageView.ScaleType.FIT_XY);
-				// imageLoader.displayImage(IP
-				// + child_list.get(position2).getSender_avatar_url(),
-				// face, options, animateFirstListener);
 				ExerciseBookTool.set_background(
 						IP + child_Micropost.getSender_avatar_url(), face);
 			}
-			Micropost_whoToWho.setText(child_Micropost.getSender_name()
-					+ "  回复   " + child_Micropost.getReciver_name()); //
-			Micropost_content.setText(child_Micropost.getContent() + " ("
-					+ divisionTime(child_Micropost.getCreated_at()) + ")"); // 消息内容
+			Micropost_who.setText(child_Micropost.getSender_name()); // 回复人
+			Micropost_ToWho.setText(child_Micropost.getReciver_name()); // 接收人
+			Micropost_date
+					.setText(divisionTime(child_Micropost.getCreated_at())); // 时间
+			Micropost_content.setText(child_Micropost.getContent()); // 消息内容
 			if (user_id.equals(child_Micropost.getSender_id())) {// 自己回复的帖子现实删除按钮
 				delete.setVisibility(View.VISIBLE);
 			}
@@ -558,20 +607,16 @@ public class HomepageAllActivity extends Activity implements
 										String notice = array
 												.getString("notice");
 										if ("success".equals(status)) {
-
 											int a = Integer
 													.parseInt(list
 															.get(focus)
 															.getReply_microposts_count()) - 1;
-											huifu_count_list.get(focus).setText(a+"");
+											huifu_count_list.get(focus)
+													.setText(a + "");
 											list.get(focus)
 													.setReply_microposts_count(
 															a + "");
-											btlist.get(focus).setText(
-													ExerciseBookParams.REPLY
-															+ "(" + a + ")");
 											child_list.remove(item);
-
 											// ziAdapter_list.get(focus)
 											// .notifyDataSetChanged();
 											ExerciseBookTool
@@ -646,11 +691,12 @@ public class HomepageAllActivity extends Activity implements
 
 			reply.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
-					Reply_edit_list.get(focus).setHint(
-							user_name + " 回复  "
-									+ child_Micropost.getSender_name() + " :");
+					// Reply_edit_list.get(focus).setHint(
+					// user_name + " 回复  "
+					// + child_Micropost.getSender_name() + " :");
 					reciver_id = child_Micropost.getSender_id();
 					reciver_types = child_Micropost.getSender_types();
+					Toast.makeText(getApplicationContext(), "回复功能还没有实现", 0).show();
 				}
 			});
 			return child_view;
@@ -848,11 +894,11 @@ public class HomepageAllActivity extends Activity implements
 	// 添加关注
 	public void add_concern(final int i, final Micropost mess) {
 		prodialog = new ProgressDialog(HomepageAllActivity.this);
-//		if (guanzhu_list.get(i).getText().toString().equals("关注")) {
-//			prodialog.setMessage("正在添加关注");
-//		} else if (guanzhu_list.get(i).getText().toString().equals("已关注")) {
-			prodialog.setMessage("正在操作...");
-//		}
+		// if (guanzhu_list.get(i).getText().toString().equals("关注")) {
+		// prodialog.setMessage("正在添加关注");
+		// } else if (guanzhu_list.get(i).getText().toString().equals("已关注")) {
+		prodialog.setMessage("正在操作...");
+		// }
 		prodialog.setCanceledOnTouchOutside(false);
 		prodialog.show();
 		final Handler gzHandler = new Handler() {
@@ -867,15 +913,17 @@ public class HomepageAllActivity extends Activity implements
 						String notic = jsonobject.getString("notice");
 						if (status.equals("success")) {
 							care.add(mess.getId().toString());
-							guanzhu_list.get(i).setBackgroundResource(R.drawable.after_care);
-//							int a = Integer
-//							.parseInt(mess
-//									.getCareCount) + 1;
-//							guanzhu_count_list.get(i).setText(a+"");
-							
-							Toast.makeText(getApplicationContext(),"修改 pojo类，增加CareCount 参数 ",
+							guanzhu_list.get(i).setBackgroundResource(
+									R.drawable.homepage_guanzhu2);
+							// int a = Integer
+							// .parseInt(mess
+							// .getCareCount) + 1;
+							// guanzhu_count_list.get(i).setText(a+"");
+
+							Toast.makeText(getApplicationContext(),
+									"修改 pojo类，增加CareCount 参数 ",
 									Toast.LENGTH_SHORT).show();
-							
+
 						}
 						Toast.makeText(getApplicationContext(), notic,
 								Toast.LENGTH_SHORT).show();
@@ -890,11 +938,13 @@ public class HomepageAllActivity extends Activity implements
 						String notic = jsonobject.getString("notice");
 						if (status.equals("success")) {
 							care.remove(mess.getId().toString());
-							guanzhu_list.get(i).setBackgroundResource(R.drawable.before_care);
-//							int a = Integer.parseInt(mess.getCareCount) - 1;
-//							guanzhu_count_list.get(i).setText(a + "");
-							
-							Toast.makeText(getApplicationContext(),"修改 pojo类，增加CareCount 参数 ",
+							guanzhu_list.get(i).setBackgroundResource(
+									R.drawable.homepage_guanzhu);
+							// int a = Integer.parseInt(mess.getCareCount) - 1;
+							// guanzhu_count_list.get(i).setText(a + "");
+
+							Toast.makeText(getApplicationContext(),
+									"修改 pojo类，增加CareCount 参数 ",
 									Toast.LENGTH_SHORT).show();
 						}
 						Toast.makeText(getApplicationContext(), notic,
@@ -917,25 +967,25 @@ public class HomepageAllActivity extends Activity implements
 					mp.put("micropost_id", String.valueOf(mess.getId()));
 					String str = "";
 					Message msg = new Message();// 创建Message 对象
-					int a=-1;
+					boolean a = false;
 					for (int j = 0; j < care.size(); j++) {
-						a=0;
-						if (care.get(i).toString().equals(mess.getId().toString())) {
-						break;
-						}else {
-							a=i+1;
+						String str2 = care.get(j).toString();
+						String str3 = mess.getId().toString();
+						if (str2.equals(str3)) {
+							a = true;
+							break;
 						}
 					}
-					if (a==care.size() || a==-1) {
-						
-						str = ExerciseBookTool.sendGETRequest(
-								Urlinterface.add_concern, mp);
-						msg.what = 0;
-						msg.obj = str;
-					} else  {
+					if (a) {
 						str = ExerciseBookTool.sendGETRequest(
 								Urlinterface.unfollow, mp);
 						msg.what = 1;
+						msg.obj = str;
+
+					} else {
+						str = ExerciseBookTool.sendGETRequest(
+								Urlinterface.add_concern, mp);
+						msg.what = 0;
 						msg.obj = str;
 					}
 					gzHandler.sendMessage(msg);
@@ -944,12 +994,12 @@ public class HomepageAllActivity extends Activity implements
 				}
 			}
 		};
-//		if (ExerciseBookTool.isConnect(HomepageAllActivity.this)) {
+		if (ExerciseBookTool.isConnect(HomepageAllActivity.this)) {
 			gzthread.start();
-//		} else {
-//			Toast.makeText(getApplicationContext(),
-//					ExerciseBookParams.INTERNET, 0).show();
-//		}
+		} else {
+			Toast.makeText(getApplicationContext(),
+					ExerciseBookParams.INTERNET, 0).show();
+		}
 	}
 
 	/*
@@ -1021,8 +1071,7 @@ public class HomepageAllActivity extends Activity implements
 	}
 
 	// 回复
-	public void setButton_huifu(final ListView listv, final Micropost mess,
-			final EditText Reply_edit) {
+	public void setButton_huifu(final ListView listv, final Micropost mess) {
 		final Handler mHandler = new Handler() {
 			public void handleMessage(android.os.Message msg) {
 				switch (msg.what) {
@@ -1037,7 +1086,7 @@ public class HomepageAllActivity extends Activity implements
 							String status = array2.getString("status");
 							String notice = array2.getString("notice");
 							if ("success".equals(status)) {
-								Reply_edit.setText("");
+								// Reply_edit.setText("");
 								Toast.makeText(getApplicationContext(), notice,
 										Toast.LENGTH_SHORT).show();
 								final Handler mHandler = new Handler() {
@@ -1056,16 +1105,12 @@ public class HomepageAllActivity extends Activity implements
 											list.get(focus)
 													.setReply_microposts_count(
 															a + "");
-											huifu_count_list.get(focus).setText(a+"");
-											btlist.get(focus).setText(
-													ExerciseBookParams.REPLY
-															+ "(" + a + ")");
-
+											huifu_count_list.get(focus)
+													.setText(a + "");
 											listv.setAdapter(ziAdapter_list
 													.get(focus));
 											ExerciseBookTool
 													.setListViewHeightBasedOnChildren(listv);
-
 											break;
 										default:
 											break;
@@ -1120,7 +1165,8 @@ public class HomepageAllActivity extends Activity implements
 			}
 		};
 
-		String reply_edit = Reply_edit.getText().toString();
+		// String reply_edit = Reply_edit.getText().toString();
+		final String reply_edit = "dgd";
 		String kongge = reply_edit.replaceAll(" ", "");
 		if (reply_edit.length() == 0 || kongge.equals("")) {
 			Toast.makeText(getApplicationContext(), R.string.edit_null,
@@ -1130,7 +1176,7 @@ public class HomepageAllActivity extends Activity implements
 			Thread thread = new Thread() {
 				public void run() {
 					try {
-						String reply_edit = Reply_edit.getText().toString();
+						// String reply_edit = Reply_edit.getText().toString();
 						Map<String, String> map = new HashMap<String, String>();
 						map.put("content", reply_edit);
 						map.put("sender_id", user_id);
@@ -1166,7 +1212,7 @@ public class HomepageAllActivity extends Activity implements
 
 	// 回复隐藏变显示
 	public void setHuiFu(int i, final Micropost mess, RelativeLayout layout1,
-			EditText Reply_edit, final ListView listView2, final Button lookMore) {
+			final ListView listView2, final Button lookMore) {
 
 		final Handler mHandler = new Handler() {
 			public void handleMessage(android.os.Message msg) {
@@ -1182,6 +1228,10 @@ public class HomepageAllActivity extends Activity implements
 						lookMore.setVisibility(View.GONE);
 					}
 					listView2.setAdapter(ziAdapter_list.get(focus));
+					reply_gk_list.clear();
+					for (int j = 0; j < child_list.size(); j++) {
+						reply_gk_list.add(true);
+					}
 					ExerciseBookTool
 							.setListViewHeightBasedOnChildren(listView2);
 					break;
@@ -1207,17 +1257,6 @@ public class HomepageAllActivity extends Activity implements
 		};
 
 		if (gk_list.get(i) == true) {
-
-			// for (int j = 0; j < gk_list.size(); j++) {
-			// if (j == i) {
-			// item_huifu.get(i).setVisibility(View.VISIBLE);
-			// gk_list.set(i, false);
-			//
-			// }else {
-			// gk_list.set(j, true);
-			// item_huifu.get(j).setVisibility(View.GONE);
-			// }
-			// }
 			gk_list.set(i, false);
 
 			for (int j = 0; j < item_huifu.size(); j++) {
@@ -1236,8 +1275,9 @@ public class HomepageAllActivity extends Activity implements
 			reciver_id = mess.getUser_id();
 			reciver_types = mess.getUser_types();
 			layout1.setVisibility(View.VISIBLE);
-			Reply_edit.setHint(user_name + " " + ExerciseBookParams.REPLY + " "
-					+ mess.getName() + ":");
+			// Reply_edit.setHint(user_name + " " + ExerciseBookParams.REPLY +
+			// " "
+			// + mess.getName() + ":");
 			listView2.setVisibility(View.VISIBLE);
 			prodialog = new ProgressDialog(HomepageAllActivity.this);
 			prodialog.setMessage("正在加载中");
@@ -1379,50 +1419,16 @@ public class HomepageAllActivity extends Activity implements
 	 */
 	public void click_list() {
 		Linear_layout.removeAllViews();
-		Reply_edit_list.clear();
+		// Reply_edit_list.clear();
 		guanzhu_list.clear();
 		button_list.clear();
 		gk_list.clear();
-		btlist.clear();
+		reply_gk_list.clear();
 		ziAdapter_list.clear();
 		list_list.clear();
 		guanzhu_count_list.clear();
 		huifu_count_list.clear();
-	}
-
-	/**
-	 * 事件处理 其中flingState的值为事件 参数pos为ListView的每一项
-	 */
-	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int pos, long arg3) {
-		// TODO Auto-generated method stub
-		Log.v("MY_TAG", "onItemClick: state=" + flingState + ", pos=" + pos);
-
-//		switch (flingState) {
-//		// 处理左滑事件
-//		case FLING_LEFT:
-//			Toast.makeText(this, "Fling Left:" + pos, Toast.LENGTH_SHORT)
-//					.show();
-//			flingState = FLING_CLICK;
-//			break;
-//		// 处理右滑事件
-//		case FLING_RIGHT:
-//			Toast.makeText(this, "Fling Right:" + pos, Toast.LENGTH_SHORT)
-//					.show();
-//			flingState = FLING_CLICK;
-//			break;
-//		// 处理点击事件
-//		case FLING_CLICK:
-//			switch (pos) {
-//			case 0:
-//				break;
-//			case 1:
-//				break;
-//			}
-//			Toast.makeText(this, "Click Item:" + pos, Toast.LENGTH_SHORT)
-//					.show();
-//			break;
-//		}
+		HorizontalScrollView_list.clear();
 	}
 
 	/**
@@ -1451,7 +1457,7 @@ public class HomepageAllActivity extends Activity implements
 	 */
 	@Override
 	public boolean onFling(MotionEvent e1, MotionEvent e2, float vX, float vY) {
-		final int minX = 120, maxY = 20, minV = 20;
+		final int minX = 120, maxY = 20, minV = 10;
 		int x1 = (int) e1.getX(), x2 = (int) e2.getX();
 		int y1 = (int) e1.getY(), y2 = (int) e2.getY();
 
