@@ -19,15 +19,20 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.GestureDetector.OnGestureListener;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -35,6 +40,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.comdosoft.ExerciseBook.HomepageAllActivity.ZiAdapter;
 import com.comdosoft.ExerciseBook.pojo.Child_Micropost;
 import com.comdosoft.ExerciseBook.pojo.Micropost;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
@@ -45,8 +51,9 @@ import com.comdosoft.ExerciseBook.tools.PullToRefreshView.OnFooterRefreshListene
 import com.comdosoft.ExerciseBook.tools.PullToRefreshView.OnHeaderRefreshListener;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
-public class HomepageMyselfActivity extends Activity implements OnHeaderRefreshListener,
-		OnFooterRefreshListener, Urlinterface {
+public class HomepageMyselfActivity extends Activity implements
+		OnHeaderRefreshListener, OnFooterRefreshListener, Urlinterface,
+		OnGestureListener {
 	private ExerciseBook exerciseBook;
 	private String user_id = "10"; // 学生 id 上面 会传过来的 学生student_id，
 	private String id = "2";
@@ -57,40 +64,45 @@ public class HomepageMyselfActivity extends Activity implements OnHeaderRefreshL
 	private String json = "{\"status\":\"success\",\"notice\":\"\u767b\u9646\u6210\u529f\uff01\",\"student\":{\"id\":66,\"name\":\"hrueieurh \",\"user_id\":66,\"nickname\":\"yeueieiri \",\"avatar_url\":\"/avatars/students/2014-01/student_66.jpg\"},\"class\":{\"id\":1,\"name\":\"1401\",\"tearcher_name\":\"fgf\",\"tearcher_id\":1},\"classmates\":[{\"avatar_url\":\"/assets/default_avater.jpg\",\"id\":1,\"name\":\"nan\",\"nickname\":\"zxn\"}],\"task_messages\":[],\"microposts\":{\"page\":1,\"pages_count\":4,\"details_microposts\":[{\"avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"content\":\"ww\u6211\u6d4b\u5b89\u5fbdi\u2026\u2026\n\n\u6d4b\u8bd5\u4e00\u4e0b\",\"created_at\":\"2014-01-27T14:12:02+08:00\",\"micropost_id\":145,\"name\":\"hrueieurh \",\"reply_microposts_count\":1,\"user_id\":66,\"user_types\":1},{\"avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"content\":\"556355265335 \",\"created_at\":\"2014-01-23T07:17:25+08:00\",\"micropost_id\":104,\"name\":\"hrueieurh \",\"reply_microposts_count\":0,\"user_id\":66,\"user_types\":1},{\"avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"content\":\"Babbitt \",\"created_at\":\"2014-01-23T02:58:48+08:00\",\"micropost_id\":103,\"name\":\"hrueieurh \",\"reply_microposts_count\":4,\"user_id\":66,\"user_types\":1},{\"avatar_url\":\"/assets/default_avater.jpg\",\"content\":\"\u5173\u4e8e\u52a0\u5f3a\",\"created_at\":\"2014-01-22T10:11:11+08:00\",\"micropost_id\":99,\"name\":\"???\",\"reply_microposts_count\":6,\"user_id\":9,\"user_types\":1},{\"avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"content\":\"\u7684\u7684\u7684\",\"created_at\":\"2014-01-22T09:47:22+08:00\",\"micropost_id\":97,\"name\":\"hrueieurh \",\"reply_microposts_count\":5,\"user_id\":66,\"user_types\":1},{\"avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"content\":\"\u5927\u5927\u65b9\u65b9\u53d1\",\"created_at\":\"2014-01-22T09:47:12+08:00\",\"micropost_id\":96,\"name\":\"hrueieurh \",\"reply_microposts_count\":0,\"user_id\":66,\"user_types\":1},{\"avatar_url\":\"/assets/default_avater.jpg\",\"content\":\"hjk\",\"created_at\":\"2014-01-22T06:43:12+08:00\",\"micropost_id\":95,\"name\":\"???\",\"reply_microposts_count\":19,\"user_id\":9,\"user_types\":1},{\"avatar_url\":\"/assets/default_avater.jpg\",\"content\":\"ffg\",\"created_at\":\"2014-01-22T02:57:52+08:00\",\"micropost_id\":94,\"name\":\"???\",\"reply_microposts_count\":6,\"user_id\":9,\"user_types\":1},{\"avatar_url\":\"/assets/default_avater.jpg\",\"content\":\"UI o\",\"created_at\":\"2014-01-21T10:48:36+08:00\",\"micropost_id\":93,\"name\":\"???\",\"reply_microposts_count\":2,\"user_id\":9,\"user_types\":1},{\"avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"content\":\"rrrrr\",\"created_at\":\"2014-01-21T10:13:22+08:00\",\"micropost_id\":86,\"name\":\"hrueieurh \",\"reply_microposts_count\":16,\"user_id\":66,\"user_types\":1},{\"avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"content\":\"rrrrr\",\"created_at\":\"2014-01-21T10:13:21+08:00\",\"micropost_id\":85,\"name\":\"hrueieurh \",\"reply_microposts_count\":7,\"user_id\":66,\"user_types\":1},{\"avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"content\":\"dffff\",\"created_at\":\"2014-01-21T10:13:19+08:00\",\"micropost_id\":84,\"name\":\"hrueieurh \",\"reply_microposts_count\":0,\"user_id\":66,\"user_types\":1},{\"avatar_url\":\"/assets/default_avater.jpg\",\"content\":\"\u5feb\u4e86\uff0c\u5feb\u4e86\u5feb\u4e86\",\"created_at\":\"2014-01-21T06:46:09+08:00\",\"micropost_id\":73,\"name\":\"??\",\"reply_microposts_count\":0,\"user_id\":8,\"user_types\":1},{\"avatar_url\":\"/assets/default_avater.jpg\",\"content\":\"dddddd\",\"created_at\":\"2014-01-20T06:24:07+08:00\",\"micropost_id\":72,\"name\":\"???\",\"reply_microposts_count\":3,\"user_id\":9,\"user_types\":1},{\"avatar_url\":\"/assets/default_avater.jpg\",\"content\":\"ggjjkkjhghhjjj\",\"created_at\":\"2014-01-20T04:41:44+08:00\",\"micropost_id\":71,\"name\":\"???\",\"reply_microposts_count\":0,\"user_id\":9,\"user_types\":1},{\"avatar_url\":\"/assets/default_avater.jpg\",\"content\":\"\u98ce\u98ce\u5149\u5149\u97e9\u56fd\u521a\u521a\u597d\u53d1\u98ce\u98ce\u5149\u5149\u5730\u65b9\u98ce\u683c\u56de\u5bb6\u98ce\u683c\u54c8\u54c8\u54c8\u98ce\u683c\u5475\u5475\u7684\u611f\u89c9\u7684\u98ce\u683c\u4e2a\",\"created_at\":\"2014-01-20T02:52:47+08:00\",\"micropost_id\":70,\"name\":\"???\",\"reply_microposts_count\":1,\"user_id\":9,\"user_types\":1},{\"avatar_url\":\"/assets/default_avater.jpg\",\"content\":\"\u89c4\u5212\u5c40\",\"created_at\":\"2014-01-18T10:57:36+08:00\",\"micropost_id\":69,\"name\":\"???\",\"reply_microposts_count\":0,\"user_id\":9,\"user_types\":1},{\"avatar_url\":\"/assets/default_avater.jpg\",\"content\":\"\u4f1a\",\"created_at\":\"2014-01-18T10:41:09+08:00\",\"micropost_id\":68,\"name\":\"???\",\"reply_microposts_count\":1,\"user_id\":9,\"user_types\":1},{\"avatar_url\":\"/assets/default_avater.jpg\",\"content\":\"\u4e2a\u770b\u8fc7\",\"created_at\":\"2014-01-18T10:40:54+08:00\",\"micropost_id\":67,\"name\":\"???\",\"reply_microposts_count\":0,\"user_id\":9,\"user_types\":1},{\"avatar_url\":\"/assets/default_avater.jpg\",\"content\":\"yyuu\",\"created_at\":\"2014-01-18T10:33:45+08:00\",\"micropost_id\":66,\"name\":\"???\",\"reply_microposts_count\":0,\"user_id\":9,\"user_types\":1}]},\"daily_tasks\":[{\"id\":2,\"name\":\"2014-1-20\u4f5c\u4e1a\",\"start_time\":\"2014-01-20T00:00:00+08:00\",\"end_time\":\"2014-01-30T00:00:00+08:00\",\"question_packages_url\":\"/question_package_1.js\",\"listening_schedule\":\"1/4\",\"reading_schedule\":\"0/4\"}],\"follow_microposts_id\":[86,97,97,96,95,93,71,93,71,99],\"messages\":[{\"content\":\"[[fgh]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;jjj\",\"created_at\":\"2014-01-26T12:32:23+08:00\",\"id\":554,\"micropost_id\":103,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[fgh]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;uui\",\"created_at\":\"2014-01-26T12:32:07+08:00\",\"id\":553,\"micropost_id\":103,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[fgh]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;huu\",\"created_at\":\"2014-01-26T12:31:59+08:00\",\"id\":552,\"micropost_id\":103,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[fgh]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;jjii\",\"created_at\":\"2014-01-26T12:30:43+08:00\",\"id\":550,\"micropost_id\":85,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[xhxksn ]]\u56de\u590d\u4e86\u60a8\u5173\u6ce8\u7684\u6d88\u606f\uff1a;||;ca\",\"created_at\":\"2014-01-23T03:04:38+08:00\",\"id\":208,\"micropost_id\":86,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[xhxksn ]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;ca\",\"created_at\":\"2014-01-23T03:04:30+08:00\",\"id\":189,\"micropost_id\":86,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[xhxksn ]]\u56de\u590d\u4e86\u60a8\u5173\u6ce8\u7684\u6d88\u606f\uff1a;||;ca\",\"created_at\":\"2014-01-23T03:04:30+08:00\",\"id\":198,\"micropost_id\":86,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[xhxksn ]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;a\",\"created_at\":\"2014-01-23T03:04:00+08:00\",\"id\":187,\"micropost_id\":97,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[xhxksn ]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;CA\",\"created_at\":\"2014-01-23T03:03:46+08:00\",\"id\":186,\"micropost_id\":97,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[xhxksn ]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;ding\",\"created_at\":\"2014-01-23T03:01:09+08:00\",\"id\":185,\"micropost_id\":103,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[xhxksn ]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;@\",\"created_at\":\"2014-01-23T03:00:51+08:00\",\"id\":184,\"micropost_id\":103,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[xhxksn ]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;ca\",\"created_at\":\"2014-01-23T03:00:29+08:00\",\"id\":183,\"micropost_id\":103,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[xhxksn ]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;ca\",\"created_at\":\"2014-01-23T03:00:29+08:00\",\"id\":182,\"micropost_id\":103,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[xhxksn ]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;abc\",\"created_at\":\"2014-01-23T02:07:00+08:00\",\"id\":180,\"micropost_id\":99,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[xhxksn ]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;''''\",\"created_at\":\"2014-01-23T02:05:37+08:00\",\"id\":175,\"micropost_id\":97,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[???]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;\u54c8\u54c8\u54c8\u5c31\",\"created_at\":\"2014-01-22T10:09:41+08:00\",\"id\":163,\"micropost_id\":97,\"sender_avatar_url\":\"/assets/default_avater.jpg\",\"sender_name\":\"???\",\"user_id\":66},{\"content\":\"[[???]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;\u53cd\u5f39\u6709\",\"created_at\":\"2014-01-22T10:09:22+08:00\",\"id\":162,\"micropost_id\":97,\"sender_avatar_url\":\"/assets/default_avater.jpg\",\"sender_name\":\"???\",\"user_id\":66},{\"content\":\"[[???]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;\u89c4\u5212\",\"created_at\":\"2014-01-22T10:09:15+08:00\",\"id\":161,\"micropost_id\":97,\"sender_avatar_url\":\"/assets/default_avater.jpg\",\"sender_name\":\"???\",\"user_id\":66},{\"content\":\"[[???]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\",\"created_at\":\"2014-01-22T08:18:41+08:00\",\"id\":159,\"micropost_id\":85,\"sender_avatar_url\":\"/assets/default_avater.jpg\",\"sender_name\":\"???\",\"user_id\":66},{\"content\":\"[[???]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\",\"created_at\":\"2014-01-22T08:18:40+08:00\",\"id\":157,\"micropost_id\":85,\"sender_avatar_url\":\"/assets/default_avater.jpg\",\"sender_name\":\"???\",\"user_id\":66},{\"content\":\"[[???]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\",\"created_at\":\"2014-01-22T08:18:39+08:00\",\"id\":153,\"micropost_id\":85,\"sender_avatar_url\":\"/assets/default_avater.jpg\",\"sender_name\":\"???\",\"user_id\":66},{\"content\":\"[[???]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\",\"created_at\":\"2014-01-22T08:18:34+08:00\",\"id\":144,\"micropost_id\":86,\"sender_avatar_url\":\"/assets/default_avater.jpg\",\"sender_name\":\"???\",\"user_id\":66},{\"content\":\"[[???]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\",\"created_at\":\"2014-01-22T08:18:32+08:00\",\"id\":135,\"micropost_id\":86,\"sender_avatar_url\":\"/assets/default_avater.jpg\",\"sender_name\":\"???\",\"user_id\":66},{\"content\":\"[[???]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\",\"created_at\":\"2014-01-22T08:18:30+08:00\",\"id\":126,\"micropost_id\":86,\"sender_avatar_url\":\"/assets/default_avater.jpg\",\"sender_name\":\"???\",\"user_id\":66},{\"content\":\"[[???]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\",\"created_at\":\"2014-01-22T08:18:28+08:00\",\"id\":117,\"micropost_id\":86,\"sender_avatar_url\":\"/assets/default_avater.jpg\",\"sender_name\":\"???\",\"user_id\":66}]}";
 	public PullToRefreshView mPullToRefreshView;
 	public LinearLayout Linear_layout;
-	
+
 	private String classname;
 	private int child_page = 1; // 子消息 分页加载的 第几页
-	private int child_pages_count=1;// 子消息总页数
+	private int child_pages_count = 1;// 子消息总页数
 	private int page;// 当前第几页
 	private int pages_count;// 总页数
 	private String reciver_id = "";
 	private String reciver_types = "";
 	private String micropost_id = "";
-	
+
 	private int list_item;// list集合的最后一位索引
 	private int user_types = 1;
-	public List<Boolean> gk_list;// 回复开关集合
+	public List<Boolean> gk_list;// 主消息 点击操作 开关集合
+	public List<Boolean> reply_gk_list;// 回复 点击操作 开关集合
 	public List<RelativeLayout> item_huifu;// 回复开关集合
 	public List<Button> button_list;// 隐藏内容中的 回复 集合
-	private int micropost_type;// 微博类型 0表是全部 1表示我的
 	private List<Micropost> list;
 	private List<String> care;
-	private List<Button> guanzhu_list;
 	private List<ListView> list_list;
-	private List<Button> btlist;
 	private List<ZiAdapter> ziAdapter_list;
 	private List<EditText> Reply_edit_list;
 	private String avatar_url;
 	private String user_name;
 	private String nick_name;
 	private int focus = -1;
-	private int lass_count = 1;
-	private int lass_count2 = 1;
 	private String user_Url;
 	private int width;
 	private int height;
-
+	private List<TextView> guanzhu_count_list;// 关注数 集合
+	private List<TextView> huifu_count_list;// 回复数 集合
+	private List<HorizontalScrollView> HorizontalScrollView_list;// 滑动块 集合
 	private ArrayList<Child_Micropost> child_list;
+	private GestureDetector gd;
+	// 事件状态
+	private final char FLING_CLICK = 0;
+	private final char FLING_LEFT = 1;
+	private final char FLING_RIGHT = 2;
+	private char flingState = FLING_CLICK;
+
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -99,10 +111,10 @@ public class HomepageMyselfActivity extends Activity implements OnHeaderRefreshL
 				final String json_1 = (String) msg.obj;
 				// Toast.makeText(getApplicationContext(),
 				// json_all, Toast.LENGTH_SHORT).show();
-			
-					parseJson_Myself(json_1);
+
+				parseJson_Myself(json_1);
 				init();
-				
+
 				break;
 
 			case 2:
@@ -112,9 +124,9 @@ public class HomepageMyselfActivity extends Activity implements OnHeaderRefreshL
 				final String json_all = (String) msg.obj;
 				// Toast.makeText(getApplicationContext(),
 				// json_all, Toast.LENGTH_SHORT).show();
-			
-					parseJson_Myself(json_all);
-				
+
+				parseJson_Myself(json_all);
+
 				for (int i = 0; i < list.size(); i++) {
 					setlayout(i);
 				}
@@ -122,9 +134,9 @@ public class HomepageMyselfActivity extends Activity implements OnHeaderRefreshL
 				break;
 			case 3:
 				final String json_all2 = (String) msg.obj;
-			
-					parseJson_Myself(json_all2);
-				
+
+				parseJson_Myself(json_all2);
+
 				for (int i = list_item; i < list.size(); i++) {
 					setlayout(i);
 				}
@@ -133,8 +145,7 @@ public class HomepageMyselfActivity extends Activity implements OnHeaderRefreshL
 			case 4:
 				prodialog.dismiss();
 				break;
-		
-		
+
 			case 7:
 				Toast.makeText(getApplicationContext(),
 						ExerciseBookParams.INTERNET, Toast.LENGTH_SHORT).show();
@@ -147,28 +158,26 @@ public class HomepageMyselfActivity extends Activity implements OnHeaderRefreshL
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.class_middle);
 		exerciseBook = (ExerciseBook) getApplication();
-
-		
+		gd = new GestureDetector(this);
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
 
-//		user_id = preferences.getString("user_id", null);
-//		id = preferences.getString("id", null);
-//		school_class_id = preferences.getString("school_class_id", null);
+		// user_id = preferences.getString("user_id", null);
+		// id = preferences.getString("id", null);
+		// school_class_id = preferences.getString("school_class_id", null);
 
-		micropost_type = 0;// 默认现实全部
 		item_huifu = new ArrayList<RelativeLayout>();
-		guanzhu_list = new ArrayList<Button>();
+		guanzhu_count_list = new ArrayList<TextView>();
+		huifu_count_list = new ArrayList<TextView>();
+		HorizontalScrollView_list = new ArrayList<HorizontalScrollView>();
 		button_list = new ArrayList<Button>();
 		ziAdapter_list = new ArrayList<ZiAdapter>();
-		btlist = new ArrayList<Button>();
 		Reply_edit_list = new ArrayList<EditText>();
 		list = new ArrayList<Micropost>();
 		list_list = new ArrayList<ListView>();
 		gk_list = new ArrayList<Boolean>();
-		
+		reply_gk_list = new ArrayList<Boolean>();
 
-	
 	}
 
 	protected void onResume() {
@@ -178,8 +187,8 @@ public class HomepageMyselfActivity extends Activity implements OnHeaderRefreshL
 			class_button_myself();
 
 		} else {
-			Toast.makeText(getApplicationContext(), ExerciseBookParams.INTERNET, 0)
-					.show();
+			Toast.makeText(getApplicationContext(),
+					ExerciseBookParams.INTERNET, 0).show();
 		}
 	}
 
@@ -207,27 +216,49 @@ public class HomepageMyselfActivity extends Activity implements OnHeaderRefreshL
 		final Micropost mess = list.get(i);
 		ZiAdapter Adapter = new ZiAdapter();
 		ziAdapter_list.add(Adapter);
-		final View convertView = LayoutInflater.from(HomepageMyselfActivity.this)
-				.inflate(R.layout.class_layout, null);
+		final View convertView = LayoutInflater.from(
+				HomepageMyselfActivity.this).inflate(R.layout.class_layout,
+				null);
+		final HorizontalScrollView hSView = (HorizontalScrollView) convertView
+				.findViewById(R.id.hsv);
+		final View action = convertView.findViewById(R.id.ll_action);
+		DisplayMetrics dm = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(dm);
+		final RelativeLayout re = (RelativeLayout) convertView
+				.findViewById(R.id.user_left);
+		LayoutParams lp = re.getLayoutParams();
+		lp.width = dm.widthPixels;
 		ImageView face = (ImageView) convertView.findViewById(R.id.user_face); // 头像
+
+		ImageView huifu_img = (ImageView) convertView
+				.findViewById(R.id.huifu_item); // 回复图标
 		TextView Micropost_senderName = (TextView) convertView
 				.findViewById(R.id.message_senderName); // 谁发的
-		ImageButton button1 = (ImageButton) convertView
-				.findViewById(R.id.button1); // 删除按钮
+		TextView guanzhu_count = (TextView) convertView
+				.findViewById(R.id.guanzhu_count); // 关注数
+		TextView huifu_count = (TextView) convertView
+				.findViewById(R.id.huifu_count); // 回复数
+		ImageView button1 = (ImageView) convertView
+				.findViewById(R.id.shanchu_button); // 删除按钮
+		ImageView button2 = (ImageView) convertView
+				.findViewById(R.id.guanzhu_button); // 关注按钮
+		ImageView button3 = (ImageView) convertView
+				.findViewById(R.id.huifu_button); // 回复按钮
 		TextView Micropost_content = (TextView) convertView
 				.findViewById(R.id.micropost_content); // 消息内容
 		TextView Micropost_date = (TextView) convertView
 				.findViewById(R.id.micropost_date); // 日期
-		final Button guanzhu = (Button) convertView
-				.findViewById(R.id.micropost_guanzhu); // 关注
+
 		final ListView listView2 = (ListView) convertView// 子消息的list
 				.findViewById(R.id.aa);//
 		list_list.add(listView2);
-		final EditText Reply_edit = (EditText) convertView
-				.findViewById(R.id.reply_edit);
-		Reply_edit_list.add(Reply_edit);
-		guanzhu_list.add(guanzhu);
+		// final EditText Reply_edit = (EditText) convertView
+		// .findViewById(R.id.reply_edit);
+		// Reply_edit_list.add(Reply_edit);
+		guanzhu_count_list.add(guanzhu_count);
+		huifu_count_list.add(huifu_count);
 		gk_list.add(true);
+		HorizontalScrollView_list.add(hSView);
 
 		final Button lookMore = (Button) convertView
 				.findViewById(R.id.lookMore); // 查看更多
@@ -237,26 +268,24 @@ public class HomepageMyselfActivity extends Activity implements OnHeaderRefreshL
 			}
 		});
 
-		Button huifu = (Button) convertView.findViewById(R.id.micropost_huifu);// 回复,用于显示隐藏的内容
-		btlist.add(huifu);
-		Button Button_huifu = (Button) convertView
-				.findViewById(R.id.Button_huifu); // 隐藏内容中的回复按钮
-		button_list.add(Button_huifu);
-		Button_huifu.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				setButton_huifu(listView2, mess, Reply_edit);
-			}
-		});
+		// Button Button_huifu = (Button) convertView
+		// .findViewById(R.id.Button_huifu); // 隐藏内容中的回复按钮
+		// button_list.add(Button_huifu);
+		// Button_huifu.setOnClickListener(new View.OnClickListener() {
+		// public void onClick(View v) {
+		// setButton_huifu(listView2, mess);
+		// }
+		// });
+
+		// guanzhu_count.setText(mess.getCareCount); // 关注数
+		huifu_count.setText(mess.getReply_microposts_count()); // 回复数
 
 		Log.i("linshi", IP + mess.getAvatar_url());
 		// 设置头像
 		if (mess.getAvatar_url().equals("")
 				|| mess.getAvatar_url().equals("null")) {
 		} else {
-			// face.setScaleType(ImageView.ScaleType.FIT_CENTER);
-			// imageLoader.displayImage(IP + mess.getAvatar_url(), face,
-			// options,
-			// animateFirstListener);
+
 			ExerciseBookTool.set_background(IP + mess.getAvatar_url(), face);
 		}
 
@@ -265,29 +294,28 @@ public class HomepageMyselfActivity extends Activity implements OnHeaderRefreshL
 		Micropost_date.setText(divisionTime(mess.getCreated_at())); // 消息日期
 		String mic_id = mess.getId();
 
-		/**
-		 * 关注
-		 */
-		if (micropost_type == 1 || user_id.equals(mess.getUser_id().toString())) {
-			guanzhu.setVisibility(View.GONE); // 自己的消息不关注
-		}
-		// 点击关注
-		guanzhu.setOnClickListener(new OnClickListener() {
+		// 回复
+		button3.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				add_concern(i, mess);
+				Toast.makeText(getApplicationContext(), "回复功能还没有实现", 0).show();
 			}
 		});
+
 		/**
 		 * 删除
 		 */
 		if (user_id.equals(mess.getUser_id())) { // 主消息删除按钮 只是在本人时显示
+			button1.setVisibility(View.VISIBLE);
+			button2.setVisibility(View.GONE);
 		} else {
 			button1.setVisibility(View.GONE);
+			button2.setVisibility(View.VISIBLE);
 		}
 		button1.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 
-				Dialog dialog = new AlertDialog.Builder(HomepageMyselfActivity.this)
+				Dialog dialog = new AlertDialog.Builder(
+						HomepageMyselfActivity.this)
 						.setTitle("提示")
 						.setMessage("您确认要删除么?")
 						.setPositiveButton("确认",
@@ -315,17 +343,40 @@ public class HomepageMyselfActivity extends Activity implements OnHeaderRefreshL
 		final RelativeLayout layout1 = (RelativeLayout) convertView
 				.findViewById(R.id.child_micropost); // 回复界面
 		item_huifu.add(layout1);
-		// 隐藏部分的内容
-		huifu.setOnClickListener(new View.OnClickListener() {
+		// 设置监听事件
+		hSView.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				switch (event.getAction()) {
+				case MotionEvent.ACTION_UP:
 
-			public void onClick(View v) {
-				setHuiFu(i, mess, layout1, Reply_edit, listView2, lookMore);
+					switch (flingState) {
+					case FLING_LEFT:
+					case FLING_RIGHT:
+					case FLING_CLICK:
+						focus = i;
+						if (gk_list.get(i) == true) {
+							hSView.smoothScrollTo(action.getWidth(), 0);
+							for (int j = 0; j < gk_list.size(); j++) {
+								if (j != i) {
+									HorizontalScrollView_list.get(j)
+											.smoothScrollTo(0, 0);
+								}
+							}
+						} else {
+							hSView.smoothScrollTo(0, 0);
+						}
+						setHuiFu(i, mess, layout1, listView2, lookMore);
+						break;
+					}
+				}
+				return false;
 			}
 		});
-		
-		if (mess.getReply_microposts_count() != null) {
-			huifu.setText(ExerciseBookParams.REPLY + "("
-					+ mess.getReply_microposts_count() + ")");
+		if (i % 2 == 0) {
+			re.setBackgroundResource(R.color.before_click);
+		} else {
+			re.setBackgroundResource(R.color.after_click);
 		}
 		Linear_layout.addView(convertView);
 	}
@@ -338,28 +389,27 @@ public class HomepageMyselfActivity extends Activity implements OnHeaderRefreshL
 			list_item = list.size();
 			Thread thread = new Thread() {
 				public void run() {// 全部 页面加载 更多
-					
-						Map<String, String> map = new HashMap<String, String>();
-						map.put("user_id", user_id);
-						map.put("school_class_id", school_class_id);
-						map.put("page", page + "");
-						String result = "";
-						try {
-							result = ExerciseBookTool.sendGETRequest(
-									Urlinterface.MY_MICROPOSTS, map);
-						} catch (Exception e1) {
-							handler.sendEmptyMessage(7);
-						}
-						Message msg = new Message();// 创建Message 对象
-						msg.what = 3;
-						msg.obj = result;
-						handler.sendMessage(msg);
-					
+
+					Map<String, String> map = new HashMap<String, String>();
+					map.put("user_id", user_id);
+					map.put("school_class_id", school_class_id);
+					map.put("page", page + "");
+					String result = "";
+					try {
+						result = ExerciseBookTool.sendGETRequest(
+								Urlinterface.MY_MICROPOSTS, map);
+					} catch (Exception e1) {
+						handler.sendEmptyMessage(7);
+					}
+					Message msg = new Message();// 创建Message 对象
+					msg.what = 3;
+					msg.obj = result;
+					handler.sendMessage(msg);
+
 				}
 			};
 
 			if (ExerciseBookTool.isConnect(HomepageMyselfActivity.this)) {
-
 				thread.start();
 			} else {
 				Toast.makeText(getApplicationContext(),
@@ -371,7 +421,6 @@ public class HomepageMyselfActivity extends Activity implements OnHeaderRefreshL
 					Toast.LENGTH_SHORT).show();
 			mPullToRefreshView.onFooterRefreshComplete();
 		}
-
 		// mPullToRefreshView.onFooterRefreshComplete();
 	}
 
@@ -399,38 +448,112 @@ public class HomepageMyselfActivity extends Activity implements OnHeaderRefreshL
 
 		public View getView(final int position2, View convertView,
 				ViewGroup parent) {
-			LayoutInflater inflater = HomepageMyselfActivity.this.getLayoutInflater();
+			LayoutInflater inflater = HomepageMyselfActivity.this
+					.getLayoutInflater();
 			View child_view = inflater.inflate(R.layout.child_micropost_item,
 					null);
+			final HorizontalScrollView hSView2 = (HorizontalScrollView) child_view
+					.findViewById(R.id.hsv2);
+			final View action2 = child_view.findViewById(R.id.ll_action2);
+			DisplayMetrics dm = new DisplayMetrics();
+			getWindowManager().getDefaultDisplay().getMetrics(dm);
+			final RelativeLayout re = (RelativeLayout) child_view
+					.findViewById(R.id.child_user_left);
+			LayoutParams lp = re.getLayoutParams();
+			lp.width = dm.widthPixels;
+
+			child_view.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					Toast.makeText(getApplicationContext(), "----", 0).show();
+				}
+			});
+			// 设置监听事件
+			hSView2.setOnTouchListener(new View.OnTouchListener() {
+				@Override
+				public boolean onTouch(View v, MotionEvent event) {
+					switch (event.getAction()) {
+					case MotionEvent.ACTION_UP:
+						switch (flingState) {
+						case FLING_LEFT:
+							Toast.makeText(getApplicationContext(),
+									"回复----向左滑动", 0).show();
+							flingState = FLING_CLICK;
+							// return false;
+							break;
+						// 处理右滑事件
+						case FLING_RIGHT:
+							Toast.makeText(getApplicationContext(),
+									"回复----向右滑动", 0).show();
+							flingState = FLING_CLICK;
+
+							hSView2.smoothScrollTo(0, 0);
+							// return false;
+							break;
+						// 处理点击事件
+						case FLING_CLICK:
+
+							// hSView2.smoothScrollTo(action2.getWidth(), 0);
+							Toast.makeText(getApplicationContext(),
+									"Click Item:" + position2,
+									Toast.LENGTH_SHORT).show();
+
+							if (reply_gk_list.get(position2) == true) {
+
+								hSView2.smoothScrollTo(action2.getWidth(), 0);
+								reply_gk_list.set(position2, false);
+								for (int j = 0; j < reply_gk_list.size(); j++) {
+									if (j != position2) {
+										reply_gk_list.set(j, true);
+										((HorizontalScrollView) list_list
+												.get(focus).getChildAt(j)
+												.findViewById(R.id.hsv2))
+												.smoothScrollTo(0, 0);
+									}
+								}
+							} else {
+								reply_gk_list.set(position2, true);
+								hSView2.smoothScrollTo(0, 0);
+							}
+							break;
+						}
+					}
+					return false;
+				}
+			});
+
 			ImageView face = (ImageView) child_view
 					.findViewById(R.id.child_user_face); // 头像
-			TextView Micropost_whoToWho = (TextView) child_view
-					.findViewById(R.id.child_message_senderName); // 张三 回复李四
+			TextView Micropost_who = (TextView) child_view
+					.findViewById(R.id.child_message_senderName); // 回复人 张三
+			TextView Micropost_ToWho = (TextView) child_view
+					.findViewById(R.id.child_message_reciverName); // 接收人 李四
+			TextView Micropost_date = (TextView) child_view
+					.findViewById(R.id.child_message_date); // 时间
 			TextView Micropost_content = (TextView) child_view
 					.findViewById(R.id.child_micropost_content); // 内容
-			Button delete = (Button) child_view
+			ImageView delete = (ImageView) child_view
 					.findViewById(R.id.child_micropost_delete); // 删除
-			Button reply = (Button) child_view
+			ImageView reply = (ImageView) child_view
 					.findViewById(R.id.child_micropost_huifu); // 回复
 
-			if (child_list.size() == 1) {
-				EditText child_bottom = (EditText) child_view
-						.findViewById(R.id.child_bottom);
+			if (position2 != 0) {
+				ImageView child_bottom = (ImageView) child_view
+						.findViewById(R.id.child_jiantou);
 				child_bottom.setVisibility(View.GONE);
 			}
 			final Child_Micropost child_Micropost = child_list.get(position2);
 			if (child_Micropost.getSender_avatar_url() != null) { // 设置头像
-				// face.setScaleType(ImageView.ScaleType.FIT_XY);
-				// imageLoader.displayImage(IP
-				// + child_list.get(position2).getSender_avatar_url(),
-				// face, options, animateFirstListener);
-				ExerciseBookTool.set_background(IP + child_Micropost.getSender_avatar_url(),
-						face);
+				ExerciseBookTool.set_background(
+						IP + child_Micropost.getSender_avatar_url(), face);
 			}
-			Micropost_whoToWho.setText(child_Micropost.getSender_name()
-					+ "  回复   " + child_Micropost.getReciver_name()); //
-			Micropost_content.setText(child_Micropost.getContent() + " ("
-					+ divisionTime(child_Micropost.getCreated_at()) + ")"); // 消息内容
+			Micropost_who.setText(child_Micropost.getSender_name()); // 回复人
+			Micropost_ToWho.setText(child_Micropost.getReciver_name()); // 接收人
+			Micropost_date
+					.setText(divisionTime(child_Micropost.getCreated_at())); // 时间
+			Micropost_content.setText(child_Micropost.getContent()); // 消息内容
 			if (user_id.equals(child_Micropost.getSender_id())) {// 自己回复的帖子现实删除按钮
 				delete.setVisibility(View.VISIBLE);
 			}
@@ -452,19 +575,16 @@ public class HomepageMyselfActivity extends Activity implements OnHeaderRefreshL
 										String notice = array
 												.getString("notice");
 										if ("success".equals(status)) {
-
 											int a = Integer
 													.parseInt(list
 															.get(focus)
 															.getReply_microposts_count()) - 1;
+											huifu_count_list.get(focus)
+													.setText(a + "");
 											list.get(focus)
 													.setReply_microposts_count(
 															a + "");
-											btlist.get(focus).setText(
-													ExerciseBookParams.REPLY + "("
-															+ a + ")");
 											child_list.remove(item);
-
 											// ziAdapter_list.get(focus)
 											// .notifyDataSetChanged();
 											ExerciseBookTool
@@ -490,8 +610,9 @@ public class HomepageMyselfActivity extends Activity implements OnHeaderRefreshL
 								Map<String, String> map = new HashMap<String, String>();
 								map.put("reply_micropost_id",
 										child_Micropost.getId());
-								String child_delete_json = ExerciseBookTool.doPost(
-										Urlinterface.DELETE_REPLY_POSTS, map);
+								String child_delete_json = ExerciseBookTool
+										.doPost(Urlinterface.DELETE_REPLY_POSTS,
+												map);
 								Message msg = new Message();// 创建Message 对象
 								msg.what = 0;
 								msg.obj = child_delete_json;
@@ -502,7 +623,8 @@ public class HomepageMyselfActivity extends Activity implements OnHeaderRefreshL
 						}
 					};
 
-					Dialog dialog = new AlertDialog.Builder(HomepageMyselfActivity.this)
+					Dialog dialog = new AlertDialog.Builder(
+							HomepageMyselfActivity.this)
 							.setTitle("提示")
 							.setMessage("您确认要删除么?")
 							.setPositiveButton("确认",
@@ -537,18 +659,17 @@ public class HomepageMyselfActivity extends Activity implements OnHeaderRefreshL
 
 			reply.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
-					Reply_edit_list.get(focus).setHint(
-							user_name + " 回复  "
-									+ child_Micropost.getSender_name() + " :");
+					// Reply_edit_list.get(focus).setHint(
+					// user_name + " 回复  "
+					// + child_Micropost.getSender_name() + " :");
 					reciver_id = child_Micropost.getSender_id();
 					reciver_types = child_Micropost.getSender_types();
+					Toast.makeText(getApplicationContext(), "回复功能还没有实现", 0).show();
 				}
 			});
 			return child_view;
 		}
 	}
-
-
 
 	/*
 	 * 解析 我的 模块中的 主消息
@@ -666,93 +787,7 @@ public class HomepageMyselfActivity extends Activity implements OnHeaderRefreshL
 		int temp2 = timeStr.lastIndexOf("+");
 		String s = timeStr.substring(temp1 + 1, temp2);
 		int temp3 = s.lastIndexOf(":");
-		return timeStr.substring(0, temp1) + "  "
-				+ s.substring(0, temp3);
-	}
-
-	// 添加关注
-	public void add_concern(final int i, final Micropost mess) {
-		prodialog = new ProgressDialog(HomepageMyselfActivity.this);
-		if (guanzhu_list.get(i).getText().toString().equals("关注")) {
-			prodialog.setMessage("正在添加关注");
-		} else if (guanzhu_list.get(i).getText().toString().equals("已关注")) {
-			prodialog.setMessage("正在取消关注");
-		}
-		prodialog.setCanceledOnTouchOutside(false);
-		prodialog.show();
-		final Handler gzHandler = new Handler() {
-			public void handleMessage(android.os.Message msg) {
-				JSONObject jsonobject;
-				prodialog.dismiss();
-				switch (msg.what) {
-				case 0:
-					try {
-						jsonobject = new JSONObject(msg.obj.toString());
-						String status = jsonobject.getString("status");
-						String notic = jsonobject.getString("notice");
-						if (status.equals("success")) {
-							care.add(mess.getId().toString());
-							guanzhu_list.get(i).setText("已关注");
-						}
-						Toast.makeText(getApplicationContext(), notic,
-								Toast.LENGTH_SHORT).show();
-					} catch (JSONException e) {
-						e.printStackTrace();
-					}
-					break;
-				case 1:
-					try {
-						jsonobject = new JSONObject(msg.obj.toString());
-						String status = jsonobject.getString("status");
-						String notic = jsonobject.getString("notice");
-						if (status.equals("success")) {
-							care.remove(mess.getId().toString());
-							guanzhu_list.get(i).setText("关注");
-						}
-						Toast.makeText(getApplicationContext(), notic,
-								Toast.LENGTH_SHORT).show();
-					} catch (JSONException e) {
-						e.printStackTrace();
-					}
-					break;
-				default:
-					break;
-				}
-			}
-		};
-		Thread gzthread = new Thread() {
-			@SuppressWarnings({ "rawtypes", "unchecked" })
-			public void run() {
-				try {
-					HashMap<String, String> mp = new HashMap();
-					mp.put("user_id", String.valueOf(user_id));
-					mp.put("micropost_id", String.valueOf(mess.getId()));
-					String str = null;
-					Message msg = new Message();// 创建Message 对象
-					if (guanzhu_list.get(i).getText().toString().equals("关注")) {
-						str = ExerciseBookTool.sendGETRequest(
-								Urlinterface.add_concern, mp);
-						msg.what = 0;
-						msg.obj = str;
-					} else if (guanzhu_list.get(i).getText().toString()
-							.equals("已关注")) {
-						str = ExerciseBookTool.sendGETRequest(
-								Urlinterface.unfollow, mp);
-						msg.what = 1;
-						msg.obj = str;
-					}
-					gzHandler.sendMessage(msg);
-				} catch (Exception e) {
-					handler.sendEmptyMessage(7);
-				}
-			}
-		};
-		if (ExerciseBookTool.isConnect(HomepageMyselfActivity.this)) {
-			gzthread.start();
-		} else {
-			Toast.makeText(getApplicationContext(), ExerciseBookParams.INTERNET, 0)
-					.show();
-		}
+		return timeStr.substring(0, temp1) + "  " + s.substring(0, temp3);
 	}
 
 	/*
@@ -818,8 +853,8 @@ public class HomepageMyselfActivity extends Activity implements OnHeaderRefreshL
 
 			thread.start();
 		} else {
-			Toast.makeText(getApplicationContext(), ExerciseBookParams.INTERNET, 0)
-					.show();
+			Toast.makeText(getApplicationContext(),
+					ExerciseBookParams.INTERNET, 0).show();
 		}
 	}
 
@@ -859,15 +894,10 @@ public class HomepageMyselfActivity extends Activity implements OnHeaderRefreshL
 											list.get(focus)
 													.setReply_microposts_count(
 															a + "");
-											btlist.get(focus).setText(
-													ExerciseBookParams.REPLY + "("
-															+ a + ")");
-
 											listv.setAdapter(ziAdapter_list
 													.get(focus));
 											ExerciseBookTool
 													.setListViewHeightBasedOnChildren(listv);
-
 											break;
 										default:
 											break;
@@ -894,7 +924,8 @@ public class HomepageMyselfActivity extends Activity implements OnHeaderRefreshL
 										}
 									}
 								};
-								if (ExerciseBookTool.isConnect(HomepageMyselfActivity.this)) {
+								if (ExerciseBookTool
+										.isConnect(HomepageMyselfActivity.this)) {
 									prodialog = new ProgressDialog(
 											HomepageMyselfActivity.this);
 									prodialog.setMessage("正在回复...");
@@ -903,7 +934,8 @@ public class HomepageMyselfActivity extends Activity implements OnHeaderRefreshL
 									thread.start();
 								} else {
 									Toast.makeText(getApplicationContext(),
-											ExerciseBookParams.INTERNET, 0).show();
+											ExerciseBookParams.INTERNET, 0)
+											.show();
 								}
 							} else {
 								Toast.makeText(getApplicationContext(), notice,
@@ -964,10 +996,9 @@ public class HomepageMyselfActivity extends Activity implements OnHeaderRefreshL
 		}
 	}
 
-
 	// 回复隐藏变显示
 	public void setHuiFu(int i, final Micropost mess, RelativeLayout layout1,
-			EditText Reply_edit, final ListView listView2, final Button lookMore) {
+			final ListView listView2, final Button lookMore) {
 
 		final Handler mHandler = new Handler() {
 			public void handleMessage(android.os.Message msg) {
@@ -983,7 +1014,12 @@ public class HomepageMyselfActivity extends Activity implements OnHeaderRefreshL
 						lookMore.setVisibility(View.GONE);
 					}
 					listView2.setAdapter(ziAdapter_list.get(focus));
-					ExerciseBookTool.setListViewHeightBasedOnChildren(listView2);
+					reply_gk_list.clear();
+					for (int j = 0; j < child_list.size(); j++) {
+						reply_gk_list.add(true);
+					}
+					ExerciseBookTool
+							.setListViewHeightBasedOnChildren(listView2);
 					break;
 				default:
 					break;
@@ -1007,17 +1043,6 @@ public class HomepageMyselfActivity extends Activity implements OnHeaderRefreshL
 		};
 
 		if (gk_list.get(i) == true) {
-
-			// for (int j = 0; j < gk_list.size(); j++) {
-			// if (j == i) {
-			// item_huifu.get(i).setVisibility(View.VISIBLE);
-			// gk_list.set(i, false);
-			//
-			// }else {
-			// gk_list.set(j, true);
-			// item_huifu.get(j).setVisibility(View.GONE);
-			// }
-			// }
 			gk_list.set(i, false);
 
 			for (int j = 0; j < item_huifu.size(); j++) {
@@ -1036,8 +1061,9 @@ public class HomepageMyselfActivity extends Activity implements OnHeaderRefreshL
 			reciver_id = mess.getUser_id();
 			reciver_types = mess.getUser_types();
 			layout1.setVisibility(View.VISIBLE);
-			Reply_edit.setHint(user_name + " " + ExerciseBookParams.REPLY + " "
-					+ mess.getName() + ":");
+			// Reply_edit.setHint(user_name + " " + ExerciseBookParams.REPLY +
+			// " "
+			// + mess.getName() + ":");
 			listView2.setVisibility(View.VISIBLE);
 			prodialog = new ProgressDialog(HomepageMyselfActivity.this);
 			prodialog.setMessage("正在加载中");
@@ -1117,7 +1143,7 @@ public class HomepageMyselfActivity extends Activity implements OnHeaderRefreshL
 	}
 
 	/*
-	 *  "我的" 时,触发该方法
+	 * "我的" 时,触发该方法
 	 */
 	public void class_button_myself() {
 		prodialog = new ProgressDialog(HomepageMyselfActivity.this);
@@ -1128,7 +1154,6 @@ public class HomepageMyselfActivity extends Activity implements OnHeaderRefreshL
 		page = 1;
 		list = new ArrayList<Micropost>();
 		json = "";
-		
 
 		Thread thread = new Thread() {
 			public void run() {
@@ -1154,8 +1179,8 @@ public class HomepageMyselfActivity extends Activity implements OnHeaderRefreshL
 
 			thread.start();
 		} else {
-			Toast.makeText(getApplicationContext(), ExerciseBookParams.INTERNET, 0)
-					.show();
+			Toast.makeText(getApplicationContext(),
+					ExerciseBookParams.INTERNET, 0).show();
 		}
 	}
 
@@ -1166,21 +1191,21 @@ public class HomepageMyselfActivity extends Activity implements OnHeaderRefreshL
 
 		Thread thread = new Thread() {
 			public void run() {// 获得第一页信息
-				
-					Map<String, String> map = new HashMap<String, String>();
-					map.put("user_id", user_id);
-					map.put("school_class_id", school_class_id);
-					map.put("page", "1");
-					String result = "";
-					try {
-						result = ExerciseBookTool.sendGETRequest(
-								Urlinterface.MY_MICROPOSTS, map);
-						Message msg = new Message();// 创建Message 对象
-						msg.what = 2;
-						msg.obj = result;
-						handler.sendMessage(msg);
-					} catch (Exception e1) {
-						handler.sendEmptyMessage(7);	
+
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("user_id", user_id);
+				map.put("school_class_id", school_class_id);
+				map.put("page", "1");
+				String result = "";
+				try {
+					result = ExerciseBookTool.sendGETRequest(
+							Urlinterface.MY_MICROPOSTS, map);
+					Message msg = new Message();// 创建Message 对象
+					msg.what = 2;
+					msg.obj = result;
+					handler.sendMessage(msg);
+				} catch (Exception e1) {
+					handler.sendEmptyMessage(7);
 				}
 			}
 		};
@@ -1188,8 +1213,8 @@ public class HomepageMyselfActivity extends Activity implements OnHeaderRefreshL
 
 			thread.start();
 		} else {
-			Toast.makeText(getApplicationContext(), ExerciseBookParams.INTERNET, 0)
-					.show();
+			Toast.makeText(getApplicationContext(),
+					ExerciseBookParams.INTERNET, 0).show();
 		}
 	}
 
@@ -1199,12 +1224,79 @@ public class HomepageMyselfActivity extends Activity implements OnHeaderRefreshL
 	public void click_list() {
 		Linear_layout.removeAllViews();
 		Reply_edit_list.clear();
-		guanzhu_list.clear();
 		button_list.clear();
 		gk_list.clear();
-		btlist.clear();
 		ziAdapter_list.clear();
 		list_list.clear();
+		guanzhu_count_list.clear();
+		huifu_count_list.clear();
+		HorizontalScrollView_list.clear();
+		reply_gk_list.clear();
 	}
 
+	/**
+	 * 覆写此方法，以解决ListView滑动被屏蔽问题
+	 */
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent event) {
+		this.gd.onTouchEvent(event);
+		return super.dispatchTouchEvent(event);
+	}
+
+	/**
+	 * 覆写此方法，以使用手势识别
+	 */
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		Log.v("MY_TAG", "onTouchEvent");
+		return this.gd.onTouchEvent(event);
+	}
+
+	/**
+	 * 参数解释： e1：第1个ACTION_DOWN MotionEvent e2：最后一个ACTION_MOVE MotionEvent
+	 * vX：X轴上的移动速度，像素/秒 vY：Y轴上的移动速度，像素/秒 触发条件 ：
+	 * X坐标位移大于minX，Y坐标位移小于maxY，移动速度大于minV像素/秒
+	 * 
+	 */
+	@Override
+	public boolean onFling(MotionEvent e1, MotionEvent e2, float vX, float vY) {
+		final int minX = 120, maxY = 20, minV = 10;
+		int x1 = (int) e1.getX(), x2 = (int) e2.getX();
+		int y1 = (int) e1.getY(), y2 = (int) e2.getY();
+
+		if (Math.abs(x1 - x2) > minX && Math.abs(y1 - y2) < maxY
+				&& Math.abs(vX) > minV) {
+			if (x1 > x2) {
+				Log.v("MY_TAG", "Fling Left");
+				flingState = FLING_LEFT;
+			} else {
+				Log.v("MY_TAG", "Fling Right");
+				flingState = FLING_RIGHT;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public void onLongPress(MotionEvent e) {
+	}
+
+	@Override
+	public void onShowPress(MotionEvent e) {
+	}
+
+	@Override
+	public boolean onDown(MotionEvent e) {
+		return false;
+	}
+
+	@Override
+	public boolean onSingleTapUp(MotionEvent e) {
+		return false;
+	}
+
+	@Override
+	public boolean onScroll(MotionEvent e1, MotionEvent e2, float dX, float dY) {
+		return false;
+	}
 }

@@ -10,6 +10,14 @@ package com.comdosoft.ExerciseBook;
 public final class R {
     public static final class attr {
     }
+    public static final class color {
+        public static final int after_click=0x7f040004;
+        public static final int before_click=0x7f040003;
+        public static final int top_huise=0x7f040002;
+        public static final int top_qianlv=0x7f040000;
+        public static final int top_shenlv=0x7f040001;
+        public static final int white=0x7f040005;
+    }
     public static final class dimen {
         /**  Default screen margins, per the Android Design guidelines. 
 
@@ -17,25 +25,152 @@ public final class R {
          screen margins) for sw720dp devices (e.g. 10" tablets) in landscape here.
     
          */
-        public static final int activity_horizontal_margin=0x7f040000;
-        public static final int activity_vertical_margin=0x7f040001;
+        public static final int activity_horizontal_margin=0x7f050000;
+        public static final int activity_vertical_margin=0x7f050001;
     }
     public static final class drawable {
-        public static final int ic_launcher=0x7f020000;
+        public static final int aboutme_delete=0x7f020000;
+        public static final int after_care=0x7f020001;
+        public static final int all_1=0x7f020002;
+        public static final int all_2=0x7f020003;
+        public static final int an=0x7f020004;
+        public static final int an2=0x7f020005;
+        public static final int before_care=0x7f020006;
+        public static final int care_care=0x7f020007;
+        public static final int child_bj2=0x7f020008;
+        public static final int childjiantou=0x7f020009;
+        public static final int homepage_bot=0x7f02000a;
+        public static final int homepage_guanzhu=0x7f02000b;
+        public static final int homepage_guanzhu2=0x7f02000c;
+        public static final int homepage_huifu=0x7f02000d;
+        public static final int homepage_shanchu=0x7f02000e;
+        public static final int ic_launcher=0x7f02000f;
+        public static final int ic_pulltorefresh_arrow=0x7f020010;
+        public static final int ic_pulltorefresh_arrow_up=0x7f020011;
+        public static final int item_reply=0x7f020012;
+        public static final int logo=0x7f020013;
+        public static final int moren=0x7f020014;
+        public static final int myself_1=0x7f020015;
+        public static final int myself_2=0x7f020016;
+        public static final int no=0x7f020017;
+        public static final int sender_1=0x7f020018;
+        public static final int sender_2=0x7f020019;
+        public static final int userinfo_button=0x7f02001a;
     }
     public static final class id {
-        public static final int action_settings=0x7f080000;
+        public static final int aa=0x7f08001d;
+        public static final int all_bottom=0x7f080027;
+        public static final int child_jiantou=0x7f080003;
+        public static final int child_message=0x7f080005;
+        public static final int child_message_date=0x7f080008;
+        public static final int child_message_reciverName=0x7f080007;
+        public static final int child_message_senderName=0x7f080006;
+        public static final int child_micropost=0x7f08001c;
+        public static final int child_micropost_content=0x7f080009;
+        public static final int child_micropost_delete=0x7f08000b;
+        public static final int child_micropost_huifu=0x7f08000c;
+        public static final int child_user_face=0x7f080002;
+        public static final int child_user_left=0x7f080001;
+        public static final int congxiangce=0x7f080033;
+        public static final int guanzhu_button=0x7f080019;
+        public static final int guanzhu_count=0x7f080014;
+        public static final int guanzhu_item=0x7f080013;
+        public static final int hsv=0x7f08000d;
+        public static final int hsv2=0x7f080000;
+        public static final int huifu_button=0x7f08001b;
+        public static final int huifu_count=0x7f080016;
+        public static final int huifu_item=0x7f080015;
+        public static final int img_tab_now=0x7f080023;
+        public static final int layout=0x7f080020;
+        public static final int ll_action=0x7f080018;
+        public static final int ll_action2=0x7f08000a;
+        public static final int lookMore=0x7f08001e;
+        public static final int main_mid=0x7f080026;
+        public static final int main_pull_refresh_view=0x7f08001f;
+        public static final int main_top=0x7f080022;
+        public static final int mainweixin=0x7f080021;
+        public static final int message_content=0x7f080010;
+        public static final int message_senderName=0x7f080011;
+        public static final int micropost_content=0x7f080017;
+        public static final int micropost_date=0x7f080012;
+        public static final int myself_bottom=0x7f080028;
+        public static final int paizhaoshangchuan=0x7f080032;
+        public static final int pull_to_load_image=0x7f08002c;
+        public static final int pull_to_load_progress=0x7f08002b;
+        public static final int pull_to_load_text=0x7f08002d;
+        public static final int pull_to_refresh_header=0x7f08002a;
+        public static final int pull_to_refresh_image=0x7f08002f;
+        public static final int pull_to_refresh_progress=0x7f08002e;
+        public static final int pull_to_refresh_text=0x7f080030;
+        public static final int relativeLayout1=0x7f080004;
+        public static final int sender_bottom=0x7f080029;
+        public static final int set_photolayout=0x7f080031;
+        public static final int shanchu_button=0x7f08001a;
+        public static final int user_button=0x7f080025;
+        public static final int user_face=0x7f08000f;
+        public static final int user_left=0x7f08000e;
+        public static final int user_name=0x7f080024;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
-    }
-    public static final class menu {
-        public static final int main=0x7f070000;
+        public static final int child_micropost_item=0x7f030001;
+        public static final int class_layout=0x7f030002;
+        public static final int class_middle=0x7f030003;
+        public static final int homewrok_main=0x7f030004;
+        public static final int refresh_footer=0x7f030005;
+        public static final int refresh_header=0x7f030006;
+        public static final int settingphoto=0x7f030007;
     }
     public static final class string {
-        public static final int action_settings=0x7f050001;
-        public static final int app_name=0x7f050000;
-        public static final int hello_world=0x7f050002;
+        public static final int Net_null=0x7f060024;
+        public static final int SwitchClass_Et=0x7f06002d;
+        public static final int SwitchClass_Tv=0x7f06002c;
+        public static final int action_settings=0x7f060001;
+        public static final int app_name=0x7f060000;
+        public static final int banjiyanzhengma=0x7f060005;
+        public static final int changeClass=0x7f060027;
+        public static final int class_button_all=0x7f06000c;
+        public static final int class_button_myself=0x7f06000d;
+        public static final int class_fabiao=0x7f06000b;
+        public static final int class_fabiao_tishi=0x7f06000a;
+        public static final int delete=0x7f060011;
+        public static final int edit_null=0x7f060023;
+        public static final int exit_user=0x7f060028;
+        public static final int fromphotostore=0x7f060008;
+        public static final int guanzhu=0x7f060010;
+        public static final int hello_world=0x7f060002;
+        public static final int huifu=0x7f06000f;
+        public static final int lookmore=0x7f06000e;
+        public static final int main_class_classesTv=0x7f06002b;
+        public static final int main_class_oneTv1=0x7f060029;
+        public static final int main_class_oneTv2=0x7f06002a;
+        public static final int newwork_text=0x7f06001d;
+        public static final int nicheng=0x7f060003;
+        public static final int pull_to_refresh_footer_pull_label=0x7f060016;
+        public static final int pull_to_refresh_footer_refreshing_label=0x7f060017;
+        public static final int pull_to_refresh_footer_release_label=0x7f060015;
+        public static final int pull_to_refresh_pull_label=0x7f060012;
+        public static final int pull_to_refresh_refreshing_label=0x7f060014;
+        public static final int pull_to_refresh_release_label=0x7f060013;
+        public static final int queren=0x7f060006;
+        public static final int question_dictation_check=0x7f06001f;
+        public static final int question_dictation_content=0x7f060021;
+        public static final int question_dictation_mes=0x7f060020;
+        public static final int question_history_tishi=0x7f060022;
+        public static final int question_speak_exit=0x7f060018;
+        public static final int question_speak_next=0x7f06001b;
+        public static final int question_speak_over=0x7f06001a;
+        public static final int question_speak_start=0x7f060019;
+        public static final int question_speak_tishi=0x7f06001c;
+        public static final int question_speak_tishi_ok=0x7f06002f;
+        public static final int reg_fanhui=0x7f060009;
+        public static final int reg_info=0x7f060030;
+        public static final int saveUpdata=0x7f060026;
+        public static final int senderError=0x7f06002e;
+        public static final int setting_tishi=0x7f060025;
+        public static final int takephoto=0x7f060007;
+        public static final int work_content_text=0x7f06001e;
+        public static final int xingming=0x7f060004;
     }
     public static final class style {
         /** 
@@ -47,22 +182,11 @@ public final class R {
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
         
-
-        Base application theme for API 11+. This theme completely replaces
-        AppBaseTheme from res/values/styles.xml on API 11+ devices.
-    
- API 11 theme customizations can go here. 
-
-        Base application theme for API 14+. This theme completely replaces
-        AppBaseTheme from BOTH res/values/styles.xml and
-        res/values-v11/styles.xml on API 14+ devices.
-    
- API 14 theme customizations can go here. 
          */
-        public static final int AppBaseTheme=0x7f060000;
+        public static final int AppBaseTheme=0x7f070000;
         /**  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
          */
-        public static final int AppTheme=0x7f060001;
+        public static final int AppTheme=0x7f070001;
     }
 }

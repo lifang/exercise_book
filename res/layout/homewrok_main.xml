@@ -44,8 +44,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15px"
                 android:layout_marginTop="40.5px"
-                android:textSize="30px"
-                android:text="丁作强" />
+                android:text="丁作强"
+                android:textColor="@color/white"
+                android:textSize="30px" />
 
             <ImageButton
                 android:id="@+id/user_button"
@@ -54,8 +55,7 @@
                 android:layout_marginLeft="15px"
                 android:layout_marginRight="28.5px"
                 android:layout_marginTop="62.5px"
-                android:background="@drawable/userinfo_button"
-                />
+                android:background="@drawable/userinfo_button" />
         </LinearLayout>
     </RelativeLayout>
 
@@ -97,7 +97,7 @@
             android:id="@+id/all_bottom"
             android:layout_width="50px"
             android:layout_height="18px"
-            android:layout_marginLeft="264px"
+            android:layout_marginLeft="254px"
             android:clickable="true"
             android:src="@drawable/homepage_bot" />
 
@@ -105,7 +105,7 @@
             android:id="@+id/myself_bottom"
             android:layout_width="50px"
             android:layout_height="18px"
-            android:layout_marginLeft="580px"
+            android:layout_marginLeft="570px"
             android:clickable="true"
             android:src="@drawable/homepage_bot" />
 
@@ -113,7 +113,7 @@
             android:id="@+id/sender_bottom"
             android:layout_width="50px"
             android:layout_height="18px"
-            android:layout_marginLeft="894.74px"
+            android:layout_marginLeft="884.74px"
             android:clickable="true"
             android:src="@drawable/homepage_bot" />
     </RelativeLayout>
