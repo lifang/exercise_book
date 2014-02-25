@@ -103,6 +103,7 @@ public class HomePageSendMessage extends Activity implements Urlinterface{
 						String status = array1.getString("status");
 						String notice = array1.getString("notice");
 						if ("success".equals(status)) {
+							sendmesset.setText("");
 							HomePageMainActivity.instance.tabhost.setCurrentTab(0);
 						} else {
 							Toast.makeText(getApplicationContext(), notice,

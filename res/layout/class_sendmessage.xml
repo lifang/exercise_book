@@ -20,6 +20,7 @@
 	    android:id="@+id/sendmess_btn"
 	    android:layout_width="287px"
 	    android:layout_height="83px"
+	    android:textSize="30px" 
 	    android:text="发布"
 	     android:background="@drawable/sendmessbtn"
 	    />
