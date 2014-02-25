@@ -45,6 +45,11 @@
             android:name=".HomepageMyselfActivity"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity android:name=".HomeWorkIngActivity" >
+            
+        </activity>
+        <activity
+            android:name="com.comdosoft.ExerciseBook.HomePageSendMessage" 
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

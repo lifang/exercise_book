@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:background="@color/before_click"
+    android:orientation="vertical" >
+    
+	<EditText
+	    android:layout_marginTop="44px"
+	    android:id="@+id/sendmesset"
+	    android:layout_width="951px"
+	    android:layout_height="215px"
+	    android:gravity="top"
+	     android:background="@drawable/sendmesset"
+	     android:hint="@null"
+	    />
+	<Button
+	    android:layout_marginTop="27px"
+	    android:id="@+id/sendmess_btn"
+	    android:layout_width="287px"
+	    android:layout_height="83px"
+	    android:text="发布"
+	     android:background="@drawable/sendmessbtn"
+	    />
+</LinearLayout>
