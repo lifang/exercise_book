@@ -14,11 +14,12 @@ public class Micropost
 	private String avatar_url; //创建者头像
 	private String  created_at;//创建时间
 	private String reply_microposts_count;
+	private String careCount; //  关注数
 
 	public Micropost(){}
 
 	public Micropost(String id, String user_id, String user_types, String name,
-			 String content, String avatar_url, String created_at,String reply_microposts_count) {
+			 String content, String avatar_url, String created_at,String reply_microposts_count,String careCount) {
 		super();
 		this.id = id;
 		this.user_id = user_id;
@@ -29,9 +30,18 @@ public class Micropost
 		this.avatar_url = avatar_url;
 		this.created_at = created_at;
 		this.reply_microposts_count= reply_microposts_count;
+		this.careCount= careCount;
 	}
 
 	
+	public String getCareCount() {
+		return careCount;
+	}
+
+	public void setCareCount(String careCount) {
+		this.careCount = careCount;
+	}
+
 	public String getReply_microposts_count() {
 		return reply_microposts_count;
 	}

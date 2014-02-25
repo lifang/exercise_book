@@ -55,9 +55,9 @@ public class HomepageMyselfActivity extends Activity implements
 		OnHeaderRefreshListener, OnFooterRefreshListener, Urlinterface,
 		OnGestureListener {
 	private ExerciseBook exerciseBook;
-	private String user_id = "10"; // 学生 id 上面 会传过来的 学生student_id，
-	private String id = "2";
-	private String school_class_id = "14";
+	private String user_id = "11"; // 学生 id 上面 会传过来的 学生student_id，
+	private String id = "3";
+	private String school_class_id = "9";
 	private ProgressDialog prodialog;
 
 	// -------------------------------------------------------------------
@@ -277,7 +277,7 @@ public class HomepageMyselfActivity extends Activity implements
 		// }
 		// });
 
-		// guanzhu_count.setText(mess.getCareCount); // 关注数
+		 guanzhu_count.setText(mess.getCareCount()); // 关注数
 		huifu_count.setText(mess.getReply_microposts_count()); // 回复数
 
 		Log.i("linshi", IP + mess.getAvatar_url());
@@ -478,21 +478,21 @@ public class HomepageMyselfActivity extends Activity implements
 					case MotionEvent.ACTION_UP:
 						switch (flingState) {
 						case FLING_LEFT:
-							Toast.makeText(getApplicationContext(),
-									"回复----向左滑动", 0).show();
-							flingState = FLING_CLICK;
-							// return false;
-							break;
-						// 处理右滑事件
+//							Toast.makeText(getApplicationContext(),
+//									"回复----向左滑动", 0).show();
+//							flingState = FLING_CLICK;
+//							// return false;
+//							break;
+//						// 处理右滑事件
 						case FLING_RIGHT:
-							Toast.makeText(getApplicationContext(),
-									"回复----向右滑动", 0).show();
-							flingState = FLING_CLICK;
-
-							hSView2.smoothScrollTo(0, 0);
-							// return false;
-							break;
-						// 处理点击事件
+//							Toast.makeText(getApplicationContext(),
+//									"回复----向右滑动", 0).show();
+//							flingState = FLING_CLICK;
+//
+//							hSView2.smoothScrollTo(0, 0);
+//							// return false;
+//							break;
+//						// 处理点击事件
 						case FLING_CLICK:
 
 							// hSView2.smoothScrollTo(action2.getWidth(), 0);
@@ -585,6 +585,7 @@ public class HomepageMyselfActivity extends Activity implements
 													.setReply_microposts_count(
 															a + "");
 											child_list.remove(item);
+											reply_gk_list.remove(item);
 											// ziAdapter_list.get(focus)
 											// .notifyDataSetChanged();
 											ExerciseBookTool
@@ -718,11 +719,14 @@ public class HomepageMyselfActivity extends Activity implements
 				String content = o.getString("content");
 				String avatar_url = o.getString("avatar_url");
 				String created_at = o.getString("created_at");
+
+//				String careCount = o.getString("      ");   //  关注数
+				String careCount = "2";
 				String reply_microposts_count = o
 						.getString("reply_microposts_count");
 				Micropost micropost = new Micropost(micropost_id, user_id,
 						user_types, name, content, avatar_url, created_at,
-						reply_microposts_count);
+						reply_microposts_count,careCount);
 				list.add(micropost);
 			}
 		} catch (JSONException e) {
@@ -1097,7 +1101,12 @@ public class HomepageMyselfActivity extends Activity implements
 				switch (msg.what) {
 				case 0:
 					final String json6 = (String) msg.obj;
+					int a = child_list.size();
 					parseJson_childMicropost(json6);
+					
+					for (int j = a; j < child_list.size(); j++) {
+						reply_gk_list.add(true);
+					}
 					ziAdapter_list.get(focus).notifyDataSetChanged();
 					ExerciseBookTool.setListViewHeightBasedOnChildren(listview);
 					break;
