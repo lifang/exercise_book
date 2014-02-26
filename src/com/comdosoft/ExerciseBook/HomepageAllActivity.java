@@ -15,8 +15,12 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -30,11 +34,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -160,6 +162,7 @@ public class HomepageAllActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.class_middle);
 		exerciseBook = (ExerciseBook) getApplication();
+		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
 		gd = new GestureDetector(this);
 		SharedPreferences preferences = getSharedPreferences(SHARED,
@@ -182,22 +185,26 @@ public class HomepageAllActivity extends Activity implements
 		gk_list = new ArrayList<Boolean>();
 		HorizontalScrollView_list = new ArrayList<HorizontalScrollView>();
 		reply_gk_list = new ArrayList<Boolean>();
+
 	}
 
 	protected void onResume() {
 		super.onResume();
+		int refresh = exerciseBook.getRefresh();
+		if (refresh == 1) {
+			
+			if (ExerciseBookTool.isConnect(HomepageAllActivity.this)) {
+				prodialog = new ProgressDialog(HomepageAllActivity.this);
+				prodialog.setMessage(ExerciseBookParams.PD_CLASS_INFO);
+				prodialog.setCanceledOnTouchOutside(false);
+				prodialog.show();
+				Thread thread = new Thread(new get_class_info());
+				thread.start();
 
-		if (ExerciseBookTool.isConnect(HomepageAllActivity.this)) {
-			prodialog = new ProgressDialog(HomepageAllActivity.this);
-			prodialog.setMessage(ExerciseBookParams.PD_CLASS_INFO);
-			prodialog.setCanceledOnTouchOutside(false);
-			prodialog.show();
-			Thread thread = new Thread(new get_class_info());
-			thread.start();
-
-		} else {
-			Toast.makeText(getApplicationContext(),
-					ExerciseBookParams.INTERNET, 0).show();
+			} else {
+				Toast.makeText(getApplicationContext(),
+						ExerciseBookParams.INTERNET, 0).show();
+			}
 		}
 	}
 
@@ -271,15 +278,6 @@ public class HomepageAllActivity extends Activity implements
 			}
 		});
 
-		// Button Button_huifu = (Button) convertView
-		// .findViewById(R.id.Button_huifu); // 隐藏内容中的回复按钮
-		// button_list.add(Button_huifu);
-		// Button_huifu.setOnClickListener(new View.OnClickListener() {
-		// public void onClick(View v) {
-		// setButton_huifu(listView2, mess);
-		// }
-		// });
-
 		guanzhu_count.setText(mess.getCareCount()); // 关注数
 		huifu_count.setText(mess.getReply_microposts_count()); // 回复数
 
@@ -304,7 +302,16 @@ public class HomepageAllActivity extends Activity implements
 		// 回复
 		button3.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Toast.makeText(getApplicationContext(), "回复功能还没有实现", 0).show();
+				// Toast.makeText(getApplicationContext(), "回复功能还没有实现",
+				// 0).show();
+
+				reciver_id = mess.getUser_id();
+				reciver_types = mess.getUser_types();
+				Intent intentp = new Intent();
+				intentp.setClass(HomepageAllActivity.this,
+						com.comdosoft.ExerciseBook.tools.OpenInputMethod.class);//
+				startActivityForResult(intentp, 0);
+
 			}
 		});
 		/**
@@ -369,6 +376,7 @@ public class HomepageAllActivity extends Activity implements
 					case FLING_LEFT:
 					case FLING_RIGHT:
 					case FLING_CLICK:
+						micropost_id = mess.getId();//
 						focus = i;
 						if (gk_list.get(i) == true) {
 							hSView.smoothScrollTo(action.getWidth(), 0);
@@ -663,13 +671,17 @@ public class HomepageAllActivity extends Activity implements
 
 			reply.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
-					// Reply_edit_list.get(focus).setHint(
-					// user_name + " 回复  "
-					// + child_Micropost.getSender_name() + " :");
+
 					reciver_id = child_Micropost.getSender_id();
 					reciver_types = child_Micropost.getSender_types();
-					Toast.makeText(getApplicationContext(), "回复功能还没有实现", 0)
-							.show();
+					// Toast.makeText(getApplicationContext(), "回复功能还没有实现", 0)
+					// .show();
+					Intent intentp = new Intent();
+					intentp.setClass(
+							HomepageAllActivity.this,
+							com.comdosoft.ExerciseBook.tools.OpenInputMethod.class);//
+					startActivityForResult(intentp, 0);
+
 				}
 			});
 			return child_view;
@@ -1040,12 +1052,12 @@ public class HomepageAllActivity extends Activity implements
 	}
 
 	// 回复
-	public void setButton_huifu(final ListView listv, final Micropost mess) {
+	public void setButton_huifu(final String reply_edit) {
 		final Handler mHandler = new Handler() {
 			public void handleMessage(android.os.Message msg) {
 				switch (msg.what) {
 				case 0:
-					button_list.get(focus).setEnabled(true);
+					// button_list.get(focus).setEnabled(true);
 					final String json2 = (String) msg.obj;
 					if (json2.length() == 0) {
 					} else {
@@ -1067,8 +1079,14 @@ public class HomepageAllActivity extends Activity implements
 											final String json7 = (String) msg.obj;
 											child_list = new ArrayList<Child_Micropost>();
 											parseJson_childMicropost(json7);
+											reply_gk_list.clear();
+											for (int j = 0; j < child_list
+													.size(); j++) {
+												reply_gk_list.add(true);
+											}
 											int a = Integer
-													.parseInt(mess
+													.parseInt(list
+															.get(focus)
 															.getReply_microposts_count()) + 1;
 
 											list.get(focus)
@@ -1076,10 +1094,12 @@ public class HomepageAllActivity extends Activity implements
 															a + "");
 											huifu_count_list.get(focus)
 													.setText(a + "");
-											listv.setAdapter(ziAdapter_list
-													.get(focus));
+											list_list.get(focus).setAdapter(
+													ziAdapter_list.get(focus));
 											ExerciseBookTool
-													.setListViewHeightBasedOnChildren(listv);
+													.setListViewHeightBasedOnChildren(list_list
+															.get(focus));
+											exerciseBook.setRefresh(1);
 											break;
 										default:
 											break;
@@ -1108,11 +1128,7 @@ public class HomepageAllActivity extends Activity implements
 								};
 								if (ExerciseBookTool
 										.isConnect(HomepageAllActivity.this)) {
-									prodialog = new ProgressDialog(
-											HomepageAllActivity.this);
-									prodialog.setMessage("正在回复...");
-									prodialog.setCanceledOnTouchOutside(false);
-									prodialog.show();
+
 									thread.start();
 								} else {
 									Toast.makeText(getApplicationContext(),
@@ -1134,14 +1150,12 @@ public class HomepageAllActivity extends Activity implements
 			}
 		};
 
-		// String reply_edit = Reply_edit.getText().toString();
-		final String reply_edit = "dgd";
 		String kongge = reply_edit.replaceAll(" ", "");
 		if (reply_edit.length() == 0 || kongge.equals("")) {
 			Toast.makeText(getApplicationContext(), R.string.edit_null,
 					Toast.LENGTH_SHORT).show();
 		} else {
-			button_list.get(focus).setEnabled(false);
+			// button_list.get(focus).setEnabled(false);
 			Thread thread = new Thread() {
 				public void run() {
 					try {
@@ -1171,6 +1185,10 @@ public class HomepageAllActivity extends Activity implements
 				}
 			};
 			if (ExerciseBookTool.isConnect(HomepageAllActivity.this)) {
+				prodialog = new ProgressDialog(HomepageAllActivity.this);
+				prodialog.setMessage("正在回复...");
+				prodialog.setCanceledOnTouchOutside(false);
+				prodialog.show();
 				thread.start();
 			} else {
 				Toast.makeText(getApplicationContext(),
@@ -1240,9 +1258,7 @@ public class HomepageAllActivity extends Activity implements
 			}
 
 			focus = i;
-			micropost_id = mess.getId();// 点击 回复 默认 给主消息回复 记录 主消息 id
-			reciver_id = mess.getUser_id();
-			reciver_types = mess.getUser_types();
+
 			layout1.setVisibility(View.VISIBLE);
 			// Reply_edit.setHint(user_name + " " + ExerciseBookParams.REPLY +
 			// " "
@@ -1447,23 +1463,44 @@ public class HomepageAllActivity extends Activity implements
 		}
 		return false;
 	}
+
 	@Override
 	public void onLongPress(MotionEvent e) {
 	}
+
 	@Override
 	public void onShowPress(MotionEvent e) {
 	}
+
 	@Override
 	public boolean onDown(MotionEvent e) {
 		return false;
 	}
+
 	@Override
 	public boolean onSingleTapUp(MotionEvent e) {
 		return false;
 	}
+
 	@Override
 	public boolean onScroll(MotionEvent e1, MotionEvent e2, float dX, float dY) {
 		return false;
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+		switch (resultCode) {
+		case 5:
+			Bundle bundle = data.getExtras();
+			String content = bundle.getString("content");
+			setButton_huifu(content);
+			break;
+		default:
+			break;
+		}
+		super.onActivityResult(requestCode, resultCode, data);
+
 	}
 
 }

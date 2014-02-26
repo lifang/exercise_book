@@ -21,11 +21,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
 public class HomePageSendMessage extends Activity implements Urlinterface{
 	private ProgressDialog prodialog;
+	private ExerciseBook exerciseBook;
 	private EditText sendmesset;
 	private Button sendmess_btn;
 	private String user_id = "11"; 
@@ -40,7 +42,7 @@ public class HomePageSendMessage extends Activity implements Urlinterface{
 		// user_id = preferences.getString("user_id", null);
 		// id = preferences.getString("id", null);
 		// school_class_id = preferences.getString("school_class_id", null);
-
+		exerciseBook = (ExerciseBook) getApplication();
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		sendmess_btn=(Button) findViewById(R.id.sendmess_btn);
 		sendmesset=(EditText) findViewById(R.id.sendmesset);
@@ -104,6 +106,7 @@ public class HomePageSendMessage extends Activity implements Urlinterface{
 						String notice = array1.getString("notice");
 						if ("success".equals(status)) {
 							sendmesset.setText("");
+							exerciseBook.setRefresh(1);
 							HomePageMainActivity.instance.tabhost.setCurrentTab(0);
 						} else {
 							Toast.makeText(getApplicationContext(), notice,

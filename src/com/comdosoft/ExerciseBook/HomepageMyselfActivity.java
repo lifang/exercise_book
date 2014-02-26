@@ -15,6 +15,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,6 +30,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -177,11 +179,16 @@ public class HomepageMyselfActivity extends Activity implements
 		list_list = new ArrayList<ListView>();
 		gk_list = new ArrayList<Boolean>();
 		reply_gk_list = new ArrayList<Boolean>();
-
+		
+		
+		
 	}
 
 	protected void onResume() {
 		super.onResume();
+		int refresh = exerciseBook.getRefresh();
+		if (refresh == 1) {
+			
 
 		if (ExerciseBookTool.isConnect(HomepageMyselfActivity.this)) {
 			class_button_myself();
@@ -189,6 +196,7 @@ public class HomepageMyselfActivity extends Activity implements
 		} else {
 			Toast.makeText(getApplicationContext(),
 					ExerciseBookParams.INTERNET, 0).show();
+		}
 		}
 	}
 
@@ -268,16 +276,7 @@ public class HomepageMyselfActivity extends Activity implements
 			}
 		});
 
-		// Button Button_huifu = (Button) convertView
-		// .findViewById(R.id.Button_huifu); // 隐藏内容中的回复按钮
-		// button_list.add(Button_huifu);
-		// Button_huifu.setOnClickListener(new View.OnClickListener() {
-		// public void onClick(View v) {
-		// setButton_huifu(listView2, mess);
-		// }
-		// });
-
-		 guanzhu_count.setText(mess.getCareCount()); // 关注数
+		guanzhu_count.setText(mess.getCareCount()); // 关注数
 		huifu_count.setText(mess.getReply_microposts_count()); // 回复数
 
 		Log.i("linshi", IP + mess.getAvatar_url());
@@ -297,7 +296,13 @@ public class HomepageMyselfActivity extends Activity implements
 		// 回复
 		button3.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Toast.makeText(getApplicationContext(), "回复功能还没有实现", 0).show();
+//				micropost_id = mess.getId();//
+				reciver_id = mess.getUser_id();
+				reciver_types = mess.getUser_types();
+				Intent intentp = new Intent();
+				intentp.setClass(HomepageMyselfActivity.this,
+						com.comdosoft.ExerciseBook.tools.OpenInputMethod.class);//
+				startActivityForResult(intentp, 0);
 			}
 		});
 
@@ -355,6 +360,7 @@ public class HomepageMyselfActivity extends Activity implements
 					case FLING_RIGHT:
 					case FLING_CLICK:
 						focus = i;
+						micropost_id = mess.getId();// 
 						if (gk_list.get(i) == true) {
 							hSView.smoothScrollTo(action.getWidth(), 0);
 							for (int j = 0; j < gk_list.size(); j++) {
@@ -478,27 +484,27 @@ public class HomepageMyselfActivity extends Activity implements
 					case MotionEvent.ACTION_UP:
 						switch (flingState) {
 						case FLING_LEFT:
-//							Toast.makeText(getApplicationContext(),
-//									"回复----向左滑动", 0).show();
-//							flingState = FLING_CLICK;
-//							// return false;
-//							break;
-//						// 处理右滑事件
+							// Toast.makeText(getApplicationContext(),
+							// "回复----向左滑动", 0).show();
+							// flingState = FLING_CLICK;
+							// // return false;
+							// break;
+							// // 处理右滑事件
 						case FLING_RIGHT:
-//							Toast.makeText(getApplicationContext(),
-//									"回复----向右滑动", 0).show();
-//							flingState = FLING_CLICK;
-//
-//							hSView2.smoothScrollTo(0, 0);
-//							// return false;
-//							break;
-//						// 处理点击事件
+							// Toast.makeText(getApplicationContext(),
+							// "回复----向右滑动", 0).show();
+							// flingState = FLING_CLICK;
+							//
+							// hSView2.smoothScrollTo(0, 0);
+							// // return false;
+							// break;
+							// // 处理点击事件
 						case FLING_CLICK:
 
 							// hSView2.smoothScrollTo(action2.getWidth(), 0);
-							Toast.makeText(getApplicationContext(),
-									"Click Item:" + position2,
-									Toast.LENGTH_SHORT).show();
+//							Toast.makeText(getApplicationContext(),
+//									"Click Item:" + position2,
+//									Toast.LENGTH_SHORT).show();
 
 							if (reply_gk_list.get(position2) == true) {
 
@@ -660,12 +666,15 @@ public class HomepageMyselfActivity extends Activity implements
 
 			reply.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
-					// Reply_edit_list.get(focus).setHint(
-					// user_name + " 回复  "
-					// + child_Micropost.getSender_name() + " :");
 					reciver_id = child_Micropost.getSender_id();
 					reciver_types = child_Micropost.getSender_types();
-					Toast.makeText(getApplicationContext(), "回复功能还没有实现", 0).show();
+					// Toast.makeText(getApplicationContext(), "回复功能还没有实现", 0)
+					// .show();
+					Intent intentp = new Intent();
+					intentp.setClass(
+							HomepageMyselfActivity.this,
+							com.comdosoft.ExerciseBook.tools.OpenInputMethod.class);//
+					startActivityForResult(intentp, 0);
 				}
 			});
 			return child_view;
@@ -720,13 +729,13 @@ public class HomepageMyselfActivity extends Activity implements
 				String avatar_url = o.getString("avatar_url");
 				String created_at = o.getString("created_at");
 
-//				String careCount = o.getString("      ");   //  关注数
+				// String careCount = o.getString("      "); // 关注数
 				String careCount = "2";
 				String reply_microposts_count = o
 						.getString("reply_microposts_count");
 				Micropost micropost = new Micropost(micropost_id, user_id,
 						user_types, name, content, avatar_url, created_at,
-						reply_microposts_count,careCount);
+						reply_microposts_count, careCount);
 				list.add(micropost);
 			}
 		} catch (JSONException e) {
@@ -863,13 +872,12 @@ public class HomepageMyselfActivity extends Activity implements
 	}
 
 	// 回复
-	public void setButton_huifu(final ListView listv, final Micropost mess,
-			final EditText Reply_edit) {
+	public void setButton_huifu(final String reply_edit) {
 		final Handler mHandler = new Handler() {
 			public void handleMessage(android.os.Message msg) {
 				switch (msg.what) {
 				case 0:
-					button_list.get(focus).setEnabled(true);
+					// button_list.get(focus).setEnabled(true);
 					final String json2 = (String) msg.obj;
 					if (json2.length() == 0) {
 					} else {
@@ -879,7 +887,7 @@ public class HomepageMyselfActivity extends Activity implements
 							String status = array2.getString("status");
 							String notice = array2.getString("notice");
 							if ("success".equals(status)) {
-								Reply_edit.setText("");
+								// Reply_edit.setText("");
 								Toast.makeText(getApplicationContext(), notice,
 										Toast.LENGTH_SHORT).show();
 								final Handler mHandler = new Handler() {
@@ -891,17 +899,27 @@ public class HomepageMyselfActivity extends Activity implements
 											final String json7 = (String) msg.obj;
 											child_list = new ArrayList<Child_Micropost>();
 											parseJson_childMicropost(json7);
+											reply_gk_list.clear();
+											for (int j = 0; j < child_list
+													.size(); j++) {
+												reply_gk_list.add(true);
+											}
 											int a = Integer
-													.parseInt(mess
+													.parseInt(list
+															.get(focus)
 															.getReply_microposts_count()) + 1;
 
 											list.get(focus)
 													.setReply_microposts_count(
 															a + "");
-											listv.setAdapter(ziAdapter_list
-													.get(focus));
+											huifu_count_list.get(focus)
+													.setText(a + "");
+											list_list.get(focus).setAdapter(
+													ziAdapter_list.get(focus));
 											ExerciseBookTool
-													.setListViewHeightBasedOnChildren(listv);
+													.setListViewHeightBasedOnChildren(list_list
+															.get(focus));
+											exerciseBook.setRefresh(1);
 											break;
 										default:
 											break;
@@ -930,11 +948,7 @@ public class HomepageMyselfActivity extends Activity implements
 								};
 								if (ExerciseBookTool
 										.isConnect(HomepageMyselfActivity.this)) {
-									prodialog = new ProgressDialog(
-											HomepageMyselfActivity.this);
-									prodialog.setMessage("正在回复...");
-									prodialog.setCanceledOnTouchOutside(false);
-									prodialog.show();
+
 									thread.start();
 								} else {
 									Toast.makeText(getApplicationContext(),
@@ -956,17 +970,16 @@ public class HomepageMyselfActivity extends Activity implements
 			}
 		};
 
-		String reply_edit = Reply_edit.getText().toString();
 		String kongge = reply_edit.replaceAll(" ", "");
 		if (reply_edit.length() == 0 || kongge.equals("")) {
 			Toast.makeText(getApplicationContext(), R.string.edit_null,
 					Toast.LENGTH_SHORT).show();
 		} else {
-			button_list.get(focus).setEnabled(false);
+			// button_list.get(focus).setEnabled(false);
 			Thread thread = new Thread() {
 				public void run() {
 					try {
-						String reply_edit = Reply_edit.getText().toString();
+						// String reply_edit = Reply_edit.getText().toString();
 						Map<String, String> map = new HashMap<String, String>();
 						map.put("content", reply_edit);
 						map.put("sender_id", user_id);
@@ -992,6 +1005,10 @@ public class HomepageMyselfActivity extends Activity implements
 				}
 			};
 			if (ExerciseBookTool.isConnect(HomepageMyselfActivity.this)) {
+				prodialog = new ProgressDialog(HomepageMyselfActivity.this);
+				prodialog.setMessage("正在回复...");
+				prodialog.setCanceledOnTouchOutside(false);
+				prodialog.show();
 				thread.start();
 			} else {
 				Toast.makeText(getApplicationContext(),
@@ -1103,7 +1120,7 @@ public class HomepageMyselfActivity extends Activity implements
 					final String json6 = (String) msg.obj;
 					int a = child_list.size();
 					parseJson_childMicropost(json6);
-					
+
 					for (int j = a; j < child_list.size(); j++) {
 						reply_gk_list.add(true);
 					}
@@ -1307,5 +1324,21 @@ public class HomepageMyselfActivity extends Activity implements
 	@Override
 	public boolean onScroll(MotionEvent e1, MotionEvent e2, float dX, float dY) {
 		return false;
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+		switch (resultCode) {
+		case 5:
+			Bundle bundle = data.getExtras();
+			String content = bundle.getString("content");
+			setButton_huifu(content);
+			break;
+		default:
+			break;
+		}
+		super.onActivityResult(requestCode, resultCode, data);
+
 	}
 }

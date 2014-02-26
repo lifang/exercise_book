@@ -43,18 +43,18 @@
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".HomepageAllActivity"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+            android:windowSoftInputMode="adjustPan" >
         </activity>
         <activity
             android:name=".HomepageMyselfActivity"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+            android:windowSoftInputMode="stateUnchanged" />
         <activity android:name=".HomeWorkIngActivity" >
-            
+        </activity>
+        <activity android:name="com.comdosoft.ExerciseBook.HomePageSendMessage" >
         </activity>
         <activity
-            android:name="com.comdosoft.ExerciseBook.HomePageSendMessage" 
-            >
- 
+            android:name="com.comdosoft.ExerciseBook.tools.OpenInputMethod"
+            android:theme="@android:style/Theme.Translucent" >
         </activity>
     </application>
 

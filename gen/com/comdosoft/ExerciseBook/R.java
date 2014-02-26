@@ -83,7 +83,8 @@ public final class R {
         public static final int child_micropost_huifu=0x7f08000c;
         public static final int child_user_face=0x7f080002;
         public static final int child_user_left=0x7f080001;
-        public static final int congxiangce=0x7f08003a;
+        public static final int congxiangce=0x7f08003d;
+        public static final int edittext=0x7f080030;
         public static final int end_time=0x7f080029;
         public static final int gridview=0x7f08002a;
         public static final int guanzhu_button=0x7f080019;
@@ -95,7 +96,7 @@ public final class R {
         public static final int huifu_button=0x7f08001b;
         public static final int huifu_count=0x7f080016;
         public static final int huifu_item=0x7f080015;
-        public static final int image=0x7f080030;
+        public static final int image=0x7f080033;
         public static final int img_tab_now=0x7f080024;
         public static final int layout=0x7f080020;
         public static final int ll_action=0x7f080018;
@@ -110,21 +111,23 @@ public final class R {
         public static final int micropost_content=0x7f080017;
         public static final int micropost_date=0x7f080012;
         public static final int myself_bottom=0x7f08002e;
-        public static final int paizhaoshangchuan=0x7f080039;
-        public static final int pull_to_load_image=0x7f080033;
-        public static final int pull_to_load_progress=0x7f080032;
-        public static final int pull_to_load_text=0x7f080034;
-        public static final int pull_to_refresh_header=0x7f080031;
-        public static final int pull_to_refresh_image=0x7f080036;
-        public static final int pull_to_refresh_progress=0x7f080035;
-        public static final int pull_to_refresh_text=0x7f080037;
+        public static final int paizhaoshangchuan=0x7f08003c;
+        public static final int pull_to_load_image=0x7f080036;
+        public static final int pull_to_load_progress=0x7f080035;
+        public static final int pull_to_load_text=0x7f080037;
+        public static final int pull_to_refresh_header=0x7f080034;
+        public static final int pull_to_refresh_image=0x7f080039;
+        public static final int pull_to_refresh_progress=0x7f080038;
+        public static final int pull_to_refresh_text=0x7f08003a;
+        public static final int queding=0x7f080032;
         public static final int relativeLayout1=0x7f080004;
         public static final int sender_bottom=0x7f08002f;
         public static final int sendmess_btn=0x7f080022;
         public static final int sendmesset=0x7f080021;
-        public static final int set_photolayout=0x7f080038;
+        public static final int set_photolayout=0x7f08003b;
         public static final int shanchu_button=0x7f08001a;
         public static final int start_time=0x7f080028;
+        public static final int tv_num=0x7f080031;
         public static final int user_button=0x7f080026;
         public static final int user_face=0x7f08000f;
         public static final int user_left=0x7f08000e;
@@ -139,10 +142,11 @@ public final class R {
         public static final int exercise_top=0x7f030005;
         public static final int homework_ing=0x7f030006;
         public static final int homewrok_main=0x7f030007;
-        public static final int item_grid_image=0x7f030008;
-        public static final int refresh_footer=0x7f030009;
-        public static final int refresh_header=0x7f03000a;
-        public static final int settingphoto=0x7f03000b;
+        public static final int inputmethod=0x7f030008;
+        public static final int item_grid_image=0x7f030009;
+        public static final int refresh_footer=0x7f03000a;
+        public static final int refresh_header=0x7f03000b;
+        public static final int settingphoto=0x7f03000c;
     }
     public static final class string {
         public static final int Net_null=0x7f060024;
@@ -189,6 +193,7 @@ public final class R {
         public static final int reg_fanhui=0x7f060009;
         public static final int reg_info=0x7f060030;
         public static final int saveUpdata=0x7f060026;
+        public static final int sender=0x7f060031;
         public static final int senderError=0x7f06002e;
         public static final int setting_tishi=0x7f060025;
         public static final int takephoto=0x7f060007;
