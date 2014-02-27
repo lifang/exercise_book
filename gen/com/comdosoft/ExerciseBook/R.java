@@ -74,7 +74,6 @@ public final class R {
         public static final int work_08=0x7f020028;
     }
     public static final class id {
-<<<<<<< HEAD
         public static final int aa=0x7f080023;
         public static final int all_bottom=0x7f08002f;
         public static final int child_jiantou=0x7f08000a;
@@ -88,7 +87,8 @@ public final class R {
         public static final int child_micropost_huifu=0x7f080013;
         public static final int child_user_face=0x7f080009;
         public static final int child_user_left=0x7f080008;
-        public static final int congxiangce=0x7f08003c;
+        public static final int congxiangce=0x7f08003f;
+        public static final int edittext=0x7f080032;
         public static final int end_time=0x7f08002b;
         public static final int gridview=0x7f08002c;
         public static final int guanzhu_button=0x7f08001f;
@@ -100,7 +100,7 @@ public final class R {
         public static final int huifu_button=0x7f080021;
         public static final int huifu_count=0x7f08001c;
         public static final int huifu_item=0x7f08001b;
-        public static final int image=0x7f080032;
+        public static final int image=0x7f080035;
         public static final int img_tab_now=0x7f080001;
         public static final int layout=0x7f080026;
         public static final int ll_action=0x7f08001e;
@@ -114,25 +114,27 @@ public final class R {
         public static final int message_senderName=0x7f080017;
         public static final int micropost_content=0x7f08001d;
         public static final int micropost_date=0x7f080018;
-        public static final int middle_layout=0x7f08003d;
+        public static final int middle_layout=0x7f080040;
         public static final int myself_bottom=0x7f080030;
-        public static final int paizhaoshangchuan=0x7f08003b;
-        public static final int pull_to_load_image=0x7f080035;
-        public static final int pull_to_load_progress=0x7f080034;
-        public static final int pull_to_load_text=0x7f080036;
-        public static final int pull_to_refresh_header=0x7f080033;
-        public static final int pull_to_refresh_image=0x7f080038;
-        public static final int pull_to_refresh_progress=0x7f080037;
-        public static final int pull_to_refresh_text=0x7f080039;
+        public static final int paizhaoshangchuan=0x7f08003e;
+        public static final int pull_to_load_image=0x7f080038;
+        public static final int pull_to_load_progress=0x7f080037;
+        public static final int pull_to_load_text=0x7f080039;
+        public static final int pull_to_refresh_header=0x7f080036;
+        public static final int pull_to_refresh_image=0x7f08003b;
+        public static final int pull_to_refresh_progress=0x7f08003a;
+        public static final int pull_to_refresh_text=0x7f08003c;
+        public static final int queding=0x7f080034;
         public static final int relativeLayout1=0x7f08000b;
         public static final int sender_bottom=0x7f080031;
         public static final int sendmess_btn=0x7f080028;
         public static final int sendmesset=0x7f080027;
-        public static final int set_photolayout=0x7f08003a;
+        public static final int set_photolayout=0x7f08003d;
         public static final int shanchu_button=0x7f080020;
         public static final int start_time=0x7f08002a;
         public static final int tabfl=0x7f080006;
         public static final int tall=0x7f080005;
+        public static final int tv_num=0x7f080033;
         public static final int user_button=0x7f080004;
         public static final int user_face=0x7f080002;
         public static final int user_left=0x7f080015;
@@ -148,89 +150,12 @@ public final class R {
         public static final int exercise_top=0x7f030006;
         public static final int homework_ing=0x7f030007;
         public static final int homewrok_main=0x7f030008;
-=======
-        public static final int aa=0x7f08001d;
-        public static final int all_bottom=0x7f08002d;
-        public static final int child_jiantou=0x7f080003;
-        public static final int child_message=0x7f080005;
-        public static final int child_message_date=0x7f080008;
-        public static final int child_message_reciverName=0x7f080007;
-        public static final int child_message_senderName=0x7f080006;
-        public static final int child_micropost=0x7f08001c;
-        public static final int child_micropost_content=0x7f080009;
-        public static final int child_micropost_delete=0x7f08000b;
-        public static final int child_micropost_huifu=0x7f08000c;
-        public static final int child_user_face=0x7f080002;
-        public static final int child_user_left=0x7f080001;
-        public static final int congxiangce=0x7f08003d;
-        public static final int edittext=0x7f080030;
-        public static final int end_time=0x7f080029;
-        public static final int gridview=0x7f08002a;
-        public static final int guanzhu_button=0x7f080019;
-        public static final int guanzhu_count=0x7f080014;
-        public static final int guanzhu_item=0x7f080013;
-        public static final int homework_ing=0x7f080027;
-        public static final int hsv=0x7f08000d;
-        public static final int hsv2=0x7f080000;
-        public static final int huifu_button=0x7f08001b;
-        public static final int huifu_count=0x7f080016;
-        public static final int huifu_item=0x7f080015;
-        public static final int image=0x7f080033;
-        public static final int img_tab_now=0x7f080024;
-        public static final int layout=0x7f080020;
-        public static final int ll_action=0x7f080018;
-        public static final int ll_action2=0x7f08000a;
-        public static final int lookMore=0x7f08001e;
-        public static final int main_mid=0x7f08002c;
-        public static final int main_pull_refresh_view=0x7f08001f;
-        public static final int main_top=0x7f080023;
-        public static final int mainweixin=0x7f08002b;
-        public static final int message_content=0x7f080010;
-        public static final int message_senderName=0x7f080011;
-        public static final int micropost_content=0x7f080017;
-        public static final int micropost_date=0x7f080012;
-        public static final int myself_bottom=0x7f08002e;
-        public static final int paizhaoshangchuan=0x7f08003c;
-        public static final int pull_to_load_image=0x7f080036;
-        public static final int pull_to_load_progress=0x7f080035;
-        public static final int pull_to_load_text=0x7f080037;
-        public static final int pull_to_refresh_header=0x7f080034;
-        public static final int pull_to_refresh_image=0x7f080039;
-        public static final int pull_to_refresh_progress=0x7f080038;
-        public static final int pull_to_refresh_text=0x7f08003a;
-        public static final int queding=0x7f080032;
-        public static final int relativeLayout1=0x7f080004;
-        public static final int sender_bottom=0x7f08002f;
-        public static final int sendmess_btn=0x7f080022;
-        public static final int sendmesset=0x7f080021;
-        public static final int set_photolayout=0x7f08003b;
-        public static final int shanchu_button=0x7f08001a;
-        public static final int start_time=0x7f080028;
-        public static final int tv_num=0x7f080031;
-        public static final int user_button=0x7f080026;
-        public static final int user_face=0x7f08000f;
-        public static final int user_left=0x7f08000e;
-        public static final int user_name=0x7f080025;
-    }
-    public static final class layout {
-        public static final int activity_main=0x7f030000;
-        public static final int child_micropost_item=0x7f030001;
-        public static final int class_layout=0x7f030002;
-        public static final int class_middle=0x7f030003;
-        public static final int class_sendmessage=0x7f030004;
-        public static final int exercise_top=0x7f030005;
-        public static final int homework_ing=0x7f030006;
-        public static final int homewrok_main=0x7f030007;
-        public static final int inputmethod=0x7f030008;
->>>>>>> a1bf5a7ab55cc80533397aed548b6fe555b54717
-        public static final int item_grid_image=0x7f030009;
-        public static final int refresh_footer=0x7f03000a;
-        public static final int refresh_header=0x7f03000b;
-        public static final int settingphoto=0x7f03000c;
-<<<<<<< HEAD
-        public static final int table=0x7f03000d;
-=======
->>>>>>> a1bf5a7ab55cc80533397aed548b6fe555b54717
+        public static final int inputmethod=0x7f030009;
+        public static final int item_grid_image=0x7f03000a;
+        public static final int refresh_footer=0x7f03000b;
+        public static final int refresh_header=0x7f03000c;
+        public static final int settingphoto=0x7f03000d;
+        public static final int table=0x7f03000e;
     }
     public static final class string {
         public static final int Net_null=0x7f060024;

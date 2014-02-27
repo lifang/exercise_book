@@ -60,9 +60,12 @@ public class HomepageAllActivity extends Activity implements
 		OnHeaderRefreshListener, OnFooterRefreshListener, Urlinterface,
 		OnGestureListener {
 	private ExerciseBook exerciseBook;
-	private String user_id = "11"; // 学生 id 上面 会传过来的 学生student_id，
-	private String id = "3";
-	private String school_class_id = "9";
+//	private String user_id = "11"; // 学生 id 上面 会传过来的 学生student_id，
+//	private String id = "3";
+//	private String school_class_id = "9";
+	private String user_id = "24"; // 学生 id 上面 会传过来的 学生student_id，
+	private String id = "5";
+	private String school_class_id = "15";
 	private ProgressDialog prodialog;
 
 	// -------------------------------------------------------------------
@@ -719,23 +722,7 @@ public class HomepageAllActivity extends Activity implements
 			// classname = class1.getString("name");
 			school_class_id = class1.getString("id");
 
-			// 循环获取班级学生的信息classmates
-			JSONArray jsonArray = obj.getJSONArray("classmates");
-			if (jsonArray.length() != 0) {
-				for (int i = 0; i < jsonArray.length(); i++) {
-					JSONObject jsonObject2 = (JSONObject) jsonArray.get(i);
-					String stu_Url = jsonObject2.getString("avatar_url");
-					int id = jsonObject2.getInt("id");
-					String stuname = jsonObject2.getString("name");
-					String nickname = jsonObject2.getString("nickname");
-					if (Integer.valueOf(user_id) == id) {
 
-					} else {
-						// stuList.add(new ClassStuPojo(id, stuname, stu_Url,
-						// nickname));
-					}
-				}
-			}
 			care = new ArrayList<String>();
 			JSONArray follow_microposts_id = obj
 					.getJSONArray("follow_microposts_id");
@@ -804,8 +791,10 @@ public class HomepageAllActivity extends Activity implements
 				String content = o.getString("content");
 				String avatar_url = o.getString("avatar_url");
 				String created_at = o.getString("created_at");
-				// String careCount = o.getString("      "); // 关注数
-				String careCount = "2";
+				 String careCount = o.getString("follow_microposts_count"); // 关注数
+				 if (careCount.equals("null")) {
+					 careCount = "0";
+				}
 				String reply_microposts_count = o
 						.getString("reply_microposts_count");
 				Micropost micropost = new Micropost(micropost_id, user_id,

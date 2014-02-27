@@ -728,9 +728,10 @@ public class HomepageMyselfActivity extends Activity implements
 				String content = o.getString("content");
 				String avatar_url = o.getString("avatar_url");
 				String created_at = o.getString("created_at");
-
-				// String careCount = o.getString("      "); // 关注数
-				String careCount = "2";
+				 String careCount = o.getString("follow_microposts_count"); // 关注数
+				 if (careCount.equals("null")) {
+					 careCount = "0";
+				}
 				String reply_microposts_count = o
 						.getString("reply_microposts_count");
 				Micropost micropost = new Micropost(micropost_id, user_id,
