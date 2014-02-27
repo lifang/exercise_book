@@ -31,11 +31,7 @@
         <activity
             android:name=".HomePageMainActivity"
             android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            
         </activity>
         <activity
             android:name=".SettingPhoto"
@@ -49,12 +45,24 @@
             android:name=".HomepageMyselfActivity"
             android:windowSoftInputMode="stateUnchanged" />
         <activity android:name=".HomeWorkIngActivity" >
+<<<<<<< HEAD
+        </activity>
+        <activity android:name="com.comdosoft.ExerciseBook.HomePageSendMessage" >
+        </activity>
+        <activity android:name="com.comdosoft.ExerciseBook.ceshi">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+=======
         </activity>
         <activity android:name="com.comdosoft.ExerciseBook.HomePageSendMessage" >
         </activity>
         <activity
             android:name="com.comdosoft.ExerciseBook.tools.OpenInputMethod"
             android:theme="@android:style/Theme.Translucent" >
+>>>>>>> a1bf5a7ab55cc80533397aed548b6fe555b54717
         </activity>
     </application>
 
