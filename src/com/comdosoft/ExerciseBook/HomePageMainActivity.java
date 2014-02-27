@@ -62,7 +62,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 	private String uri;
 	private String avatar_url = "/avatars/students/2014-02/student_2.jpg"; // 用户头像
 	private String name = "丁作强丁作强"; // 用户mingcheng
-	private TextView userName;
+	 TextView userName;
 	Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
