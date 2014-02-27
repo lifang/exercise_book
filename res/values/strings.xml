@@ -50,6 +50,7 @@
     <string name="senderError">发表失败</string>
     <string name="question_speak_tishi_ok">你的发音真的很不错哦,让我们再来读读其它的句子吧！</string>
     <string name="reg_info">登记信息</string>
+    <string name="sender">发送</string>
     
 
 </resources>

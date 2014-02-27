@@ -31,9 +31,20 @@ public class ExerciseBook extends Application {
 	private int hw_number;
 	private int work_date_item;
 	private int history_item;
+	private int refresh; //  0 不刷新  1 刷新
 	private List<Integer> new_id_list;
 	public int getLastcount() {
 		return lastcount;
+	}
+
+
+	public int getRefresh() {
+		return refresh;
+	}
+
+
+	public void setRefresh(int refresh) {
+		this.refresh = refresh;
 	}
 
 
@@ -51,6 +62,7 @@ public class ExerciseBook extends Application {
 
 	 public ExerciseBook() {
 
+		 this.setRefresh(1);
 		this.setNewsFlag(true);
 		this.setNewCount(0);
 		this.setQuestion_index(0);

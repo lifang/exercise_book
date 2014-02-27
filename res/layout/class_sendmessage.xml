@@ -12,6 +12,7 @@
 	    android:layout_width="951px"
 	    android:layout_height="215px"
 	    android:gravity="top"
+	    android:maxLength="60"
 	     android:background="@drawable/sendmesset"
 	     android:hint="@null"
 	    />
