@@ -283,13 +283,11 @@ public class HomepageAllActivity extends Activity implements
 
 		guanzhu_count.setText(mess.getCareCount()); // 关注数
 		huifu_count.setText(mess.getReply_microposts_count()); // 回复数
-
 		Log.i("linshi", IP + mess.getAvatar_url());
 		// 设置头像
 		if (mess.getAvatar_url().equals("")
 				|| mess.getAvatar_url().equals("null")) {
 		} else {
-
 			ExerciseBookTool.set_background(IP + mess.getAvatar_url(), face);
 		}
 		Micropost_senderName.setText(mess.getName()); // 发消息的人
@@ -305,16 +303,12 @@ public class HomepageAllActivity extends Activity implements
 		// 回复
 		button3.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				// Toast.makeText(getApplicationContext(), "回复功能还没有实现",
-				// 0).show();
-
 				reciver_id = mess.getUser_id();
 				reciver_types = mess.getUser_types();
 				Intent intentp = new Intent();
 				intentp.setClass(HomepageAllActivity.this,
 						com.comdosoft.ExerciseBook.tools.OpenInputMethod.class);//
 				startActivityForResult(intentp, 0);
-
 			}
 		});
 		/**
@@ -1293,6 +1287,7 @@ public class HomepageAllActivity extends Activity implements
 			public void handleMessage(android.os.Message msg) {
 				switch (msg.what) {
 				case 0:
+					prodialog.dismiss();
 					final String json6 = (String) msg.obj;
 					int a = child_list.size();
 					parseJson_childMicropost(json6);
@@ -1332,7 +1327,10 @@ public class HomepageAllActivity extends Activity implements
 				}
 			};
 			if (ExerciseBookTool.isConnect(HomepageAllActivity.this)) {
-
+				prodialog = new ProgressDialog(HomepageAllActivity.this);
+				prodialog.setMessage(ExerciseBookParams.PD_CLASS_INFO);
+				prodialog.setCanceledOnTouchOutside(false);
+				prodialog.show();
 				thread.start();
 			} else {
 				Toast.makeText(getApplicationContext(),

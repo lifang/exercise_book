@@ -1082,9 +1082,9 @@ public class HomepageMyselfActivity extends Activity implements
 			}
 
 			focus = i;
-			micropost_id = mess.getId();// 点击 回复 默认 给主消息回复 记录 主消息 id
-			reciver_id = mess.getUser_id();
-			reciver_types = mess.getUser_types();
+//			micropost_id = mess.getId();// 点击 回复 默认 给主消息回复 记录 主消息 id
+//			reciver_id = mess.getUser_id();
+//			reciver_types = mess.getUser_types();
 			layout1.setVisibility(View.VISIBLE);
 			// Reply_edit.setHint(user_name + " " + ExerciseBookParams.REPLY +
 			// " "
@@ -1121,6 +1121,7 @@ public class HomepageMyselfActivity extends Activity implements
 			public void handleMessage(android.os.Message msg) {
 				switch (msg.what) {
 				case 0:
+					prodialog.dismiss();
 					final String json6 = (String) msg.obj;
 					int a = child_list.size();
 					parseJson_childMicropost(json6);
@@ -1160,7 +1161,10 @@ public class HomepageMyselfActivity extends Activity implements
 				}
 			};
 			if (ExerciseBookTool.isConnect(HomepageMyselfActivity.this)) {
-
+				prodialog = new ProgressDialog(HomepageMyselfActivity.this);
+				prodialog.setMessage(ExerciseBookParams.PD_CLASS_INFO);
+				prodialog.setCanceledOnTouchOutside(false);
+				prodialog.show();
 				thread.start();
 			} else {
 				Toast.makeText(getApplicationContext(),
@@ -1173,7 +1177,7 @@ public class HomepageMyselfActivity extends Activity implements
 	}
 
 	/*
-	 * "我的" 时,触发该方法
+	 * 获得 "我的" 第一页消息
 	 */
 	public void class_button_myself() {
 		prodialog = new ProgressDialog(HomepageMyselfActivity.this);

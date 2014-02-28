@@ -17,12 +17,14 @@ public class UserInfoActivity extends Activity {
 	private LinearLayout layout;
 	private ImageView imageView1;
 	private ImageView imageView2;
+	public static UserInfoActivity instance = null;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);//去掉标题栏
 		setContentView(R.layout.userinfo);
-		//dialog=new MyDialog(this);
+		instance = this;
 		imageView1=(ImageView) findViewById(R.id.imageView1);//  修改用户名图标
 		imageView1.setOnClickListener(listener);
 		imageView2=(ImageView) findViewById(R.id.imageView2);//  切换班级图标
