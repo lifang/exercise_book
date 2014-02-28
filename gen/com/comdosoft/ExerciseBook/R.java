@@ -17,6 +17,7 @@ public final class R {
         public static final int top_huise=0x7f040002;
         public static final int top_qianlv=0x7f040000;
         public static final int top_shenlv=0x7f040001;
+        public static final int transparent=0x7f040008;
         public static final int white=0x7f040006;
         public static final int work_bg=0x7f040007;
     }
@@ -32,50 +33,67 @@ public final class R {
     }
     public static final class drawable {
         public static final int aboutme_delete=0x7f020000;
-        public static final int after_care=0x7f020001;
-        public static final int all_1=0x7f020002;
-        public static final int all_2=0x7f020003;
-        public static final int an=0x7f020004;
-        public static final int an2=0x7f020005;
-        public static final int before_care=0x7f020006;
-        public static final int care_care=0x7f020007;
-        public static final int child_bj2=0x7f020008;
-        public static final int childjiantou=0x7f020009;
-        public static final int homepage_bot=0x7f02000a;
-        public static final int homepage_guanzhu=0x7f02000b;
-        public static final int homepage_guanzhu2=0x7f02000c;
-        public static final int homepage_huifu=0x7f02000d;
-        public static final int homepage_shanchu=0x7f02000e;
-        public static final int ic_launcher=0x7f02000f;
-        public static final int ic_pulltorefresh_arrow=0x7f020010;
-        public static final int ic_pulltorefresh_arrow_up=0x7f020011;
-        public static final int img1=0x7f020012;
-        public static final int img2=0x7f020013;
-        public static final int img3=0x7f020014;
-        public static final int img4=0x7f020015;
-        public static final int img5=0x7f020016;
-        public static final int img6=0x7f020017;
-        public static final int img7=0x7f020018;
-        public static final int item_reply=0x7f020019;
-        public static final int leftmenu_11=0x7f02001a;
-        public static final int leftmenu_12=0x7f02001b;
-        public static final int leftmenu_13=0x7f02001c;
-        public static final int leftmenu_14=0x7f02001d;
-        public static final int logo=0x7f02001e;
-        public static final int moren=0x7f02001f;
-        public static final int myself_1=0x7f020020;
-        public static final int myself_2=0x7f020021;
-        public static final int no=0x7f020022;
-        public static final int sender_1=0x7f020023;
-        public static final int sender_2=0x7f020024;
-        public static final int sendmessbtn=0x7f020025;
-        public static final int sendmesset=0x7f020026;
-        public static final int userinfo_button=0x7f020027;
-        public static final int work_08=0x7f020028;
+        public static final int addnewclass=0x7f020001;
+        public static final int after_care=0x7f020002;
+        public static final int all_1=0x7f020003;
+        public static final int all_2=0x7f020004;
+        public static final int an=0x7f020005;
+        public static final int an2=0x7f020006;
+        public static final int before_care=0x7f020007;
+        public static final int care_care=0x7f020008;
+        public static final int chengjiu_danhuang=0x7f020009;
+        public static final int chengjiu_huang=0x7f02000a;
+        public static final int child_bj2=0x7f02000b;
+        public static final int childjiantou=0x7f02000c;
+        public static final int class_dangqian=0x7f02000d;
+        public static final int homepage_bot=0x7f02000e;
+        public static final int homepage_guanzhu=0x7f02000f;
+        public static final int homepage_guanzhu2=0x7f020010;
+        public static final int homepage_huifu=0x7f020011;
+        public static final int homepage_shanchu=0x7f020012;
+        public static final int ic_launcher=0x7f020013;
+        public static final int ic_pulltorefresh_arrow=0x7f020014;
+        public static final int ic_pulltorefresh_arrow_up=0x7f020015;
+        public static final int img1=0x7f020016;
+        public static final int img2=0x7f020017;
+        public static final int img3=0x7f020018;
+        public static final int img4=0x7f020019;
+        public static final int img5=0x7f02001a;
+        public static final int img6=0x7f02001b;
+        public static final int img7=0x7f02001c;
+        public static final int item_reply=0x7f02001d;
+        public static final int leftmenu_11=0x7f02001e;
+        public static final int leftmenu_12=0x7f02001f;
+        public static final int leftmenu_13=0x7f020020;
+        public static final int leftmenu_14=0x7f020021;
+        public static final int logo=0x7f020022;
+        public static final int moren=0x7f020023;
+        public static final int myself_1=0x7f020024;
+        public static final int myself_2=0x7f020025;
+        public static final int no=0x7f020026;
+        public static final int push_top_in2=0x7f020027;
+        public static final int push_top_out2=0x7f020028;
+        public static final int sender_1=0x7f020029;
+        public static final int sender_2=0x7f02002a;
+        public static final int sendmessbtn=0x7f02002b;
+        public static final int sendmesset=0x7f02002c;
+        public static final int us_chengjiu1=0x7f02002d;
+        public static final int us_chengjiu2=0x7f02002e;
+        public static final int us_chengjiu3=0x7f02002f;
+        public static final int us_chengjiu4=0x7f020030;
+        public static final int userinfo_1=0x7f020031;
+        public static final int userinfo_2=0x7f020032;
+        public static final int userinfo_bg1=0x7f020033;
+        public static final int userinfo_bg2=0x7f020034;
+        public static final int userinfo_button=0x7f020035;
+        public static final int userinfo_hengtiao=0x7f020036;
+        public static final int work_08=0x7f020037;
     }
     public static final class id {
         public static final int aa=0x7f080023;
+        public static final int add_newclass=0x7f080042;
         public static final int all_bottom=0x7f08002f;
+        public static final int asd=0x7f080043;
         public static final int child_jiantou=0x7f08000a;
         public static final int child_message=0x7f08000c;
         public static final int child_message_date=0x7f08000f;
@@ -88,6 +106,7 @@ public final class R {
         public static final int child_user_face=0x7f080009;
         public static final int child_user_left=0x7f080008;
         public static final int congxiangce=0x7f08003f;
+        public static final int dangqian_class=0x7f080045;
         public static final int edittext=0x7f080032;
         public static final int end_time=0x7f08002b;
         public static final int gridview=0x7f08002c;
@@ -101,11 +120,14 @@ public final class R {
         public static final int huifu_count=0x7f08001c;
         public static final int huifu_item=0x7f08001b;
         public static final int image=0x7f080035;
+        public static final int imageView1=0x7f080049;
+        public static final int imageView2=0x7f08004a;
         public static final int img_tab_now=0x7f080001;
         public static final int layout=0x7f080026;
         public static final int ll_action=0x7f08001e;
         public static final int ll_action2=0x7f080011;
         public static final int lookMore=0x7f080024;
+        public static final int main_dialog_layout=0x7f080047;
         public static final int main_mid=0x7f08002e;
         public static final int main_pull_refresh_view=0x7f080025;
         public static final int main_top=0x7f080000;
@@ -114,7 +136,7 @@ public final class R {
         public static final int message_senderName=0x7f080017;
         public static final int micropost_content=0x7f08001d;
         public static final int micropost_date=0x7f080018;
-        public static final int middle_layout=0x7f080040;
+        public static final int middle_layout=0x7f080046;
         public static final int myself_bottom=0x7f080030;
         public static final int paizhaoshangchuan=0x7f08003e;
         public static final int pull_to_load_image=0x7f080038;
@@ -132,6 +154,9 @@ public final class R {
         public static final int set_photolayout=0x7f08003d;
         public static final int shanchu_button=0x7f080020;
         public static final int start_time=0x7f08002a;
+        public static final int switchclass=0x7f080040;
+        public static final int switchclassLv=0x7f080041;
+        public static final int switchclass_oneTv=0x7f080044;
         public static final int tabfl=0x7f080006;
         public static final int tall=0x7f080005;
         public static final int tv_num=0x7f080033;
@@ -139,6 +164,15 @@ public final class R {
         public static final int user_face=0x7f080002;
         public static final int user_left=0x7f080015;
         public static final int user_name=0x7f080003;
+        public static final int userinfo_jiezu1=0x7f080051;
+        public static final int userinfo_jiezu2=0x7f080052;
+        public static final int userinfo_jingzhun1=0x7f08004d;
+        public static final int userinfo_jingzhun2=0x7f08004e;
+        public static final int userinfo_username=0x7f080048;
+        public static final int userinfo_xunsu1=0x7f08004f;
+        public static final int userinfo_xunsu2=0x7f080050;
+        public static final int userinfo_youyi1=0x7f08004b;
+        public static final int userinfo_youyi2=0x7f08004c;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
@@ -155,7 +189,10 @@ public final class R {
         public static final int refresh_footer=0x7f03000b;
         public static final int refresh_header=0x7f03000c;
         public static final int settingphoto=0x7f03000d;
-        public static final int table=0x7f03000e;
+        public static final int switchclass=0x7f03000e;
+        public static final int switchclass_one=0x7f03000f;
+        public static final int table=0x7f030010;
+        public static final int userinfo=0x7f030011;
     }
     public static final class string {
         public static final int Net_null=0x7f060024;
@@ -210,6 +247,7 @@ public final class R {
         public static final int xingming=0x7f060004;
     }
     public static final class style {
+        public static final int AnimTop2=0x7f070003;
         /** 
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
@@ -225,5 +263,8 @@ public final class R {
  All customizations that are NOT specific to a particular API-level can go here. 
          */
         public static final int AppTheme=0x7f070001;
+        /** 模糊
+         */
+        public static final int MyDialogStyleTop=0x7f070002;
     }
 }

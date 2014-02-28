@@ -57,9 +57,12 @@ public class HomepageMyselfActivity extends Activity implements
 		OnHeaderRefreshListener, OnFooterRefreshListener, Urlinterface,
 		OnGestureListener {
 	private ExerciseBook exerciseBook;
-	private String user_id = "11"; // 学生 id 上面 会传过来的 学生student_id，
-	private String id = "3";
-	private String school_class_id = "9";
+//	private String user_id = "11"; // 学生 id 上面 会传过来的 学生student_id，
+//	private String id = "3";
+//	private String school_class_id = "9";
+	private String user_id = "130"; // 学生 id 上面 会传过来的 学生student_id，
+	private String id = "73";
+	private String school_class_id = "83";
 	private ProgressDialog prodialog;
 
 	// -------------------------------------------------------------------
@@ -164,9 +167,9 @@ public class HomepageMyselfActivity extends Activity implements
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
 
-		// user_id = preferences.getString("user_id", null);
-		// id = preferences.getString("id", null);
-		// school_class_id = preferences.getString("school_class_id", null);
+//		 user_id = preferences.getString("user_id", null);
+//		 id = preferences.getString("id", null);
+//		 school_class_id = preferences.getString("school_class_id", null);
 
 		item_huifu = new ArrayList<RelativeLayout>();
 		guanzhu_count_list = new ArrayList<TextView>();

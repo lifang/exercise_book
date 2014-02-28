@@ -48,7 +48,7 @@
                 android:textColor="@color/white"
                 android:textSize="30px" />
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/user_button"
                 android:layout_width="26px"
                 android:layout_height="15px"

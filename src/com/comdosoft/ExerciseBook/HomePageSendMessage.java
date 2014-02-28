@@ -30,8 +30,8 @@ public class HomePageSendMessage extends Activity implements Urlinterface{
 	private ExerciseBook exerciseBook;
 	private EditText sendmesset;
 	private Button sendmess_btn;
-	private String user_id = "11"; 
-	private String school_class_id = "9";
+	private String user_id = "130"; 
+	private String school_class_id = "83";
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
@@ -39,9 +39,8 @@ public class HomePageSendMessage extends Activity implements Urlinterface{
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
 
-		// user_id = preferences.getString("user_id", null);
-		// id = preferences.getString("id", null);
-		// school_class_id = preferences.getString("school_class_id", null);
+//		 user_id = preferences.getString("user_id", null);
+//		 school_class_id = preferences.getString("school_class_id", null);
 		exerciseBook = (ExerciseBook) getApplication();
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		sendmess_btn=(Button) findViewById(R.id.sendmess_btn);
