@@ -10,23 +10,18 @@
         android:layout_alignParentBottom="true"
         android:background="#282828"
         android:orientation="horizontal"
-        android:padding="20px"
-        >
-
-
-      
+        android:padding="25px" >
 
         <EditText
             android:id="@+id/edittext"
-            android:layout_width="550px"
+            android:layout_width="650px"
             android:layout_height="wrap_content"
-            
             android:background="@color/top_huise"
             android:maxLength="60"
             android:textSize="30px" >
-
         </EditText>
-  <TextView
+
+        <TextView
             android:id="@+id/tv_num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -34,17 +29,17 @@
             android:layout_toRightOf="@+id/edittext"
             android:text="@string/sender"
             android:textSize="20px" />
-  
+
         <Button
             android:id="@+id/queding"
             android:layout_width="50px"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/edittext"
-             android:layout_alignParentRight="true"
-            android:layout_toRightOf="@+id/tv_num"
+            android:layout_alignParentRight="true"
             android:layout_marginLeft="10px"
+            android:layout_toRightOf="@+id/tv_num"
             android:background="#BEBFC0"
-            android:text="@string/sender"
+            android:text="@string/queren"
             android:textSize="30px" />
     </RelativeLayout>
 

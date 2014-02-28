@@ -60,9 +60,12 @@ public class HomepageAllActivity extends Activity implements
 		OnHeaderRefreshListener, OnFooterRefreshListener, Urlinterface,
 		OnGestureListener {
 	private ExerciseBook exerciseBook;
-	private String user_id = "11"; // 学生 id 上面 会传过来的 学生student_id，
-	private String id = "3";
-	private String school_class_id = "9";
+	private String user_id = "130"; // 学生 id 上面 会传过来的 学生student_id，
+	private String id = "73";
+	private String school_class_id = "83";
+	// private String user_id = "4"; // 学生 id 上面 会传过来的 学生student_id，
+	// private String id = "2";
+	// private String school_class_id = "15";
 	private ProgressDialog prodialog;
 
 	// -------------------------------------------------------------------
@@ -192,7 +195,7 @@ public class HomepageAllActivity extends Activity implements
 		super.onResume();
 		int refresh = exerciseBook.getRefresh();
 		if (refresh == 1) {
-			
+
 			if (ExerciseBookTool.isConnect(HomepageAllActivity.this)) {
 				prodialog = new ProgressDialog(HomepageAllActivity.this);
 				prodialog.setMessage(ExerciseBookParams.PD_CLASS_INFO);
@@ -280,13 +283,11 @@ public class HomepageAllActivity extends Activity implements
 
 		guanzhu_count.setText(mess.getCareCount()); // 关注数
 		huifu_count.setText(mess.getReply_microposts_count()); // 回复数
-
 		Log.i("linshi", IP + mess.getAvatar_url());
 		// 设置头像
 		if (mess.getAvatar_url().equals("")
 				|| mess.getAvatar_url().equals("null")) {
 		} else {
-
 			ExerciseBookTool.set_background(IP + mess.getAvatar_url(), face);
 		}
 		Micropost_senderName.setText(mess.getName()); // 发消息的人
@@ -302,16 +303,12 @@ public class HomepageAllActivity extends Activity implements
 		// 回复
 		button3.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				// Toast.makeText(getApplicationContext(), "回复功能还没有实现",
-				// 0).show();
-
 				reciver_id = mess.getUser_id();
 				reciver_types = mess.getUser_types();
 				Intent intentp = new Intent();
 				intentp.setClass(HomepageAllActivity.this,
 						com.comdosoft.ExerciseBook.tools.OpenInputMethod.class);//
 				startActivityForResult(intentp, 0);
-
 			}
 		});
 		/**
@@ -694,56 +691,48 @@ public class HomepageAllActivity extends Activity implements
 	private void setJson(String json) {
 		try {
 			JSONObject obj = new JSONObject(json);
-			// 学生信息
-			JSONObject student = obj.getJSONObject("student"); // 获得学生的信息
-			// id = student.getString("id");
-			// user_id = student.getString("user_id");
-			avatar_url = student.getString("avatar_url"); // 获取本人头像昂所有在地址
-			SharedPreferences preferences = getSharedPreferences(SHARED,
-					Context.MODE_PRIVATE);
-			Editor editor = preferences.edit();
-			editor.putString("avatar_url", avatar_url);
-			editor.commit();
-			user_name = student.getString("name");
-			nick_name = student.getString("nickname");
-			JSONObject microposts = obj.getJSONObject("microposts");
-			page = Integer.parseInt(microposts.getString("page"));
-			pages_count = Integer.parseInt(microposts.getString("pages_count"));
-			String details_microposts = microposts
-					.getString("details_microposts");
-			// page":1,"pages_count":2,"details_microposts":
-			parseJson_details_microposts(details_microposts);
-			// 班级头像和名字
-			JSONObject class1 = obj.getJSONObject("class"); // 或得班级信息
-			String class_name = class1.getString("name"); // 获取class_name
-			// classname = class1.getString("name");
-			school_class_id = class1.getString("id");
 
-			// 循环获取班级学生的信息classmates
-			JSONArray jsonArray = obj.getJSONArray("classmates");
-			if (jsonArray.length() != 0) {
-				for (int i = 0; i < jsonArray.length(); i++) {
-					JSONObject jsonObject2 = (JSONObject) jsonArray.get(i);
-					String stu_Url = jsonObject2.getString("avatar_url");
-					int id = jsonObject2.getInt("id");
-					String stuname = jsonObject2.getString("name");
-					String nickname = jsonObject2.getString("nickname");
-					if (Integer.valueOf(user_id) == id) {
+			String status = obj.getString("status");
+			String notice = obj.getString("notice");
+			if ("success".equals(status)) {
+				// // 学生信息
+				// JSONObject student = obj.getJSONObject("student"); // 获得学生的信息
+				// // id = student.getString("id");
+				// // user_id = student.getString("user_id");
+				// avatar_url = student.getString("avatar_url"); // 获取本人头像昂所有在地址
+				// SharedPreferences preferences = getSharedPreferences(SHARED,
+				// Context.MODE_PRIVATE);
+				// Editor editor = preferences.edit();
+				// editor.putString("avatar_url", avatar_url);
+				// editor.commit();
+				// user_name = student.getString("name");
+				// nick_name = student.getString("nickname");
+				JSONObject microposts = obj.getJSONObject("microposts");
+				page = Integer.parseInt(microposts.getString("page"));
+				pages_count = Integer.parseInt(microposts
+						.getString("pages_count"));
+				String details_microposts = microposts
+						.getString("details_microposts");
+				// page":1,"pages_count":2,"details_microposts":
+				parseJson_details_microposts(details_microposts);
+				// 班级头像和名字
+				JSONObject class1 = obj.getJSONObject("class"); // 或得班级信息
+				String class_name = class1.getString("name"); // 获取class_name
+				// classname = class1.getString("name");
+				school_class_id = class1.getString("id");
 
-					} else {
-						// stuList.add(new ClassStuPojo(id, stuname, stu_Url,
-						// nickname));
-					}
+				care = new ArrayList<String>();
+				JSONArray follow_microposts_id = obj
+						.getJSONArray("follow_microposts_id");
+				for (int i = 0; i < follow_microposts_id.length(); ++i) {
+					String fmi = follow_microposts_id.getInt(i) + "";
+					care.add(fmi);
 				}
-			}
-			care = new ArrayList<String>();
-			JSONArray follow_microposts_id = obj
-					.getJSONArray("follow_microposts_id");
-			for (int i = 0; i < follow_microposts_id.length(); ++i) {
-				String fmi = follow_microposts_id.getInt(i) + "";
-				care.add(fmi);
-			}
 
+			} else {
+				Toast.makeText(getApplicationContext(), notice,
+						Toast.LENGTH_SHORT).show();
+			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -804,8 +793,10 @@ public class HomepageAllActivity extends Activity implements
 				String content = o.getString("content");
 				String avatar_url = o.getString("avatar_url");
 				String created_at = o.getString("created_at");
-				// String careCount = o.getString("      "); // 关注数
-				String careCount = "2";
+				String careCount = o.getString("follow_microposts_count"); // 关注数
+				if (careCount.equals("null")) {
+					careCount = "0";
+				}
 				String reply_microposts_count = o
 						.getString("reply_microposts_count");
 				Micropost micropost = new Micropost(micropost_id, user_id,
@@ -1136,6 +1127,7 @@ public class HomepageAllActivity extends Activity implements
 											.show();
 								}
 							} else {
+								prodialog.dismiss();
 								Toast.makeText(getApplicationContext(), notice,
 										Toast.LENGTH_SHORT).show();
 							}
@@ -1295,6 +1287,7 @@ public class HomepageAllActivity extends Activity implements
 			public void handleMessage(android.os.Message msg) {
 				switch (msg.what) {
 				case 0:
+					prodialog.dismiss();
 					final String json6 = (String) msg.obj;
 					int a = child_list.size();
 					parseJson_childMicropost(json6);
@@ -1334,7 +1327,10 @@ public class HomepageAllActivity extends Activity implements
 				}
 			};
 			if (ExerciseBookTool.isConnect(HomepageAllActivity.this)) {
-
+				prodialog = new ProgressDialog(HomepageAllActivity.this);
+				prodialog.setMessage(ExerciseBookParams.PD_CLASS_INFO);
+				prodialog.setCanceledOnTouchOutside(false);
+				prodialog.show();
 				thread.start();
 			} else {
 				Toast.makeText(getApplicationContext(),

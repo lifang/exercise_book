@@ -57,9 +57,12 @@ public class HomepageMyselfActivity extends Activity implements
 		OnHeaderRefreshListener, OnFooterRefreshListener, Urlinterface,
 		OnGestureListener {
 	private ExerciseBook exerciseBook;
-	private String user_id = "11"; // 学生 id 上面 会传过来的 学生student_id，
-	private String id = "3";
-	private String school_class_id = "9";
+//	private String user_id = "11"; // 学生 id 上面 会传过来的 学生student_id，
+//	private String id = "3";
+//	private String school_class_id = "9";
+	private String user_id = "130"; // 学生 id 上面 会传过来的 学生student_id，
+	private String id = "73";
+	private String school_class_id = "83";
 	private ProgressDialog prodialog;
 
 	// -------------------------------------------------------------------
@@ -164,9 +167,9 @@ public class HomepageMyselfActivity extends Activity implements
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
 
-		// user_id = preferences.getString("user_id", null);
-		// id = preferences.getString("id", null);
-		// school_class_id = preferences.getString("school_class_id", null);
+//		 user_id = preferences.getString("user_id", null);
+//		 id = preferences.getString("id", null);
+//		 school_class_id = preferences.getString("school_class_id", null);
 
 		item_huifu = new ArrayList<RelativeLayout>();
 		guanzhu_count_list = new ArrayList<TextView>();
@@ -728,9 +731,10 @@ public class HomepageMyselfActivity extends Activity implements
 				String content = o.getString("content");
 				String avatar_url = o.getString("avatar_url");
 				String created_at = o.getString("created_at");
-
-				// String careCount = o.getString("      "); // 关注数
-				String careCount = "2";
+				 String careCount = o.getString("follow_microposts_count"); // 关注数
+				 if (careCount.equals("null")) {
+					 careCount = "0";
+				}
 				String reply_microposts_count = o
 						.getString("reply_microposts_count");
 				Micropost micropost = new Micropost(micropost_id, user_id,
@@ -1078,9 +1082,9 @@ public class HomepageMyselfActivity extends Activity implements
 			}
 
 			focus = i;
-			micropost_id = mess.getId();// 点击 回复 默认 给主消息回复 记录 主消息 id
-			reciver_id = mess.getUser_id();
-			reciver_types = mess.getUser_types();
+//			micropost_id = mess.getId();// 点击 回复 默认 给主消息回复 记录 主消息 id
+//			reciver_id = mess.getUser_id();
+//			reciver_types = mess.getUser_types();
 			layout1.setVisibility(View.VISIBLE);
 			// Reply_edit.setHint(user_name + " " + ExerciseBookParams.REPLY +
 			// " "
@@ -1117,6 +1121,7 @@ public class HomepageMyselfActivity extends Activity implements
 			public void handleMessage(android.os.Message msg) {
 				switch (msg.what) {
 				case 0:
+					prodialog.dismiss();
 					final String json6 = (String) msg.obj;
 					int a = child_list.size();
 					parseJson_childMicropost(json6);
@@ -1156,7 +1161,10 @@ public class HomepageMyselfActivity extends Activity implements
 				}
 			};
 			if (ExerciseBookTool.isConnect(HomepageMyselfActivity.this)) {
-
+				prodialog = new ProgressDialog(HomepageMyselfActivity.this);
+				prodialog.setMessage(ExerciseBookParams.PD_CLASS_INFO);
+				prodialog.setCanceledOnTouchOutside(false);
+				prodialog.show();
 				thread.start();
 			} else {
 				Toast.makeText(getApplicationContext(),
@@ -1169,7 +1177,7 @@ public class HomepageMyselfActivity extends Activity implements
 	}
 
 	/*
-	 * "我的" 时,触发该方法
+	 * 获得 "我的" 第一页消息
 	 */
 	public void class_button_myself() {
 		prodialog = new ProgressDialog(HomepageMyselfActivity.this);

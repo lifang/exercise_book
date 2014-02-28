@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
 
 import android.app.ProgressDialog;
 import android.app.TabActivity;
@@ -24,8 +25,8 @@ import android.view.Display;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
@@ -44,7 +45,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 	TabHost.TabSpec spec1, spec2, spec3;
 	private ImageView allbottom, myselfbottom, senderbottom;
 	private ImageView faceImage;
-	private ImageView img_tab_now;
+	private LinearLayout userInfo;
 	private Resources res;
 	public Field mBottomLeftStrip;
 	public Field mBottomRightStrip;
@@ -60,11 +61,12 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 	private ProgressDialog prodialog;
 	/* 头像名称 */
 	private static final String IMAGE_FILE_NAME = "faceImage.jpg";
+	private String id = "8"; // 用户 id，，切记 不是 user_id
 	private String json = "";
 	private String uri;
 	private String avatar_url = "/avatars/students/2014-02/student_2.jpg"; // 用户头像
 	private String name = "丁作强丁作强"; // 用户mingcheng
-	private TextView userName;
+	 TextView userName;
 	Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -128,16 +130,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 
 //		avatar_url = preferences.getString("avatar_url", "");
 //		name = preferences.getString("name", "");
-//		img_tab_now=(ImageView) findViewById(R.id.img_tab_now);
-//		img_tab_now.setOnClickListener(new OnClickListener()
-//		{
-//
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//				
-//			}
-//			
-//		});
+//		id = preferences.getString("id", null);
 		File file = new File(Environment.getExternalStorageDirectory() + "/1"
 				+ IMAGE_FILE_NAME);
 
@@ -154,6 +147,8 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 		senderbottom = (ImageView) findViewById(R.id.sender_bottom);
 		userName=(TextView) findViewById(R.id.user_name);
 		userName.setText(name);
+		
+		 userInfo = (LinearLayout) findViewById(R.id.user_button);
 		faceImage = (CircularImage) findViewById(R.id.user_face);
 		if (ExerciseBookTool.isConnect(getApplicationContext())) {
 			if (avatar_url != null || avatar_url.length() != 0) { // 设置头像
@@ -165,6 +160,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 					.show();
 		}
 		faceImage.setOnClickListener(listener);
+		userInfo.setOnClickListener(listener2);
 		Display display = this.getWindowManager().getDefaultDisplay();
 		width = display.getWidth();
 
@@ -381,8 +377,19 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 
 		@Override
 		public void onClick(View v) {
+			
+
 			Intent intentp = new Intent();
 			intentp.setClass(HomePageMainActivity.this, SettingPhoto.class);//
+			startActivityForResult(intentp, 0);
+		}
+	};
+	private View.OnClickListener listener2 = new View.OnClickListener() {
+
+		@Override
+		public void onClick(View v) {
+			Intent intentp = new Intent();
+			intentp.setClass(HomePageMainActivity.this, UserInfoActivity.class);//
 			startActivityForResult(intentp, 0);
 		}
 	};
@@ -424,7 +431,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 
 				MultipartEntity entity = new MultipartEntity();
 
-				// entity.addPart("student_id", new StringBody(id));
+				 entity.addPart("student_id", new StringBody(id));
 				File f = new File(Environment.getExternalStorageDirectory()
 						+ "/1" + IMAGE_FILE_NAME);
 

@@ -6,11 +6,10 @@
     <color name="top_huise">#D2D3D4</color>
     <color name="before_click">#FEFEFE</color>
     <color name="after_click">#EBEBEB</color>
-    
-
     <color name="red">#FF0000</color>
     <color name="white">#FFFFFF</color>
     <color name="work_bg">#DCDBDB</color>
 	<color name="select_menu">#272f39</color>
+    <color name="transparent">#00000000</color>
 
 </resources>

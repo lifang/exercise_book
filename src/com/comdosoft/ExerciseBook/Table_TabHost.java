@@ -41,15 +41,13 @@ public class Table_TabHost extends Activity
 		JPushInterface.init(getApplicationContext());     
 		JPushInterface.setAlias(getApplicationContext(), "a123", null);
 	}
-	@Override
 	protected void onResume() {
 		super.onResume();
-//		JPushInterface.onResume(getApplicationContext());
+		JPushInterface.onResume(this);
 	}
-	@Override
 	protected void onPause() {
 		super.onPause();
-//		JPushInterface.onPause(getApplicationContext());
+		JPushInterface.onPause(this);
 	}
 	public void setContentView(int layoutId)
 	{
