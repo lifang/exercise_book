@@ -60,12 +60,12 @@
         </activity>
         <activity
             android:name=".UserInfoActivity"
-           android:theme="@android:style/Theme.Translucent">
+           android:theme="@style/MyDialogStyleTop">
            
         </activity>
         <activity
             android:name=".SwitchClassActivity"
-            android:theme="@android:style/Theme.Translucent">
+            android:theme="@style/MyDialogStyleTop">
         </activity>
     </application>
 

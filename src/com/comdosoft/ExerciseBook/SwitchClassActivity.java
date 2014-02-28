@@ -199,7 +199,7 @@ public class SwitchClassActivity extends Activity {
 				
 				scTv.setText(classlist.get(position).getName());
 				scTv.setGravity(Gravity.CENTER);
-				scTv.setOnClickListener(new OnClickListener() {
+				convertView.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {
 						new Thread() {
 							public void run() {
@@ -212,7 +212,7 @@ public class SwitchClassActivity extends Activity {
 										Urlinterface.SHARED,
 										Context.MODE_PRIVATE);
 								Editor editor = preferences.edit();
-//								HomeWorkMainActivity.instance.finish();
+								HomePageMainActivity.instance.finish();
 								editor.putString("school_class_id", String
 										.valueOf(classlist.get(position)
 												.getId()));
