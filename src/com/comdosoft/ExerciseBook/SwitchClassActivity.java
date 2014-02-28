@@ -186,6 +186,8 @@ public class SwitchClassActivity extends Activity {
 							UserInfoActivity.instance.finish();
 							editor.putString("school_class_id", String
 									.valueOf(classlist.get(position).getId()));
+							editor.putString("school_class_name", String
+									.valueOf(classlist.get(position).getName()));
 							editor.commit();
 							startActivity(intent);
 							SwitchClassActivity.this.finish();

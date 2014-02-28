@@ -10,11 +10,11 @@
         android:layout_alignParentBottom="true"
         android:background="#282828"
         android:orientation="horizontal"
-        android:padding="20px" >
+        android:padding="25px" >
 
         <EditText
             android:id="@+id/edittext"
-            android:layout_width="550px"
+            android:layout_width="650px"
             android:layout_height="wrap_content"
             android:background="@color/top_huise"
             android:maxLength="60"
