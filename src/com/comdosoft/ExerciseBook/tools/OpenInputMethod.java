@@ -78,13 +78,11 @@ public class OpenInputMethod extends Activity {
 			} else {
 				exerciseBook.setRefresh(0);
 				Intent intent2 = new Intent();
-
 				intent2.putExtra("content", reply_edit);
 				// 通过调用setResult方法返回结果给前一个activity。
 				OpenInputMethod.this.setResult(5, intent2);
 				// 关闭当前activity
 				OpenInputMethod.this.finish();
-
 			}
 		}
 	};

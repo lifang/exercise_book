@@ -24,6 +24,7 @@ import android.view.Display;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TabHost;
@@ -43,6 +44,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 	TabHost.TabSpec spec1, spec2, spec3;
 	private ImageView allbottom, myselfbottom, senderbottom;
 	private ImageView faceImage;
+	private ImageView img_tab_now;
 	private Resources res;
 	public Field mBottomLeftStrip;
 	public Field mBottomRightStrip;
@@ -126,6 +128,16 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 
 //		avatar_url = preferences.getString("avatar_url", "");
 //		name = preferences.getString("name", "");
+//		img_tab_now=(ImageView) findViewById(R.id.img_tab_now);
+//		img_tab_now.setOnClickListener(new OnClickListener()
+//		{
+//
+//			public void onClick(View v) {
+//				// TODO Auto-generated method stub
+//				
+//			}
+//			
+//		});
 		File file = new File(Environment.getExternalStorageDirectory() + "/1"
 				+ IMAGE_FILE_NAME);
 

@@ -14,8 +14,9 @@ import android.widget.LinearLayout;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
-public class HomeWorkIngActivity extends Activity implements Urlinterface {
+public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 
+	static HomeWorkIngActivity instance=null;
 	private ExerciseBook eb;
 	private LinearLayout homework_ing;
 	private GridView gridview;
@@ -37,6 +38,7 @@ public class HomeWorkIngActivity extends Activity implements Urlinterface {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.homework_ing);
 		eb = (ExerciseBook) getApplication();// 初始化
+		instance=this;
 		initialize();// 初始化
 
 	}

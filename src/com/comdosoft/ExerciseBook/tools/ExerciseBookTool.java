@@ -55,7 +55,7 @@ public class ExerciseBookTool implements Urlinterface {
 		int temp1 = timeStr.indexOf("T");
 		int temp2 = timeStr.lastIndexOf("+");
 		return timeStr.substring(0, temp1) + " "
-				+ timeStr.substring(temp1 + 1, temp2);
+		+ timeStr.substring(temp1 + 1, temp2);
 	}
 
 	// asses拷贝文件到sd卡
@@ -232,7 +232,7 @@ public class ExerciseBookTool implements Urlinterface {
 		url.deleteCharAt(url.length() - 1);
 		Log.i("homework", url.toString());
 		HttpURLConnection conn = (HttpURLConnection) new URL(url.toString())
-				.openConnection();
+		.openConnection();
 		conn.setConnectTimeout(8000);
 		conn.setReadTimeout(8000);
 		conn.setRequestMethod("GET");
@@ -455,8 +455,8 @@ public class ExerciseBookTool implements Urlinterface {
 		}
 		return false;
 	}
-	
-	
+
+
 	/*
 	 * 设置头像
 	 */
@@ -496,10 +496,6 @@ public class ExerciseBookTool implements Urlinterface {
 
 			}
 		};		
-
-			thread.start();
-	
-
+		thread.start();
 	}
-
 }

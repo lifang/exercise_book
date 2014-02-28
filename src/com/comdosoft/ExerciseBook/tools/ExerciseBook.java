@@ -12,8 +12,8 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
 public class ExerciseBook extends Application {
 	private int Question_allNumber;
-//	private List<QuestionPojo> branch_questions;
-//	private List<ListeningPojo> question_list;
+	//	private List<QuestionPojo> branch_questions;
+	//	private List<ListeningPojo> question_list;
 	private int question_id;
 	private int question_index;
 	private List<List<String>> question_history;
@@ -31,6 +31,26 @@ public class ExerciseBook extends Application {
 	private int hw_number;
 	private int work_date_item;
 	private int history_item;
+	private int menu_count=0;
+	public int getMenu_count() {
+		return menu_count;
+	}
+
+
+	public void setMenu_count(int menu_count) {
+		this.menu_count = menu_count;
+	}
+
+	private boolean isMneu;
+	public boolean isMneu() {
+		return isMneu;
+	}
+
+
+	public void setMneu(boolean isMneu) {
+		this.isMneu = isMneu;
+	}
+
 	private int refresh; //  0 不刷新  1 刷新
 	private List<Integer> new_id_list;
 	public int getLastcount() {
@@ -60,9 +80,10 @@ public class ExerciseBook extends Application {
 		this.newsFlag = newsFlag;
 	}
 
-	 public ExerciseBook() {
-
-		 this.setRefresh(1);
+	public ExerciseBook() {
+		
+		this.setMneu(true);
+		this.setRefresh(1);
 		this.setNewsFlag(true);
 		this.setNewCount(0);
 		this.setQuestion_index(0);
@@ -104,13 +125,13 @@ public class ExerciseBook extends Application {
 		this.question_id = question_id;
 	}
 
-//	public List<QuestionPojo> getBranch_questions() {
-//		return branch_questions;
-//	}
-//
-//	public void setBranch_questions(List<QuestionPojo> branch_questions) {
-//		this.branch_questions = branch_questions;
-//	}
+	//	public List<QuestionPojo> getBranch_questions() {
+	//		return branch_questions;
+	//	}
+	//
+	//	public void setBranch_questions(List<QuestionPojo> branch_questions) {
+	//		this.branch_questions = branch_questions;
+	//	}
 
 	public int getQuestion_allNumber() {
 		return Question_allNumber;
@@ -120,13 +141,13 @@ public class ExerciseBook extends Application {
 		Question_allNumber = question_allNumber;
 	}
 
-//	public List<ListeningPojo> getQuestion_list() {
-//		return question_list;
-//	}
-//
-//	public void setQuestion_list(List<ListeningPojo> question_list) {
-//		this.question_list = question_list;
-//	}
+	//	public List<ListeningPojo> getQuestion_list() {
+	//		return question_list;
+	//	}
+	//
+	//	public void setQuestion_list(List<ListeningPojo> question_list) {
+	//		this.question_list = question_list;
+	//	}
 
 	public List<List<String>> getQuestion_history() {
 		return question_history;
