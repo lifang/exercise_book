@@ -10,7 +10,7 @@
 
         <LinearLayout
             android:id="@+id/main_dialog_layout"
-            android:layout_width="390px"
+            android:layout_width="420px"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"

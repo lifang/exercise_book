@@ -58,6 +58,10 @@
             android:name="com.comdosoft.ExerciseBook.tools.OpenInputMethod"
             android:theme="@android:style/Theme.Translucent" >
         </activity>
+         <activity
+            android:name="com.comdosoft.ExerciseBook.tools.OpenInputMethod_size8"
+            android:theme="@android:style/Theme.Translucent" >
+        </activity>
         <activity
             android:name=".UserInfoActivity"
            android:theme="@style/MyDialogStyleTop">

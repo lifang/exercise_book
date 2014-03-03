@@ -11,10 +11,11 @@ import org.apache.http.entity.mime.content.StringBody;
 
 import android.app.ProgressDialog;
 import android.app.TabActivity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -64,8 +65,8 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 	private String id = "8"; // 用户 id，，切记 不是 user_id
 	private String json = "";
 	private String uri;
-	private String avatar_url = "/avatars/students/2014-02/student_2.jpg"; // 用户头像
-	private String name = "丁作强丁作强"; // 用户mingcheng
+	private String avatar_url = "/avatars/students/2014-02/student_73.jpg"; // 用户头像
+	private String name = "丁作强强作丁丁作强"; // 用户mingcheng
 	 TextView userName;
 	Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -92,10 +93,17 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 				//
 				//
 				// editor.commit();
-				// BitmapFactory.Options options = new BitmapFactory.Options();
-				// options.inSampleSize = 7;//7就代表容量变为以前容量的1/7
-				// Bitmap bm = BitmapFactory.decodeFile(uri, options);
-				// faceImage.setImageDrawable(new BitmapDrawable(bm));
+				 BitmapFactory.Options options = new BitmapFactory.Options();
+				 options.inSampleSize = 7;//7就代表容量变为以前容量的1/7
+				String uri = Environment.getExternalStorageDirectory()
+				+ "/1" + IMAGE_FILE_NAME;
+				 Bitmap bm = BitmapFactory.decodeFile(uri, options);
+				 faceImage.setImageDrawable(new BitmapDrawable(bm));
+					File file = new File(uri);
+
+					if (file.exists()) {
+						file.delete();
+					}
 				//
 				// }else {
 				// Toast.makeText(getApplicationContext(), notice, 0)

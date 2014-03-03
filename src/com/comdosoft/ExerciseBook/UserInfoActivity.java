@@ -48,12 +48,12 @@ public class UserInfoActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);// 去掉标题栏
 		setContentView(R.layout.userinfo);
 		instance = this;
-		// SharedPreferences preferences =
-		// getSharedPreferences(Urlinterface.SHARED,
-		// Context.MODE_PRIVATE);
-		// classname= preferences.getString("school_class_name", "");
-		// username = preferences.getString("name", "");
-		// id = preferences.getString("id", null);
+		 SharedPreferences preferences =
+		 getSharedPreferences(Urlinterface.SHARED,
+		 Context.MODE_PRIVATE);
+		 classname= preferences.getString("school_class_name", "");
+		 username = preferences.getString("name", "");
+		 id = preferences.getString("id", null);
 
 		userinfo_username = (TextView) findViewById(R.id.userinfo_username); // 用户名
 		userinfo_classname = (TextView) findViewById(R.id.userinfo_classname); // 班级名
