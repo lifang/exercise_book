@@ -4,7 +4,7 @@
     <string name="app_name">Exercisebook_app</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
-     <string name="nicheng">昵称</string>
+    <string name="nicheng">昵称</string>
     <string name="xingming">姓名</string>
     <string name="banjiyanzhengma">班级验证码</string>
     <string name="queren">确认</string>
@@ -48,9 +48,11 @@
     <string name="SwitchClass_Tv">切换班级</string>
     <string name="SwitchClass_Et">输入班级验证码加入新班级</string>
     <string name="senderError">发表失败</string>
+    <string name="sender">发送</string>
     <string name="question_speak_tishi_ok">你的发音真的很不错哦,让我们再来读读其它的句子吧！</string>
     <string name="reg_info">登记信息</string>
-    <string name="sender">发送</string>
-    
+    <string name="homeworking_title">今日作業截至时间为</string>
+    <string name="top">排行</string>
+    <string name="work_null">还没有需要完成的作业！</string>
 
 </resources>

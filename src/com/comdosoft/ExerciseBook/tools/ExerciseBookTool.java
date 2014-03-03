@@ -189,9 +189,9 @@ public class ExerciseBookTool implements Urlinterface {
 	}
 
 	// 判断是否存在集合中
-	public static boolean getExist(String one, List<String> two) {
+	public static boolean getExist(int one, List<Integer> two) {
 		for (int i = 0; i < two.size(); i++) {
-			if (one.equals(two.get(i))) {
+			if (one==two.get(i)) {
 				return true;
 			}
 		}
@@ -222,6 +222,7 @@ public class ExerciseBookTool implements Urlinterface {
 	// get请求
 	public static String sendGETRequest(String path, Map<String, String> map)
 			throws Exception {
+		Log.i(tag, path.toString());
 		String json = "error";
 		StringBuilder url = new StringBuilder(path);
 		url.append("?");
@@ -230,7 +231,7 @@ public class ExerciseBookTool implements Urlinterface {
 			url.append("&");
 		}
 		url.deleteCharAt(url.length() - 1);
-		Log.i("homework", url.toString());
+		Log.i(tag, url.toString());
 		HttpURLConnection conn = (HttpURLConnection) new URL(url.toString())
 				.openConnection();
 		conn.setConnectTimeout(8000);
@@ -242,7 +243,7 @@ public class ExerciseBookTool implements Urlinterface {
 			is.close();
 			json = new String(data);
 		}
-		Log.i("homework", json);
+		Log.i(tag, json);
 		return json;
 	}
 
