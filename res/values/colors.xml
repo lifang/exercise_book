@@ -11,5 +11,5 @@
     <color name="work_bg">#DCDBDB</color>
 	<color name="select_menu">#272f39</color>
     <color name="transparent">#00000000</color>
-
+    <color name="question_color">#404853</color>
 </resources>

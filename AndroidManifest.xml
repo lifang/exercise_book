@@ -124,11 +124,7 @@
         <activity
             android:name=".HomePageMainActivity"
             android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".SettingPhoto"
@@ -141,8 +137,6 @@
         <activity
             android:name=".HomepageMyselfActivity"
             android:windowSoftInputMode="stateUnchanged" />
-        <activity android:name=".HomeWorkIngActivity" >
-        </activity>
         <activity android:name="com.comdosoft.ExerciseBook.HomePageSendMessage" >
         </activity>
         <activity
@@ -154,11 +148,7 @@
             android:theme="@android:style/Theme.Translucent" >
         </activity>
         <activity android:name="com.comdosoft.ExerciseBook.Table_TabHost" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".UserInfoActivity"
@@ -168,6 +158,21 @@
             android:name=".SwitchClassActivity"
             android:theme="@style/MyDialogStyleTop" >
         </activity>
+        <activity
+            android:name=".HomeWorkIngActivity"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".RecordMainActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".TenSpeedActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
