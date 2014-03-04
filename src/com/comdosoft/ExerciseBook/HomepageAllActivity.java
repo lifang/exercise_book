@@ -723,6 +723,7 @@ public class HomepageAllActivity extends Activity implements
 						 editor.putString("avatar_url", avatar_url);
 						 editor.putString("school_class_name", class_name);
 						 editor.putString("name", user_name);
+						 editor.putString("nickname", nick_name);
 						 editor.commit();
 				care = new ArrayList<String>();
 				JSONArray follow_microposts_id = obj

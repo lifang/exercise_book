@@ -11,7 +11,9 @@ import org.apache.http.entity.mime.content.StringBody;
 
 import android.app.ProgressDialog;
 import android.app.TabActivity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -66,8 +68,8 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 	private String json = "";
 	private String uri;
 	private String avatar_url = "/avatars/students/2014-02/student_73.jpg"; // 用户头像
-	private String name = "丁作强强作丁丁作强"; // 用户mingcheng
-	 TextView userName;
+	private String nickName = "丁作"; // 用户昵称
+	 TextView userName;//  
 	Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -133,12 +135,11 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.homewrok_main);
-//		SharedPreferences preferences = getSharedPreferences(SHARED,
-//				Context.MODE_PRIVATE);
-
-//		avatar_url = preferences.getString("avatar_url", "");
-//		name = preferences.getString("name", "");
-//		id = preferences.getString("id", null);
+		SharedPreferences preferences = getSharedPreferences(SHARED,
+				Context.MODE_PRIVATE);
+		avatar_url = preferences.getString("avatar_url", "");
+		nickName = preferences.getString("nickname", "");
+		id = preferences.getString("id", null);
 		File file = new File(Environment.getExternalStorageDirectory() + "/1"
 				+ IMAGE_FILE_NAME);
 
@@ -154,7 +155,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 		myselfbottom = (ImageView) findViewById(R.id.myself_bottom);
 		senderbottom = (ImageView) findViewById(R.id.sender_bottom);
 		userName=(TextView) findViewById(R.id.user_name);
-		userName.setText(name);
+		userName.setText(nickName);
 		
 		 userInfo = (LinearLayout) findViewById(R.id.user_button);
 		faceImage = (CircularImage) findViewById(R.id.user_face);
