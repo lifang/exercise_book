@@ -28,8 +28,9 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 import com.comdosoft.ExerciseBook.tools.WorkJson;
 
-public class HomeWorkIngActivity extends Activity implements Urlinterface {
-
+public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
+	private String id = "73";
+	private String school_class_id = "85";
 	private String json = "{\"status\": \"success\",\"notice\": \"获取成功！\",\"tasks\": [{\"id\": 97,\"name\": null,\"start_time\": \"2014-02-27T10:38:08+08:00\",\"question_types\": [0,1,4,5,6],\"finish_types\": [0],\"end_time\": \"2014-02-27T10:45:04+08:00\",\"question_packages_url\": \"/que_ps/question_p_234/resourse.zip\"}]}";
 	private ExerciseBook eb;
 	private LinearLayout mylayout;
@@ -43,7 +44,7 @@ public class HomeWorkIngActivity extends Activity implements Urlinterface {
 	private List<WorkPoJo> work_list = new ArrayList<WorkPoJo>();
 	private TextView start_time;
 	private TextView end_time;
-	static HomeWorkIngActivity instance=null;
+	static HomeWorkIngActivity instance = null;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -74,6 +75,8 @@ public class HomeWorkIngActivity extends Activity implements Urlinterface {
 				break;
 			case 2:
 				prodialog.dismiss();
+				Toast.makeText(getApplicationContext(), "解析数据出现问题",
+						Toast.LENGTH_SHORT).show();
 				break;
 			}
 		};
@@ -130,8 +133,8 @@ public class HomeWorkIngActivity extends Activity implements Urlinterface {
 		int imgid = 0;
 		imageView.setBackgroundResource(0);
 		try {// 利用java反射动态设置图片
-			imgid = (Integer) R.drawable.class.getField("img" + (questiontype_list.get(i) + 1)).get(
-					null);
+			imgid = (Integer) R.drawable.class.getField(
+					"img" + (questiontype_list.get(i) + 1)).get(null);
 		} catch (Exception e) {
 			imgid = 0;
 		}
@@ -158,11 +161,11 @@ public class HomeWorkIngActivity extends Activity implements Urlinterface {
 	class get_newer_task implements Runnable {
 		public void run() {
 			Map<String, String> map = new HashMap<String, String>();
-			map.put("student_id", 2 + "");
-			map.put("school_class_id", 15 + "");
-			// String json;
+			map.put("student_id", id);
+			map.put("school_class_id", school_class_id);
+			String json;
 			try {
-				// json = ExerciseBookTool.sendGETRequest(get_newer_task, map);
+				json = ExerciseBookTool.sendGETRequest(get_newer_task, map);
 				JSONObject obj = new JSONObject(json);
 				if (obj.getString("status").equals("success")) {
 					work_list = WorkJson.json(json);
@@ -172,7 +175,6 @@ public class HomeWorkIngActivity extends Activity implements Urlinterface {
 					handler.sendEmptyMessage(1);
 				}
 			} catch (Exception e) {
-				Toast.makeText(getApplicationContext(), "解析数据出现问题", Toast.LENGTH_SHORT).show();
 				handler.sendEmptyMessage(2);
 			}
 		}

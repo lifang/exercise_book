@@ -5,11 +5,14 @@ public interface Urlinterface {
 	static final String SHARED = "EB";
 	static String[] namearr = new String[] { "听写任务", "朗读任务", "十速挑战", "选择挑战",
 			"连线挑战", "完形填空", "排序挑战" };
-	static final String IP = "http://192.168.0.250:3004";
+	 static final String IP = "http://192.168.0.250:3004";
+//	static final String IP = "http://192.168.199.196:3004";
+
 	// 获取新作业数量
 	static final String NEW_HOMEWORK = IP + "/api/students/new_homework";
 	// 获取班级每日任务等信息
 	static final String CLASS_INFO = IP + "/api/students/get_class_info";
+	
 	// 提交作业
 	static final String FINISH_QUESTION_PACKGE = IP
 			+ "/api/students/finish_question_packge";
@@ -47,7 +50,8 @@ public interface Urlinterface {
 
 	// 获取当天作业
 	static final String get_newer_task = IP + "/api/students/get_newer_task";
-
 	// 过往记录列表
 	static final String get_more_tasks = IP + "/api/students/get_more_tasks";
+	//根据日期查询作业记录
+	static final String search_tasks = IP + "/api/students/search_tasks";
 }
