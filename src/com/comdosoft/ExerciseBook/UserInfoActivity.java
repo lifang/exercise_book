@@ -59,7 +59,6 @@ public class UserInfoActivity extends Activity {
 				if (list.size()==4) {
 					init();
 				}
-				
 
 				break;
 
@@ -190,24 +189,24 @@ public class UserInfoActivity extends Activity {
 		userinfo_youyi1.setLayoutParams(laParams0);
 
 		int num1 = (Integer) list.get(1); // 精准
-		userinfo_jingzhun2.setText("LV" + num0 / 100);
-		LayoutParams laParams1 = (LayoutParams) userinfo_youyi1
+		userinfo_jingzhun2.setText("LV" + num1 / 100);
+		LayoutParams laParams1 = (LayoutParams) userinfo_jingzhun1
 				.getLayoutParams();
-		laParams1.width = (int) ((num0 % 100) * 2.01);
+		laParams1.width = (int) ((num1 % 100) * 2.01);
 		userinfo_jingzhun1.setLayoutParams(laParams1);
 
 		int num2 = (Integer) list.get(2); // 迅速
-		userinfo_xunsu2.setText("LV" + num0 / 100);
-		LayoutParams laParams2 = (LayoutParams) userinfo_youyi1
+		userinfo_xunsu2.setText("LV" + num2 / 100);
+		LayoutParams laParams2 = (LayoutParams) userinfo_xunsu1
 				.getLayoutParams();
-		laParams2.width = (int) ((num0 % 100) * 2.01);
+		laParams2.width = (int) ((num2 % 100) * 2.01);
 		userinfo_xunsu1.setLayoutParams(laParams2);
 
 		int num3 = (Integer) list.get(3); // 捷足
-		userinfo_jiezu2.setText("LV" + num0 / 100);
-		LayoutParams laParams3 = (LayoutParams) userinfo_youyi1
+		userinfo_jiezu2.setText("LV" + num3 / 100);
+		LayoutParams laParams3 = (LayoutParams) userinfo_jiezu1
 				.getLayoutParams();
-		laParams3.width = (int) ((num0 % 100) * 2.01);
+		laParams3.width = (int) ((num3 % 100) * 2.01);
 		userinfo_jiezu1.setLayoutParams(laParams3);
 
 	}
