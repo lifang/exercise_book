@@ -15,6 +15,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -64,9 +67,9 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 	private String id = "8"; // 用户 id，，切记 不是 user_id
 	private String json = "";
 	private String uri;
-	private String avatar_url = "/avatars/students/2014-02/student_2.jpg"; // 用户头像
-	private String name = "丁作强丁作强"; // 用户mingcheng
-	 TextView userName;
+	private String avatar_url = "/avatars/students/2014-02/student_73.jpg"; // 用户头像
+	private String nickName = "丁作"; // 用户昵称
+	 TextView userName;//  
 	Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -92,10 +95,17 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 				//
 				//
 				// editor.commit();
-				// BitmapFactory.Options options = new BitmapFactory.Options();
-				// options.inSampleSize = 7;//7就代表容量变为以前容量的1/7
-				// Bitmap bm = BitmapFactory.decodeFile(uri, options);
-				// faceImage.setImageDrawable(new BitmapDrawable(bm));
+				 BitmapFactory.Options options = new BitmapFactory.Options();
+				 options.inSampleSize = 7;//7就代表容量变为以前容量的1/7
+				String uri = Environment.getExternalStorageDirectory()
+				+ "/1" + IMAGE_FILE_NAME;
+				 Bitmap bm = BitmapFactory.decodeFile(uri, options);
+				 faceImage.setImageDrawable(new BitmapDrawable(bm));
+					File file = new File(uri);
+
+					if (file.exists()) {
+						file.delete();
+					}
 				//
 				// }else {
 				// Toast.makeText(getApplicationContext(), notice, 0)
@@ -125,12 +135,11 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.homewrok_main);
-//		SharedPreferences preferences = getSharedPreferences(SHARED,
-//				Context.MODE_PRIVATE);
-
-//		avatar_url = preferences.getString("avatar_url", "");
-//		name = preferences.getString("name", "");
-//		id = preferences.getString("id", null);
+		SharedPreferences preferences = getSharedPreferences(SHARED,
+				Context.MODE_PRIVATE);
+		avatar_url = preferences.getString("avatar_url", "");
+		nickName = preferences.getString("nickname", "");
+		id = preferences.getString("id", null);
 		File file = new File(Environment.getExternalStorageDirectory() + "/1"
 				+ IMAGE_FILE_NAME);
 
@@ -146,7 +155,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 		myselfbottom = (ImageView) findViewById(R.id.myself_bottom);
 		senderbottom = (ImageView) findViewById(R.id.sender_bottom);
 		userName=(TextView) findViewById(R.id.user_name);
-		userName.setText(name);
+		userName.setText(nickName);
 		
 		 userInfo = (LinearLayout) findViewById(R.id.user_button);
 		faceImage = (CircularImage) findViewById(R.id.user_face);

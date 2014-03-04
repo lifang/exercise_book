@@ -93,6 +93,7 @@ public class SwitchClassActivity extends Activity {
 						int class_id = (Integer) jsonobject2.get("class_id");
 						String class_name = jsonobject2.getString("class_name");
 						classList.add(new ClassPojo(class_id, class_name));
+						
 					}
 					handler.sendEmptyMessage(0);
 				} catch (Exception e) {
@@ -124,6 +125,7 @@ public class SwitchClassActivity extends Activity {
 			case 0:
 				switchclassLv.setAdapter(new SwitchClassAdapter(
 						getApplication(), classList));
+				switchclassLv.setDivider(null);
 				break;
 			case 1:
 				Toast.makeText(SwitchClassActivity.this, msg.obj.toString(), 1)
