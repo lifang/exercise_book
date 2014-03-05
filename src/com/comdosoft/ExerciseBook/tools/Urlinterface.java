@@ -3,6 +3,11 @@ package com.comdosoft.ExerciseBook.tools;
 public interface Urlinterface {
 	static final String tag = "ExerciseBook";
 	static final String SHARED = "EB";
+<<<<<<< HEAD
+	static final String IP ="http://192.168.0.250:3004";
+//	static final String IP="http://58.240.210.42:3004";
+	static final String NEW_HOMEWORK = IP +"/api/students/new_homework";
+=======
 	static String[] namearr = new String[] { "听写任务", "朗读任务", "十速挑战", "选择挑战",
 			"连线挑战", "完形填空", "排序挑战" };
 	static final String IP = "http://58.240.210.42:3004";
@@ -11,6 +16,7 @@ public interface Urlinterface {
 	
 	// 获取新作业数量
 	static final String NEW_HOMEWORK = IP + "/api/students/new_homework";
+>>>>>>> c385b6f7e2d36790129952b8972f3fb33b16c7fe
 	// 获取班级每日任务等信息
 	static final String CLASS_INFO = IP + "/api/students/get_class_info";
 	
@@ -43,6 +49,8 @@ public interface Urlinterface {
 	String getClass = IP + "/api/students/get_classmates_info";
 	String delete_message = IP + "/api/students/delete_message"; // 删除消息
 	String read_message = IP + "/api/students/read_message";
+	String get_sysmessage=IP+"/api/students/get_sys_message";		//获取系统消息
+	String delete_sys_message=IP+"/api/students/delete_sys_message";
 	// String UPLOAD_FACE = IP + "/api/students/upload_avatar"; // 上传头像
 	String unfollow = IP + "/api/students/unfollow"; // 取消关注消息
 	String SAVE_DICTATION = IP + "/api/students/record_answer_info"; // 保存拼写答题记录
