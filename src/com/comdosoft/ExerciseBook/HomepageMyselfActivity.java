@@ -169,7 +169,7 @@ public class HomepageMyselfActivity extends Activity implements
 
 //		 user_id = preferences.getString("user_id", null);
 //		 id = preferences.getString("id", null);
-//		 school_class_id = preferences.getString("school_class_id", null);
+		 school_class_id = preferences.getString("school_class_id", null);
 
 		item_huifu = new ArrayList<RelativeLayout>();
 		guanzhu_count_list = new ArrayList<TextView>();

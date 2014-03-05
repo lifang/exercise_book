@@ -117,6 +117,7 @@ public class HomepageAllActivity extends Activity implements
 	private final char FLING_RIGHT = 2;
 	private char flingState = FLING_CLICK;
 
+	public static HomepageAllActivity instance = null;
 	private ArrayList<Child_Micropost> child_list;
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
@@ -166,14 +167,14 @@ public class HomepageAllActivity extends Activity implements
 		setContentView(R.layout.class_middle);
 		exerciseBook = (ExerciseBook) getApplication();
 		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-
+		instance = this;
 		gd = new GestureDetector(this);
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
 
 		// user_id = preferences.getString("user_id", null);
 		// id = preferences.getString("id", null);
-		// school_class_id = preferences.getString("school_class_id", null);
+		 school_class_id = preferences.getString("school_class_id", null);
 
 		item_huifu = new ArrayList<RelativeLayout>();
 		guanzhu_list = new ArrayList<ImageView>();
