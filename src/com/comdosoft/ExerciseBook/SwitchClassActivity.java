@@ -74,7 +74,7 @@ public class SwitchClassActivity extends Activity {
 			public void onClick(View v) {
 				Intent intentp = new Intent();
 				intentp.setClass(SwitchClassActivity.this,
-						com.comdosoft.ExerciseBook.tools.OpenInputMethod.class);//
+						com.comdosoft.ExerciseBook.tools.CodeInputMethod.class);//
 				startActivityForResult(intentp, 0);
 			}
 		});
