@@ -8,7 +8,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="#282828"
+        android:background="@drawable/input_bg"
         android:orientation="horizontal"
         android:padding="25px" >
 
@@ -25,8 +25,8 @@
             android:layout_marginLeft="10px"
             
              android:padding="10px"
-            
-            android:background="#BEBFC0"
+            android:textColor="#BEBFC0"
+            android:background="@drawable/shape"
             android:text="@string/queren"
             android:textSize="30px" />
                 <TextView
@@ -41,9 +41,9 @@
             android:id="@+id/edittext"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@color/top_huise"
             android:maxLength="60"
             android:padding="10px"
+            android:background="@drawable/shape"
             android:layout_marginRight="200px"
             android:textSize="30px" >
             
