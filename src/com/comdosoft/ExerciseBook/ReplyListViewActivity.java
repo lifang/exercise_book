@@ -8,7 +8,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,12 +15,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.GestureDetector.OnGestureListener;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.GestureDetector.OnGestureListener;
 import android.widget.BaseAdapter;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
@@ -315,7 +314,6 @@ OnGestureListener
 		public long getItemId(int position) {
 			return position;
 		}
-		@SuppressLint("ResourceAsColor")
 		public View getView(final int position, View convertView, ViewGroup parent) {
 			LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
 			final int showPosition = position;

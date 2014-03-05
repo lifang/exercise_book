@@ -61,7 +61,7 @@ public class LeftMenu extends Activity implements Urlinterface
 		Invit();
 		linear =  (LinearLayout) findViewById(R.id.linear);
 		ClickLis();
-
+		eb = (ExerciseBook) getApplication();
 	}
 	public void setBackColor()
 	{

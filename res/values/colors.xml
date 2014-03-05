@@ -12,10 +12,7 @@
     <color name="select_menu">#272f39</color>
     <color name="noselect_menu">#3f4853</color>
     <color name="transparent">#00000000</color>
-<<<<<<< HEAD
     <color name="huse">#ebebeb</color>
 
-=======
     <color name="question_color">#404853</color>
->>>>>>> c385b6f7e2d36790129952b8972f3fb33b16c7fe
 </resources>

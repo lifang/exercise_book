@@ -8,51 +8,49 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.comdosoft.ExerciseBook.ReplyListView.IXListViewListener;
-import com.comdosoft.ExerciseBook.pojo.Reply;
-import com.comdosoft.ExerciseBook.pojo.SysMessage;
-import com.comdosoft.ExerciseBook.tools.ExerciseBook;
-import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
-import com.comdosoft.ExerciseBook.tools.Urlinterface;
-
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.GestureDetector.OnGestureListener;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.GestureDetector.OnGestureListener;
 import android.widget.BaseAdapter;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MessageActivity extends Table_TabHost implements IXListViewListener ,Urlinterface,
-OnGestureListener
-{
+import com.comdosoft.ExerciseBook.ReplyListView.IXListViewListener;
+import com.comdosoft.ExerciseBook.pojo.SysMessage;
+import com.comdosoft.ExerciseBook.tools.ExerciseBook;
+import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
+import com.comdosoft.ExerciseBook.tools.Urlinterface;
+
+public class MessageActivity extends Table_TabHost implements
+		IXListViewListener, Urlinterface, OnGestureListener {
 	private ReplyListView mListView;
-	private List<SysMessage>  replyList=new ArrayList<SysMessage>();;
+	private List<SysMessage> replyList = new ArrayList<SysMessage>();;
 	private Handler mHandler;
 	private int start = 0;
-	private String page="1";
+	private String page = "1";
 	private static int refreshCnt = 0;
-	private String user_id="1";
-	private String school_class_id="1";
-	private int mShowPosition  = -1;
-	private Boolean isShow=false;
-	ReplyAdapter madapter=new ReplyAdapter();
+	private String user_id = "1";
+	private String school_class_id = "1";
+	private int mShowPosition = -1;
+	private Boolean isShow = false;
+	ReplyAdapter madapter = new ReplyAdapter();
 	private GestureDetector gd;
 	private final char FLING_CLICK = 0;
 	private final char FLING_LEFT = 1;
 	private final char FLING_RIGHT = 2;
 	private char flingState = FLING_CLICK;
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -62,13 +60,12 @@ OnGestureListener
 		mListView = (ReplyListView) findViewById(R.id.xListView);
 		mListView.setPullLoadEnable(true);
 		get_News();
-		//		mListView.setPullLoadEnable(false);
-		//		mListView.setPullRefreshEnable(false);
+		// mListView.setPullLoadEnable(false);
+		// mListView.setPullRefreshEnable(false);
 		mListView.setXListViewListener(this);
 		mListView.setDividerHeight(0);
 		mHandler = new Handler();
 	}
-
 
 	public void getnews() {
 		new Thread() {
@@ -89,7 +86,8 @@ OnGestureListener
 				mListView.setAdapter(madapter);
 				break;
 			case 1:
-				Toast.makeText(getApplicationContext(), "未开启网络", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), "未开启网络",
+						Toast.LENGTH_SHORT).show();
 				break;
 			}
 		}
@@ -98,26 +96,28 @@ OnGestureListener
 	// 解析获取到的Json
 	public int getNewsJson(String json) {
 		try {
-			Log.i("aa","解析字符串");
+			Log.i("aa", "解析字符串");
 			JSONObject jsonobject = new JSONObject(json);
 			String status = (String) jsonobject.get("status");
 			if (status.equals("success")) {
 				JSONArray jsonarray = jsonobject.getJSONArray("sysmessage");
 				for (int i = 0; i < jsonarray.length(); i++) {
 					JSONObject jsonobject2 = jsonarray.getJSONObject(i);
-				
+
 					String content = jsonobject2.getString("content");
 					String created_at = divisionTime(jsonobject2
 							.getString("created_at"));
 					String id = jsonobject2.getString("id");
-					String class_id=jsonobject2.getString("student_id");
-					replyList.add(new SysMessage(content,created_at,id,class_id));
+					String class_id = jsonobject2.getString("student_id");
+					replyList.add(new SysMessage(content, created_at, id,
+							class_id));
 				}
-				Log.i("aa", replyList.size()+"");
+				Log.i("aa", replyList.size() + "");
 				return replyList.size();
 			} else {
 				String notic = (String) jsonobject.get("notic");
-				Toast.makeText(getApplicationContext(), notic, Toast.LENGTH_LONG).show();
+				Toast.makeText(getApplicationContext(), notic,
+						Toast.LENGTH_LONG).show();
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -151,9 +151,9 @@ OnGestureListener
 		try {
 			HashMap<String, String> mp = new HashMap<String, String>();
 			mp.put("student_id", user_id);
-			mp.put("page",page );
-			String json = ExerciseBookTool
-					.sendGETRequest(Urlinterface.get_sysmessage, mp);
+			mp.put("page", page);
+			String json = ExerciseBookTool.sendGETRequest(
+					Urlinterface.get_sysmessage, mp);
 			return json;
 		} catch (Exception e) {
 			handler1.sendEmptyMessage(1);
@@ -176,7 +176,7 @@ OnGestureListener
 		int temp1 = timeStr.indexOf("T");
 		int temp2 = timeStr.lastIndexOf("+");
 		return timeStr.substring(0, temp1) + " "
-		+ timeStr.substring(temp1 + 1, temp2);
+				+ timeStr.substring(temp1 + 1, temp2);
 	}
 
 	private void onLoad() {
@@ -193,7 +193,7 @@ OnGestureListener
 				start = ++refreshCnt;
 				replyList.clear();
 				// mAdapter.notifyDataSetChanged();
-				page="1";
+				page = "1";
 				get_News();
 				madapter = new ReplyAdapter();
 				mListView.setAdapter(madapter);
@@ -207,15 +207,16 @@ OnGestureListener
 		mHandler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				int num=Integer.valueOf(page);
+				int num = Integer.valueOf(page);
 				num++;
-				page=String.valueOf(num);
+				page = String.valueOf(num);
 				get_News();
 				mListView.setAdapter(madapter);
 				onLoad();
 			}
 		}, 2000);
 	}
+
 	public static class ViewHolder {
 		public HorizontalScrollView hSView;
 		public TextView date;
@@ -223,9 +224,10 @@ OnGestureListener
 		public ImageView imgbtn2;
 		private View ll_action2;
 	}
-	class ReplyAdapter extends BaseAdapter
-	{
+
+	class ReplyAdapter extends BaseAdapter {
 		ExerciseBook hw = (ExerciseBook) getApplication();
+
 		public ReplyAdapter() {
 		}
 
@@ -243,62 +245,70 @@ OnGestureListener
 		public long getItemId(int position) {
 			return position;
 		}
-		@SuppressLint("ResourceAsColor")
-		public View getView(final int position, View convertView, ViewGroup parent) {
-			LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+
+		public View getView(final int position, View convertView,
+				ViewGroup parent) {
+			LayoutInflater inflater = LayoutInflater
+					.from(getApplicationContext());
 			final int showPosition = position;
 			ViewHolder holder = null;
 			if (convertView == null) {
-				convertView = inflater.inflate(R.layout.message_layout_iteam, null);
+				convertView = inflater.inflate(R.layout.message_layout_iteam,
+						null);
 				holder = new ViewHolder();
-				holder.hSView = (HorizontalScrollView) convertView.findViewById(R.id.hsv2);
-				holder.date=(TextView) convertView.findViewById(R.id.child_message_date);
-				holder.content=(TextView) convertView.findViewById(R.id.child_micropost_content);
-				holder.imgbtn2=(ImageView) convertView.findViewById(R.id.child_micropost_delete);
-				holder.ll_action2=convertView.findViewById(R.id.ll_action2);
-				View vew=convertView.findViewById(R.id.child_user_left);
+				holder.hSView = (HorizontalScrollView) convertView
+						.findViewById(R.id.hsv2);
+				holder.date = (TextView) convertView
+						.findViewById(R.id.child_message_date);
+				holder.content = (TextView) convertView
+						.findViewById(R.id.child_micropost_content);
+				holder.imgbtn2 = (ImageView) convertView
+						.findViewById(R.id.child_micropost_delete);
+				holder.ll_action2 = convertView.findViewById(R.id.ll_action2);
+				View vew = convertView.findViewById(R.id.child_user_left);
 
-				if(position%2==0)
-				{
+				if (position % 2 == 0) {
 					vew.setBackgroundResource(R.color.before_click);
-				}
-				else
-				{
+				} else {
 					vew.setBackgroundResource(R.color.huse);
 				}
 				convertView.setTag(holder);
-			}
-			else {
+			} else {
 				holder = (ViewHolder) convertView.getTag();
 			}
-			holder.imgbtn2.setOnClickListener(new OnClickListener()
-			{
+			holder.imgbtn2.setOnClickListener(new OnClickListener() {
 
 				public void onClick(View v) {
-					if (ExerciseBookTool.isConnect(MessageActivity.this))
-					{
-						
-						Thread thread = new Thread()
-						{
-							public void run()
-							{
+					if (ExerciseBookTool.isConnect(MessageActivity.this)) {
+
+						Thread thread = new Thread() {
+							public void run() {
 								try {
 									HashMap<String, String> mp = new HashMap<String, String>();
 									mp.put("user_id", user_id);
-									mp.put("sys_message_id",replyList.get(position).getId() );
-									mp.put("school_class_id",replyList.get(position).getClass_id() );
-									String json = ExerciseBookTool.doPost(Urlinterface.delete_sys_message, mp);
-									JSONObject jsonobejct=new JSONObject(json);
-									String status=jsonobejct.getString("status");
-									String notice=jsonobejct.getString("notice");
-									if(status.equals("success"))
-									{
-										Toast.makeText(getApplicationContext(), notice, Toast.LENGTH_SHORT).show();
+									mp.put("sys_message_id",
+											replyList.get(position).getId());
+									mp.put("school_class_id",
+											replyList.get(position)
+													.getClass_id());
+									String json = ExerciseBookTool
+											.doPost(Urlinterface.delete_sys_message,
+													mp);
+									JSONObject jsonobejct = new JSONObject(json);
+									String status = jsonobejct
+											.getString("status");
+									String notice = jsonobejct
+											.getString("notice");
+									if (status.equals("success")) {
+										Toast.makeText(getApplicationContext(),
+												notice, Toast.LENGTH_SHORT)
+												.show();
 										replyList.remove(position);
 										madapter.notifyDataSetChanged();
-									}else
-									{
-										Toast.makeText(getApplicationContext(), notice, Toast.LENGTH_SHORT).show();
+									} else {
+										Toast.makeText(getApplicationContext(),
+												notice, Toast.LENGTH_SHORT)
+												.show();
 									}
 								} catch (Exception e) {
 									// TODO Auto-generated catch block
@@ -309,44 +319,35 @@ OnGestureListener
 						thread.start();
 					}
 				}
-				
+
 			});
-		
-			convertView.setOnTouchListener(new View.OnTouchListener()
-			{
+
+			convertView.setOnTouchListener(new View.OnTouchListener() {
 				final int showPosition = position;
-				public boolean onTouch(View v, MotionEvent event)
-				{
+
+				public boolean onTouch(View v, MotionEvent event) {
 					ViewHolder viewHolder = (ViewHolder) v.getTag();
 					int scrollX = viewHolder.hSView.getScrollX();
 					int actionW = viewHolder.ll_action2.getWidth();
 					switch (event.getAction()) {
 					case MotionEvent.ACTION_UP:
-						if(scrollX==0)
-						{
+						if (scrollX == 0) {
 							viewHolder.hSView.smoothScrollTo(actionW, 0);
-							mShowPosition = showPosition;  
-							notifyDataSetChanged();  
-							isShow=true;
-						}
-						else if (scrollX < actionW / 2)
-						{
+							mShowPosition = showPosition;
+							notifyDataSetChanged();
+							isShow = true;
+						} else if (scrollX < actionW / 2) {
 							viewHolder.hSView.smoothScrollTo(0, 0);
-							isShow=false;
-						}
-						else if(scrollX==actionW||scrollX >= actionW / 2)
-						{
-							if(isShow)
-							{
+							isShow = false;
+						} else if (scrollX == actionW || scrollX >= actionW / 2) {
+							if (isShow) {
 								viewHolder.hSView.smoothScrollTo(0, 0);
-								isShow=false;
-							}
-							else
-							{
+								isShow = false;
+							} else {
 								viewHolder.hSView.smoothScrollTo(actionW, 0);
-								mShowPosition = showPosition;  
-								notifyDataSetChanged();  
-								isShow=true;
+								mShowPosition = showPosition;
+								notifyDataSetChanged();
+								isShow = true;
 							}
 						}
 						return true;
@@ -355,12 +356,10 @@ OnGestureListener
 
 				}
 			});
-			if (holder.hSView.getScrollX() != 0 && position != mShowPosition )  
-			{  
-				holder.hSView.scrollTo(0, 0);  
-			} 
-			if (holder.hSView.getScrollX() != 0)
-			{
+			if (holder.hSView.getScrollX() != 0 && position != mShowPosition) {
+				holder.hSView.scrollTo(0, 0);
+			}
+			if (holder.hSView.getScrollX() != 0) {
 				holder.hSView.scrollTo(0, 0);
 			}
 			holder.content.setText(replyList.get(position).getContent());
@@ -369,6 +368,7 @@ OnGestureListener
 		}
 
 	}
+
 	public boolean dispatchTouchEvent(MotionEvent event) {
 		this.gd.onTouchEvent(event);
 		return super.dispatchTouchEvent(event);
