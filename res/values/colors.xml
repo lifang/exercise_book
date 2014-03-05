@@ -9,7 +9,9 @@
     <color name="red">#FF0000</color>
     <color name="white">#FFFFFF</color>
     <color name="work_bg">#DCDBDB</color>
-	<color name="select_menu">#272f39</color>
+    <color name="select_menu">#272f39</color>
+    <color name="noselect_menu">#3f4853</color>
     <color name="transparent">#00000000</color>
+    <color name="huse">#ebebeb</color>
 
 </resources>

@@ -47,20 +47,19 @@
                 android:text="丁作强"
                 android:textColor="@color/white"
                 android:textSize="30px" />
-<LinearLayout 
-       android:id="@+id/user_button"
-    android:layout_width="wrap_content"
+
+            <LinearLayout
+                android:id="@+id/user_button"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="15px"
-                android:layout_marginTop="47.5px"
                 android:layout_marginRight="13.5px"
-    >
-            <ImageView
-             
-                android:layout_width="26px"
-                android:layout_height="15px"
-                
-                android:background="@drawable/userinfo_button" />
+                android:layout_marginTop="47.5px"
+                android:padding="15px" >
+
+                <ImageView
+                    android:layout_width="26px"
+                    android:layout_height="15px"
+                    android:background="@drawable/userinfo_button" />
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>

@@ -1,25 +1,22 @@
 package com.comdosoft.ExerciseBook;
 
-import cn.jpush.android.api.JPushInterface;
-
-import com.comdosoft.ExerciseBook.tools.ExerciseBook;
-
 import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import cn.jpush.android.api.JPushInterface;
+import com.comdosoft.ExerciseBook.R;
+
+import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 public class Table_TabHost extends Activity
 {
 	private LinearLayout middleLayout;
 	private ImageView img_tab_now;
 	private ExerciseBook eb;
-	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);

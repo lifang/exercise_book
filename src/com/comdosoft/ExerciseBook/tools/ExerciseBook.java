@@ -32,6 +32,21 @@ public class ExerciseBook extends Application {
 	private int work_date_item;
 	private int history_item;
 	private int menu_count=0;
+	private int menu_num;
+	private boolean MessageChoice;
+	public int getMenu_num() {
+		return menu_num;
+	}
+	public void setMenu_num(int menu_num) {
+		this.menu_num = menu_num;
+	}
+
+	public boolean isMessageChoice() {
+		return MessageChoice;
+	}
+	public void setMessageChoice(boolean messageChoice) {
+		MessageChoice = messageChoice;
+	}
 	public int getMenu_count() {
 		return menu_count;
 	}
@@ -81,7 +96,8 @@ public class ExerciseBook extends Application {
 	}
 
 	public ExerciseBook() {
-		
+		this.menu_num=0;
+		this.setMessageChoice(true);
 		this.setMneu(true);
 		this.setRefresh(1);
 		this.setNewsFlag(true);

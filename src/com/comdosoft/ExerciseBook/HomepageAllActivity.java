@@ -1429,7 +1429,6 @@ public class HomepageAllActivity extends Activity implements
 	/**
 	 * 覆写此方法，以使用手势识别
 	 */
-	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		Log.v("MY_TAG", "onTouchEvent");
 		return this.gd.onTouchEvent(event);

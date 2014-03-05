@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -61,6 +62,27 @@ public class LeftMenu extends Activity implements Urlinterface
 		linear =  (LinearLayout) findViewById(R.id.linear);
 		ClickLis();
 
+	}
+	public void setBackColor()
+	{
+		Log.i("aa", eb.getMenu_num()+"下表");
+		switch (eb.getMenu_num()) {
+		case 0:
+			ll1.setBackgroundColor(R.color.select_menu);
+			
+			break;
+		case 1:
+			ll2.setBackgroundColor(R.color.select_menu);
+			break;
+		case 2:
+			ll3.setBackgroundColor(R.color.select_menu);
+			break;
+		case 3:
+			ll4.setBackgroundColor(R.color.select_menu);
+			break;
+		default:
+			break;
+		}
 	}
 	public void ClickLis()
 	{
@@ -112,9 +134,9 @@ public class LeftMenu extends Activity implements Urlinterface
 		{
 			public void onClick(View v) {
 				LeftMenu.this.finish();
-				HomeWorkIngActivity.instance.finish();
 				overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 				eb.setMneu(true);
+				eb.setMenu_num(0);
 				Intent intent=new Intent(LeftMenu.this,HomePageMainActivity.class);
 				startActivity(intent);
 			}
@@ -125,7 +147,9 @@ public class LeftMenu extends Activity implements Urlinterface
 			public void onClick(View v) {
 				LeftMenu.this.finish();
 				overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+				eb.setMenu_num(1);
 				eb.setMneu(true);
+				
 			}
 		});
 		ll3.setOnClickListener(new OnClickListener()
@@ -134,6 +158,9 @@ public class LeftMenu extends Activity implements Urlinterface
 			public void onClick(View v) {
 				LeftMenu.this.finish();
 				overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+				Intent intent=new Intent(LeftMenu.this,ReplyListViewActivity.class);
+				eb.setMenu_num(2);
+				startActivity(intent);
 				eb.setMneu(true);
 			}
 
@@ -144,6 +171,7 @@ public class LeftMenu extends Activity implements Urlinterface
 			public void onClick(View v) {
 				LeftMenu.this.finish();
 				overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+				eb.setMenu_num(3);
 				eb.setMneu(true);
 			}
 		});
@@ -161,7 +189,6 @@ public class LeftMenu extends Activity implements Urlinterface
 				String json=ExerciseBookTool.sendGETRequest(getClass, map);
 				ChangeViewMessage(json);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -266,6 +293,7 @@ public class LeftMenu extends Activity implements Urlinterface
 		teachIV=(ImageView) findViewById(R.id.teacherIm);
 		teachname=(TextView) findViewById(R.id.teachname);
 		ClassStuGv=(GridView) findViewById(R.id.classstugv);
+		setBackColor();
 	}
 	public boolean  onTouchEvent(MotionEvent event) {       
 		this.finish();
@@ -349,7 +377,6 @@ public class LeftMenu extends Activity implements Urlinterface
 			holder.tv3.setText("Lv "+classStu.get(position).getSuccess_2());
 			holder.tv4.setText("Lv "+classStu.get(position).getSuccess_3());
 			holder.tv5.setText("Lv "+classStu.get(position).getSuccess_4());
-
 			return convertView;
 		}
 

@@ -124,11 +124,6 @@
         <activity
             android:name=".HomePageMainActivity"
             android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".SettingPhoto"
@@ -148,17 +143,17 @@
         <activity
             android:name="com.comdosoft.ExerciseBook.LeftMenu"
             android:theme="@android:style/Theme.Translucent" >
+             <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name="com.comdosoft.ExerciseBook.tools.OpenInputMethod"
             android:theme="@android:style/Theme.Translucent" >
         </activity>
         <activity android:name="com.comdosoft.ExerciseBook.Table_TabHost" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".UserInfoActivity"
@@ -167,6 +162,14 @@
         <activity
             android:name=".SwitchClassActivity"
             android:theme="@style/MyDialogStyleTop" >
+        </activity>
+        <activity
+            android:name=".ReplyListViewActivity"
+            android:label="@string/app_name" >
+            
+        </activity>
+        <activity android:name=".MessageActivity">
+           
         </activity>
     </application>
 
