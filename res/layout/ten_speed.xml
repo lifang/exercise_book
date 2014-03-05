@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/work_bg"
+    android:gravity="center_horizontal"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="450px"
+        android:gravity="center" >
+
+        <ImageView
+            android:id="@+id/question_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/one_btn"
+        android:layout_width="650px"
+        android:layout_height="220px"
+        android:layout_marginTop="80px"
+        android:background="@drawable/loginbtn_hui"
+        android:gravity="center"
+        android:onClick="onclick"
+        android:text="True"
+        android:textColor="@color/white"
+        android:textSize="130px" />
+
+    <TextView
+        android:id="@+id/question"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50px"
+        android:text="马龙是狗？"
+        android:textColor="@color/question_color"
+        android:textSize="60px" />
+
+    <Button
+        android:id="@+id/two_btn"
+        android:layout_width="650px"
+        android:layout_height="220px"
+        android:layout_marginTop="50px"
+        android:background="@drawable/loginbtn_hui"
+        android:gravity="center"
+        android:onClick="onclick"
+        android:text="False"
+        android:textColor="@color/white"
+        android:textSize="130px" />
+
+</LinearLayout>

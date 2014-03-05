@@ -40,7 +40,7 @@ public class HomePageSendMessage extends Activity implements Urlinterface{
 				Context.MODE_PRIVATE);
 
 //		 user_id = preferences.getString("user_id", null);
-//		 school_class_id = preferences.getString("school_class_id", null);
+		 school_class_id = preferences.getString("school_class_id", null);
 		exerciseBook = (ExerciseBook) getApplication();
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		sendmess_btn=(Button) findViewById(R.id.sendmess_btn);

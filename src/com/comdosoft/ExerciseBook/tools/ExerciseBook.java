@@ -1,7 +1,5 @@
 package com.comdosoft.ExerciseBook.tools;
 
-import java.util.List;
-
 import android.app.Application;
 import android.content.Context;
 
@@ -11,6 +9,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
 public class ExerciseBook extends Application {
+<<<<<<< HEAD
 	private int Question_allNumber;
 	//	private List<QuestionPojo> branch_questions;
 	//	private List<ListeningPojo> question_list;
@@ -51,37 +50,28 @@ public class ExerciseBook extends Application {
 		return menu_count;
 	}
 
+=======
+>>>>>>> c385b6f7e2d36790129952b8972f3fb33b16c7fe
 
-	public void setMenu_count(int menu_count) {
-		this.menu_count = menu_count;
+	private int today_newer_id;
+	private int MainItem;
+	private int refresh;
+	private boolean Mneu;
+
+	public ExerciseBook() {
+		this.setMainItem(0);
+		this.setRefresh(1);
 	}
-
-	private boolean isMneu;
-	public boolean isMneu() {
-		return isMneu;
-	}
-
-
-	public void setMneu(boolean isMneu) {
-		this.isMneu = isMneu;
-	}
-
-	private int refresh; //  0 不刷新  1 刷新
-	private List<Integer> new_id_list;
-	public int getLastcount() {
-		return lastcount;
-	}
-
 
 	public int getRefresh() {
 		return refresh;
 	}
 
-
 	public void setRefresh(int refresh) {
 		this.refresh = refresh;
 	}
 
+<<<<<<< HEAD
 
 	public void setLastcount(int lastcount) {
 		this.lastcount = lastcount;
@@ -181,84 +171,30 @@ public class ExerciseBook extends Application {
 		this.work_history = work_history;
 	}
 
+=======
+>>>>>>> c385b6f7e2d36790129952b8972f3fb33b16c7fe
 	public int getMainItem() {
-		return mainItem;
+		return MainItem;
 	}
 
 	public void setMainItem(int mainItem) {
-		this.mainItem = mainItem;
+		MainItem = mainItem;
 	}
 
-	public int getP_q_package_id() {
-		return p_q_package_id;
+	public int getToday_newer_id() {
+		return today_newer_id;
 	}
 
-	public void setP_q_package_id(int p_q_package_id) {
-		this.p_q_package_id = p_q_package_id;
+	public void setToday_newer_id(int today_newer_id) {
+		this.today_newer_id = today_newer_id;
 	}
 
-	public int getQ_package_id() {
-		return q_package_id;
+	public boolean isMneu() {
+		return Mneu;
 	}
 
-	public void setQ_package_id(int q_package_id) {
-		this.q_package_id = q_package_id;
-	}
-
-	public int getUser_id() {
-		return user_id;
-	}
-
-	public void setUser_id(int user_id) {
-		this.user_id = user_id;
-	}
-
-	public int getClass_id() {
-		return class_id;
-	}
-
-	public void setClass_id(int class_id) {
-		this.class_id = class_id;
-	}
-
-	public int getMessage_id() {
-		return message_id;
-	}
-
-	public void setMessage_id(int message_id) {
-		this.message_id = message_id;
-	}
-
-	public int getHistory_item() {
-		return history_item;
-	}
-
-	public void setHistory_item(int history_item) {
-		this.history_item = history_item;
-	}
-
-	public int getHw_number() {
-		return hw_number;
-	}
-
-	public void setHw_number(int hw_number) {
-		this.hw_number = hw_number;
-	}
-
-	public int getWork_date_item() {
-		return work_date_item;
-	}
-
-	public void setWork_date_item(int work_date_item) {
-		this.work_date_item = work_date_item;
-	}
-
-	public List<Integer> getNew_id_list() {
-		return new_id_list;
-	}
-
-	public void setNew_id_list(List<Integer> new_id_list) {
-		this.new_id_list = new_id_list;
+	public void setMneu(boolean mneu) {
+		Mneu = mneu;
 	}
 
 	public void onCreate() {
@@ -282,4 +218,5 @@ public class ExerciseBook extends Application {
 		// Initialize ImageLoader with configuration.
 		ImageLoader.getInstance().init(config);
 	}
+
 }

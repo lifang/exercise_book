@@ -3,11 +3,23 @@ package com.comdosoft.ExerciseBook.tools;
 public interface Urlinterface {
 	static final String tag = "ExerciseBook";
 	static final String SHARED = "EB";
+<<<<<<< HEAD
 	static final String IP ="http://192.168.0.250:3004";
 //	static final String IP="http://58.240.210.42:3004";
 	static final String NEW_HOMEWORK = IP +"/api/students/new_homework";
+=======
+	static String[] namearr = new String[] { "听写任务", "朗读任务", "十速挑战", "选择挑战",
+			"连线挑战", "完形填空", "排序挑战" };
+	static final String IP = "http://58.240.210.42:3004";
+//	static final String IP = "http://192.168.0.250:3004";
+//	static final String IP = "http://192.168.199.196:3004";
+	
+	// 获取新作业数量
+	static final String NEW_HOMEWORK = IP + "/api/students/new_homework";
+>>>>>>> c385b6f7e2d36790129952b8972f3fb33b16c7fe
 	// 获取班级每日任务等信息
-	static final String CLASS_INFO = IP +"/api/students/get_class_info";
+	static final String CLASS_INFO = IP + "/api/students/get_class_info";
+	
 	// 提交作业
 	static final String FINISH_QUESTION_PACKGE = IP
 			+ "/api/students/finish_question_packge";
@@ -34,7 +46,7 @@ public interface Urlinterface {
 	String get_News = IP + "/api/students/get_messages"; // 获取所有的新消息
 	String DELETE_REPLY_POSTS = IP + "/api/students/delete_reply_microposts"; // 删除
 	String MY_MICROPOSTS = IP + "/api/students/my_microposts"; // 分页 获取 子消息
-	String getClass=IP+"/api/students/get_classmates_info";
+	String getClass = IP + "/api/students/get_classmates_info";
 	String delete_message = IP + "/api/students/delete_message"; // 删除消息
 	String read_message = IP + "/api/students/read_message";
 	String get_sysmessage=IP+"/api/students/get_sys_message";		//获取系统消息
@@ -44,6 +56,11 @@ public interface Urlinterface {
 	String SAVE_DICTATION = IP + "/api/students/record_answer_info"; // 保存拼写答题记录
 	String QQ_LOGIN = IP + "/api/students/login"; // qq登录
 	String add_concern = IP + "/api/students/add_concern"; // 关注消息
+	String get_my_achievements = IP + "/api/students/get_my_archivements"; // 获得成就
+	// 获取当天作业
+	static final String get_newer_task = IP + "/api/students/get_newer_task";
+	// 过往记录列表
+	static final String get_more_tasks = IP + "/api/students/get_more_tasks";
+	//根据日期查询作业记录
+	static final String search_tasks = IP + "/api/students/search_tasks";
 }
-
-

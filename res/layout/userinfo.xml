@@ -10,7 +10,7 @@
 
         <LinearLayout
             android:id="@+id/main_dialog_layout"
-            android:layout_width="390px"
+            android:layout_width="420px"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
@@ -32,12 +32,18 @@
                     android:textColor="#fff"
                     android:textSize="26px" />
 
-                <ImageView
+                <LinearLayout
                     android:id="@+id/imageView1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:src="@drawable/userinfo_1" />
+                    android:paddingLeft="30px" >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/userinfo_1" />
+                </LinearLayout>
             </RelativeLayout>
 
             <ImageView
@@ -60,12 +66,18 @@
                     android:textColor="#fff"
                     android:textSize="26px" />
 
-                <ImageView
+                <LinearLayout
                     android:id="@+id/imageView2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:src="@drawable/userinfo_2" />
+                    android:paddingLeft="30px" >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/userinfo_2" />
+                </LinearLayout>
             </RelativeLayout>
 
             <ImageView
@@ -124,7 +136,7 @@
 
                     <ImageView
                         android:id="@+id/userinfo_youyi1"
-                        android:layout_width="170px"
+                        android:layout_width="1px"
                         android:layout_height="30px"
                         android:layout_marginTop="10px"
                         android:background="@drawable/chengjiu_huang" />
@@ -138,7 +150,7 @@
                         android:layout_marginBottom="2px"
                         android:layout_marginLeft="10px"
                         android:layout_marginTop="7px"
-                        android:text="LV1"
+                        android:text="LV0"
                         android:textColor="#074f31"
                         android:textSize="26px" />
                 </RelativeLayout>
@@ -179,7 +191,7 @@
 
                     <ImageView
                         android:id="@+id/userinfo_jingzhun1"
-                        android:layout_width="170px"
+                        android:layout_width="1px"
                         android:layout_height="30px"
                         android:layout_marginTop="10px"
                         android:background="@drawable/chengjiu_huang" />
@@ -190,7 +202,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10px"
                         android:layout_marginTop="7px"
-                        android:text="LV1"
+                        android:text="LV0"
                         android:textColor="#074f31"
                         android:textSize="26px" />
                 </RelativeLayout>
@@ -231,7 +243,7 @@
 
                     <ImageView
                         android:id="@+id/userinfo_xunsu1"
-                        android:layout_width="170px"
+                        android:layout_width="1px"
                         android:layout_height="30px"
                         android:layout_marginTop="10px"
                         android:background="@drawable/chengjiu_huang" />
@@ -242,7 +254,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10px"
                         android:layout_marginTop="7px"
-                        android:text="LV1"
+                        android:text="LV0"
                         android:textColor="#074f31"
                         android:textSize="26px" />
                 </RelativeLayout>
@@ -284,7 +296,7 @@
 
                     <ImageView
                         android:id="@+id/userinfo_jiezu1"
-                        android:layout_width="170px"
+                        android:layout_width="1px"
                         android:layout_height="30px"
                         android:layout_marginTop="10px"
                         android:background="@drawable/chengjiu_huang" />
@@ -295,7 +307,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10px"
                         android:layout_marginTop="7px"
-                        android:text="LV1"
+                        android:text="LV0"
                         android:textColor="#074f31"
                         android:textSize="26px" />
                 </RelativeLayout>

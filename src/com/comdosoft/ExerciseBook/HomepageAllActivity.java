@@ -117,6 +117,7 @@ public class HomepageAllActivity extends Activity implements
 	private final char FLING_RIGHT = 2;
 	private char flingState = FLING_CLICK;
 
+	public static HomepageAllActivity instance = null;
 	private ArrayList<Child_Micropost> child_list;
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
@@ -166,14 +167,14 @@ public class HomepageAllActivity extends Activity implements
 		setContentView(R.layout.class_middle);
 		exerciseBook = (ExerciseBook) getApplication();
 		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-
+		instance = this;
 		gd = new GestureDetector(this);
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
 
 		// user_id = preferences.getString("user_id", null);
 		// id = preferences.getString("id", null);
-		// school_class_id = preferences.getString("school_class_id", null);
+		 school_class_id = preferences.getString("school_class_id", null);
 
 		item_huifu = new ArrayList<RelativeLayout>();
 		guanzhu_list = new ArrayList<ImageView>();
@@ -696,17 +697,13 @@ public class HomepageAllActivity extends Activity implements
 			String notice = obj.getString("notice");
 			if ("success".equals(status)) {
 				// // 学生信息
-				// JSONObject student = obj.getJSONObject("student"); // 获得学生的信息
-				// // id = student.getString("id");
-				// // user_id = student.getString("user_id");
-				// avatar_url = student.getString("avatar_url"); // 获取本人头像昂所有在地址
-				// SharedPreferences preferences = getSharedPreferences(SHARED,
-				// Context.MODE_PRIVATE);
-				// Editor editor = preferences.edit();
-				// editor.putString("avatar_url", avatar_url);
-				// editor.commit();
-				// user_name = student.getString("name");
-				// nick_name = student.getString("nickname");
+				 JSONObject student = obj.getJSONObject("student"); // 获得学生的信息
+				 // id = student.getString("id");
+				 // user_id = student.getString("user_id");
+				 avatar_url = student.getString("avatar_url"); // 获取本人头像昂所有在地址
+				 
+				 user_name = student.getString("name");
+				 nick_name = student.getString("nickname");
 				JSONObject microposts = obj.getJSONObject("microposts");
 				page = Integer.parseInt(microposts.getString("page"));
 				pages_count = Integer.parseInt(microposts
@@ -718,9 +715,17 @@ public class HomepageAllActivity extends Activity implements
 				// 班级头像和名字
 				JSONObject class1 = obj.getJSONObject("class"); // 或得班级信息
 				String class_name = class1.getString("name"); // 获取class_name
-				// classname = class1.getString("name");
-				school_class_id = class1.getString("id");
+//				school_class_id = class1.getString("id");
 
+				
+				SharedPreferences preferences = getSharedPreferences(SHARED,
+						 Context.MODE_PRIVATE);
+						 Editor editor = preferences.edit();
+						 editor.putString("avatar_url", avatar_url);
+						 editor.putString("school_class_name", class_name);
+						 editor.putString("name", user_name);
+						 editor.putString("nickname", nick_name);
+						 editor.commit();
 				care = new ArrayList<String>();
 				JSONArray follow_microposts_id = obj
 						.getJSONArray("follow_microposts_id");

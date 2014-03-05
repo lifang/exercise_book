@@ -59,13 +59,13 @@ public class SwitchClassActivity extends Activity {
 		add_newclass = (ImageView) findViewById(R.id.add_newclass);// 加入新班级
 		SharedPreferences sp = getSharedPreferences(Urlinterface.SHARED, 0);
 		// id = sp.getString("id", "null");
-		// school_class_id = sp.getString("school_class_id", "null");
+		 school_class_id = sp.getString("school_class_id", "null");
 		layout.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				Toast.makeText(getApplicationContext(), "点击别的地方本界面消失",
-						Toast.LENGTH_SHORT).show();
+//				Toast.makeText(getApplicationContext(), "点击别的地方本界面消失",
+//						Toast.LENGTH_SHORT).show();
 			}
 		});
 
@@ -74,7 +74,7 @@ public class SwitchClassActivity extends Activity {
 			public void onClick(View v) {
 				Intent intentp = new Intent();
 				intentp.setClass(SwitchClassActivity.this,
-						com.comdosoft.ExerciseBook.tools.OpenInputMethod.class);//
+						com.comdosoft.ExerciseBook.tools.CodeInputMethod.class);//
 				startActivityForResult(intentp, 0);
 			}
 		});
@@ -93,6 +93,7 @@ public class SwitchClassActivity extends Activity {
 						int class_id = (Integer) jsonobject2.get("class_id");
 						String class_name = jsonobject2.getString("class_name");
 						classList.add(new ClassPojo(class_id, class_name));
+						
 					}
 					handler.sendEmptyMessage(0);
 				} catch (Exception e) {
@@ -124,6 +125,7 @@ public class SwitchClassActivity extends Activity {
 			case 0:
 				switchclassLv.setAdapter(new SwitchClassAdapter(
 						getApplication(), classList));
+				switchclassLv.setDivider(null);
 				break;
 			case 1:
 				Toast.makeText(SwitchClassActivity.this, msg.obj.toString(), 1)
@@ -182,7 +184,12 @@ public class SwitchClassActivity extends Activity {
 							SharedPreferences preferences = getSharedPreferences(
 									Urlinterface.SHARED, Context.MODE_PRIVATE);
 							Editor editor = preferences.edit();
-							HomePageMainActivity.instance.finish();
+							if(HomePageMainActivity.active==true){
+								HomePageMainActivity.instance.finish();
+								
+							}
+							
+//							
 							UserInfoActivity.instance.finish();
 							editor.putString("school_class_id", String
 									.valueOf(classlist.get(position).getId()));
@@ -229,14 +236,19 @@ public class SwitchClassActivity extends Activity {
 							JSONObject jsonobject2 = jsonobject
 									.getJSONObject("class");
 							int id = jsonobject2.getInt("id");
+							String name = jsonobject2.getString("name");
 							SharedPreferences preferences = getSharedPreferences(
 									Urlinterface.SHARED, Context.MODE_PRIVATE);
 							Editor editor = preferences.edit();
 							editor.putString("school_class_id",
 									String.valueOf(id));
+							editor.putString("school_class_name",name);
 							editor.commit();
 							exerciseBook.setMainItem(0);
+							exerciseBook.setRefresh(1);
 							HomePageMainActivity.instance.finish();
+							HomepageAllActivity.instance.finish();
+							
 							UserInfoActivity.instance.finish();
 							Intent intent = new Intent(
 									SwitchClassActivity.this,
