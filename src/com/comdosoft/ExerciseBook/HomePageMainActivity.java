@@ -73,6 +73,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 	private String avatar_url = "/avatars/students/2014-02/student_73.jpg"; // 用户头像
 	private String nickName = "丁作"; // 用户昵称
 	TextView userName;//
+	static boolean active = false;
 	Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -144,7 +145,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 		nickName = preferences.getString("nickname", "");
 //		id = preferences.getString("id", null);
 
-
+active=true;
 		exerciseBook = (ExerciseBook) getApplication();
 		instance = this;
 		tabhost = getTabHost();
@@ -197,6 +198,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 
 	}
 
+	 
 	private void updateTabStyle(final TabHost mTabHost) {
 		final TabWidget tabWidget = mTabHost.getTabWidget();
 		tabWidget.setBackgroundColor(res.getColor(R.color.top_huise));

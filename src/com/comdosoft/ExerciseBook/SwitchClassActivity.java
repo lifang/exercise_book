@@ -184,7 +184,12 @@ public class SwitchClassActivity extends Activity {
 							SharedPreferences preferences = getSharedPreferences(
 									Urlinterface.SHARED, Context.MODE_PRIVATE);
 							Editor editor = preferences.edit();
-							HomePageMainActivity.instance.finish();
+							if(HomePageMainActivity.active==true){
+								HomePageMainActivity.instance.finish();
+								
+							}
+							
+//							
 							UserInfoActivity.instance.finish();
 							editor.putString("school_class_id", String
 									.valueOf(classlist.get(position).getId()));
