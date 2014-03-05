@@ -13,6 +13,7 @@ public interface Urlinterface {
 	static final String NEW_HOMEWORK = IP + "/api/students/new_homework";
 	// 获取班级每日任务等信息
 	static final String CLASS_INFO = IP + "/api/students/get_class_info";
+	
 	// 提交作业
 	static final String FINISH_QUESTION_PACKGE = IP
 			+ "/api/students/finish_question_packge";
@@ -50,7 +51,8 @@ public interface Urlinterface {
 	String get_my_achievements = IP + "/api/students/get_my_archivements"; // 获得成就
 	// 获取当天作业
 	static final String get_newer_task = IP + "/api/students/get_newer_task";
-
 	// 过往记录列表
 	static final String get_more_tasks = IP + "/api/students/get_more_tasks";
+	//根据日期查询作业记录
+	static final String search_tasks = IP + "/api/students/search_tasks";
 }

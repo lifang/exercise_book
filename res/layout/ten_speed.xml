@@ -14,8 +14,7 @@
         <ImageView
             android:id="@+id/question_number"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ten_1" />
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <Button

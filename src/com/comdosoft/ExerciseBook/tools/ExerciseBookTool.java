@@ -191,7 +191,7 @@ public class ExerciseBookTool implements Urlinterface {
 	// 判断是否存在集合中
 	public static boolean getExist(int one, List<Integer> two) {
 		for (int i = 0; i < two.size(); i++) {
-			if (one==two.get(i)) {
+			if (one == two.get(i)) {
 				return true;
 			}
 		}
@@ -222,8 +222,7 @@ public class ExerciseBookTool implements Urlinterface {
 	// get请求
 	public static String sendGETRequest(String path, Map<String, String> map)
 			throws Exception {
-		Log.i(tag, path.toString());
-		String json = "error";
+		String json = "";
 		StringBuilder url = new StringBuilder(path);
 		url.append("?");
 		for (Map.Entry<String, String> entry : map.entrySet()) {
@@ -231,7 +230,7 @@ public class ExerciseBookTool implements Urlinterface {
 			url.append("&");
 		}
 		url.deleteCharAt(url.length() - 1);
-		Log.i(tag, url.toString());
+		Log.i("aaa", url.toString());
 		HttpURLConnection conn = (HttpURLConnection) new URL(url.toString())
 				.openConnection();
 		conn.setConnectTimeout(8000);
@@ -243,7 +242,7 @@ public class ExerciseBookTool implements Urlinterface {
 			is.close();
 			json = new String(data);
 		}
-		Log.i(tag, json);
+		Log.i("aaa", json);
 		return json;
 	}
 
@@ -343,7 +342,7 @@ public class ExerciseBookTool implements Urlinterface {
 			rd.close();
 			in.close();
 		} catch (IOException e) {
-
+			Log.i("linshi", "发生异常");
 		}
 		Log.i("linshi", tempLine);
 		return tempLine;
@@ -456,12 +455,12 @@ public class ExerciseBookTool implements Urlinterface {
 		}
 		return false;
 	}
-	
-	
+
 	/*
 	 * 设置头像
 	 */
-	public static void set_background(final String uri, final ImageView imageView) {
+	public static void set_background(final String uri,
+			final ImageView imageView) {
 
 		final Handler mHandler = new Handler() {
 			public void handleMessage(android.os.Message msg) {
@@ -496,10 +495,9 @@ public class ExerciseBookTool implements Urlinterface {
 				}
 
 			}
-		};		
+		};
 
-			thread.start();
-	
+		thread.start();
 
 	}
 
