@@ -83,7 +83,7 @@ public class UserInfoActivity extends Activity {
 				Urlinterface.SHARED, Context.MODE_PRIVATE);
 		classname = preferences.getString("school_class_name", "");
 		nickName = preferences.getString("nickname", "");
-//		 id = preferences.getString("id", null);
+		 id = preferences.getString("id", null);
 		 school_class_id = preferences.getString("school_class_id", null);
 
 		list = new ArrayList();

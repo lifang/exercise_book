@@ -137,7 +137,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 				Context.MODE_PRIVATE);
 		avatar_url = preferences.getString("avatar_url", "");
 		nickName = preferences.getString("nickname", "");
-		// id = preferences.getString("id", null);
+		 id = preferences.getString("id", null);
 
 		active = true;
 		exerciseBook = (ExerciseBook) getApplication();

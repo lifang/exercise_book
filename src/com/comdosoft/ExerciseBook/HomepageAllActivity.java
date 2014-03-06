@@ -72,8 +72,8 @@ public class HomepageAllActivity extends Activity implements
 	private DisplayImageOptions options;
 	private int child_page = 1; // 子消息 分页加载的 第几页
 	private int child_pages_count;// 子消息总页数
-	private int page;// 当前第几页
-	private int pages_count;// 总页数
+	private int page=1;// 当前第几页
+	private int pages_count=1;// 总页数
 	private String reciver_id = "";
 	private String reciver_types = "";
 	private String micropost_id = "";
@@ -160,9 +160,9 @@ public class HomepageAllActivity extends Activity implements
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
 
-		// user_id = preferences.getString("user_id", null);
-		// id = preferences.getString("id", null);
-		school_class_id = preferences.getString("school_class_id", null);
+		 user_id = preferences.getString("user_id", "130");
+		 id = preferences.getString("id", "73");
+		school_class_id = preferences.getString("school_class_id", "83");
 
 		item_huifu = new ArrayList<RelativeLayout>();
 		guanzhu_list = new ArrayList<ImageView>();
@@ -705,6 +705,9 @@ public class HomepageAllActivity extends Activity implements
 				editor.putString("school_class_name", class_name);
 				editor.putString("name", user_name);
 				editor.putString("nickname", nick_name);
+				editor.putString("id", id);
+				editor.putString("user_id", user_id);
+				editor.putString("school_class_id", school_class_id);
 				editor.commit();
 				care = new ArrayList<String>();
 				JSONArray follow_microposts_id = obj
@@ -1228,13 +1231,15 @@ public class HomepageAllActivity extends Activity implements
 
 			layout1.setVisibility(View.VISIBLE);
 			listView2.setVisibility(View.VISIBLE);
-			prodialog = new ProgressDialog(HomepageAllActivity.this);
-			prodialog.setMessage("正在加载中");
-			prodialog.setCanceledOnTouchOutside(false);
-			prodialog.show();
-
+		
 			if (ExerciseBookTool.isConnect(HomepageAllActivity.this)) {
+				
+
 				if (Integer.parseInt(mess.getReply_microposts_count()) > 0) {
+					prodialog = new ProgressDialog(HomepageAllActivity.this);
+					prodialog.setMessage("正在加载中");
+					prodialog.setCanceledOnTouchOutside(false);
+					prodialog.show();
 					child_list = new ArrayList<Child_Micropost>();
 					thread.start();
 				} else {

@@ -58,7 +58,7 @@ public class SwitchClassActivity extends Activity {
 		layout = (LinearLayout) findViewById(R.id.switchclass);
 		add_newclass = (ImageView) findViewById(R.id.add_newclass);// 加入新班级
 		SharedPreferences sp = getSharedPreferences(Urlinterface.SHARED, 0);
-		// id = sp.getString("id", "null");
+		 id = sp.getString("id", "null");
 		 school_class_id = sp.getString("school_class_id", "null");
 		layout.setOnClickListener(new OnClickListener() {
 

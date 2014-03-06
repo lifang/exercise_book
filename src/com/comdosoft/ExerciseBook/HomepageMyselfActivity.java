@@ -69,8 +69,8 @@ public class HomepageMyselfActivity extends Activity implements
 	private String classname;
 	private int child_page = 1; // 子消息 分页加载的 第几页
 	private int child_pages_count = 1;// 子消息总页数
-	private int page;// 当前第几页
-	private int pages_count;// 总页数
+	private int page=1;// 当前第几页
+	private int pages_count=1;// 总页数
 	private String reciver_id = "";
 	private String reciver_types = "";
 	private String micropost_id = "";
@@ -148,8 +148,8 @@ public class HomepageMyselfActivity extends Activity implements
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
 
-		// user_id = preferences.getString("user_id", null);
-		// id = preferences.getString("id", null);
+		 user_id = preferences.getString("user_id", null);
+		 id = preferences.getString("id", null);
 		school_class_id = preferences.getString("school_class_id", null);
 
 		item_huifu = new ArrayList<RelativeLayout>();
@@ -1033,13 +1033,15 @@ public class HomepageMyselfActivity extends Activity implements
 			focus = i;
 			layout1.setVisibility(View.VISIBLE);
 			listView2.setVisibility(View.VISIBLE);
-			prodialog = new ProgressDialog(HomepageMyselfActivity.this);
-			prodialog.setMessage("正在加载中");
-			prodialog.setCanceledOnTouchOutside(false);
-			prodialog.show();
+			
 
 			if (ExerciseBookTool.isConnect(HomepageMyselfActivity.this)) {
+				
 				if (Integer.parseInt(mess.getReply_microposts_count()) > 0) {
+					prodialog = new ProgressDialog(HomepageMyselfActivity.this);
+					prodialog.setMessage("正在加载中");
+					prodialog.setCanceledOnTouchOutside(false);
+					prodialog.show();
 					child_list = new ArrayList<Child_Micropost>();
 					thread.start();
 				} else {
@@ -1183,6 +1185,7 @@ public class HomepageMyselfActivity extends Activity implements
 					msg.obj = result;
 					handler.sendMessage(msg);
 				} catch (Exception e1) {
+					mPullToRefreshView.onHeaderRefreshComplete();
 					handler.sendEmptyMessage(7);
 				}
 			}
@@ -1191,6 +1194,7 @@ public class HomepageMyselfActivity extends Activity implements
 
 			thread.start();
 		} else {
+			mPullToRefreshView.onHeaderRefreshComplete();
 			handler.sendEmptyMessage(7);
 		}
 	}
