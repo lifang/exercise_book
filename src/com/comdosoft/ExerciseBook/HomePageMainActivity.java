@@ -49,7 +49,7 @@ import com.comdosoft.ExerciseBook.tools.Urlinterface;
 public class HomePageMainActivity extends TabActivity implements Urlinterface {
 	TabHost tabhost;
 	TabHost.TabSpec spec1, spec2, spec3;
-	private ImageView allbottom, myselfbottom, senderbottom,logo;
+	private ImageView allbottom, myselfbottom, senderbottom, logo;
 	private ImageView faceImage;
 	private LinearLayout userInfo;
 	private Resources res;
@@ -92,12 +92,6 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 
 							Toast.makeText(getApplicationContext(), notice, 0)
 									.show();
-							SharedPreferences preferences = getSharedPreferences(
-									SHARED, Context.MODE_PRIVATE);
-							Editor editor = preferences.edit();
-							// editor.putString("name", nameS);
-
-							editor.commit();
 							BitmapFactory.Options options = new BitmapFactory.Options();
 							options.inSampleSize = 7;// 7就代表容量变为以前容量的1/7
 							String uri = Environment
@@ -143,9 +137,9 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 				Context.MODE_PRIVATE);
 		avatar_url = preferences.getString("avatar_url", "");
 		nickName = preferences.getString("nickname", "");
-//		id = preferences.getString("id", null);
+		// id = preferences.getString("id", null);
 
-active=true;
+		active = true;
 		exerciseBook = (ExerciseBook) getApplication();
 		instance = this;
 		tabhost = getTabHost();
@@ -175,7 +169,6 @@ active=true;
 		width = display.getWidth();
 
 		Intent intent1 = new Intent(this, HomepageAllActivity.class);
-		// Intent intent1 = new Intent(this, SettingPhoto.class);
 		spec1 = tabhost.newTabSpec("spec1")
 				.setIndicator("", res.getDrawable(R.drawable.all_2))
 				.setContent(intent1);
@@ -198,7 +191,6 @@ active=true;
 
 	}
 
-	 
 	private void updateTabStyle(final TabHost mTabHost) {
 		final TabWidget tabWidget = mTabHost.getTabWidget();
 		tabWidget.setBackgroundColor(res.getColor(R.color.top_huise));
@@ -407,10 +399,12 @@ active=true;
 
 		@Override
 		public void onClick(View v) {
-			Intent  intent = new Intent(HomePageMainActivity.this,LeftMenu.class);
-			 exerciseBook.setMneu(false); 
+			Intent intent = new Intent(HomePageMainActivity.this,
+					LeftMenu.class);
+			exerciseBook.setMneu(false);
 			startActivity(intent);
-		     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+			overridePendingTransition(R.anim.slide_in_left,
+					R.anim.slide_out_right);
 		}
 	};
 
@@ -478,7 +472,5 @@ active=true;
 			}
 		}
 	};
-	
-	
 
 }
