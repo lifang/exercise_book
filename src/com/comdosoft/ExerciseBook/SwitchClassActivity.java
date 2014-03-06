@@ -227,12 +227,13 @@ public class SwitchClassActivity extends Activity {
 						String status = jsonobject.getString("status");
 						if (status.equals("error")) {
 							String notice = jsonobject.getString("notice");
+							exerciseBook.setRefresh(1);
 							Message msg = new Message();
 							msg.what = 1;
 							msg.obj = notice;
 							handler.sendMessage(msg);
 
-						} else if (status.equals("success")) {
+						} else  {
 							JSONObject jsonobject2 = jsonobject
 									.getJSONObject("class");
 							int id = jsonobject2.getInt("id");
