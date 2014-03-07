@@ -182,7 +182,7 @@ public class HomepageAllActivity extends Activity implements
 		super.onResume();
 		int refresh = exerciseBook.getRefresh();
 		if (refresh == 1) {
-//			memoryCache.removeBitmap(Urlinterface.IP + avatar_url);
+			// memoryCache.removeBitmap(Urlinterface.IP + avatar_url);
 			if (ExerciseBookTool.isConnect(HomepageAllActivity.this)) {
 				prodialog = new ProgressDialog(HomepageAllActivity.this);
 				prodialog.setMessage(ExerciseBookParams.PD_CLASS_INFO);
@@ -285,11 +285,11 @@ public class HomepageAllActivity extends Activity implements
 
 			Bitmap result = memoryCache.getBitmapFromCache(url);
 			if (result == null) {
-				Log.i("aa", " 网络网络"+i);
-				ExerciseBookTool.set_bk(url, face,memoryCache);
+				Log.i("aa", " 网络网络" + i);
+				ExerciseBookTool.set_bk(url, face, memoryCache);
 			} else {
-				
-				Log.i("aa", " 缓存缓存缓存缓存"+i);
+
+				Log.i("aa", " 缓存缓存缓存缓存" + i);
 				face.setImageDrawable(new BitmapDrawable(result));
 			}
 
@@ -397,9 +397,9 @@ public class HomepageAllActivity extends Activity implements
 			}
 		});
 		if (i % 2 == 0) {
-			re.setBackgroundResource(R.color.before_click);//  背景白色
+			re.setBackgroundResource(R.color.before_click);// 背景白色
 		} else {
-			re.setBackgroundResource(R.color.after_click);//  背景灰色
+			re.setBackgroundResource(R.color.after_click);// 背景灰色
 		}
 		Linear_layout.addView(convertView);
 	}
@@ -421,7 +421,7 @@ public class HomepageAllActivity extends Activity implements
 						result = ExerciseBookTool.sendGETRequest(
 								Urlinterface.GET_MICROPOSTS, map);
 					} catch (Exception e1) {
-						mPullToRefreshView.onHeaderRefreshComplete();
+						mPullToRefreshView.onFooterRefreshComplete();
 						handler.sendEmptyMessage(7);
 					}
 					Message msg = new Message();// 创建Message 对象
@@ -434,7 +434,7 @@ public class HomepageAllActivity extends Activity implements
 			if (ExerciseBookTool.isConnect(HomepageAllActivity.this)) {
 				thread.start();
 			} else {
-				mPullToRefreshView.onHeaderRefreshComplete();
+				mPullToRefreshView.onFooterRefreshComplete();
 				handler.sendEmptyMessage(7);
 			}
 		} else {
@@ -446,8 +446,15 @@ public class HomepageAllActivity extends Activity implements
 
 	// 刷新
 	public void onHeaderRefresh(PullToRefreshView view) {
-//		memoryCache.removeBitmap(Urlinterface.IP + avatar_url);
-		shuaxin();
+		// memoryCache.removeBitmap(Urlinterface.IP + avatar_url);
+		if (ExerciseBookTool.isConnect(HomepageAllActivity.this)) {
+			shuaxin();
+		} else {
+
+			handler.sendEmptyMessage(7);
+			mPullToRefreshView.onHeaderRefreshComplete();
+		}
+
 	}
 
 	/*
@@ -493,7 +500,7 @@ public class HomepageAllActivity extends Activity implements
 						switch (flingState) {
 						case FLING_LEFT:
 						case FLING_RIGHT:
-						// 处理点击事件
+							// 处理点击事件
 						case FLING_CLICK:
 
 							if (reply_gk_list.get(position2) == true) {
@@ -542,18 +549,18 @@ public class HomepageAllActivity extends Activity implements
 			}
 			final Child_Micropost child_Micropost = child_list.get(position2);
 			if (child_Micropost.getSender_avatar_url() != null) { // 设置头像
-//				ExerciseBookTool.set_background(
-//						IP + child_Micropost.getSender_avatar_url(), face);
+				// ExerciseBookTool.set_background(
+				// IP + child_Micropost.getSender_avatar_url(), face);
 				String url = IP + child_Micropost.getSender_avatar_url();
 				// ExerciseBookTool.set_background(url, face);
 
 				Bitmap result = memoryCache.getBitmapFromCache(url);
 				if (result == null) {
-					Log.i("aa", " 适配器    网络网络"+position2);
-					ExerciseBookTool.set_bk(url, face,memoryCache);
+					Log.i("aa", " 适配器    网络网络" + position2);
+					ExerciseBookTool.set_bk(url, face, memoryCache);
 				} else {
-					
-					Log.i("aa", " 适配器   缓存缓存缓存缓存"+position2);
+
+					Log.i("aa", " 适配器   缓存缓存缓存缓存" + position2);
 					face.setImageDrawable(new BitmapDrawable(result));
 				}
 			}
@@ -829,24 +836,7 @@ public class HomepageAllActivity extends Activity implements
 							.getString("pages_count"));
 					String reply_microposts = microposts
 							.getString("reply_microposts");
-					JSONArray jsonArray2 = new JSONArray(reply_microposts);
-					for (int i = 0; i < jsonArray2.length(); ++i) {
-						JSONObject o = (JSONObject) jsonArray2.get(i);
-						String id = o.getString("id");
-						String sender_id = o.getString("sender_id");
-						String sender_types = o.getString("sender_types");
-						String sender_name = o.getString("sender_name");
-						String sender_avatar_url = o
-								.getString("sender_avatar_url");
-						String content = o.getString("content");
-						String reciver_name = o.getString("reciver_name");
-						String created_at = o.getString("created_at");
-						Child_Micropost child = new Child_Micropost(id,
-								sender_id, sender_types, sender_name,
-								sender_avatar_url, content, reciver_name,
-								created_at);
-						child_list.add(child);
-					}
+					parse_reply_microposts(reply_microposts);
 				} else {
 					Toast.makeText(getApplicationContext(), notice,
 							Toast.LENGTH_SHORT).show();
@@ -857,6 +847,38 @@ public class HomepageAllActivity extends Activity implements
 		}
 	}
 
+	/*
+	 * 解析  子消息  中消息部分  
+	 * 
+	 * */
+	
+	public void parse_reply_microposts(String reply_microposts) {
+		
+			try {
+				JSONArray jsonArray2 = new JSONArray(reply_microposts);
+				for (int i = 0; i < jsonArray2.length(); ++i) {
+					JSONObject o = (JSONObject) jsonArray2.get(i);
+					String id = o.getString("id");
+					String sender_id = o.getString("sender_id");
+					String sender_types = o.getString("sender_types");
+					String sender_name = o.getString("sender_name");
+					String sender_avatar_url = o
+							.getString("sender_avatar_url");
+					String content = o.getString("content");
+					String reciver_name = o.getString("reciver_name");
+					String created_at = o.getString("created_at");
+					Child_Micropost child = new Child_Micropost(id,
+							sender_id, sender_types, sender_name,
+							sender_avatar_url, content, reciver_name,
+							created_at);
+					child_list.add(child);
+				}
+			} catch (Exception e) {
+			}
+	}
+	
+	
+	
 	// 分割时间
 	public String divisionTime(String timeStr) {
 		timeStr = timeStr.replace("-", "/");
@@ -1042,6 +1064,7 @@ public class HomepageAllActivity extends Activity implements
 	public void setButton_huifu(final String reply_edit) {
 		final Handler mHandler = new Handler() {
 			public void handleMessage(android.os.Message msg) {
+				prodialog.dismiss();
 				switch (msg.what) {
 				case 0:
 					final String json2 = (String) msg.obj;
@@ -1052,74 +1075,50 @@ public class HomepageAllActivity extends Activity implements
 							array2 = new JSONObject(json2);//
 							String status = array2.getString("status");
 							String notice = array2.getString("notice");
+
 							if ("success".equals(status)) {
 								Toast.makeText(getApplicationContext(), notice,
 										Toast.LENGTH_SHORT).show();
-								final Handler mHandler = new Handler() {
-									public void handleMessage(
-											android.os.Message msg) {
-										switch (msg.what) {
-										case 0:
-											prodialog.dismiss();
-											final String json7 = (String) msg.obj;
-											child_list = new ArrayList<Child_Micropost>();
-											parseJson_childMicropost(json7);
-											reply_gk_list.clear();
-											for (int j = 0; j < child_list
-													.size(); j++) {
-												reply_gk_list.add(true);
-											}
-											int a = Integer
-													.parseInt(list
-															.get(focus)
-															.getReply_microposts_count()) + 1;
-
-											list.get(focus)
-													.setReply_microposts_count(
-															a + "");
-											huifu_count_list.get(focus)
-													.setText(a + "");
-											list_list.get(focus).setAdapter(
-													ziAdapter_list.get(focus));
-											ExerciseBookTool
-													.setListViewHeightBasedOnChildren(list_list
-															.get(focus));
-											exerciseBook.setRefresh(1);
-											break;
-										default:
-											break;
-										}
-									}
-								};
-								Thread thread = new Thread() {
-									public void run() {
-										try {
-											Map<String, String> map = new HashMap<String, String>();
-											map.put("micropost_id",
-													micropost_id);
-											String js2 = ExerciseBookTool
-													.sendGETRequest(
-															Urlinterface.get_reply_microposts,
-															map);
-											Message msg = new Message();// 创建Message
-											// 对象
-											msg.what = 0;
-											msg.obj = js2;
-											mHandler.sendMessage(msg);
-										} catch (Exception e) {
-											handler.sendEmptyMessage(7);
-										}
-									}
-								};
-								if (ExerciseBookTool
-										.isConnect(HomepageAllActivity.this)) {
-
-									thread.start();
-								} else {
-									prodialog.dismiss();
+								String replymicropost = array2
+										.getString("replymicropost");
+								JSONArray jsonArray2 = new JSONArray(
+										replymicropost);
+								for (int i = 0; i < jsonArray2.length(); ++i) {
+									JSONObject o = (JSONObject) jsonArray2
+											.get(i);
+									String id = o.getString("id");
+									String sender_id = o.getString("sender_id");
+									String sender_types = o
+											.getString("sender_types");
+									String sender_name = o
+											.getString("sender_name");
+									String sender_avatar_url = o
+											.getString("sender_avatar_url");
+									String content = o.getString("content");
+									String reciver_name = o
+											.getString("reciver_name");
+									String created_at = o
+											.getString("created_at");
+									Child_Micropost child = new Child_Micropost(
+											id, sender_id, sender_types,
+											sender_name, sender_avatar_url,
+											content, reciver_name, created_at);
+									child_list.add(0, child);
 								}
+								reply_gk_list.add(true);
+								int a = Integer.parseInt(list.get(focus)
+										.getReply_microposts_count()) + 1;
+
+								list.get(focus).setReply_microposts_count(
+										a + "");
+								huifu_count_list.get(focus).setText(a + "");
+								list_list.get(focus).setAdapter(
+										ziAdapter_list.get(focus));
+								ExerciseBookTool
+										.setListViewHeightBasedOnChildren(list_list
+												.get(focus));
+								exerciseBook.setRefresh(1);
 							} else {
-								prodialog.dismiss();
 								Toast.makeText(getApplicationContext(), notice,
 										Toast.LENGTH_SHORT).show();
 							}
@@ -1371,16 +1370,17 @@ public class HomepageAllActivity extends Activity implements
 					msg.obj = result;
 					handler.sendMessage(msg);
 				} catch (Exception e1) {
-					mPullToRefreshView.onHeaderRefreshComplete();
 					handler.sendEmptyMessage(7);
+					mPullToRefreshView.onHeaderRefreshComplete();
 				}
 			}
 		};
 		if (ExerciseBookTool.isConnect(HomepageAllActivity.this)) {
 			thread.start();
 		} else {
-			mPullToRefreshView.onHeaderRefreshComplete();
+
 			handler.sendEmptyMessage(7);
+			mPullToRefreshView.onHeaderRefreshComplete();
 		}
 	}
 
@@ -1479,7 +1479,5 @@ public class HomepageAllActivity extends Activity implements
 		super.onActivityResult(requestCode, resultCode, data);
 
 	}
-
-	
 
 }
