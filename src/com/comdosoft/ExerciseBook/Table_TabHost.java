@@ -85,6 +85,7 @@ public class Table_TabHost extends Activity
 									+ IMAGE_FILE_NAME;
 							Bitmap bm = BitmapFactory.decodeFile(uri, options);
 							faceImage.setImageDrawable(new BitmapDrawable(bm));
+							eb.setRefresh(1);
 							File file = new File(uri);
 
 							if (file.exists()) {

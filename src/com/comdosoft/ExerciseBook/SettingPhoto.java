@@ -17,8 +17,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
 import android.view.Window;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
@@ -29,25 +27,12 @@ import com.comdosoft.ExerciseBook.tools.Urlinterface;
 public class SettingPhoto extends Activity implements Urlinterface {
 
 	// 设置 界面
-	private ImageView faceImage;
-	private EditText nickname;//
-	private EditText name; //
-	private View layout;// 选择头像界面
-	private String json = "";
 	String delUri = "";
 	String photoStr = Environment.getExternalStorageDirectory()
 	+ "/1" + IMAGE_FILE_NAME;
 	/* 头像名称 */
 	private static final String IMAGE_FILE_NAME = "faceImage.jpg";
 
-	/* 请求码 */
-
-	private Bitmap bm = null;
-	private String nameS = ""; //
-	private String nicknameS = ""; //
-	private String id = "8"; // 用户 id，，切记 不是 user_id
-	private String user_id = "8"; // 用户 id，，切记 不是 user_id
-	private String avatar_url = ""; // 用户头像
 	private ExerciseBook exerciseBook;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,12 +42,9 @@ public class SettingPhoto extends Activity implements Urlinterface {
 		setContentView(R.layout.settingphoto);
 		exerciseBook = (ExerciseBook) getApplication();
 		File file = new File(photoStr);
-
 		if (file.exists()) {
 			file.delete();
-
 		}
-
 	}
 
 	/**
@@ -71,18 +53,15 @@ public class SettingPhoto extends Activity implements Urlinterface {
 	public void set_paizhaoshangchuan(View v) {
 
 		try {
-
 			Intent intentFromCapture = new Intent(
 					MediaStore.ACTION_IMAGE_CAPTURE);
 			// 判断存储卡是否可以用，可用进行存储
 			if (ExerciseBookTool.isHasSdcard()) {
-
 				File file = new File(Environment.getExternalStorageDirectory()
 						+ "/" + IMAGE_FILE_NAME);
 
 				if (file.exists()) {
 					file.delete();
-
 				}
 				file = new File(Environment.getExternalStorageDirectory() + "/"
 						+ IMAGE_FILE_NAME);
@@ -91,9 +70,7 @@ public class SettingPhoto extends Activity implements Urlinterface {
 							.fromFile(new File(Environment
 									.getExternalStorageDirectory(),
 									IMAGE_FILE_NAME)));
-
 				}
-
 			}
 
 			startActivityForResult(intentFromCapture, 2);
@@ -198,15 +175,10 @@ public class SettingPhoto extends Activity implements Urlinterface {
 		if (extras != null) {
 			Bitmap photo = extras.getParcelable("data");
 			Drawable drawable = new BitmapDrawable(photo);
-			// faceImage.setBackgroundDrawable(drawable);
-			
 			File file = new File(photoStr);
-
 			try {
-
 				if (file.exists()) {
 					file.delete();
-
 				}
 
 				file.createNewFile();

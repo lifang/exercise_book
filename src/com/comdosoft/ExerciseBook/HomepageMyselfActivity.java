@@ -84,7 +84,6 @@ public class HomepageMyselfActivity extends Activity implements
 	public List<Boolean> reply_gk_list;// 回复 点击操作 开关集合
 	public List<RelativeLayout> item_huifu;// 回复开关集合
 	private List<Micropost> list;
-	private List<String> care;
 	private List<ListView> list_list;
 	private List<ZiAdapter> ziAdapter_list;
 	private List<EditText> Reply_edit_list;
@@ -472,21 +471,8 @@ public class HomepageMyselfActivity extends Activity implements
 					case MotionEvent.ACTION_UP:
 						switch (flingState) {
 						case FLING_LEFT:
-							// flingState = FLING_CLICK;
-							// // return false;
-							// break;
-							// // 处理右滑事件
 						case FLING_RIGHT:
-							// flingState = FLING_CLICK;
-							// hSView2.smoothScrollTo(0, 0);
-							// // return false;
-							// break;
-							// // 处理点击事件
 						case FLING_CLICK:
-							// hSView2.smoothScrollTo(action2.getWidth(), 0);
-							// Toast.makeText(getApplicationContext(),
-							// "Click Item:" + position2,
-							// Toast.LENGTH_SHORT).show();
 							if (reply_gk_list.get(position2) == true) {
 								hSView2.smoothScrollTo(action2.getWidth(), 0);
 								reply_gk_list.set(position2, false);

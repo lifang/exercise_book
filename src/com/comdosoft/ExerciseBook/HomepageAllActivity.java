@@ -397,9 +397,9 @@ public class HomepageAllActivity extends Activity implements
 			}
 		});
 		if (i % 2 == 0) {
-			re.setBackgroundResource(R.color.before_click);
+			re.setBackgroundResource(R.color.before_click);//  背景白色
 		} else {
-			re.setBackgroundResource(R.color.after_click);
+			re.setBackgroundResource(R.color.after_click);//  背景灰色
 		}
 		Linear_layout.addView(convertView);
 	}
@@ -432,7 +432,6 @@ public class HomepageAllActivity extends Activity implements
 			};
 
 			if (ExerciseBookTool.isConnect(HomepageAllActivity.this)) {
-
 				thread.start();
 			} else {
 				mPullToRefreshView.onHeaderRefreshComplete();
@@ -493,20 +492,7 @@ public class HomepageAllActivity extends Activity implements
 
 						switch (flingState) {
 						case FLING_LEFT:
-							// Toast.makeText(getApplicationContext(),
-							// "回复----向左滑动", 0).show();
-							flingState = FLING_CLICK;
-							// return false;
-							break;
-						// 处理右滑事件
 						case FLING_RIGHT:
-							// Toast.makeText(getApplicationContext(),
-							// "回复----向右滑动", 0).show();
-							flingState = FLING_CLICK;
-
-							hSView2.smoothScrollTo(0, 0);
-							// return false;
-							break;
 						// 处理点击事件
 						case FLING_CLICK:
 
