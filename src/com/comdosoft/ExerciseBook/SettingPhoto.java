@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
@@ -47,14 +48,14 @@ public class SettingPhoto extends Activity implements Urlinterface {
 	private String id = "8"; // 用户 id，，切记 不是 user_id
 	private String user_id = "8"; // 用户 id，，切记 不是 user_id
 	private String avatar_url = ""; // 用户头像
-
+	private ExerciseBook exerciseBook;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);// 去掉标题栏
 		setContentView(R.layout.settingphoto);
-
+		exerciseBook = (ExerciseBook) getApplication();
 		File file = new File(photoStr);
 
 		if (file.exists()) {
@@ -181,7 +182,7 @@ public class SettingPhoto extends Activity implements Urlinterface {
 		intent.putExtra("aspectX", 1);
 		intent.putExtra("aspectY", 1);
 		// outputX outputY 是裁剪图片宽高
-		intent.putExtra("outputX", 176);
+		intent.putExtra("outputX", 186);
 		intent.putExtra("outputY", 186);
 		intent.putExtra("return-data", true);
 		startActivityForResult(intent, 3);
@@ -217,6 +218,7 @@ public class SettingPhoto extends Activity implements Urlinterface {
 				stream.write(buf);
 				stream.close();
 //				delStr(delUri);
+				exerciseBook.setRefresh(0);
 				Intent intent2 = new Intent();
 
 				intent2.putExtra("uri",photoStr);

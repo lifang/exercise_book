@@ -10,13 +10,12 @@ import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.json.JSONException;
 import org.json.JSONObject;
-
+import com.comdosoft.ExerciseBook.tools.ImageMemoryCache;
 import android.app.ProgressDialog;
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -48,8 +47,8 @@ import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
 public class HomePageMainActivity extends TabActivity implements Urlinterface {
 	TabHost tabhost;
-	TabHost.TabSpec spec1, spec2, spec3;
-	private ImageView allbottom, myselfbottom, senderbottom, logo;
+	TabHost.TabSpec spec1, spec2, spec3,spec4;
+	private ImageView allbottom, myselfbottom,focusbottom, senderbottom, logo;
 	private ImageView faceImage;
 	private LinearLayout userInfo;
 	private Resources res;
@@ -74,6 +73,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 	private String nickName = "丁作"; // 用户昵称
 	TextView userName;//
 	static boolean active = false;
+	  ImageMemoryCache memoryCache;
 	Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -89,7 +89,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 						String notice = array.getString("notice");
 
 						if (status == true) {
-
+							memoryCache.removeBitmap(Urlinterface.IP + avatar_url);
 							Toast.makeText(getApplicationContext(), notice, 0)
 									.show();
 							BitmapFactory.Options options = new BitmapFactory.Options();
@@ -100,6 +100,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 									+ IMAGE_FILE_NAME;
 							Bitmap bm = BitmapFactory.decodeFile(uri, options);
 							faceImage.setImageDrawable(new BitmapDrawable(bm));
+							exerciseBook.setRefresh(1);
 							File file = new File(uri);
 
 							if (file.exists()) {
@@ -138,7 +139,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 		avatar_url = preferences.getString("avatar_url", "");
 		nickName = preferences.getString("nickname", "");
 		 id = preferences.getString("id", null);
-
+		 memoryCache = new ImageMemoryCache(this);
 		active = true;
 		exerciseBook = (ExerciseBook) getApplication();
 		instance = this;
@@ -147,6 +148,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 		logo = (ImageView) findViewById(R.id.img_tab_now);
 		allbottom = (ImageView) findViewById(R.id.all_bottom);
 		myselfbottom = (ImageView) findViewById(R.id.myself_bottom);
+		focusbottom = (ImageView) findViewById(R.id.focus_bottom);
 		senderbottom = (ImageView) findViewById(R.id.sender_bottom);
 		userName = (TextView) findViewById(R.id.user_name);
 		userName.setText(nickName);
@@ -180,13 +182,19 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 				.setContent(intent2);
 		tabhost.addTab(spec2);
 
-		Intent intent3 = new Intent(this, HomePageSendMessage.class);
+		Intent intent3 = new Intent(this, HomepageFocusActivity.class);
 		spec3 = tabhost.newTabSpec("spec3")
 				.setIndicator("", res.getDrawable(R.drawable.sender_1))
 				.setContent(intent3);
 		tabhost.addTab(spec3);
+		
+		Intent intent4 = new Intent(this, HomePageSendMessage.class);
+		spec4 = tabhost.newTabSpec("spec4")
+				.setIndicator("", res.getDrawable(R.drawable.sender_1))
+				.setContent(intent4);
+		tabhost.addTab(spec4);
 
-		tabhost.setCurrentTab(exerciseBook.getMainItem());
+		tabhost.setCurrentTab(0);
 		updateTabStyle(tabhost);
 
 	}
@@ -217,6 +225,10 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 					myselfbottom.setVisibility(View.VISIBLE);
 					break;
 				case 2:
+					img.setImageResource(R.drawable.focus_2);
+					focusbottom.setVisibility(View.VISIBLE);
+					break;
+				case 3:
 					img.setImageResource(R.drawable.sender_2);
 					senderbottom.setVisibility(View.VISIBLE);
 					break;
@@ -234,13 +246,17 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 					myselfbottom.setVisibility(View.GONE);
 					break;
 				case 2:
+					img.setImageResource(R.drawable.focus_1);
+					focusbottom.setVisibility(View.GONE);
+					break;
+				case 3:
 					img.setImageResource(R.drawable.sender_1);
 					senderbottom.setVisibility(View.GONE);
 					break;
 
 				}
 			}
-			img.setPadding(254, 30, 0, 0);
+			img.setPadding(222, 46, 0, 0);
 			// img.setPadding(0, 0, 0, 0);
 			/**
 			 * 此方法是为了去掉系统默认的色白的底角
@@ -330,12 +346,14 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 								break;
 							case 1:
 
-								hw_num = 0;
-								// handler.sendEmptyMessage(1);
 								img.setImageResource(R.drawable.myself_2);
 								myselfbottom.setVisibility(View.VISIBLE);
 								break;
 							case 2:
+								img.setImageResource(R.drawable.focus_2);
+								focusbottom.setVisibility(View.VISIBLE);
+								break;
+							case 3:
 
 								img.setImageResource(R.drawable.sender_2);
 								senderbottom.setVisibility(View.VISIBLE);
@@ -355,12 +373,16 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 								myselfbottom.setVisibility(View.GONE);
 								break;
 							case 2:
+								img.setImageResource(R.drawable.focus_1);
+								focusbottom.setVisibility(View.GONE);
+								break;
+							case 3:
 								img.setImageResource(R.drawable.sender_1);
 								senderbottom.setVisibility(View.GONE);
 								break;
 							}
 						}
-						img.setPadding(254, 30, 0, 0);
+						img.setPadding(222, 46, 0, 0);
 						// img.setPadding(0, 0, 0, 0);
 					}
 				}

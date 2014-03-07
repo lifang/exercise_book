@@ -17,6 +17,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -48,6 +50,7 @@ import com.comdosoft.ExerciseBook.pojo.Micropost;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
+import com.comdosoft.ExerciseBook.tools.ImageMemoryCache;
 import com.comdosoft.ExerciseBook.tools.PullToRefreshView;
 import com.comdosoft.ExerciseBook.tools.PullToRefreshView.OnFooterRefreshListener;
 import com.comdosoft.ExerciseBook.tools.PullToRefreshView.OnHeaderRefreshListener;
@@ -80,7 +83,6 @@ public class HomepageMyselfActivity extends Activity implements
 	public List<Boolean> gk_list;// 主消息 点击操作 开关集合
 	public List<Boolean> reply_gk_list;// 回复 点击操作 开关集合
 	public List<RelativeLayout> item_huifu;// 回复开关集合
-	public List<Button> button_list;// 隐藏内容中的 回复 集合
 	private List<Micropost> list;
 	private List<String> care;
 	private List<ListView> list_list;
@@ -92,6 +94,7 @@ public class HomepageMyselfActivity extends Activity implements
 	private List<HorizontalScrollView> HorizontalScrollView_list;// 滑动块 集合
 	private ArrayList<Child_Micropost> child_list;
 	private GestureDetector gd;
+	private static ImageMemoryCache memoryCache;
 	// 事件状态
 	private final char FLING_CLICK = 0;
 	private final char FLING_LEFT = 1;
@@ -145,6 +148,7 @@ public class HomepageMyselfActivity extends Activity implements
 		setContentView(R.layout.class_middle);
 		exerciseBook = (ExerciseBook) getApplication();
 		gd = new GestureDetector(this);
+		memoryCache = HomePageMainActivity.instance.memoryCache;
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
 
@@ -156,7 +160,6 @@ public class HomepageMyselfActivity extends Activity implements
 		guanzhu_count_list = new ArrayList<TextView>();
 		huifu_count_list = new ArrayList<TextView>();
 		HorizontalScrollView_list = new ArrayList<HorizontalScrollView>();
-		button_list = new ArrayList<Button>();
 		ziAdapter_list = new ArrayList<ZiAdapter>();
 		Reply_edit_list = new ArrayList<EditText>();
 		list = new ArrayList<Micropost>();
@@ -171,6 +174,10 @@ public class HomepageMyselfActivity extends Activity implements
 		if (refresh == 1) {
 
 			if (ExerciseBookTool.isConnect(HomepageMyselfActivity.this)) {
+				prodialog = new ProgressDialog(HomepageMyselfActivity.this);
+				prodialog.setMessage(ExerciseBookParams.PD_CLASS_INFO);
+				prodialog.setCanceledOnTouchOutside(false);
+				prodialog.show();
 				class_button_myself();
 			} else {
 				handler.sendEmptyMessage(7);
@@ -258,7 +265,19 @@ public class HomepageMyselfActivity extends Activity implements
 		if (mess.getAvatar_url().equals("")
 				|| mess.getAvatar_url().equals("null")) {
 		} else {
-			ExerciseBookTool.set_background(IP + mess.getAvatar_url(), face);
+//			ExerciseBookTool.set_background(IP + mess.getAvatar_url(), face);
+			String url = IP + mess.getAvatar_url();
+			// ExerciseBookTool.set_background(url, face);
+
+			Bitmap result = memoryCache.getBitmapFromCache(url);
+			if (result == null) {
+				Log.i("aa", " 网络网络"+i);
+				ExerciseBookTool.set_bk(url, face,memoryCache);
+			} else {
+				
+				Log.i("aa", " 缓存缓存缓存缓存"+i);
+				face.setImageDrawable(new BitmapDrawable(result));
+			}
 		}
 
 		Micropost_senderName.setText(mess.getName()); // 发消息的人
@@ -513,8 +532,20 @@ public class HomepageMyselfActivity extends Activity implements
 			}
 			final Child_Micropost child_Micropost = child_list.get(position2);
 			if (child_Micropost.getSender_avatar_url() != null) { // 设置头像
-				ExerciseBookTool.set_background(
-						IP + child_Micropost.getSender_avatar_url(), face);
+//				ExerciseBookTool.set_background(
+//						IP + child_Micropost.getSender_avatar_url(), face);
+				String url = IP + child_Micropost.getSender_avatar_url();
+				// ExerciseBookTool.set_background(url, face);
+
+				Bitmap result = memoryCache.getBitmapFromCache(url);
+				if (result == null) {
+					Log.i("aa", " 适配器    网络网络"+position2);
+					ExerciseBookTool.set_bk(url, face,memoryCache);
+				} else {
+					
+					Log.i("aa", " 适配器   缓存缓存缓存缓存"+position2);
+					face.setImageDrawable(new BitmapDrawable(result));
+				}
 			}
 			Micropost_who.setText(child_Micropost.getSender_name()); // 回复人
 			Micropost_ToWho.setText(child_Micropost.getReciver_name()); // 接收人
@@ -981,10 +1012,13 @@ public class HomepageMyselfActivity extends Activity implements
 				case 0:
 					prodialog.dismiss();
 					if (child_list.size() > 0) {// 如果没有子消息，隐藏加载更多按钮
-						lookMore.setVisibility(View.VISIBLE);
+//						lookMore.setVisibility(View.VISIBLE);
 						listView2.setVisibility(View.VISIBLE);
 
-					} else {
+					} 
+					if(child_pages_count>=2){
+						lookMore.setVisibility(View.VISIBLE);
+					}else {
 						lookMore.setVisibility(View.GONE);
 					}
 					listView2.setAdapter(ziAdapter_list.get(focus));
@@ -1125,10 +1159,7 @@ public class HomepageMyselfActivity extends Activity implements
 	 * 获得 "我的" 第一页消息
 	 */
 	public void class_button_myself() {
-		prodialog = new ProgressDialog(HomepageMyselfActivity.this);
-		prodialog.setMessage(ExerciseBookParams.PD_CLASS_INFO);
-		prodialog.setCanceledOnTouchOutside(false);
-		prodialog.show();
+	
 
 		page = 1;
 		list = new ArrayList<Micropost>();
@@ -1205,7 +1236,6 @@ public class HomepageMyselfActivity extends Activity implements
 	public void click_list() {
 		Linear_layout.removeAllViews();
 		Reply_edit_list.clear();
-		button_list.clear();
 		gk_list.clear();
 		ziAdapter_list.clear();
 		list_list.clear();

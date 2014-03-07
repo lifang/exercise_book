@@ -177,25 +177,23 @@ public class SwitchClassActivity extends Activity {
 					new Thread() {
 						public void run() {
 
-							exerciseBook.setMainItem(0);
 							Intent intent = new Intent(
 									SwitchClassActivity.this,
 									HomePageMainActivity.class);
 							SharedPreferences preferences = getSharedPreferences(
 									Urlinterface.SHARED, Context.MODE_PRIVATE);
 							Editor editor = preferences.edit();
-							if(HomePageMainActivity.active==true){
-								HomePageMainActivity.instance.finish();
-								
-							}
 							
-//							
-							UserInfoActivity.instance.finish();
 							editor.putString("school_class_id", String
 									.valueOf(classlist.get(position).getId()));
 							editor.putString("school_class_name", String
 									.valueOf(classlist.get(position).getName()));
 							editor.commit();
+							if(HomePageMainActivity.active==true){
+								HomePageMainActivity.instance.finish();
+								
+							}
+							UserInfoActivity.instance.finish();
 							startActivity(intent);
 							SwitchClassActivity.this.finish();
 						}
