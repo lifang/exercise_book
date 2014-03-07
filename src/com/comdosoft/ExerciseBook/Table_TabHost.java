@@ -122,7 +122,7 @@ public class Table_TabHost extends Activity
 				Context.MODE_PRIVATE);
 		avatar_url = preferences.getString("avatar_url", "");
 		nickName = preferences.getString("nickname", "");
-//		id = preferences.getString("id", null);
+		id = preferences.getString("id", null);
 		
 		active=true;
 		img_tab_now=(ImageView) findViewById(R.id.img_tab_now);
