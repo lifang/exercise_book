@@ -19,9 +19,6 @@
             android:layout_alignBottom="@+id/edittext"
             android:layout_alignParentRight="true"
             android:layout_marginLeft="10px"
-            android:paddingLeft="20px"
-            android:paddingRight="20px"
-           android:padding="10px"
             android:background="@drawable/shape"
             android:text="@string/question_speak_over"
             android:textColor="#BEBFC0"
@@ -33,7 +30,6 @@
              android:layout_toLeftOf="@+id/queding1"
             android:maxLength="60"
              android:background="@drawable/shape"
-            android:padding="10px"
             android:textSize="30px" >
         </EditText>
 

@@ -47,8 +47,8 @@ import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
 public class HomePageMainActivity extends TabActivity implements Urlinterface {
 	TabHost tabhost;
-	TabHost.TabSpec spec1, spec2, spec3,spec4;
-	private ImageView allbottom, myselfbottom,focusbottom, senderbottom, logo;
+	TabHost.TabSpec spec1, spec2, spec3, spec4;
+	private ImageView allbottom, myselfbottom, focusbottom, senderbottom, logo;
 	private ImageView faceImage;
 	private LinearLayout userInfo;
 	private Resources res;
@@ -73,7 +73,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 	private String nickName = "丁作"; // 用户昵称
 	TextView userName;//
 	static boolean active = false;
-	  ImageMemoryCache memoryCache;
+	ImageMemoryCache memoryCache;
 	Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -89,29 +89,25 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 						String notice = array.getString("notice");
 
 						if (status == true) {
-							memoryCache.removeBitmap(Urlinterface.IP + avatar_url);
-							Toast.makeText(getApplicationContext(), notice, 0)
-									.show();
+							memoryCache.removeBitmap(Urlinterface.IP
+									+ avatar_url);
 							BitmapFactory.Options options = new BitmapFactory.Options();
 							options.inSampleSize = 7;// 7就代表容量变为以前容量的1/7
-							String uri = Environment
-									.getExternalStorageDirectory()
-									+ "/1"
-									+ IMAGE_FILE_NAME;
 							Bitmap bm = BitmapFactory.decodeFile(uri, options);
 							faceImage.setImageDrawable(new BitmapDrawable(bm));
-							exerciseBook.setRefresh(1);
+
 							File file = new File(uri);
 
 							if (file.exists()) {
 								file.delete();
 							}
-							//
-						} else {
-							Toast.makeText(getApplicationContext(), notice, 0)
-									.show();
+							exerciseBook.setRefresh(1);
 						}
+						Toast.makeText(getApplicationContext(), notice, 0)
+								.show();
 					} catch (JSONException e) {
+						Toast.makeText(getApplicationContext(),
+								"修改头像失败", 0).show();
 						e.printStackTrace();
 					}
 
@@ -138,8 +134,8 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 				Context.MODE_PRIVATE);
 		avatar_url = preferences.getString("avatar_url", "");
 		nickName = preferences.getString("nickname", "");
-		 id = preferences.getString("id", null);
-		 memoryCache = new ImageMemoryCache(this);
+		id = preferences.getString("id", null);
+		memoryCache = new ImageMemoryCache(this);
 		active = true;
 		exerciseBook = (ExerciseBook) getApplication();
 		instance = this;
@@ -187,7 +183,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 				.setIndicator("", res.getDrawable(R.drawable.sender_1))
 				.setContent(intent3);
 		tabhost.addTab(spec3);
-		
+
 		Intent intent4 = new Intent(this, HomePageSendMessage.class);
 		spec4 = tabhost.newTabSpec("spec4")
 				.setIndicator("", res.getDrawable(R.drawable.sender_1))
@@ -256,7 +252,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 
 				}
 			}
-			img.setPadding(222, 36, 0, 0);
+			img.setPadding(200, 30, 0, 0);
 			// img.setPadding(0, 0, 0, 0);
 			/**
 			 * 此方法是为了去掉系统默认的色白的底角
@@ -382,7 +378,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 								break;
 							}
 						}
-						img.setPadding(222, 36, 0, 0);
+						img.setPadding(200, 30, 0, 0);
 						// img.setPadding(0, 0, 0, 0);
 					}
 				}
@@ -435,7 +431,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 
 		switch (resultCode) {
 		// 如果是直接从相册获取
-		case RESULT_OK:
+		case -11:
 
 			Bundle bundle = data.getExtras();
 			uri = bundle.getString("uri");
@@ -468,17 +464,11 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 				MultipartEntity entity = new MultipartEntity();
 
 				entity.addPart("student_id", new StringBody(id));
-				File f = new File(Environment.getExternalStorageDirectory()
-						+ "/1" + IMAGE_FILE_NAME);
+				File f = new File(uri);
 
 				Log.i("suanfa", f.getPath() + "");
 				if (f.exists()) {
-					entity.addPart(
-							"avatar",
-							new FileBody(new File(Environment
-									.getExternalStorageDirectory()
-									+ "/1"
-									+ IMAGE_FILE_NAME)));
+					entity.addPart("avatar", new FileBody(new File(uri)));
 				}
 
 				json = ExerciseBookTool.sendPhostimg(
@@ -490,6 +480,8 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 				mHandler.sendMessage(msg);
 
 			} catch (Exception e) {
+				Toast.makeText(getApplicationContext(),
+						"修改头像失败", 0).show();
 				mHandler.sendEmptyMessage(7);
 			}
 		}

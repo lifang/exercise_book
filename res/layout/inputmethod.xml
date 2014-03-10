@@ -24,7 +24,6 @@
             android:layout_alignParentRight="true"
             android:layout_marginLeft="10px"
             
-             android:padding="10px"
             android:textColor="#BEBFC0"
             android:background="@drawable/shape"
             android:text="@string/queren"
@@ -42,9 +41,8 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:maxLength="60"
-            android:padding="10px"
             android:background="@drawable/shape"
-            android:layout_marginRight="200px"
+            android:layout_marginRight="260px"
             android:textSize="30px" >
             
         </EditText>

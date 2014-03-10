@@ -16,6 +16,7 @@ public class ExerciseBook extends Application {
 	private boolean Mneu;
 	private String uid;
 	private String class_id;
+	private int user_id;
 	private String work_id;
 	private int menu_num;
 
@@ -73,6 +74,13 @@ public class ExerciseBook extends Application {
 		this.uid = uid;
 	}
 
+	public int getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(int user_id) {
+		this.user_id = user_id;
+	}
 	public String getClass_id() {
 		return class_id;
 	}

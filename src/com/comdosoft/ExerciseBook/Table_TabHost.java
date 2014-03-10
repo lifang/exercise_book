@@ -202,7 +202,7 @@ public class Table_TabHost extends Activity
 
 		switch (resultCode) {
 		// 如果是直接从相册获取
-		case RESULT_OK:
+		case -11:
 
 			Bundle bundle = data.getExtras();
 			uri = bundle.getString("uri");

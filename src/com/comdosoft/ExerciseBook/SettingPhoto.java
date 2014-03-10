@@ -28,6 +28,8 @@ public class SettingPhoto extends Activity implements Urlinterface {
 
 	// 设置 界面
 	String delUri = "";
+	String photo = Environment.getExternalStorageDirectory()
+	+ "/" + IMAGE_FILE_NAME;
 	String photoStr = Environment.getExternalStorageDirectory()
 	+ "/1" + IMAGE_FILE_NAME;
 	/* 头像名称 */
@@ -45,6 +47,10 @@ public class SettingPhoto extends Activity implements Urlinterface {
 		if (file.exists()) {
 			file.delete();
 		}
+		File file2 = new File(photo);
+		if (file2.exists()) {
+			file2.delete();
+		}
 	}
 
 	/**
@@ -57,14 +63,12 @@ public class SettingPhoto extends Activity implements Urlinterface {
 					MediaStore.ACTION_IMAGE_CAPTURE);
 			// 判断存储卡是否可以用，可用进行存储
 			if (ExerciseBookTool.isHasSdcard()) {
-				File file = new File(Environment.getExternalStorageDirectory()
-						+ "/" + IMAGE_FILE_NAME);
+				File file = new File(photo);
 
 				if (file.exists()) {
 					file.delete();
 				}
-				file = new File(Environment.getExternalStorageDirectory() + "/"
-						+ IMAGE_FILE_NAME);
+				file = new File(photo);
 				if (!file.exists()) {
 					intentFromCapture.putExtra(MediaStore.EXTRA_OUTPUT, Uri
 							.fromFile(new File(Environment
@@ -115,9 +119,7 @@ public class SettingPhoto extends Activity implements Urlinterface {
 			case 2:
 
 				if (ExerciseBookTool.isHasSdcard()) {
-					File temp = new File(
-							Environment.getExternalStorageDirectory() + "/"
-									+ IMAGE_FILE_NAME);
+					File temp = new File(photo);
 					startPhotoZoom(Uri.fromFile(temp));
 				} else {
 					Toast.makeText(this, "未找到存储卡，无法存储照片！", Toast.LENGTH_LONG)
@@ -150,7 +152,6 @@ public class SettingPhoto extends Activity implements Urlinterface {
 	 * @param uri
 	 */
 	public void startPhotoZoom(Uri uri) {
-		delUri = getAbsoluteImagePath(uri);
 		Intent intent = new Intent("com.android.camera.action.CROP");
 		intent.setDataAndType(uri, "image/*");
 		// 设置裁剪
@@ -171,8 +172,10 @@ public class SettingPhoto extends Activity implements Urlinterface {
 	 * @param picdata
 	 */
 	private void getImageToView(Intent data) {
+	
 		Bundle extras = data.getExtras();
 		if (extras != null) {
+			exerciseBook.setRefresh(0);
 			Bitmap photo = extras.getParcelable("data");
 			Drawable drawable = new BitmapDrawable(photo);
 			File file = new File(photoStr);
@@ -189,13 +192,12 @@ public class SettingPhoto extends Activity implements Urlinterface {
 				// byte[] buf = s.getBytes();
 				stream.write(buf);
 				stream.close();
-//				delStr(delUri);
-				exerciseBook.setRefresh(0);
+				
 				Intent intent2 = new Intent();
 
 				intent2.putExtra("uri",photoStr);
 				// 通过调用setResult方法返回结果给前一个activity。
-				SettingPhoto.this.setResult(RESULT_OK, intent2);
+				SettingPhoto.this.setResult(-11, intent2);
 				// 关闭当前activity
 				SettingPhoto.this.finish();
 			} catch (IOException e) {
@@ -206,33 +208,4 @@ public class SettingPhoto extends Activity implements Urlinterface {
 		}
 	}
 
-	protected void delStr(String del) {
-		String str1 = del;
-		int temp2 = str1.lastIndexOf(".");
-		String s1 = str1.substring(0, temp2) + "~2";
-		String s2 = str1.substring(temp2, str1.length());
-		str1 = s1 + s2;
-		File file = new File(str1);
-
-		if (file.exists()) {
-			file.delete();
-
-		}
-
-	}
-
-	protected String getAbsoluteImagePath(Uri uri) {
-		// can post image
-		String[] proj = { MediaStore.Images.Media.DATA };
-		Cursor cursor = managedQuery(uri, proj, // Which columns to return
-				null, // WHERE clause; which rows to return (all rows)
-				null, // WHERE clause selection arguments (none)
-				null); // Order-by clause (ascending by name)
-
-		int column_index = cursor
-				.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-		cursor.moveToFirst();
-
-		return cursor.getString(column_index);
-	}
 }

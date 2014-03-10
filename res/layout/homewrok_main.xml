@@ -103,7 +103,7 @@
             android:id="@+id/all_bottom"
             android:layout_width="50px"
             android:layout_height="18px"
-            android:layout_marginLeft="222px"
+            android:layout_marginLeft="202px"
             android:clickable="true"
             android:src="@drawable/homepage_bot" />
 
@@ -111,7 +111,7 @@
             android:id="@+id/myself_bottom"
             android:layout_width="50px"
             android:layout_height="18px"
-            android:layout_marginLeft="486px"
+            android:layout_marginLeft="453px"
             android:clickable="true"
             android:src="@drawable/homepage_bot" />
 
@@ -119,14 +119,14 @@
             android:id="@+id/focus_bottom"
             android:layout_width="50px"
             android:layout_height="18px"
-            android:layout_marginLeft="752px"
+            android:layout_marginLeft="710px"
             android:clickable="true"
             android:src="@drawable/homepage_bot" />
                 <ImageView
             android:id="@+id/sender_bottom"
             android:layout_width="50px"
             android:layout_height="18px"
-            android:layout_marginLeft="1018px"
+            android:layout_marginLeft="959px"
             android:clickable="true"
             android:src="@drawable/homepage_bot" />
     </RelativeLayout>
