@@ -176,6 +176,7 @@ public class SwitchClassActivity extends Activity {
 				public void onClick(View v) {
 					new Thread() {
 						public void run() {
+							exerciseBook.setMainItem(0);
 
 							Intent intent = new Intent(
 									SwitchClassActivity.this,

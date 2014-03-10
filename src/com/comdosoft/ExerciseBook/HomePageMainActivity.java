@@ -194,7 +194,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 				.setContent(intent4);
 		tabhost.addTab(spec4);
 
-		tabhost.setCurrentTab(0);
+		tabhost.setCurrentTab(exerciseBook.getMainItem());
 		updateTabStyle(tabhost);
 
 	}
@@ -256,7 +256,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 
 				}
 			}
-			img.setPadding(222, 46, 0, 0);
+			img.setPadding(222, 36, 0, 0);
 			// img.setPadding(0, 0, 0, 0);
 			/**
 			 * 此方法是为了去掉系统默认的色白的底角
@@ -382,7 +382,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 								break;
 							}
 						}
-						img.setPadding(222, 46, 0, 0);
+						img.setPadding(222, 36, 0, 0);
 						// img.setPadding(0, 0, 0, 0);
 					}
 				}

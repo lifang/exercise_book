@@ -898,8 +898,8 @@ public class HomepageMyselfActivity extends Activity implements
 								list.get(focus).setReply_microposts_count(
 										a + "");
 								huifu_count_list.get(focus).setText(a + "");
-								list_list.get(focus).setAdapter(
-										ziAdapter_list.get(focus));
+//								list_list.get(focus).setAdapter(
+//										ziAdapter_list.get(focus));
 								ExerciseBookTool
 										.setListViewHeightBasedOnChildren(list_list
 												.get(focus));
