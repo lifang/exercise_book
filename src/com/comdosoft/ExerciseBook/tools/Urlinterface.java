@@ -59,4 +59,6 @@ public interface Urlinterface {
 	// 根据日期查询作业记录
 	static final String search_tasks = IP + "/api/students/search_tasks";
 	String get_follow_microposts = IP + "/api/students/get_follow_microposts"; // 关注的信息
+	String get_rankings = IP + "/api/students/get_rankings"; // 获得排名
+	
 }

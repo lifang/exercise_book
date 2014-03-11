@@ -405,6 +405,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 		public void onClick(View v) {
 
 			Intent intentp = new Intent();
+//			intentp.setClass(HomePageMainActivity.this, RankingOfPointsActivity.class);//
 			intentp.setClass(HomePageMainActivity.this, SettingPhoto.class);//
 			startActivityForResult(intentp, 0);
 		}
