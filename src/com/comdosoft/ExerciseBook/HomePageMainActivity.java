@@ -3,13 +3,18 @@ package com.comdosoft.ExerciseBook;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.comdosoft.ExerciseBook.HomepageAllActivity.get_class_info;
+import com.comdosoft.ExerciseBook.pojo.Micropost;
 import com.comdosoft.ExerciseBook.tools.ImageMemoryCache;
 import android.app.ProgressDialog;
 import android.app.TabActivity;
@@ -442,6 +447,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 				prodialog.setMessage("正在提交数据...");
 				prodialog.setCanceledOnTouchOutside(false);
 				prodialog.show();
+				Thread thread = new Thread(new mod_avatar());
 				thread.start();
 			} else {
 				Toast.makeText(getApplicationContext(),
@@ -457,7 +463,8 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 
 	}
 
-	Thread thread = new Thread() {
+	
+	class mod_avatar implements Runnable {
 		public void run() {
 			try {
 
@@ -485,6 +492,8 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 				mHandler.sendEmptyMessage(7);
 			}
 		}
-	};
+	}
+	
+
 
 }

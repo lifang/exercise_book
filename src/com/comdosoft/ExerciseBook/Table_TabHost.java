@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import cn.jpush.android.api.JPushInterface;
 
+import com.comdosoft.ExerciseBook.HomePageMainActivity.mod_avatar;
 import com.comdosoft.ExerciseBook.tools.CircularImage;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
@@ -213,6 +214,7 @@ public class Table_TabHost extends Activity
 				prodialog.setMessage("正在提交数据...");
 				prodialog.setCanceledOnTouchOutside(false);
 				prodialog.show();
+				Thread thread = new Thread(new mod_avatar());
 				thread.start();
 			} else {
 				Toast.makeText(getApplicationContext(),
@@ -228,24 +230,19 @@ public class Table_TabHost extends Activity
 
 	}
 
-	Thread thread = new Thread() {
+	
+	class mod_avatar implements Runnable {
 		public void run() {
 			try {
 
 				MultipartEntity entity = new MultipartEntity();
 
 				entity.addPart("student_id", new StringBody(id));
-				File f = new File(Environment.getExternalStorageDirectory()
-						+ "/1" + IMAGE_FILE_NAME);
+				File f = new File(uri);
 
 				Log.i("suanfa", f.getPath() + "");
 				if (f.exists()) {
-					entity.addPart(
-							"avatar",
-							new FileBody(new File(Environment
-									.getExternalStorageDirectory()
-									+ "/1"
-									+ IMAGE_FILE_NAME)));
+					entity.addPart("avatar", new FileBody(new File(uri)));
 				}
 
 				json = ExerciseBookTool.sendPhostimg(
@@ -257,9 +254,12 @@ public class Table_TabHost extends Activity
 				mHandler.sendMessage(msg);
 
 			} catch (Exception e) {
+				Toast.makeText(getApplicationContext(),
+						"修改头像失败", 0).show();
 				mHandler.sendEmptyMessage(7);
 			}
 		}
-	};
+	}
+	
 
 }
