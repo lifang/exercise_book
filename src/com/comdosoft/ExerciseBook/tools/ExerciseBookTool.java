@@ -503,7 +503,7 @@ public class ExerciseBookTool implements Urlinterface {
 	/*
 	 * 设置头像
 	 */
-	public static void set_background(final String uri,
+	public static void set_background(final String url,
 			final ImageView imageView) {
 
 		final Handler mHandler = new Handler() {
@@ -523,12 +523,55 @@ public class ExerciseBookTool implements Urlinterface {
 			public void run() {
 				HttpClient hc = new DefaultHttpClient();
 
-				HttpGet hg = new HttpGet(uri);//
+				HttpGet hg = new HttpGet(url);//
 				Drawable face_drawable;
 				try {
 					HttpResponse hr = hc.execute(hg);
 					Bitmap bm = BitmapFactory.decodeStream(hr.getEntity()
 							.getContent());
+					face_drawable = new BitmapDrawable(bm);
+					Message msg = new Message();// 创建Message 对象
+					msg.what = 0;
+					msg.obj = face_drawable;
+					mHandler.sendMessage(msg);
+				} catch (Exception e) {
+
+				}
+
+			}
+		};
+
+		thread.start();
+
+	}
+	
+	
+	public static void set_bk(final String url, final ImageView imageView,final ImageMemoryCache memoryCache) {
+
+		final Handler mHandler = new Handler() {
+			public void handleMessage(android.os.Message msg) {
+				switch (msg.what) {
+				case 0:
+					Drawable drawable = (Drawable) msg.obj;
+					imageView.setImageDrawable(drawable);
+					break;
+				default:
+					break;
+				}
+			}
+		};
+
+		Thread thread = new Thread() {
+			public void run() {
+				HttpClient hc = new DefaultHttpClient();
+
+				HttpGet hg = new HttpGet(url);//
+				Drawable face_drawable;
+				try {
+					HttpResponse hr = hc.execute(hg);
+					Bitmap bm = BitmapFactory.decodeStream(hr.getEntity()
+							.getContent());
+					memoryCache.addBitmapToCache(url, bm);
 					face_drawable = new BitmapDrawable(bm);
 					Message msg = new Message();// 创建Message 对象
 					msg.what = 0;

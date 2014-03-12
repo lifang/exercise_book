@@ -22,8 +22,8 @@
             android:background="#00000000"
             android:src="@drawable/logo" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+       <LinearLayout
+            android:layout_width="341.67px"
             android:layout_height="fill_parent"
             android:layout_alignParentRight="true"
             android:background="@color/top_shenlv"
@@ -39,22 +39,28 @@
 
             <TextView
                 android:id="@+id/user_name"
-                android:layout_width="wrap_content"
+                android:layout_width="182px"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15px"
                 android:layout_marginTop="40.5px"
+                android:maxLines="1"
                 android:text="丁作强"
                 android:textColor="@color/white"
                 android:textSize="30px" />
 
-            <ImageButton
+            <LinearLayout
                 android:id="@+id/user_button"
-                android:layout_width="26px"
-                android:layout_height="15px"
-                android:layout_marginLeft="15px"
-                android:layout_marginRight="28.5px"
-                android:layout_marginTop="62.5px"
-                android:background="@drawable/userinfo_button" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="13.5px"
+                android:layout_marginTop="47.5px"
+                android:padding="15px" >
+
+                <ImageView
+                    android:layout_width="26px"
+                    android:layout_height="15px"
+                    android:background="@drawable/userinfo_button" />
+            </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
     <!-- 中间不同的部分 -->

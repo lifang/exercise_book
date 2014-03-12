@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -16,10 +17,9 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
 import android.view.Window;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
@@ -27,43 +27,31 @@ import com.comdosoft.ExerciseBook.tools.Urlinterface;
 public class SettingPhoto extends Activity implements Urlinterface {
 
 	// 设置 界面
-	private ImageView faceImage;
-	private EditText nickname;//
-	private EditText name; //
-	private View layout;// 选择头像界面
-	private String json = "";
-
+	String delUri = "";
+	String photo = Environment.getExternalStorageDirectory()
+	+ "/" + IMAGE_FILE_NAME;
+	String photoStr = Environment.getExternalStorageDirectory()
+	+ "/1" + IMAGE_FILE_NAME;
 	/* 头像名称 */
 	private static final String IMAGE_FILE_NAME = "faceImage.jpg";
 
-	/* 请求码 */
-
-	private Bitmap bm = null;
-	private String nameS = ""; //
-	private String nicknameS = ""; //
-	private String id = "8"; // 用户 id，，切记 不是 user_id
-	private String user_id = "8"; // 用户 id，，切记 不是 user_id
-	private String avatar_url = ""; // 用户头像
-
+	private ExerciseBook exerciseBook;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		
+
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);//去掉标题栏
+		requestWindowFeature(Window.FEATURE_NO_TITLE);// 去掉标题栏
 		setContentView(R.layout.settingphoto);
-
-
-		File file = new File(Environment.getExternalStorageDirectory() + "/1"
-				+ IMAGE_FILE_NAME);
-
+		exerciseBook = (ExerciseBook) getApplication();
+		File file = new File(photoStr);
 		if (file.exists()) {
 			file.delete();
-
 		}
-
-		
+		File file2 = new File(photo);
+		if (file2.exists()) {
+			file2.delete();
+		}
 	}
-
 
 	/**
 	 * 拍照上传
@@ -71,36 +59,29 @@ public class SettingPhoto extends Activity implements Urlinterface {
 	public void set_paizhaoshangchuan(View v) {
 
 		try {
-
 			Intent intentFromCapture = new Intent(
 					MediaStore.ACTION_IMAGE_CAPTURE);
 			// 判断存储卡是否可以用，可用进行存储
 			if (ExerciseBookTool.isHasSdcard()) {
-
-				File file = new File(Environment.getExternalStorageDirectory()
-						+ "/" + IMAGE_FILE_NAME);
+				File file = new File(photo);
 
 				if (file.exists()) {
 					file.delete();
-
 				}
-				file = new File(Environment.getExternalStorageDirectory() + "/"
-						+ IMAGE_FILE_NAME);
+				file = new File(photo);
 				if (!file.exists()) {
 					intentFromCapture.putExtra(MediaStore.EXTRA_OUTPUT, Uri
 							.fromFile(new File(Environment
 									.getExternalStorageDirectory(),
 									IMAGE_FILE_NAME)));
-
 				}
-
 			}
 
 			startActivityForResult(intentFromCapture, 2);
 		} catch (Exception e) {
 
-			Toast.makeText(getApplicationContext(), ExerciseBookParams.MES_CAPTURE, 0)
-					.show();
+			Toast.makeText(getApplicationContext(),
+					ExerciseBookParams.MES_CAPTURE, 0).show();
 		}
 
 	}
@@ -127,43 +108,41 @@ public class SettingPhoto extends Activity implements Urlinterface {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (resultCode!=0) {
-			
-		
-		switch (requestCode) {
-		// 如果是直接从相册获取
-		case 1:
-			startPhotoZoom(data.getData());
-			break;
-		// 如果是调用相机拍照时
-		case 2:
+		if (resultCode != 0) {
 
-			if (ExerciseBookTool.isHasSdcard()) {
-				File temp = new File(Environment.getExternalStorageDirectory()
-						+ "/" + IMAGE_FILE_NAME);
-				startPhotoZoom(Uri.fromFile(temp));
-			} else {
-				Toast.makeText(this, "未找到存储卡，无法存储照片！", Toast.LENGTH_LONG)
-						.show();
+			switch (requestCode) {
+			// 如果是直接从相册获取
+			case 1:
+				startPhotoZoom(data.getData());
+				break;
+			// 如果是调用相机拍照时
+			case 2:
+
+				if (ExerciseBookTool.isHasSdcard()) {
+					File temp = new File(photo);
+					startPhotoZoom(Uri.fromFile(temp));
+				} else {
+					Toast.makeText(this, "未找到存储卡，无法存储照片！", Toast.LENGTH_LONG)
+							.show();
+				}
+
+				break;
+			// 取得裁剪后的图片
+			case 3:
+				/**
+				 * 非空判断大家一定要验证，如果不验证的话， 在剪裁之后如果发现不满意，要重新裁剪，丢弃
+				 * 当前功能时，会报NullException，小马只 在这个地方加下，大家可以根据不同情况在合适的 地方做判断处理类似情况
+				 * 
+				 */
+				if (data != null) {
+					getImageToView(data);
+				}
+				break;
+			default:
+				break;
+
 			}
-
-			break;
-		// 取得裁剪后的图片
-		case 3:
-			/**
-			 * 非空判断大家一定要验证，如果不验证的话， 在剪裁之后如果发现不满意，要重新裁剪，丢弃
-			 * 当前功能时，会报NullException，小马只 在这个地方加下，大家可以根据不同情况在合适的 地方做判断处理类似情况
-			 * 
-			 */
-			if (data != null) {
-				getImageToView(data);
-			}
-			break;
-		default:
-			break;
-
-		}
-		super.onActivityResult(requestCode, resultCode, data);
+			super.onActivityResult(requestCode, resultCode, data);
 		}
 	}
 
@@ -173,7 +152,6 @@ public class SettingPhoto extends Activity implements Urlinterface {
 	 * @param uri
 	 */
 	public void startPhotoZoom(Uri uri) {
-
 		Intent intent = new Intent("com.android.camera.action.CROP");
 		intent.setDataAndType(uri, "image/*");
 		// 设置裁剪
@@ -182,7 +160,7 @@ public class SettingPhoto extends Activity implements Urlinterface {
 		intent.putExtra("aspectX", 1);
 		intent.putExtra("aspectY", 1);
 		// outputX outputY 是裁剪图片宽高
-		intent.putExtra("outputX", 176);
+		intent.putExtra("outputX", 186);
 		intent.putExtra("outputY", 186);
 		intent.putExtra("return-data", true);
 		startActivityForResult(intent, 3);
@@ -194,19 +172,16 @@ public class SettingPhoto extends Activity implements Urlinterface {
 	 * @param picdata
 	 */
 	private void getImageToView(Intent data) {
+	
 		Bundle extras = data.getExtras();
 		if (extras != null) {
+			exerciseBook.setRefresh(0);
 			Bitmap photo = extras.getParcelable("data");
 			Drawable drawable = new BitmapDrawable(photo);
-//			faceImage.setBackgroundDrawable(drawable);
-			File file = new File(Environment.getExternalStorageDirectory()
-					+ "/1" + IMAGE_FILE_NAME);
-
+			File file = new File(photoStr);
 			try {
-
 				if (file.exists()) {
 					file.delete();
-
 				}
 
 				file.createNewFile();
@@ -217,14 +192,14 @@ public class SettingPhoto extends Activity implements Urlinterface {
 				// byte[] buf = s.getBytes();
 				stream.write(buf);
 				stream.close();
-				Intent intent2 = new Intent();  
 				
-	            intent2.putExtra("uri", Environment.getExternalStorageDirectory()
-						+ "/1" + IMAGE_FILE_NAME);  
-	            // 通过调用setResult方法返回结果给前一个activity。  
-	            SettingPhoto.this.setResult(RESULT_OK, intent2);  
-	            //关闭当前activity  
-	            SettingPhoto.this.finish(); 
+				Intent intent2 = new Intent();
+
+				intent2.putExtra("uri",photoStr);
+				// 通过调用setResult方法返回结果给前一个activity。
+				SettingPhoto.this.setResult(-11, intent2);
+				// 关闭当前activity
+				SettingPhoto.this.finish();
 			} catch (IOException e) {
 
 				e.printStackTrace();
@@ -232,4 +207,5 @@ public class SettingPhoto extends Activity implements Urlinterface {
 
 		}
 	}
+
 }

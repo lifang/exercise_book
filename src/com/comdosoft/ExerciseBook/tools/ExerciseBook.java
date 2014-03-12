@@ -2,6 +2,11 @@ package com.comdosoft.ExerciseBook.tools;
 
 import java.util.List;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 
@@ -23,12 +28,32 @@ public class ExerciseBook extends Application {
 	private List<ListeningPojo> list;
 	private int questions_index;
 	private int branch_item_index;
+	private int user_id;
+	private int menu_num;
+	private List<Activity> activityList = new LinkedList<Activity>();
 
 	public ExerciseBook() {
 		this.setMainItem(0);
 		this.setRefresh(1);
 		this.setQuestions_index(0);
 		this.setBranch_item_index(0);
+		this.setMenu_num(0);
+	}
+
+	public List<Activity> getActivityList() {
+		return activityList;
+	}
+
+	public void setActivityList() {
+		this.activityList = new LinkedList<Activity>();
+	}
+
+	public int getMenu_num() {
+		return menu_num;
+	}
+
+	public void setMenu_num(int menu_num) {
+		this.menu_num = menu_num;
 	}
 
 	public int getRefresh() {
@@ -85,6 +110,14 @@ public class ExerciseBook extends Application {
 
 	public void setUid(String uid) {
 		this.uid = uid;
+	}
+
+	public int getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(int user_id) {
+		this.user_id = user_id;
 	}
 
 	public String getClass_id() {

@@ -8,39 +8,44 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="#282828"
+        android:background="@drawable/input_bg"
         android:orientation="horizontal"
         android:padding="25px" >
 
-        <EditText
-            android:id="@+id/edittext"
-            android:layout_width="650px"
-            android:layout_height="wrap_content"
-            android:background="@color/top_huise"
-            android:maxLength="60"
-            android:textSize="30px" >
-        </EditText>
 
-        <TextView
-            android:id="@+id/tv_num"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/edittext"
-            android:layout_toRightOf="@+id/edittext"
-            android:text="@string/sender"
-            android:textSize="20px" />
+
+
 
         <Button
             android:id="@+id/queding"
-            android:layout_width="50px"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/edittext"
             android:layout_alignParentRight="true"
             android:layout_marginLeft="10px"
-            android:layout_toRightOf="@+id/tv_num"
-            android:background="#BEBFC0"
+            
+            android:textColor="#BEBFC0"
+            android:background="@drawable/shape"
             android:text="@string/queren"
             android:textSize="30px" />
+                <TextView
+            android:id="@+id/tv_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/edittext"
+            android:layout_toLeftOf="@+id/queding"
+            android:text="@string/sender"
+            android:textSize="20px" />
+                        <EditText
+            android:id="@+id/edittext"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:maxLength="60"
+            android:background="@drawable/shape"
+            android:layout_marginRight="260px"
+            android:textSize="30px" >
+            
+        </EditText>
     </RelativeLayout>
 
 </RelativeLayout>

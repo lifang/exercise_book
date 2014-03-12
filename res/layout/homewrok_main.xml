@@ -44,24 +44,23 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15px"
                 android:layout_marginTop="40.5px"
-                android:text="丁作强"
                 android:maxLines="1"
+                android:text="丁作强"
                 android:textColor="@color/white"
                 android:textSize="30px" />
-<LinearLayout 
-       android:id="@+id/user_button"
-    android:layout_width="wrap_content"
+
+            <LinearLayout
+                android:id="@+id/user_button"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="15px"
-                android:layout_marginTop="47.5px"
                 android:layout_marginRight="13.5px"
-    >
-            <ImageView
-             
-                android:layout_width="26px"
-                android:layout_height="15px"
-                
-                android:background="@drawable/userinfo_button" />
+                android:layout_marginTop="47.5px"
+                android:padding="15px" >
+
+                <ImageView
+                    android:layout_width="26px"
+                    android:layout_height="15px"
+                    android:background="@drawable/userinfo_button" />
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
@@ -104,7 +103,7 @@
             android:id="@+id/all_bottom"
             android:layout_width="50px"
             android:layout_height="18px"
-            android:layout_marginLeft="254px"
+            android:layout_marginLeft="202px"
             android:clickable="true"
             android:src="@drawable/homepage_bot" />
 
@@ -112,15 +111,22 @@
             android:id="@+id/myself_bottom"
             android:layout_width="50px"
             android:layout_height="18px"
-            android:layout_marginLeft="570px"
+            android:layout_marginLeft="453px"
             android:clickable="true"
             android:src="@drawable/homepage_bot" />
 
         <ImageView
+            android:id="@+id/focus_bottom"
+            android:layout_width="50px"
+            android:layout_height="18px"
+            android:layout_marginLeft="710px"
+            android:clickable="true"
+            android:src="@drawable/homepage_bot" />
+                <ImageView
             android:id="@+id/sender_bottom"
             android:layout_width="50px"
             android:layout_height="18px"
-            android:layout_marginLeft="884.74px"
+            android:layout_marginLeft="959px"
             android:clickable="true"
             android:src="@drawable/homepage_bot" />
     </RelativeLayout>

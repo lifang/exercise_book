@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:scrollbars="none" >
 
+    
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -31,8 +32,8 @@
                 android:id="@+id/child_jiantou"
                 android:layout_width="29px"
                 android:layout_height="29px"
-                android:layout_marginTop="18px"
                 android:layout_marginLeft="8px"
+                android:layout_marginTop="18px"
                 android:background="@drawable/childjiantou" />
 
             <RelativeLayout
@@ -105,21 +106,18 @@
             android:gravity="center"
             android:orientation="vertical" >
 
-        
-                <ImageView
-                    android:id="@+id/child_micropost_delete"
-                    android:layout_width="55px"
-                    android:layout_height="55px"
-                    android:background="@drawable/homepage_shanchu"
-                    android:layout_marginBottom="51.5px"
-                    android:visibility="gone" />
-           
+            <ImageView
+                android:id="@+id/child_micropost_delete"
+                android:layout_width="55px"
+                android:layout_height="55px"
+                android:layout_marginBottom="51.5px"
+                android:background="@drawable/homepage_shanchu"
+                android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/child_micropost_huifu"
                 android:layout_width="55px"
                 android:layout_height="55px"
-                
                 android:background="@drawable/homepage_huifu" />
         </LinearLayout>
     </LinearLayout>

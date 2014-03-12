@@ -1,9 +1,14 @@
 package com.comdosoft.ExerciseBook;
 
+import java.io.File;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,6 +18,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -28,6 +34,7 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.comdosoft.ExerciseBook.HomePageMainActivity.mod_avatar;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.PullToRefreshView;
@@ -36,14 +43,13 @@ import com.comdosoft.ExerciseBook.tools.Urlinterface;
 public class UserInfoActivity extends Activity {
 	// private MyDialog dialog;
 	private LinearLayout layout;
-	private ImageView imageView1;
-	private ImageView imageView2;
+	private LinearLayout imageView1,imageView2;
 	private TextView userinfo_username;
 	private TextView userinfo_classname;
 	public static UserInfoActivity instance = null;
 	private String nickName = "丁作强";// 用户昵称
 	private String classname = "三年级二班";
-	private String id = "2";
+	private String id = "73";
 	private String school_class_id = "15";
 	private ProgressDialog prodialog;
 	private TextView userinfo_youyi2, userinfo_jingzhun2, userinfo_xunsu2,
@@ -80,8 +86,8 @@ public class UserInfoActivity extends Activity {
 				Urlinterface.SHARED, Context.MODE_PRIVATE);
 		classname = preferences.getString("school_class_name", "");
 		nickName = preferences.getString("nickname", "");
-//		 id = preferences.getString("id", null);
-//		 school_class_id = preferences.getString("school_class_id", null);
+		 id = preferences.getString("id", null);
+		 school_class_id = preferences.getString("school_class_id", null);
 
 		list = new ArrayList();
 
@@ -99,9 +105,9 @@ public class UserInfoActivity extends Activity {
 		userinfo_classname = (TextView) findViewById(R.id.userinfo_classname); // 班级名
 		userinfo_username.setText(nickName);
 		userinfo_classname.setText(classname);
-		imageView1 = (ImageView) findViewById(R.id.imageView1);// 修改用户名图标
+		imageView1 = (LinearLayout) findViewById(R.id.imageView1);// 修改用户名图标
 		imageView1.setOnClickListener(listener);
-		imageView2 = (ImageView) findViewById(R.id.imageView2);// 切换班级图标
+		imageView2 = (LinearLayout) findViewById(R.id.imageView2);// 切换班级图标
 		imageView2.setOnClickListener(listener2);
 		layout = (LinearLayout) findViewById(R.id.main_dialog_layout);
 		layout.setOnClickListener(new OnClickListener() {
@@ -109,8 +115,8 @@ public class UserInfoActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Toast.makeText(getApplicationContext(), "点击别的地方消失",
-						Toast.LENGTH_SHORT).show();
+//				Toast.makeText(getApplicationContext(), "点击别的地方消失",
+//						Toast.LENGTH_SHORT).show();
 			}
 		});
 		if (ExerciseBookTool.isConnect(UserInfoActivity.this)) {
@@ -243,9 +249,9 @@ public class UserInfoActivity extends Activity {
 
 		switch (resultCode) {
 		case 8:
-			// Bundle bundle = data.getExtras();
-			// String content = bundle.getString("content");
-			// modifyName(content);
+			 Bundle bundle = data.getExtras();
+			 String content = bundle.getString("content");
+			 modifyName(content);
 			break;
 		default:
 			break;
@@ -266,13 +272,19 @@ public class UserInfoActivity extends Activity {
 					} else {
 						JSONObject array2;
 						try {
-							array2 = new JSONObject(json2);//
-							String status = array2.getString("status");
+							array2 = new JSONObject(json2);
+							Boolean status = array2.getBoolean("status");
 							String notice = array2.getString("notice");
-							if ("success".equals(status)) {
+
+							if (status == true) {
 								userinfo_username.setText(content);
 								HomePageMainActivity.instance.userName
 										.setText(content);
+								SharedPreferences preferences = getSharedPreferences(Urlinterface.SHARED,
+										 Context.MODE_PRIVATE);
+										 Editor editor = preferences.edit();
+										 editor.putString("nickname", content);
+										 editor.commit();
 
 							}
 							Toast.makeText(getApplicationContext(), notice,
@@ -289,33 +301,42 @@ public class UserInfoActivity extends Activity {
 			}
 		};
 
-		Thread thread = new Thread() {
+		class mod_nickname implements Runnable {
 			public void run() {
 				try {
-					Map<String, String> map = new HashMap<String, String>();
-					map.put("content", content);
-					map.put("student_id", id);
+					
+					MultipartEntity entity = new MultipartEntity();
 
-					// String js1 = ExerciseBookTool.doPost(
-					// Urlinterface.modifyUserName, map);
-					// Message msg = new Message();// 创建Message 对象
-					// msg.what = 0;
-					// msg.obj = js1;
-					// mHandler.sendMessage(msg);
+					entity.addPart("student_id", new StringBody(id));
+					entity.addPart("nickname", new StringBody(content,
+							Charset.forName("UTF-8")));
+
+					 String js1 = ExerciseBookTool.sendPhostimg(
+								Urlinterface.MODIFY_PERSON_INFO, entity);
+					 Message msg = new Message();// 创建Message 对象
+					 msg.what = 0;
+					 msg.obj = js1;
+					 mHandler.sendMessage(msg);
 				} catch (Exception e) {
-					// handler.sendEmptyMessage(7);
+					Toast.makeText(getApplicationContext(),
+							"修改昵称失败", 0).show();
+					mHandler.sendEmptyMessage(7);
 				}
 			}
-		};
+		}
 		if (ExerciseBookTool.isConnect(UserInfoActivity.this)) {
 			prodialog = new ProgressDialog(UserInfoActivity.this);
 			prodialog.setMessage("正在修改...");
 			prodialog.setCanceledOnTouchOutside(false);
 			prodialog.show();
+			Thread thread = new Thread(new mod_nickname());
 			thread.start();
 		} else {
 			Toast.makeText(getApplicationContext(),
 					ExerciseBookParams.INTERNET, 0).show();
 		}
 	}
+	
+
+	
 }
