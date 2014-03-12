@@ -164,7 +164,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 				ExerciseBookTool.set_background(Urlinterface.IP + avatar_url,
 						faceImage);
 			}
-		} else {
+		} else { 
 			Toast.makeText(getApplicationContext(), ExerciseBookParams.INTERNET, 0)
 					.show();
 		}

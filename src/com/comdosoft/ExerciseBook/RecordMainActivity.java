@@ -49,8 +49,6 @@ import com.comdosoft.ExerciseBook.tools.WorkJson;
 
 public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 		OnGestureListener {
-	private String id = "73";
-	private String school_class_id = "85";
 	private ViewPager pager;
 	private List<LinearLayout> linearList = new ArrayList<LinearLayout>();
 	private List<Integer> questiontype_list = new ArrayList<Integer>();
@@ -80,6 +78,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 	private String state = "";
 	private LinearLayout date_ll;
 	public boolean date_type = false;
+	public ImagePagerAdapter ipa;
 	private TextView tishi;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -87,8 +86,9 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 			case 0:
 				prodialog.dismiss();
 				if (work_list.size() != 0) {
+					tishi.setVisibility(View.GONE);
 					number = work_list.size();
-					pager.setAdapter(new ImagePagerAdapter());
+					pager.setAdapter(ipa);
 				} else {
 					tishi.setVisibility(View.VISIBLE);
 				}
@@ -113,6 +113,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.record_main);
 		eb = (ExerciseBook) getApplication();
+
 		initialize();
 		initDate();
 		prodialog = new ProgressDialog(RecordMainActivity.this);
@@ -125,6 +126,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 
 	// 初始化
 	public void initialize() {
+		ipa = new ImagePagerAdapter();
 		pager = (ViewPager) findViewById(R.id.vPager);
 		ll = (LinearLayout) findViewById(R.id.ll);
 		date_ll = (LinearLayout) findViewById(R.id.date_ll);
@@ -145,10 +147,8 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 		bun = getIntent().getExtras();// in
 		if (bun != null && bun.getString("state").equals("ruzhu")) {
 			state = bun.getString("state");
-			System.out.println("%%%%%%" + state);
 		} else if (bun != null && bun.getString("state").equals("lidian")) {
 			state = bun.getString("state");
-			System.out.println("|||||||||||" + state);
 		}
 		gestureDetector = new GestureDetector(this);
 		// bd=new Bundle();
@@ -206,23 +206,27 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 		public Object instantiateItem(View arg0, int arg1) {
 			View nl = inflater.inflate(R.layout.record_page_item,
 					(ViewGroup) arg0, false);
-			TextView time = (TextView) nl.findViewById(R.id.start_date);
-			time.setText(work_list.get(arg1).getStart_time() + " 发布");
-			LinearLayout mylayout = (LinearLayout) nl
-					.findViewById(R.id.mylayout);
-			linearList.clear();
-			linear_item = 0;
-			// Log.i("linshi", work_list.get(arg1).toString()+ "");
-			for (int i = 0; i < work_list.get(arg1).getQuestion_types().size(); i++) {
+			if (work_list.size() > 0) {
 
-				setlayout(i, mylayout, work_list.get(arg1));
+				TextView time = (TextView) nl.findViewById(R.id.start_date);
+				time.setText(work_list.get(arg1).getStart_time() + " 发布");
+				LinearLayout mylayout = (LinearLayout) nl
+						.findViewById(R.id.mylayout);
+				linearList.clear();
+				linear_item = 0;
+				// Log.i("linshi", work_list.get(arg1).toString()+ "");
+				for (int i = 0; i < work_list.get(arg1).getQuestion_types()
+						.size(); i++) {
+					setlayout(i, mylayout, work_list.get(arg1));
+				}
 			}
 			((ViewPager) arg0).addView(nl, 0);
 			return nl;
 		}
 	}
 
-	public void setlayout(int i, LinearLayout mylayout, WorkPoJo pojo) {
+	public void setlayout(final int i, LinearLayout mylayout,
+			final WorkPoJo pojo) {
 		View view = View.inflate(this, R.layout.work_item, null);
 		RelativeLayout layout = (RelativeLayout) view.findViewById(R.id.layout);
 		ImageView imageView = (ImageView) view.findViewById(R.id.image);
@@ -233,6 +237,11 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 		top.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View arg0) {
 				Log.i("linshi", "textview");
+			}
+		});
+		layout.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View arg0) {
+				startDekaron(pojo.getQuestion_types().get(i));// 跳转到答题页面
 			}
 		});
 
@@ -278,8 +287,8 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 		public void run() {
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("today_newer_id", eb.getToday_newer_id() + "");
-			map.put("student_id", id);
-			map.put("school_class_id", school_class_id);
+			map.put("student_id", eb.getUid());
+			map.put("school_class_id", eb.getClass_id());
 			String json;
 			try {
 				json = ExerciseBookTool.sendGETRequest(get_more_tasks, map);
@@ -309,15 +318,19 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 		public void run() {
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("date", date);
-			map.put("student_id", id);
-			map.put("school_class_id", school_class_id);
+			map.put("student_id", eb.getUid());
+			map.put("school_class_id", eb.getClass_id());
 			Log.i("linshi", "date:" + date);
 			String json;
 			try {
-				json = ExerciseBookTool.doPost(get_more_tasks, map);
+				json = ExerciseBookTool.doPost(search_tasks, map);
 				JSONObject obj = new JSONObject(json);
 				if (obj.getString("status").equals("success")) {
-					
+					work_list = WorkJson.json(json);
+					handler.sendEmptyMessage(0);
+				} else {
+					notice = obj.getString("notice");
+					handler.sendEmptyMessage(1);
 				}
 			} catch (Exception e) {
 				handler.sendEmptyMessage(2);
@@ -393,27 +406,22 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 	}
 
 	public boolean onDown(MotionEvent e) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public void onLongPress(MotionEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
 	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
 			float distanceY) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public void onShowPress(MotionEvent e) {
-		// TODO Auto-generated method stub
 	}
 
 	public boolean onSingleTapUp(MotionEvent e) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -434,9 +442,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 
 		gridView.setOnTouchListener(new OnTouchListener() {
 			// 将gridview中的触摸事件回传给gestureDetector
-			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				// TODO Auto-generated method stub
 				return RecordMainActivity.this.gestureDetector
 						.onTouchEvent(event);
 			}
@@ -445,9 +451,10 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 		gridView.setOnItemClickListener(new OnItemClickListener() {
 			// gridView中的每一个item的点击事件
 
-			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
+				work_list.clear();
+				ipa.notifyDataSetChanged();
 				// 点击任何一个item，得到这个item的日期(排除点击的是周日到周六(点击不响应))
 				int startPosition = calV.getStartPositon();
 				int endPosition = calV.getEndPosition();
@@ -468,6 +475,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 					date_type = false;
 					prodialog.show();
 					new Thread(new search_tasks()).start();
+
 				}
 			}
 		});
@@ -501,5 +509,36 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 			startActivity(intent);
 			break;
 		}
+	}
+
+	public void startDekaron(int i) {
+		eb.setWork_id(work_list.get(0).getId() + "");
+		switch (i) {
+		case 0:
+			intent.setClass(this, TenSpeedActivity.class);
+			break;
+		case 1:
+			// intent.setClass(this, SpeakPrepareActivity.class);
+			// intent.setClass(this, ClozeActivity.class);
+			intent.setClass(this, WorkEndActivity.class);
+			break;
+		case 2:
+			intent.setClass(this, TenSpeedActivity.class);
+			break;
+		case 3:
+			intent.setClass(this, TenSpeedActivity.class);
+			break;
+		case 4:
+			intent.setClass(this, TenSpeedActivity.class);
+			break;
+		case 5:
+			intent.setClass(this, TenSpeedActivity.class);
+			break;
+		case 6:
+			intent.setClass(this, TenSpeedActivity.class);
+			break;
+		}
+//		this.finish();
+		startActivity(intent);
 	}
 }
