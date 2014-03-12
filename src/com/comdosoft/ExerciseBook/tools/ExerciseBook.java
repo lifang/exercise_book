@@ -1,5 +1,10 @@
 package com.comdosoft.ExerciseBook.tools;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 
@@ -19,11 +24,20 @@ public class ExerciseBook extends Application {
 	private int user_id;
 	private String work_id;
 	private int menu_num;
+	private List<Activity> activityList=new LinkedList<Activity>();
 
 	public ExerciseBook() {
 		this.setMainItem(0);
 		this.setRefresh(1);
 		this.setMenu_num(0);
+	}
+
+	public List<Activity> getActivityList() {
+		return activityList;
+	}
+
+	public void setActivityList() {
+		this.activityList = new LinkedList<Activity>();
 	}
 
 	public int getMenu_num() {

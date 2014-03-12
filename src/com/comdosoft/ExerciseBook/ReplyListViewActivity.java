@@ -58,6 +58,9 @@ OnGestureListener
 	private String micropost_id;
 	private String reciver_id;
 	private String reciver_types;
+	private ExerciseBook exerciseBook;
+	static boolean active = false;
+	public static ReplyListViewActivity instance = null;
 	List<Boolean> listbool=new ArrayList<Boolean>();
 	/** Called when the activity is first created. */
 	@Override
@@ -68,6 +71,10 @@ OnGestureListener
 		mListView = (ReplyListView) findViewById(R.id.xListView);
 		mListView.setPullLoadEnable(true);
 		get_News();
+		active = true;
+		instance = this;
+		exerciseBook = (ExerciseBook) getApplication();
+		exerciseBook.getActivityList().add(this);
 		//		mListView.setPullLoadEnable(false);
 		//		mListView.setPullRefreshEnable(false);
 		mListView.setXListViewListener(this);

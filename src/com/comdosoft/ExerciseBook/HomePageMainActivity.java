@@ -16,6 +16,8 @@ import org.json.JSONObject;
 import com.comdosoft.ExerciseBook.HomepageAllActivity.get_class_info;
 import com.comdosoft.ExerciseBook.pojo.Micropost;
 import com.comdosoft.ExerciseBook.tools.ImageMemoryCache;
+
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.app.TabActivity;
 import android.content.Context;
@@ -143,6 +145,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 		memoryCache = new ImageMemoryCache(this);
 		active = true;
 		exerciseBook = (ExerciseBook) getApplication();
+		exerciseBook.getActivityList().add(this);
 		instance = this;
 		tabhost = getTabHost();
 		res = getResources();
