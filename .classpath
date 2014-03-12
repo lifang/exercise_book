@@ -7,6 +7,7 @@
 	<classpathentry kind="lib" path="libs/httpmime-4.2.1.jar"/>
 	<classpathentry kind="lib" path="libs/universal-image-loader-1.9.1-SNAPSHOT-with-sources.jar"/>
 	<classpathentry kind="lib" path="libs/jpush-sdk-release1.6.0.jar"/>
+	<classpathentry kind="lib" path="libs/open_sdk.jar"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="output" path="bin/classes"/>

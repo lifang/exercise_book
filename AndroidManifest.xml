@@ -135,7 +135,7 @@
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name=".AnswerOrderActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
