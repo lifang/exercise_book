@@ -137,6 +137,7 @@ public class LeftMenu extends Activity implements Urlinterface
 				overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 				eb.setMneu(true);
 				eb.setMenu_num(0);
+				HomePageMainActivity.instance.finish();
 				Intent intent=new Intent(LeftMenu.this,HomePageMainActivity.class);
 				startActivity(intent);
 			}
