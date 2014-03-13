@@ -93,7 +93,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.homework_ing);
 		eb = (ExerciseBook) getApplication();// 初始化
-//		eb.getActivityList().add(this);
+		eb.getActivityList().add(this);
 		eb.setUid(id);
 		eb.setClass_id(school_class_id);
 		initialize();// 初始化
