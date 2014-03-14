@@ -1,5 +1,7 @@
 package com.comdosoft.ExerciseBook.tools;
 
+import java.util.List;
+
 import android.app.Application;
 import android.content.Context;
 
@@ -9,7 +11,6 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
 public class ExerciseBook extends Application {
-<<<<<<< HEAD
 	private int Question_allNumber;
 	//	private List<QuestionPojo> branch_questions;
 	//	private List<ListeningPojo> question_list;
@@ -50,9 +51,6 @@ public class ExerciseBook extends Application {
 		return menu_count;
 	}
 
-=======
->>>>>>> c385b6f7e2d36790129952b8972f3fb33b16c7fe
-
 	private int today_newer_id;
 	private int MainItem;
 	private int refresh;
@@ -61,6 +59,14 @@ public class ExerciseBook extends Application {
 	public ExerciseBook() {
 		this.setMainItem(0);
 		this.setRefresh(1);
+		this.menu_num=0;
+		this.setMessageChoice(true);
+		this.setMneu(true);
+		this.setRefresh(1);
+		this.setNewsFlag(true);
+		this.setNewCount(0);
+		this.setQuestion_index(0);
+		this.setMainItem(0);
 	}
 
 	public int getRefresh() {
@@ -71,7 +77,6 @@ public class ExerciseBook extends Application {
 		this.refresh = refresh;
 	}
 
-<<<<<<< HEAD
 
 	public void setLastcount(int lastcount) {
 		this.lastcount = lastcount;
@@ -83,20 +88,6 @@ public class ExerciseBook extends Application {
 
 	public void setNewsFlag(boolean newsFlag) {
 		this.newsFlag = newsFlag;
-	}
-
-	public ExerciseBook() {
-		this.menu_num=0;
-		this.setMessageChoice(true);
-		this.setMneu(true);
-		this.setRefresh(1);
-		this.setNewsFlag(true);
-		this.setNewCount(0);
-		this.setQuestion_index(0);
-		this.setHistory_item(0);
-		this.setMainItem(0);
-		this.setMessage_id(-1);
-		this.setWork_date_item(0);
 	}
 
 	public int getNewCount() {
@@ -170,9 +161,6 @@ public class ExerciseBook extends Application {
 	public void setWork_history(boolean work_history) {
 		this.work_history = work_history;
 	}
-
-=======
->>>>>>> c385b6f7e2d36790129952b8972f3fb33b16c7fe
 	public int getMainItem() {
 		return MainItem;
 	}

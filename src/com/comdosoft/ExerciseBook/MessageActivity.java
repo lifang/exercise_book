@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.comdosoft.ExerciseBook.ReplyListView.IXListViewListener;
+import com.comdosoft.ExerciseBook.ReplyListViewActivity.ReplyAdapter;
 import com.comdosoft.ExerciseBook.pojo.Reply;
 import com.comdosoft.ExerciseBook.pojo.SysMessage;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
@@ -17,6 +18,7 @@ import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -53,6 +55,7 @@ OnGestureListener
 	private final char FLING_LEFT = 1;
 	private final char FLING_RIGHT = 2;
 	private char flingState = FLING_CLICK;
+	private TextView topTv1;
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -61,6 +64,16 @@ OnGestureListener
 		gd = new GestureDetector(this);
 		mListView = (ReplyListView) findViewById(R.id.xListView);
 		mListView.setPullLoadEnable(true);
+		topTv1=(TextView) findViewById(R.id.topTv1);
+		topTv1.setOnClickListener(new OnClickListener()
+		{
+			public void onClick(View v) {
+				MessageActivity.this.finish();
+				Intent intent=new Intent(MessageActivity.this,ReplyListViewActivity.class);
+				startActivity(intent);
+				overridePendingTransition(R.anim.fade, R.anim.hold); 
+			}
+		});
 		get_News();
 		//		mListView.setPullLoadEnable(false);
 		//		mListView.setPullRefreshEnable(false);
@@ -90,6 +103,11 @@ OnGestureListener
 				break;
 			case 1:
 				Toast.makeText(getApplicationContext(), "未开启网络", Toast.LENGTH_SHORT).show();
+				break;
+			case 2:
+				mListView.setAdapter(new ReplyAdapter());
+				Log.i("aa",  String.valueOf(msg.obj));
+				Toast.makeText(MessageActivity.this, String.valueOf(msg.obj), Toast.LENGTH_SHORT).show();
 				break;
 			}
 		}
@@ -151,6 +169,7 @@ OnGestureListener
 		try {
 			HashMap<String, String> mp = new HashMap<String, String>();
 			mp.put("student_id", user_id);
+			mp.put("school_class_id", school_class_id);
 			mp.put("page",page );
 			String json = ExerciseBookTool
 					.sendGETRequest(Urlinterface.get_sysmessage, mp);
@@ -288,18 +307,17 @@ OnGestureListener
 									mp.put("sys_message_id",replyList.get(position).getId() );
 									mp.put("school_class_id",replyList.get(position).getClass_id() );
 									String json = ExerciseBookTool.doPost(Urlinterface.delete_sys_message, mp);
-									JSONObject jsonobejct=new JSONObject(json);
-									String status=jsonobejct.getString("status");
-									String notice=jsonobejct.getString("notice");
-									if(status.equals("success"))
+									JSONObject jsonobject=new JSONObject(json);
+									String notice=jsonobject.getString("notice");
+									if(jsonobject.getString("status").equals("success"))
 									{
-										Toast.makeText(getApplicationContext(), notice, Toast.LENGTH_SHORT).show();
+										Log.i("aa", position+"删除的小标");
 										replyList.remove(position);
-										madapter.notifyDataSetChanged();
-									}else
-									{
-										Toast.makeText(getApplicationContext(), notice, Toast.LENGTH_SHORT).show();
 									}
+									Message msg=new Message();
+									msg.obj=notice;
+									msg.what=2;
+									handler1.sendMessage(msg);
 								} catch (Exception e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();

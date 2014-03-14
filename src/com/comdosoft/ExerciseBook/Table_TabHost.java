@@ -1,7 +1,5 @@
 package com.comdosoft.ExerciseBook;
 
-<<<<<<< HEAD
-=======
 import java.io.File;
 
 import org.apache.http.entity.mime.MultipartEntity;
@@ -18,46 +16,34 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
->>>>>>> c385b6f7e2d36790129952b8972f3fb33b16c7fe
 import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-<<<<<<< HEAD
-=======
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
->>>>>>> c385b6f7e2d36790129952b8972f3fb33b16c7fe
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-<<<<<<< HEAD
-import cn.jpush.android.api.JPushInterface;
 import com.comdosoft.ExerciseBook.R;
 
-import com.comdosoft.ExerciseBook.tools.ExerciseBook;
-=======
 import android.widget.TextView;
 import android.widget.Toast;
 
->>>>>>> c385b6f7e2d36790129952b8972f3fb33b16c7fe
 public class Table_TabHost extends Activity
 {
 	private LinearLayout middleLayout;
 	private ImageView img_tab_now;
 	private ExerciseBook eb;
-<<<<<<< HEAD
-=======
 	private String nickName = "丁作"; // 用户昵称
 	TextView userName;//
 	private ImageView faceImage;
@@ -124,7 +110,6 @@ public class Table_TabHost extends Activity
 		}
 	};
 	@Override
->>>>>>> c385b6f7e2d36790129952b8972f3fb33b16c7fe
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
@@ -165,18 +150,10 @@ public class Table_TabHost extends Activity
 			}
 		} else {
 			Toast.makeText(getApplicationContext(),
-					ExerciseBookParams.INTERNET, 0).show();
+					ExerciseBookParams.INTERNET, Toast.LENGTH_SHORT).show();
 		}
 		faceImage.setOnClickListener(listener);
 		userInfo.setOnClickListener(listener2);
-	}
-	protected void onResume() {
-		super.onResume();
-		JPushInterface.onResume(this);
-	}
-	protected void onPause() {
-		super.onPause();
-		JPushInterface.onPause(this);
 	}
 	public void setContentView(int layoutId)
 	{

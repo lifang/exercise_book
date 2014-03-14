@@ -11,6 +11,8 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -45,7 +47,7 @@ OnGestureListener
 	private int start = 0;
 	private String page="1";
 	private static int refreshCnt = 0;
-	private String user_id="1";
+	private String user_id="9";
 	private String school_class_id="1";
 	private int mShowPosition  = -1;
 	private Boolean isShow=false;
@@ -59,6 +61,7 @@ OnGestureListener
 	private String micropost_id;
 	private String reciver_id;
 	private String reciver_types;
+	private TextView topTv2;
 	List<Boolean> listbool=new ArrayList<Boolean>();
 	/** Called when the activity is first created. */
 	@Override
@@ -68,6 +71,15 @@ OnGestureListener
 		gd = new GestureDetector(this);
 		mListView = (ReplyListView) findViewById(R.id.xListView);
 		mListView.setPullLoadEnable(true);
+		topTv2=(TextView) findViewById(R.id.topTv2);
+		topTv2.setOnClickListener(new OnClickListener(){
+			public void onClick(View v) {
+				ReplyListViewActivity.this.finish();
+				Intent intent=new Intent(ReplyListViewActivity.this,MessageActivity.class);
+				startActivity(intent);
+				overridePendingTransition(R.anim.fade, R.anim.hold); 
+			}
+		});
 		get_News();
 		//		mListView.setPullLoadEnable(false);
 		//		mListView.setPullRefreshEnable(false);
@@ -89,6 +101,7 @@ OnGestureListener
 		}.start();
 	}
 
+	@SuppressLint("HandlerLeak")
 	Handler handler1 = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -100,7 +113,7 @@ OnGestureListener
 				Toast.makeText(ReplyListViewActivity.this, "未开启网络", Toast.LENGTH_SHORT).show();
 				break;
 			case 2:
-				
+				mListView.setAdapter(new ReplyAdapter());
 				Log.i("aa",  String.valueOf(msg.obj));
 				Toast.makeText(ReplyListViewActivity.this, String.valueOf(msg.obj), Toast.LENGTH_SHORT).show();
 				break;
@@ -215,13 +228,15 @@ OnGestureListener
 			public void run() {
 				start = ++refreshCnt;
 				Log.i("aa", "onRefresh");
+				SharedPreferences userInfo= getSharedPreferences("replyMenu", 0);  
+				Editor editor = userInfo.edit();//获取编辑器
+				editor.putBoolean("ReplyMenu", true);
+				editor.commit();
 				replyList.clear();
 				// mAdapter.notifyDataSetChanged();
 				page="1";
-				Log.i("aa",page );
 				get_News();
-				madapter = new ReplyAdapter();
-				mListView.setAdapter(madapter);
+				mListView.setAdapter(new ReplyAdapter());
 				onLoad();
 			}
 		}, 2000);
@@ -432,7 +447,7 @@ OnGestureListener
 								String notice=jsonobject.getString("notice");
 								if(jsonobject.getString("status").equals("success"))
 								{
-									mListView.setAdapter(madapter);
+									Log.i("aa", position+"删除的小标");
 									replyList.remove(position);
 								}
 								Message msg=new Message();
