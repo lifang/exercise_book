@@ -39,7 +39,7 @@ public class HomePageSendMessage extends Activity implements Urlinterface{
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
 
-//		 user_id = preferences.getString("user_id", null);
+		 user_id = preferences.getString("user_id", null);
 		 school_class_id = preferences.getString("school_class_id", null);
 		exerciseBook = (ExerciseBook) getApplication();
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);

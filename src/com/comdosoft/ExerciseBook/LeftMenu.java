@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -27,9 +28,11 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.comdosoft.ExerciseBook.pojo.ClassStu;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
+import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
@@ -42,6 +45,7 @@ public class LeftMenu extends Activity implements Urlinterface
 	private View ll3;
 	private View ll4;
 	private View ll5;
+	private View ll6;  //  退出
 	private LinearLayout allLL;
 	private ImageView hwImg;
 	private ImageView rImg;
@@ -67,7 +71,7 @@ public class LeftMenu extends Activity implements Urlinterface
 		Invit();
 		linear =  (LinearLayout) findViewById(R.id.linear);
 		ClickLis();
-
+		eb = (ExerciseBook) getApplication();
 	}
 	public void setBackColor()
 	{
@@ -142,6 +146,7 @@ public class LeftMenu extends Activity implements Urlinterface
 				overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 				eb.setMneu(true);
 				eb.setMenu_num(0);
+				clearActivity();
 				Intent intent=new Intent(LeftMenu.this,HomePageMainActivity.class);
 				startActivity(intent);
 			}
@@ -154,11 +159,12 @@ public class LeftMenu extends Activity implements Urlinterface
 				overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 				eb.setMenu_num(1);
 				eb.setMneu(true);
-				Intent intent=new Intent(LeftMenu.this,HomeWorkIngActivity.class);
-				startActivity(intent);
 				Editor editor = userInfo.edit();//获取编辑器
 				editor.putBoolean("HomeWorkMenu", true);
 				editor.commit();
+				clearActivity();
+				Intent intent=new Intent(LeftMenu.this,HomeWorkIngActivity.class);
+				startActivity(intent);
 			}
 		});
 		ll3.setOnClickListener(new OnClickListener()
@@ -169,6 +175,7 @@ public class LeftMenu extends Activity implements Urlinterface
 				overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 				Intent intent=new Intent(LeftMenu.this,ReplyListViewActivity.class);
 				eb.setMenu_num(2);
+				clearActivity();
 				startActivity(intent);
 				eb.setMneu(true);
 				Editor editor = userInfo.edit();//获取编辑器
@@ -185,6 +192,29 @@ public class LeftMenu extends Activity implements Urlinterface
 				overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 				eb.setMenu_num(3);
 				eb.setMneu(true);
+				clearActivity();
+				Intent intent=new Intent(LeftMenu.this,HomePageMainActivity.class);
+				startActivity(intent);
+			}
+		});
+		ll6.setOnClickListener(new OnClickListener()
+		{
+			public void onClick(View v) {
+				LeftMenu.this.finish();
+				overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+				eb.setMneu(true);
+				eb.setMenu_num(0);
+				clearActivity();
+				SharedPreferences preferences = getSharedPreferences(SHARED,
+						Context.MODE_PRIVATE);
+				Editor editor = preferences.edit();
+				editor.putString("user_id", "");
+				editor.putString("school_class_id", "");
+				editor.putString("id", "");
+				editor.commit();
+				
+				Intent intent=new Intent(LeftMenu.this,LoginActivity.class);
+				startActivity(intent);
 			}
 		});
 	}
@@ -289,6 +319,17 @@ public class LeftMenu extends Activity implements Urlinterface
 			}
 		}
 	};
+	
+	//关闭上个主界面
+	public void clearActivity()
+	{
+		List<Activity> activityList=eb.getActivityList();
+		for (int i = 0; i < activityList.size(); i++) {
+			activityList.get(i).finish();
+		}
+		eb.setActivityList();
+	}
+	
 	//初始化参数
 	public void Invit()
 	{
@@ -301,6 +342,7 @@ public class LeftMenu extends Activity implements Urlinterface
 		ll5=findViewById(R.id.menuclassll);
 		hwImg=(ImageView) findViewById(R.id.leftmenu_12red);
 		rImg=(ImageView) findViewById(R.id.leftmenu_13red);
+		ll6=findViewById(R.id.ll6);
 		classback=(ImageView) findViewById(R.id.classback);
 		classImg=(ImageView) findViewById(R.id.classMenu);
 		teachIV=(ImageView) findViewById(R.id.teacherIm);

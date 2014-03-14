@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.util.Log;
@@ -47,6 +46,9 @@ public class WorkJson {
 				Log.i("linshi", questiontype_list.size() + "<-");
 			}
 		}
+		
+		
+		
 		return work_list;
 	}
 }

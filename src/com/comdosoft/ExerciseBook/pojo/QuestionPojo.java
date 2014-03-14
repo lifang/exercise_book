@@ -1,7 +1,5 @@
 package com.comdosoft.ExerciseBook.pojo;
 
-import java.util.List;
-
 public class QuestionPojo {
 
 	private int id;

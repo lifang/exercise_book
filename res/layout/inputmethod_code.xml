@@ -8,7 +8,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="#282828"
+        android:background="@drawable/input_bg"
         android:orientation="horizontal"
         android:padding="25px" >
 
@@ -19,20 +19,17 @@
             android:layout_alignBottom="@+id/edittext"
             android:layout_alignParentRight="true"
             android:layout_marginLeft="10px"
-            android:paddingLeft="20px"
-            android:paddingRight="20px"
-           android:padding="10px"
-            android:background="#BEBFC0"
+            android:background="@drawable/shape"
             android:text="@string/question_speak_over"
+            android:textColor="#BEBFC0"
             android:textSize="30px" />
         <EditText
             android:id="@+id/edittext1"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@color/top_huise"
              android:layout_toLeftOf="@+id/queding1"
             android:maxLength="60"
-            android:padding="10px"
+             android:background="@drawable/shape"
             android:textSize="30px" >
         </EditText>
 

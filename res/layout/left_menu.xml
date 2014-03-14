@@ -20,7 +20,7 @@
             <LinearLayout
                 android:id="@+id/ll1"
                 android:layout_width="206.09px"
-                android:layout_height="wrap_content"
+                android:layout_height="141px"
                 android:background="#3f4853"
                 android:orientation="vertical" >
 
@@ -148,6 +148,25 @@
                 android:adjustViewBounds="false"
                 android:scaleType="fitStart"
                 android:src="@drawable/menuclass" />
+            
+            
+            <LinearLayout
+                android:id="@+id/ll6"
+                android:layout_width="206.09px"
+                android:layout_height="204px"
+                android:background="#3f4853"
+                android:layout_marginTop="295px"
+                android:orientation="vertical" >
+
+                <ImageView
+                    android:id="@+id/leftmenu_11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="68px"
+                    android:layout_marginTop="95px"
+                    android:src="@drawable/leftmenu_quit" />
+
+            </LinearLayout>
         </LinearLayout>
 
         <RelativeLayout

@@ -1,12 +1,16 @@
 package com.comdosoft.ExerciseBook.tools;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -27,6 +31,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import com.comdosoft.ExerciseBook.TenSpeedActivity;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -43,12 +49,50 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class ExerciseBookTool implements Urlinterface {
 
 	private static int connectTimeOut = 5000;
 	private static int readTimeOut = 10000;
 	private static String requestEncoding = "UTF-8";
+
+	/**
+	 * 新建Json文件时，写入json数据
+	 * 
+	 * @param filePath
+	 * @param sets
+	 * @throws IOException
+	 */
+	public static void writeFile(String filePath, String sets) throws IOException {
+		FileWriter fw = new FileWriter(filePath);
+		PrintWriter out = new PrintWriter(fw);
+		out.write(sets);
+		out.println();
+		fw.close();
+		out.close();
+	}
+
+	// 读取本地json文件
+	public static String getJson(String path) {
+		StringBuilder stringBuilder = new StringBuilder();
+		InputStream in;
+		BufferedReader bf;
+		try {
+			File f = new File(path);// 这是对应文件名
+			in = new BufferedInputStream(new FileInputStream(f));
+			bf = new BufferedReader(new InputStreamReader(in));
+			String line;
+			while ((line = bf.readLine()) != null) {
+				stringBuilder.append(line);
+			}
+			bf.close();
+			in.close();
+		} catch (IOException e) {
+			Log.i("linshi", "读取json文件发生错误");
+		}
+		return stringBuilder.toString();
+	}
 
 	// 分割时间 带时分秒
 	public static String divisionTime(String timeStr) {
@@ -459,7 +503,7 @@ public class ExerciseBookTool implements Urlinterface {
 	/*
 	 * 设置头像
 	 */
-	public static void set_background(final String uri,
+	public static void set_background(final String url,
 			final ImageView imageView) {
 
 		final Handler mHandler = new Handler() {
@@ -479,12 +523,55 @@ public class ExerciseBookTool implements Urlinterface {
 			public void run() {
 				HttpClient hc = new DefaultHttpClient();
 
-				HttpGet hg = new HttpGet(uri);//
+				HttpGet hg = new HttpGet(url);//
 				Drawable face_drawable;
 				try {
 					HttpResponse hr = hc.execute(hg);
 					Bitmap bm = BitmapFactory.decodeStream(hr.getEntity()
 							.getContent());
+					face_drawable = new BitmapDrawable(bm);
+					Message msg = new Message();// 创建Message 对象
+					msg.what = 0;
+					msg.obj = face_drawable;
+					mHandler.sendMessage(msg);
+				} catch (Exception e) {
+
+				}
+
+			}
+		};
+
+		thread.start();
+
+	}
+	
+	
+	public static void set_bk(final String url, final ImageView imageView,final ImageMemoryCache memoryCache) {
+
+		final Handler mHandler = new Handler() {
+			public void handleMessage(android.os.Message msg) {
+				switch (msg.what) {
+				case 0:
+					Drawable drawable = (Drawable) msg.obj;
+					imageView.setImageDrawable(drawable);
+					break;
+				default:
+					break;
+				}
+			}
+		};
+
+		Thread thread = new Thread() {
+			public void run() {
+				HttpClient hc = new DefaultHttpClient();
+
+				HttpGet hg = new HttpGet(url);//
+				Drawable face_drawable;
+				try {
+					HttpResponse hr = hc.execute(hg);
+					Bitmap bm = BitmapFactory.decodeStream(hr.getEntity()
+							.getContent());
+					memoryCache.addBitmapToCache(url, bm);
 					face_drawable = new BitmapDrawable(bm);
 					Message msg = new Message();// 创建Message 对象
 					msg.what = 0;

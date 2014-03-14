@@ -8,7 +8,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,12 +17,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.GestureDetector.OnGestureListener;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.GestureDetector.OnGestureListener;
 import android.widget.BaseAdapter;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
@@ -62,6 +61,9 @@ OnGestureListener
 	private String reciver_id;
 	private String reciver_types;
 	private TextView topTv2;
+	private ExerciseBook exerciseBook;
+	static boolean active = false;
+	public static ReplyListViewActivity instance = null;
 	List<Boolean> listbool=new ArrayList<Boolean>();
 	/** Called when the activity is first created. */
 	@Override
@@ -81,6 +83,10 @@ OnGestureListener
 			}
 		});
 		get_News();
+		active = true;
+		instance = this;
+		exerciseBook = (ExerciseBook) getApplication();
+		exerciseBook.getActivityList().add(this);
 		//		mListView.setPullLoadEnable(false);
 		//		mListView.setPullRefreshEnable(false);
 		mListView.setXListViewListener(this);
@@ -101,7 +107,6 @@ OnGestureListener
 		}.start();
 	}
 
-	@SuppressLint("HandlerLeak")
 	Handler handler1 = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -330,7 +335,6 @@ OnGestureListener
 		public long getItemId(int position) {
 			return position;
 		}
-		@SuppressLint("ResourceAsColor")
 		public View getView(final int position, View convertView, ViewGroup parent) {
 			LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
 			final int showPosition = position;

@@ -1,19 +1,12 @@
 package com.comdosoft.ExerciseBook;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.FragmentManager;
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -66,14 +59,11 @@ public class CardBagActivity extends Table_TabHost implements Urlinterface {
 	List<tags> tagsList;
 	private int allsize;
 	public Map<Integer, List> Allmap;
-
-
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.cardbag);
 		getKonwledges();
 	}
-
 	public void getKonwledges() {
 		Thread thread = new Thread() {
 			public void run() {
@@ -98,7 +88,6 @@ public class CardBagActivity extends Table_TabHost implements Urlinterface {
 		thread.start();
 	}
 
-	@SuppressLint("UseSparseArrays")
 	private void parsejson(String json) {
 		// cardList.clear();
 		int count1 = 0;
@@ -556,14 +545,16 @@ public class CardBagActivity extends Table_TabHost implements Urlinterface {
 			wronganswer.setText(card.getAnswer());
 			rightanswer.setText("正确答案:");
 			youranswer.setText(card.getYour_answer());
+			Adapter listad=new LabelAdapter(card.getCard_bag_id(), card.getTagsarr());
+			Log.i("bbb", card.getTagsarr().size()+"个人的tags");
+			listView.setAdapter((ListAdapter) listad);
 			fontIv.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
+					Log.i("3", "page:"+page+"/count:"+count+"t/f:"+biaoqianbool[page][count]);
 					if (biaoqianbool[page][count]) {
 						linearll.setVisibility(View.VISIBLE);
 						biaoqianbool[page][count] = false;
-						Adapter listad=new LabelAdapter(card.getCard_bag_id(), card.getTagsarr());
-						Log.i("bbb", card.getTagsarr().size()+"个人的tags");
-						listView.setAdapter((ListAdapter) listad);
+						
 					} else {
 						linearll.setVisibility(View.GONE);
 						biaoqianbool[page][count] = true;

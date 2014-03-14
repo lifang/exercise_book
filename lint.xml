@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lint>
+<<<<<<< HEAD
     <issue id="ResourceAsColor" severity="ignore" />
     <issue id="ValidFragment">
         <ignore path="src/com/comdosoft/ExerciseBook/CardBagActivity.java" />
         <ignore path="src/com/comdosoft/ExerciseBook/CardFrontFragment.java" />
     </issue>
+=======
+>>>>>>> 05ac27117783bcae1e7208a2c7a401b552390c31
 </lint>

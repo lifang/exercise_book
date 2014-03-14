@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import cn.jpush.android.api.JPushInterface;
 
+import com.comdosoft.ExerciseBook.HomePageMainActivity.mod_avatar;
 import com.comdosoft.ExerciseBook.tools.CircularImage;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
@@ -36,6 +37,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import com.comdosoft.ExerciseBook.R;
 
+import cn.jpush.android.api.JPushInterface;
+import com.comdosoft.ExerciseBook.R;
+
+import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -82,6 +87,7 @@ public class Table_TabHost extends Activity
 									+ IMAGE_FILE_NAME;
 							Bitmap bm = BitmapFactory.decodeFile(uri, options);
 							faceImage.setImageDrawable(new BitmapDrawable(bm));
+							eb.setRefresh(1);
 							File file = new File(uri);
 
 							if (file.exists()) {
@@ -119,7 +125,7 @@ public class Table_TabHost extends Activity
 				Context.MODE_PRIVATE);
 		avatar_url = preferences.getString("avatar_url", "");
 		nickName = preferences.getString("nickname", "");
-//		id = preferences.getString("id", null);
+		id = preferences.getString("id", null);
 		
 		active=true;
 		img_tab_now=(ImageView) findViewById(R.id.img_tab_now);
@@ -190,7 +196,7 @@ public class Table_TabHost extends Activity
 
 		switch (resultCode) {
 		// 如果是直接从相册获取
-		case RESULT_OK:
+		case -11:
 
 			Bundle bundle = data.getExtras();
 			uri = bundle.getString("uri");
@@ -201,6 +207,7 @@ public class Table_TabHost extends Activity
 				prodialog.setMessage("正在提交数据...");
 				prodialog.setCanceledOnTouchOutside(false);
 				prodialog.show();
+				Thread thread = new Thread(new mod_avatar());
 				thread.start();
 			} else {
 				Toast.makeText(getApplicationContext(),
@@ -216,24 +223,19 @@ public class Table_TabHost extends Activity
 
 	}
 
-	Thread thread = new Thread() {
+	
+	class mod_avatar implements Runnable {
 		public void run() {
 			try {
 
 				MultipartEntity entity = new MultipartEntity();
 
 				entity.addPart("student_id", new StringBody(id));
-				File f = new File(Environment.getExternalStorageDirectory()
-						+ "/1" + IMAGE_FILE_NAME);
+				File f = new File(uri);
 
 				Log.i("suanfa", f.getPath() + "");
 				if (f.exists()) {
-					entity.addPart(
-							"avatar",
-							new FileBody(new File(Environment
-									.getExternalStorageDirectory()
-									+ "/1"
-									+ IMAGE_FILE_NAME)));
+					entity.addPart("avatar", new FileBody(new File(uri)));
 				}
 
 				json = ExerciseBookTool.sendPhostimg(
@@ -245,9 +247,12 @@ public class Table_TabHost extends Activity
 				mHandler.sendMessage(msg);
 
 			} catch (Exception e) {
+				Toast.makeText(getApplicationContext(),
+						"修改头像失败", 0).show();
 				mHandler.sendEmptyMessage(7);
 			}
 		}
-	};
+	}
+	
 
 }

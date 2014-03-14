@@ -67,4 +67,16 @@
 	<string name="reson5">完型错误</string>
 	<string name="reson6">排序错误</string>
 	<string name="returntext">原题:</string>
+    <string name="work_end_str1">恭喜完成挑战！</string>
+    <string name="work_end_str2">正确率：</string>
+    <string name="work_end_str3">用时：</string>
+    <string name="work_end_str4">好可惜没有全对哦,不能拿到&lt;精准>得分哦!</string>
+    <string name="work_end_str5">恭喜你全部都答对了,&lt;精准>成就加10分!</string>
+    <string name="work_end_str6">好可惜你的用时超过了最佳时间,不能拿到&lt;迅速>得分哦!</string>
+    <string name="work_end_str7">恭喜你在最佳时间内完成作业,&lt;迅速>成就加10分!</string>
+    <string name="work_end_str8">好可惜你你没能在截至时间前两小时完成作业,不能拿到&lt;捷足>得分哦!</string>
+    <string name="work_end_str9">恭喜你在截至时间前两小时完成作业,&lt;捷足>成就加10分!</string>
+    <string name="work_end_str10">确认完成</string>
+    <string name="work_end_str11">再次挑战</string>
+
 </resources>

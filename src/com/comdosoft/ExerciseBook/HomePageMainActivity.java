@@ -3,7 +3,9 @@ package com.comdosoft.ExerciseBook;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
@@ -11,12 +13,16 @@ import org.apache.http.entity.mime.content.StringBody;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.comdosoft.ExerciseBook.HomepageAllActivity.get_class_info;
+import com.comdosoft.ExerciseBook.pojo.Micropost;
+import com.comdosoft.ExerciseBook.tools.ImageMemoryCache;
+
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -48,8 +54,8 @@ import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
 public class HomePageMainActivity extends TabActivity implements Urlinterface {
 	TabHost tabhost;
-	TabHost.TabSpec spec1, spec2, spec3;
-	private ImageView allbottom, myselfbottom, senderbottom,logo;
+	TabHost.TabSpec spec1, spec2, spec3, spec4;
+	private ImageView allbottom, myselfbottom, focusbottom, senderbottom, logo;
 	private ImageView faceImage;
 	private LinearLayout userInfo;
 	private Resources res;
@@ -74,6 +80,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 	private String nickName = "丁作"; // 用户昵称
 	TextView userName;//
 	static boolean active = false;
+	ImageMemoryCache memoryCache;
 	Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -89,34 +96,25 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 						String notice = array.getString("notice");
 
 						if (status == true) {
-
-							Toast.makeText(getApplicationContext(), notice, 0)
-									.show();
-							SharedPreferences preferences = getSharedPreferences(
-									SHARED, Context.MODE_PRIVATE);
-							Editor editor = preferences.edit();
-							// editor.putString("name", nameS);
-
-							editor.commit();
+							memoryCache.removeBitmap(Urlinterface.IP
+									+ avatar_url);
 							BitmapFactory.Options options = new BitmapFactory.Options();
 							options.inSampleSize = 7;// 7就代表容量变为以前容量的1/7
-							String uri = Environment
-									.getExternalStorageDirectory()
-									+ "/1"
-									+ IMAGE_FILE_NAME;
 							Bitmap bm = BitmapFactory.decodeFile(uri, options);
 							faceImage.setImageDrawable(new BitmapDrawable(bm));
+
 							File file = new File(uri);
 
 							if (file.exists()) {
 								file.delete();
 							}
-							//
-						} else {
-							Toast.makeText(getApplicationContext(), notice, 0)
-									.show();
+							exerciseBook.setRefresh(1);
 						}
+						Toast.makeText(getApplicationContext(), notice, 0)
+								.show();
 					} catch (JSONException e) {
+						Toast.makeText(getApplicationContext(), "修改头像失败", 0)
+								.show();
 						e.printStackTrace();
 					}
 
@@ -143,16 +141,18 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 				Context.MODE_PRIVATE);
 		avatar_url = preferences.getString("avatar_url", "");
 		nickName = preferences.getString("nickname", "");
-//		id = preferences.getString("id", null);
-
-active=true;
+		id = preferences.getString("id", null);
+		memoryCache = new ImageMemoryCache(this);
+		active = true;
 		exerciseBook = (ExerciseBook) getApplication();
+		exerciseBook.getActivityList().add(this);
 		instance = this;
 		tabhost = getTabHost();
 		res = getResources();
 		logo = (ImageView) findViewById(R.id.img_tab_now);
 		allbottom = (ImageView) findViewById(R.id.all_bottom);
 		myselfbottom = (ImageView) findViewById(R.id.myself_bottom);
+		focusbottom = (ImageView) findViewById(R.id.focus_bottom);
 		senderbottom = (ImageView) findViewById(R.id.sender_bottom);
 		userName = (TextView) findViewById(R.id.user_name);
 		userName.setText(nickName);
@@ -175,7 +175,6 @@ active=true;
 		width = display.getWidth();
 
 		Intent intent1 = new Intent(this, HomepageAllActivity.class);
-		// Intent intent1 = new Intent(this, SettingPhoto.class);
 		spec1 = tabhost.newTabSpec("spec1")
 				.setIndicator("", res.getDrawable(R.drawable.all_2))
 				.setContent(intent1);
@@ -187,18 +186,23 @@ active=true;
 				.setContent(intent2);
 		tabhost.addTab(spec2);
 
-		Intent intent3 = new Intent(this, HomePageSendMessage.class);
+		Intent intent3 = new Intent(this, HomepageFocusActivity.class);
 		spec3 = tabhost.newTabSpec("spec3")
 				.setIndicator("", res.getDrawable(R.drawable.sender_1))
 				.setContent(intent3);
 		tabhost.addTab(spec3);
+
+		Intent intent4 = new Intent(this, HomePageSendMessage.class);
+		spec4 = tabhost.newTabSpec("spec4")
+				.setIndicator("", res.getDrawable(R.drawable.sender_1))
+				.setContent(intent4);
+		tabhost.addTab(spec4);
 
 		tabhost.setCurrentTab(exerciseBook.getMainItem());
 		updateTabStyle(tabhost);
 
 	}
 
-	 
 	private void updateTabStyle(final TabHost mTabHost) {
 		final TabWidget tabWidget = mTabHost.getTabWidget();
 		tabWidget.setBackgroundColor(res.getColor(R.color.top_huise));
@@ -225,6 +229,10 @@ active=true;
 					myselfbottom.setVisibility(View.VISIBLE);
 					break;
 				case 2:
+					img.setImageResource(R.drawable.focus_2);
+					focusbottom.setVisibility(View.VISIBLE);
+					break;
+				case 3:
 					img.setImageResource(R.drawable.sender_2);
 					senderbottom.setVisibility(View.VISIBLE);
 					break;
@@ -242,13 +250,17 @@ active=true;
 					myselfbottom.setVisibility(View.GONE);
 					break;
 				case 2:
+					img.setImageResource(R.drawable.focus_1);
+					focusbottom.setVisibility(View.GONE);
+					break;
+				case 3:
 					img.setImageResource(R.drawable.sender_1);
 					senderbottom.setVisibility(View.GONE);
 					break;
 
 				}
 			}
-			img.setPadding(254, 30, 0, 0);
+			img.setPadding(200, 30, 0, 0);
 			// img.setPadding(0, 0, 0, 0);
 			/**
 			 * 此方法是为了去掉系统默认的色白的底角
@@ -338,12 +350,14 @@ active=true;
 								break;
 							case 1:
 
-								hw_num = 0;
-								// handler.sendEmptyMessage(1);
 								img.setImageResource(R.drawable.myself_2);
 								myselfbottom.setVisibility(View.VISIBLE);
 								break;
 							case 2:
+								img.setImageResource(R.drawable.focus_2);
+								focusbottom.setVisibility(View.VISIBLE);
+								break;
+							case 3:
 
 								img.setImageResource(R.drawable.sender_2);
 								senderbottom.setVisibility(View.VISIBLE);
@@ -363,12 +377,16 @@ active=true;
 								myselfbottom.setVisibility(View.GONE);
 								break;
 							case 2:
+								img.setImageResource(R.drawable.focus_1);
+								focusbottom.setVisibility(View.GONE);
+								break;
+							case 3:
 								img.setImageResource(R.drawable.sender_1);
 								senderbottom.setVisibility(View.GONE);
 								break;
 							}
 						}
-						img.setPadding(254, 30, 0, 0);
+						img.setPadding(200, 30, 0, 0);
 						// img.setPadding(0, 0, 0, 0);
 					}
 				}
@@ -390,6 +408,8 @@ active=true;
 		public void onClick(View v) {
 
 			Intent intentp = new Intent();
+			// intentp.setClass(HomePageMainActivity.this,
+			// RankingOfPointsActivity.class);//
 			intentp.setClass(HomePageMainActivity.this, SettingPhoto.class);//
 			startActivityForResult(intentp, 0);
 		}
@@ -407,10 +427,12 @@ active=true;
 
 		@Override
 		public void onClick(View v) {
-			Intent  intent = new Intent(HomePageMainActivity.this,LeftMenu.class);
-			 exerciseBook.setMneu(false); 
+			Intent intent = new Intent(HomePageMainActivity.this,
+					LeftMenu.class);
+			exerciseBook.setMneu(false);
 			startActivity(intent);
-		     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+			overridePendingTransition(R.anim.slide_in_left,
+					R.anim.slide_out_right);
 		}
 	};
 
@@ -419,7 +441,7 @@ active=true;
 
 		switch (resultCode) {
 		// 如果是直接从相册获取
-		case RESULT_OK:
+		case -11:
 
 			Bundle bundle = data.getExtras();
 			uri = bundle.getString("uri");
@@ -430,6 +452,7 @@ active=true;
 				prodialog.setMessage("正在提交数据...");
 				prodialog.setCanceledOnTouchOutside(false);
 				prodialog.show();
+				Thread thread = new Thread(new mod_avatar());
 				thread.start();
 			} else {
 				Toast.makeText(getApplicationContext(),
@@ -445,24 +468,18 @@ active=true;
 
 	}
 
-	Thread thread = new Thread() {
+	class mod_avatar implements Runnable {
 		public void run() {
 			try {
 
 				MultipartEntity entity = new MultipartEntity();
 
 				entity.addPart("student_id", new StringBody(id));
-				File f = new File(Environment.getExternalStorageDirectory()
-						+ "/1" + IMAGE_FILE_NAME);
+				File f = new File(uri);
 
 				Log.i("suanfa", f.getPath() + "");
 				if (f.exists()) {
-					entity.addPart(
-							"avatar",
-							new FileBody(new File(Environment
-									.getExternalStorageDirectory()
-									+ "/1"
-									+ IMAGE_FILE_NAME)));
+					entity.addPart("avatar", new FileBody(new File(uri)));
 				}
 
 				json = ExerciseBookTool.sendPhostimg(
@@ -474,11 +491,10 @@ active=true;
 				mHandler.sendMessage(msg);
 
 			} catch (Exception e) {
+				Toast.makeText(getApplicationContext(), "修改头像失败", 0).show();
 				mHandler.sendEmptyMessage(7);
 			}
 		}
-	};
-	
-	
+	}
 
 }

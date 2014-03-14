@@ -2,71 +2,58 @@ package com.comdosoft.ExerciseBook.tools;
 
 import java.util.List;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 
+import com.comdosoft.ExerciseBook.pojo.ListeningPojo;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
 public class ExerciseBook extends Application {
-	private int Question_allNumber;
-	//	private List<QuestionPojo> branch_questions;
-	//	private List<ListeningPojo> question_list;
-	private int question_id;
-	private int question_index;
-	private List<List<String>> question_history;
-	private int p_q_package_id;
-	private int q_package_id;
-	private boolean work_history;// 查看历史开关
-	private int mainItem;
-	private int user_id;
-	private int class_id;
-	private int message_id;
-	private String noselect_message;
-	private int newCount;
-	private boolean newsFlag;
-	private int lastcount;
-	private int hw_number;
-	private int work_date_item;
-	private int history_item;
-	private int menu_count=0;
-	private int menu_num;
-	private boolean MessageChoice;
-	public int getMenu_num() {
-		return menu_num;
-	}
-	public void setMenu_num(int menu_num) {
-		this.menu_num = menu_num;
-	}
-
-	public boolean isMessageChoice() {
-		return MessageChoice;
-	}
-	public void setMessageChoice(boolean messageChoice) {
-		MessageChoice = messageChoice;
-	}
-	public int getMenu_count() {
-		return menu_count;
-	}
 
 	private int today_newer_id;
 	private int MainItem;
 	private int refresh;
 	private boolean Mneu;
+	private String uid;
+	private String class_id;
+	private String work_id;
+	private List<ListeningPojo> list;
+	private int questions_index;
+	private int branch_item_index;
+	private int user_id;
+	private int menu_num;
+	private List<Activity> activityList = new LinkedList<Activity>();
 
 	public ExerciseBook() {
 		this.setMainItem(0);
 		this.setRefresh(1);
-		this.menu_num=0;
-		this.setMessageChoice(true);
-		this.setMneu(true);
-		this.setRefresh(1);
-		this.setNewsFlag(true);
-		this.setNewCount(0);
-		this.setQuestion_index(0);
-		this.setMainItem(0);
+		this.setQuestions_index(0);
+		this.setBranch_item_index(0);
+		this.setMenu_num(0);
+	}
+
+	public List<Activity> getActivityList() {
+		return activityList;
+	}
+
+	public void setActivityList() {
+		this.activityList = new LinkedList<Activity>();
+	}
+
+	public int getMenu_num() {
+		return menu_num;
+	}
+
+	public void setMenu_num(int menu_num) {
+		this.menu_num = menu_num;
 	}
 
 	public int getRefresh() {
@@ -77,90 +64,6 @@ public class ExerciseBook extends Application {
 		this.refresh = refresh;
 	}
 
-
-	public void setLastcount(int lastcount) {
-		this.lastcount = lastcount;
-	}
-
-	public boolean isNewsFlag() {
-		return newsFlag;
-	}
-
-	public void setNewsFlag(boolean newsFlag) {
-		this.newsFlag = newsFlag;
-	}
-
-	public int getNewCount() {
-		return newCount;
-	}
-
-	public void setNewCount(int newCount) {
-		this.newCount = newCount;
-	}
-
-	public String getNoselect_message() {
-		return noselect_message;
-	}
-
-	public void setNoselect_message(String noselect_message) {
-		this.noselect_message = noselect_message;
-	}
-
-	public int getQuestion_index() {
-		return question_index;
-	}
-
-	public void setQuestion_index(int question_index) {
-		this.question_index = question_index;
-	}
-
-	public int getQuestion_id() {
-		return question_id;
-	}
-
-	public void setQuestion_id(int question_id) {
-		this.question_id = question_id;
-	}
-
-	//	public List<QuestionPojo> getBranch_questions() {
-	//		return branch_questions;
-	//	}
-	//
-	//	public void setBranch_questions(List<QuestionPojo> branch_questions) {
-	//		this.branch_questions = branch_questions;
-	//	}
-
-	public int getQuestion_allNumber() {
-		return Question_allNumber;
-	}
-
-	public void setQuestion_allNumber(int question_allNumber) {
-		Question_allNumber = question_allNumber;
-	}
-
-	//	public List<ListeningPojo> getQuestion_list() {
-	//		return question_list;
-	//	}
-	//
-	//	public void setQuestion_list(List<ListeningPojo> question_list) {
-	//		this.question_list = question_list;
-	//	}
-
-	public List<List<String>> getQuestion_history() {
-		return question_history;
-	}
-
-	public void setQuestion_history(List<List<String>> question_history) {
-		this.question_history = question_history;
-	}
-
-	public boolean isWork_history() {
-		return work_history;
-	}
-
-	public void setWork_history(boolean work_history) {
-		this.work_history = work_history;
-	}
 	public int getMainItem() {
 		return MainItem;
 	}
@@ -177,12 +80,68 @@ public class ExerciseBook extends Application {
 		this.today_newer_id = today_newer_id;
 	}
 
+	public int getQuestions_index() {
+		return questions_index;
+	}
+
+	public void setQuestions_index(int questions_index) {
+		this.questions_index = questions_index;
+	}
+
+	public int getBranch_item_index() {
+		return branch_item_index;
+	}
+
+	public void setBranch_item_index(int branch_item_index) {
+		this.branch_item_index = branch_item_index;
+	}
+
 	public boolean isMneu() {
 		return Mneu;
 	}
 
 	public void setMneu(boolean mneu) {
 		Mneu = mneu;
+	}
+
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
+
+	public int getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(int user_id) {
+		this.user_id = user_id;
+	}
+
+	public String getClass_id() {
+		return class_id;
+	}
+
+	public void setClass_id(String class_id) {
+		this.class_id = class_id;
+	}
+
+	public String getWork_id() {
+		return work_id;
+	}
+
+	public void setWork_id(String work_id) {
+		this.work_id = work_id;
+	}
+
+	public List<ListeningPojo> getList() {
+		return list;
+	}
+
+	public void setList(List<ListeningPojo> list) {
+		this.list = list;
 	}
 
 	public void onCreate() {
