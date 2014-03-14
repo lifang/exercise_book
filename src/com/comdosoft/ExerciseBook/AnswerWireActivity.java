@@ -3,13 +3,23 @@ package com.comdosoft.ExerciseBook;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.comdosoft.ExerciseBook.pojo.AnswerOrderPojo;
 import com.comdosoft.ExerciseBook.pojo.AnswerWirePojo;
+import com.comdosoft.ExerciseBook.pojo.PersonListPorjo;
+import com.comdosoft.ExerciseBook.pojo.PersonPojo;
+
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,15 +31,21 @@ import android.widget.TextView;
 
 public class AnswerWireActivity extends AnswerBaseActivity {
 
+	private int last = -1;
+	private int type = 0;
+	private int specified_time = 0;
+	private int mIndex = 0;
+	private String test = "This is<=>an apple;||;A<=>B;||;ZhangDaCa<=>Dog";
+	private String testA = "iOS<=>Android;||;iPhone5s<=>Iphone5";
+	private String JSON = "{    \"lining\":{\"specified_time\": \"100\",  \"questions\":[ {\"id\": \"284\",  \"branch_questions\": [{\"id\": \"181\", \"content\": \"This is<=>an apple;||;A<=>B;||;ZhangDaCa<=>Dog\"}]},{\"id\": \"285\", \"branch_questions\": [{\"id\": \"182\", \"content\": \"C<=>D;||;Chen<=>Long;||;Gao<=>Shi\"}]}, {\"id\": \"285\", \"branch_questions\": [ {\"id\": \"182\", \"content\": \"Ma<=>Long;||;123<=>456;||;1111<=>2222\"} ]},  {\"id\": \"291\",\"branch_questions\": [ {\"id\": \"182\", \"content\": \"ZhangDaCa<=>ZXN;||;ChenLong<=>CL;||;MaLong<=>ML\"}]}] }}";
+
+	private List<AnswerOrderPojo> mAOPList = new ArrayList<AnswerOrderPojo>();
 	private LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT,
 			LayoutParams.WRAP_CONTENT);
 	private LinearLayout leftLinearLayout;
 	private LinearLayout rightLinearLayout;
 	private ImageView imgCanvas;
-	private int last = -1;
-	private String test = "This is<=>an apple;||;A<=>B;||;ZhangDaCa<=>Dog";
-	private String testA = "iOS<=>Android;||;iPhone5s<=>Iphone5";
-	private int type = 0;
+
 	// 存储题目选项对象
 	private ArrayList<AnswerWirePojo> wireList = new ArrayList<AnswerWirePojo>();
 	// 题目默认排序
@@ -65,11 +81,31 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 			setAccuracyAndUseTime(85, 1000);
 			setMyAnswer("This is      ZhangDaCa Dog      A B", 0);
 		}
+		test();
 
-		updataView(test);
+		analysisJSON(JSON);
+		updataView(mAOPList.get(mIndex++).getAnswer());
 	}
 
-	public void updataView(String json) {
+	public void test() {
+		try {
+			PersonListPorjo plp = new PersonListPorjo();
+			plp.setId(1);
+			List<PersonPojo> pl = new ArrayList<PersonPojo>();
+			for (int i = 0; i < 3; i++) {
+				pl.add(new PersonPojo("a" + i, i + 18, 1));
+			}
+			plp.setPersons(pl);
+			JSONObject jo = new JSONObject();
+			jo.put("person", plp);
+			Log.i("Ax", jo.toString());
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void updataView(String str) {
 		answerList.clear();
 		orderAnswerList.clear();
 		coordinate.clear();
@@ -78,7 +114,7 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 		leftLinearLayout.removeAllViews();
 		rightLinearLayout.removeAllViews();
 
-		initData(json);
+		initData(str);
 
 		for (int i = 0; i < answerList.size(); i += 2) {
 			initLeftView(i);
@@ -95,8 +131,32 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 		imgCanvas.setImageBitmap(drawView());
 	}
 
-	public void initData(String json) {
-		String[] arr = json.split(";\\|\\|;");
+	public void analysisJSON(String json) {
+		try {
+			JSONObject jsonObject = new JSONObject(json)
+					.getJSONObject("lining");
+			specified_time = jsonObject.getInt("specified_time");
+			JSONArray jArr = new JSONArray(jsonObject.getString("questions"));
+			for (int i = 0; i < jArr.length(); i++) {
+				JSONObject jo = jArr.getJSONObject(i);
+				int question_id = jo.getInt("id");
+				JSONArray jsonArr = new JSONArray(
+						jo.getString("branch_questions"));
+				for (int j = 0; j < jsonArr.length(); j++) {
+					JSONObject jb = jsonArr.getJSONObject(j);
+					int branch_question_id = jb.getInt("id");
+					String answer = jb.getString("content");
+					mAOPList.add(new AnswerOrderPojo(question_id,
+							branch_question_id, answer));
+				}
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void initData(String str) {
+		String[] arr = str.split(";\\|\\|;");
 		for (int i = 0; i < arr.length; i++) {
 			answerList.add(arr[i].split("<=>")[0]);
 			answerList.add(arr[i].split("<=>")[1]);
@@ -240,22 +300,29 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 				count++;
 			}
 		} else {
-			updataView(testA);
+			if (++mIndex < mAOPList.size()) {
+				updataView(mAOPList.get(mIndex).getAnswer());
+			}
+
 		}
 
 		Toast.makeText(getApplicationContext(), "正确个数:" + count, 0).show();
 	}
 
 	public void setCancelStatusForIndex(int index) {
-		AnswerWirePojo indexAwp = wireList.get(index);
-		indexAwp.getTv().setBackgroundResource(
-				R.drawable.answer_wire_item_style);
+		if (index >= 0) {
+			AnswerWirePojo indexAwp = wireList.get(index);
+			indexAwp.getTv().setBackgroundResource(
+					R.drawable.answer_wire_item_style);
+		}
 	}
 
 	public void setCheckStatusForIndex(int index) {
-		AnswerWirePojo indexAwp = wireList.get(index);
-		indexAwp.getTv().setBackgroundResource(
-				R.drawable.answer_wire_item_check_style);
+		if (index >= 0) {
+			AnswerWirePojo indexAwp = wireList.get(index);
+			indexAwp.getTv().setBackgroundResource(
+					R.drawable.answer_wire_item_check_style);
+		}
 	}
 
 	class MyClick implements OnClickListener {
@@ -278,33 +345,54 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 				indexAwp.getTv().setBackgroundResource(
 						R.drawable.answer_wire_item_check_style);
 
-				if (last % 2 == 0 && index % 2 == 0 || last % 2 != 0
-						&& index % 2 != 0) {
-					if (last != -1) {
-						boolean lastFlag = false;
-						boolean indexFlag = false;
-						for (int i = 0; i < coordinate.size(); i++) {
-							if (last == coordinate.get(i)[0]) {
-								lastFlag = true;
-							} else if (index == coordinate.get(i)[0]) {
-								indexFlag = true;
-							}
+				// 暂时保留
+				if (index % 2 != 0 && last % 2 != 0) {
+					// if (last != -1) {
+					boolean lastFlag = false;
+					boolean indexFlag = false;
+					for (int i = 0; i < coordinate.size(); i++) {
+						if (last == coordinate.get(i)[1]) {
+							lastFlag = true;
+						} else if (index == coordinate.get(i)[1]) {
+							indexFlag = true;
 						}
-						if (lastFlag && !indexFlag) {
-							setCancelStatusForIndex(index);
-						} else if (indexFlag && !lastFlag) {
-							setCancelStatusForIndex(last);
-						} else if (lastFlag && indexFlag) {
+					}
+					if (lastFlag && !indexFlag) {
+						setCancelStatusForIndex(index);
+					} else if (indexFlag && !lastFlag) {
+						setCancelStatusForIndex(last);
+					} else if (lastFlag && indexFlag) {
 
-						} else {
-							setCancelStatus();
+					} else {
+						setCancelStatus();
+					}
+					last = -1;
+					// } else {
+					// setCancelStatusForIndex(index);
+					// }
+				}
+
+				if (last % 2 == 0 && index % 2 == 0) {
+					boolean lastFlag = false;
+					boolean indexFlag = false;
+					for (int i = 0; i < coordinate.size(); i++) {
+						if (last == coordinate.get(i)[0]) {
+							lastFlag = true;
+						} else if (index == coordinate.get(i)[0]) {
+							indexFlag = true;
 						}
-						last = -1;
 					}
+					if (lastFlag && !indexFlag) {
+						setCancelStatusForIndex(index);
+					} else if (indexFlag && !lastFlag) {
+						setCancelStatusForIndex(last);
+					} else if (lastFlag && indexFlag) {
+
+					} else {
+						setCancelStatus();
+					}
+					last = -1;
 				} else {
-					if (last == -1 && index % 2 != 0) {
-						last = index;
-					}
 					if (last == -1) {
 						last = index;
 					}
@@ -315,7 +403,9 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 						last = index;
 					}
 				}
-
+//				if (index % 2 != 0) {
+//					last = -1;
+//				}
 				break;
 			case R.id.base_back_linearlayout:
 				break;

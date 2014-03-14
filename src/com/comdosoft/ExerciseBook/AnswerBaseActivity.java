@@ -7,6 +7,7 @@ import android.os.Message;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
@@ -16,7 +17,6 @@ public class AnswerBaseActivity extends Activity {
 	private String[] answerArr = new String[] { "你的搭配: ", "你的选择: ", "你的排序: ",
 			"你的作答: " };
 	private int second;
-	// type 0答题 1历史
 	private int type = 0;
 	private LinearLayout middleLayout;
 	private LinearLayout base_history_linearlayout;
@@ -30,6 +30,8 @@ public class AnswerBaseActivity extends Activity {
 	private TextView base_answer_text;
 	private ImageView propTrue;
 	private ImageView propTime;
+	private boolean flag = true;
+	private Thread mTimer = new Timer();
 	private Handler mHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
@@ -60,7 +62,8 @@ public class AnswerBaseActivity extends Activity {
 		base_answer_text = (TextView) findViewById(R.id.base_answer_text);
 
 		if (type == 0) {
-			new Timer().start();
+			mTimer.start();
+			// new Timer().start();
 			base_time_linearlayout.setVisibility(View.VISIBLE);
 			base_history_linearlayout.setVisibility(View.GONE);
 			base_answer_linearlayout.setVisibility(View.GONE);
@@ -84,7 +87,7 @@ public class AnswerBaseActivity extends Activity {
 		}
 	}
 
-	// 设置题目类型 答题或历史
+	// 设置题目类型 type 0答题 1历史
 	public void setType(int type) {
 		this.type = type;
 	}
@@ -109,7 +112,7 @@ public class AnswerBaseActivity extends Activity {
 		page.setText(current + "/" + size);
 	}
 
-	// 设置正确率和使用时间
+	// 设置答题记录 正确率和使用时间
 	public void setAccuracyAndUseTime(int accuracy, int useTime) {
 		accuracyText.setText(accuracy + "%");
 		useTimeText.setText(timeSecondToString(useTime));
@@ -148,16 +151,40 @@ public class AnswerBaseActivity extends Activity {
 		return sb.toString();
 	}
 
+	// 暂停计时
+	public void setPause() {
+		flag = false;
+	}
+
+	// 继续计时
+	public void setStart() {
+		flag = true;
+		// 如果线程还没有开始过，就调用start。如果已经开始了，用start就会出错了
+		if (mTimer.getState() == Thread.State.NEW) {
+			mTimer.start();
+		} else if (mTimer.getState() == Thread.State.TERMINATED) {
+			// 如果线程已经被interrupt了，那么它的状态就是terminated。即这个线程完整的结束了。
+			// 这时候就重新new一个线程，再start
+			try {
+				mTimer = new Timer();
+				mTimer.start();
+			} catch (Exception e) {
+			}
+		}
+	}
+
 	// 计时器线程
 	class Timer extends Thread {
 		@Override
 		public void run() {
 			try {
-				while (true) {
+				while (flag) {
 					Thread.sleep(1000);
 					second++;
 					mHandler.sendEmptyMessage(1);
 				}
+				if (!flag)
+					this.interrupt();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

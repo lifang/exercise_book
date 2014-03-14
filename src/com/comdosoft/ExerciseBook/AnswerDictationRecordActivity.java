@@ -3,11 +3,7 @@ package com.comdosoft.ExerciseBook;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import android.app.Activity;
-import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -20,7 +16,6 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
@@ -40,7 +35,6 @@ public class AnswerDictationRecordActivity extends AnswerBaseActivity implements
 	private String mp3URL;
 	private LinearLayout linearLayout;
 	private TextView topic;
-	private TextView page;
 	private List<List<String>> bigList = new ArrayList<List<String>>();
 	private List<String> smallList = new ArrayList<String>();
 	private List<String> errorList = new ArrayList<String>();

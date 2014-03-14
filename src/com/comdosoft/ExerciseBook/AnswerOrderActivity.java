@@ -236,6 +236,7 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 				}
 				break;
 			case R.id.answer_order_again:
+				setStart();
 				mAnswerIndex = 0;
 				mAnswerList.clear();
 				mOptionOrderTextList.clear();
@@ -247,6 +248,7 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 				}
 				break;
 			case R.id.base_check_linearlayout:
+				setPause();
 				check();
 				if (++mIndex < mAOPList.size()) {
 					initData();
