@@ -8,7 +8,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.comdosoft.ExerciseBook.ReplyListView.IXListViewListener;
+import com.comdosoft.ExerciseBook.ReplyListViewActivity.ReplyAdapter;
+import com.comdosoft.ExerciseBook.pojo.Reply;
+import com.comdosoft.ExerciseBook.pojo.SysMessage;
+import com.comdosoft.ExerciseBook.tools.ExerciseBook;
+import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
+import com.comdosoft.ExerciseBook.tools.Urlinterface;
+
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -50,6 +59,7 @@ public class MessageActivity extends Table_TabHost implements
 	private final char FLING_LEFT = 1;
 	private final char FLING_RIGHT = 2;
 	private char flingState = FLING_CLICK;
+	private TextView topTv1;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -59,6 +69,16 @@ public class MessageActivity extends Table_TabHost implements
 		gd = new GestureDetector(this);
 		mListView = (ReplyListView) findViewById(R.id.xListView);
 		mListView.setPullLoadEnable(true);
+		topTv1=(TextView) findViewById(R.id.topTv1);
+		topTv1.setOnClickListener(new OnClickListener()
+		{
+			public void onClick(View v) {
+				MessageActivity.this.finish();
+				Intent intent=new Intent(MessageActivity.this,ReplyListViewActivity.class);
+				startActivity(intent);
+				overridePendingTransition(R.anim.fade, R.anim.hold); 
+			}
+		});
 		get_News();
 		// mListView.setPullLoadEnable(false);
 		// mListView.setPullRefreshEnable(false);
@@ -88,6 +108,11 @@ public class MessageActivity extends Table_TabHost implements
 			case 1:
 				Toast.makeText(getApplicationContext(), "未开启网络",
 						Toast.LENGTH_SHORT).show();
+				break;
+			case 2:
+				mListView.setAdapter(new ReplyAdapter());
+				Log.i("aa",  String.valueOf(msg.obj));
+				Toast.makeText(MessageActivity.this, String.valueOf(msg.obj), Toast.LENGTH_SHORT).show();
 				break;
 			}
 		}
@@ -151,9 +176,10 @@ public class MessageActivity extends Table_TabHost implements
 		try {
 			HashMap<String, String> mp = new HashMap<String, String>();
 			mp.put("student_id", user_id);
-			mp.put("page", page);
-			String json = ExerciseBookTool.sendGETRequest(
-					Urlinterface.get_sysmessage, mp);
+			mp.put("school_class_id", school_class_id);
+			mp.put("page",page );
+			String json = ExerciseBookTool
+					.sendGETRequest(Urlinterface.get_sysmessage, mp);
 			return json;
 		} catch (Exception e) {
 			handler1.sendEmptyMessage(1);
@@ -310,6 +336,10 @@ public class MessageActivity extends Table_TabHost implements
 												notice, Toast.LENGTH_SHORT)
 												.show();
 									}
+									Message msg=new Message();
+									msg.obj=notice;
+									msg.what=2;
+									handler1.sendMessage(msg);
 								} catch (Exception e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();

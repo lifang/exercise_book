@@ -53,6 +53,9 @@ public interface Urlinterface {
 	String QQ_LOGIN = IP + "/api/students/login"; // qq登录
 	String add_concern = IP + "/api/students/add_concern"; // 关注消息
 	String get_my_achievements = IP + "/api/students/get_my_archivements"; // 获得成就
+	String get_knowledges_card=IP+"/api/students/get_knowledges_card";			//获取卡包信息
+	String delete_knowledges_card=IP+"/api/students/delete_knowledges_card";		//删除卡片
+	String knoledge_tag_relation=IP+"/api/students/knoledge_tag_relation";
 	// 获取当天作业
 	static final String get_newer_task = IP + "/api/students/get_newer_task";
 	// 过往记录列表

@@ -22,6 +22,9 @@
     <color name="noselect_menu">#3f4853</color>
     <color name="transparent">#00000000</color>
     <color name="huse">#ebebeb</color>
+    <color name="cardchoice">#9a9d9e</color>
+    <color name="quesreson">#3f4853</color>
+    <color name="quescontent">#f31328</color>
     <color name="question_title_bg1">#6E6B6B</color>
     <color name="question_speak_bg">#F4F4F4</color>
     <color name="question_color">#404853</color>

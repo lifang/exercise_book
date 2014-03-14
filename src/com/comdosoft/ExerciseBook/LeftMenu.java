@@ -47,6 +47,8 @@ public class LeftMenu extends Activity implements Urlinterface
 	private View ll5;
 	private View ll6;  //  退出
 	private LinearLayout allLL;
+	private ImageView hwImg;
+	private ImageView rImg;
 	private ImageView classImg;			//左侧班级按钮
 	private ImageView teachIV;			//班级老师头像
 	private ImageView classback;		//班级缩图
@@ -58,11 +60,13 @@ public class LeftMenu extends Activity implements Urlinterface
 	private Thread T1 = null; 
 	List<ClassStu> classStu;
 	private boolean isStu_cj=true;
+	SharedPreferences userInfo;
 	ExerciseBook eb;
 	protected void  onCreate(Bundle savedInstanceState) {  
 		super.onCreate(savedInstanceState);
 		super.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.left_menu);
+		userInfo= getSharedPreferences("replyMenu", 0);  
 		LeftMenu.this.setFinishOnTouchOutside(true);
 		Invit();
 		linear =  (LinearLayout) findViewById(R.id.linear);
@@ -75,7 +79,6 @@ public class LeftMenu extends Activity implements Urlinterface
 		switch (eb.getMenu_num()) {
 		case 0:
 			ll1.setBackgroundColor(R.color.select_menu);
-			
 			break;
 		case 1:
 			ll2.setBackgroundColor(R.color.select_menu);
@@ -156,8 +159,11 @@ public class LeftMenu extends Activity implements Urlinterface
 				overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 				eb.setMenu_num(1);
 				eb.setMneu(true);
+				Editor editor = userInfo.edit();//获取编辑器
+				editor.putBoolean("HomeWorkMenu", true);
+				editor.commit();
 				clearActivity();
-				Intent intent=new Intent(LeftMenu.this,HomePageMainActivity.class);
+				Intent intent=new Intent(LeftMenu.this,HomeWorkIngActivity.class);
 				startActivity(intent);
 			}
 		});
@@ -172,7 +178,9 @@ public class LeftMenu extends Activity implements Urlinterface
 				clearActivity();
 				startActivity(intent);
 				eb.setMneu(true);
-				
+				Editor editor = userInfo.edit();//获取编辑器
+				editor.putBoolean("ReplyMenu", true);
+				editor.commit();
 			}
 
 		});
@@ -241,7 +249,6 @@ public class LeftMenu extends Activity implements Urlinterface
 				JSONArray jsonArray=jsonobject.getJSONArray("classmates");
 				for(int i=0;i<jsonArray.length();i++)
 				{
-
 					ClassStu stu=new ClassStu();
 					JSONObject jsonobject2=jsonArray.getJSONObject(i);
 					String id=jsonobject2.getString("id");
@@ -333,12 +340,34 @@ public class LeftMenu extends Activity implements Urlinterface
 		ll4=findViewById(R.id.ll4);
 		allLL=(LinearLayout) findViewById(R.id.allLinear);
 		ll5=findViewById(R.id.menuclassll);
+		hwImg=(ImageView) findViewById(R.id.leftmenu_12red);
+		rImg=(ImageView) findViewById(R.id.leftmenu_13red);
 		ll6=findViewById(R.id.ll6);
 		classback=(ImageView) findViewById(R.id.classback);
 		classImg=(ImageView) findViewById(R.id.classMenu);
 		teachIV=(ImageView) findViewById(R.id.teacherIm);
 		teachname=(TextView) findViewById(R.id.teachname);
 		ClassStuGv=(GridView) findViewById(R.id.classstugv);
+		
+		boolean homeWork = true;
+		if(userInfo.getBoolean("HomeWorkMenu", true))
+		{
+			homeWork=true;
+		}
+		else
+		{
+			homeWork=false;
+		}
+		boolean reply=userInfo.getBoolean("ReplyMenu", true);
+		Log.i("asd", homeWork+"/"+reply);
+		if(!homeWork)
+		{
+			hwImg.setVisibility(View.VISIBLE);
+		}
+		if(!reply)
+		{
+			rImg.setVisibility(View.VISIBLE);
+		}
 		setBackColor();
 	}
 	public boolean  onTouchEvent(MotionEvent event) {       

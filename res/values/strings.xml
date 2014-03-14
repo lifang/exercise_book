@@ -48,9 +48,9 @@
     <string name="SwitchClass_Tv">切换班级</string>
     <string name="SwitchClass_Et">输入班级验证码加入新班级</string>
     <string name="senderError">发表失败</string>
-    <string name="sender">发送</string>
     <string name="question_speak_tishi_ok">你的发音真的很不错哦,让我们再来读读其它的句子吧！</string>
     <string name="reg_info">登记信息</string>
+    <string name="sender">发送</string>
     <string name="xlistview_header_hint_normal">下拉刷新</string>
     <string name="xlistview_header_hint_ready">松开刷新数据</string>
     <string name="xlistview_header_hint_loading">正在加载...</string>
@@ -60,6 +60,13 @@
     <string name="homeworking_title">今日作業截至时间为</string>
     <string name="top">排行</string>
     <string name="work_null">还没有需要完成的作业！</string>
+	<string name="reson1">拼写错误</string>
+	<string name="reson2">朗读错误</string>
+	<string name="reson3">连线错误</string>
+	<string name="reson4">选择错误</string>
+	<string name="reson5">完型错误</string>
+	<string name="reson6">排序错误</string>
+	<string name="returntext">原题:</string>
     <string name="work_end_str1">恭喜完成挑战！</string>
     <string name="work_end_str2">正确率：</string>
     <string name="work_end_str3">用时：</string>

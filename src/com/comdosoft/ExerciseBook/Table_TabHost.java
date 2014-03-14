@@ -23,7 +23,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -36,6 +35,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import com.comdosoft.ExerciseBook.R;
+
 import cn.jpush.android.api.JPushInterface;
 import com.comdosoft.ExerciseBook.R;
 
@@ -155,18 +156,10 @@ public class Table_TabHost extends Activity
 			}
 		} else {
 			Toast.makeText(getApplicationContext(),
-					ExerciseBookParams.INTERNET, 0).show();
+					ExerciseBookParams.INTERNET, Toast.LENGTH_SHORT).show();
 		}
 		faceImage.setOnClickListener(listener);
 		userInfo.setOnClickListener(listener2);
-	}
-	protected void onResume() {
-		super.onResume();
-		JPushInterface.onResume(this);
-	}
-	protected void onPause() {
-		super.onPause();
-		JPushInterface.onPause(this);
 	}
 	public void setContentView(int layoutId)
 	{

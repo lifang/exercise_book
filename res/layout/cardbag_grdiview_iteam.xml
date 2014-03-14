@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="513px"
+    android:layout_height="512px" >
+
+    <LinearLayout
+        android:layout_width="513px"
+        android:layout_height="512px"
+        android:background="@drawable/cardfont"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/reson"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="38px"
+                android:layout_marginTop="40px"
+                android:text="@string/reson1"
+                android:textColor="@color/quesreson"
+                android:textSize="33px" />
+
+            <TextView
+                android:id="@+id/wronganswer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/reson"
+                android:layout_marginLeft="38px"
+                android:layout_marginTop="30px"
+                android:text="tagether"
+                android:textColor="@color/quescontent"
+                android:textSize="45.93px" />
+
+            <ImageView
+                android:id="@+id/fontIv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="38px"
+                android:layout_marginTop="40px"
+                android:src="@drawable/ques_reson" />
+
+            <LinearLayout
+                android:id="@+id/biaoqian"
+                android:visibility="gone"
+                android:layout_width="513px"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="70px"
+                android:background="@drawable/biaoqianback"
+                android:gravity="center_horizontal"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="42px"
+                    android:gravity="center_horizontal"
+                    
+                    android:orientation="horizontal" >
+                    <ImageView
+                        android:layout_marginTop="10px"
+                        android:id="@+id/biaoqianfind"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/cardfind" />
+                    <EditText
+                        android:id="@+id/biaoqianet"
+                        android:layout_width="306px"
+                        android:layout_height="wrap_content"
+                        android:hint="搜索知识点"
+                        android:maxEms="10"
+                        android:maxLines="1" />
+                </LinearLayout>
+
+                <ListView
+                    android:id="@+id/biaoqianlv"
+                    android:layout_width="513px"
+                    android:layout_height="wrap_content"
+                    android:background="@color/top_qianlv" 
+                    >
+                </ListView>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="150px"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/rightanswer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="38px"
+                android:text="正确拼写"
+                android:textColor="@color/quesreson"
+                android:textSize="33px" />
+
+            <TextView
+                android:id="@+id/youranswer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="38px"
+                android:layout_marginTop="30px"
+                android:text="together"
+                android:textColor="@color/quesreson"
+                android:textSize="45.93px" />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>
