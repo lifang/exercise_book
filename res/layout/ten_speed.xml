@@ -24,7 +24,7 @@
         android:layout_marginTop="80px"
         android:background="@drawable/loginbtn_hui"
         android:gravity="center"
-        android:onClick="onclick"
+        android:onClick="btnonclick"
         android:text="True"
         android:textColor="@color/white"
         android:textSize="130px" />
@@ -45,7 +45,7 @@
         android:layout_marginTop="50px"
         android:background="@drawable/loginbtn_hui"
         android:gravity="center"
-        android:onClick="onclick"
+        android:onClick="btnonclick"
         android:text="False"
         android:textColor="@color/white"
         android:textSize="130px" />

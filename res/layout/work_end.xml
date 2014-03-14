@@ -61,7 +61,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/work_ratio"
+            android:id="@+id/work_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="8&apos;44"
@@ -152,20 +152,22 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/loginbtn"
+            android:onClick="onclick"
             android:text="@string/work_end_str10"
             android:textColor="@color/work_end"
             android:textSize="30px" />
 
-        <View 
+        <View
             android:layout_width="15dp"
-            android:layout_height="fill_parent"/>
-        
+            android:layout_height="fill_parent" />
+
         <Button
             android:id="@+id/letsgo"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/loginbtn"
+            android:onClick="onclick"
             android:text="@string/work_end_str11"
             android:textColor="@color/work_end"
             android:textSize="30px" />

@@ -26,6 +26,6 @@
     <color name="question_speak_bg">#F4F4F4</color>
     <color name="question_color">#404853</color>
     <color name="dialog_text">#FCE3CE</color>
-     <color name="lvse">#92B81B</color>
-
+    <color name="lvse">#92B81B</color>
+    <color name="question_bg">#EEECEC</color>
 </resources>

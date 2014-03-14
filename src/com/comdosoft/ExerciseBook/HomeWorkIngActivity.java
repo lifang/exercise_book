@@ -1,6 +1,7 @@
 package com.comdosoft.ExerciseBook;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
+import android.util.Xml;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ImageView;
@@ -25,6 +27,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.comdosoft.ExerciseBook.pojo.AnswerJson;
+import com.comdosoft.ExerciseBook.pojo.Answer_QuestionsPojo;
+import com.comdosoft.ExerciseBook.pojo.AnswerPojo;
 import com.comdosoft.ExerciseBook.pojo.WorkPoJo;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
@@ -35,7 +39,7 @@ import com.google.gson.Gson;
 public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	private String id = "73";
 	private String school_class_id = "85";
-	private String json = "{\"status\":\"success\",\"notice\":\"\u83b7\u53d6\u6210\u529f\uff01\",\"tasks\":[{\"id\":130,\"name\":\"\",\"start_time\":\"2014-03-12T14:44:45+08:00\",\"question_types\":[0,1,2,3,4,5,6],\"finish_types\":[],\"end_time\":\"2014-03-13T14:47:27+08:00\",\"question_packages_url\":\"/que_ps/question_p_264/resourse.zip\"}],\"knowledges_cards_count\":null}";
+	private String json = "{\"status\":\"success\",\"notice\":\"\u83b7\u53d6\u6210\u529f\uff01\",\"tasks\":[{\"id\":130,\"name\":\"\",\"start_time\":\"2014-03-12T14:44:45+08:00\",\"question_types\":[0,1,2,3,4,5,6],\"finish_types\":[],\"end_time\":\"2014-03-13T18:00:00+08:00\",\"question_packages_url\":\"/que_ps/question_p_264/resourse.zip\"}],\"knowledges_cards_count\":null}";
 	private ExerciseBook eb;
 	private LinearLayout mylayout;
 	private int linear_item = 0;
@@ -93,7 +97,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.homework_ing);
 		eb = (ExerciseBook) getApplication();// 初始化
-//		eb.getActivityList().add(this);
+		// eb.getActivityList().add(this);
 		eb.setUid(id);
 		eb.setClass_id(school_class_id);
 		initialize();// 初始化
@@ -157,7 +161,10 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 		});
 		top.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View arg0) {
-				Log.i("linshi", "textview");
+				Intent intent = new Intent(HomeWorkIngActivity.this,
+						RankingOfPointsActivity.class);
+				intent.putExtra("types", questiontype_list.get(i));
+				intent.putExtra("pub_id", Integer.valueOf(eb.getWork_id()));
 			}
 		});
 		if (ExerciseBookTool.getExist(questiontype_list.get(i), finish_list)) {
@@ -207,31 +214,40 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 				JSONObject obj = new JSONObject(json);
 				if (obj.getString("status").equals("success")) {
 					work_list = WorkJson.json(json);
+					Log.i("linshi", work_list.size() + "-size");
 					eb.setWork_id(work_list.get(0).getId() + "");
 					getJsonPath();
-
-					AnswerJson answer = new AnswerJson(eb.getWork_id(), "0",
-							new String[] {}, "", "",
-							"", "", "", "",
-							"");
-					// String json=JSONArray.fromObject(answer);
-					Gson gson = new Gson();
-					String result = gson.toJson(answer);
 					File file = new File(path);
-					try {
-						if (!file.exists()) {
-							file.mkdirs();
-						}
-						file = new File(path + "/answer.js");
-						if (!file.exists()) {
-							file.createNewFile();
-							ExerciseBookTool.writeFile(path + "/answer.js",
-									result);
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
+					if (!file.exists()) {
+						file.mkdirs();
 					}
-					Log.i("linshi", result);
+					file = new File(path + "/answer.js");
+					if (!file.exists()) {
+						file.createNewFile();
+
+						Log.i("linshi", path + "/answer.js");
+						AnswerJson answer = new AnswerJson(eb.getWork_id(),
+								"0", new String[] {}, new AnswerPojo("0", "",
+										"-1", "-1", "0",
+										new ArrayList<Answer_QuestionsPojo>()),
+								new AnswerPojo("0", "", "-1", "-1", "0",
+										new ArrayList<Answer_QuestionsPojo>()),
+								new AnswerPojo("0", "", "-1", "-1", "0",
+										new ArrayList<Answer_QuestionsPojo>()),
+								new AnswerPojo("0", "", "-1", "-1", "0",
+										new ArrayList<Answer_QuestionsPojo>()),
+								new AnswerPojo("0", "", "-1", "-1", "0",
+										new ArrayList<Answer_QuestionsPojo>()),
+								new AnswerPojo("0", "", "-1", "-1", "0",
+										new ArrayList<Answer_QuestionsPojo>()),
+								new AnswerPojo("0", "", "-1", "-1", "0",
+										new ArrayList<Answer_QuestionsPojo>()));
+						// String json=JSONArray.fromObject(answer);
+						Gson gson = new Gson();
+						String result = gson.toJson(answer);
+						Log.i("linshi", result);
+						ExerciseBookTool.writeFile(path + "/answer.js", result);
+					}
 					handler.sendEmptyMessage(0);
 				} else {
 					notice = obj.getString("notice");
@@ -274,10 +290,12 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 			intent.setClass(this, TenSpeedActivity.class);
 			break;
 		}
-		this.finish();
 		intent.putExtra("json", json_list.get(i));
 		intent.putExtra("path", path + "/answer.js");
+		Log.i("aaa", work_list.get(0).getEnd_time() + "-end time");
+		eb.setWork_end_dath(work_list.get(0).getEnd_time());
 		startActivity(intent);
+		this.finish();
 	}
 
 	public void onclick(View v) {

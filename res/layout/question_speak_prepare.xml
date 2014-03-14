@@ -1,7 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/question_speak_bg"
+    android:background="@color/question_bg"
     android:orientation="vertical" >
 
     <LinearLayout
@@ -27,7 +27,7 @@
             android:layout_height="170dp"
             android:layout_marginTop="30dp"
             android:onClick="onclicks"
-            android:src="@drawable/dictation_laba1" />
+            android:src="@drawable/yuting2" />
 
         <ScrollView
             android:layout_width="wrap_content"

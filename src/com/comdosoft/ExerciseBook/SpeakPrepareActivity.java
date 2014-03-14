@@ -27,11 +27,13 @@ import android.speech.tts.TextToSpeech.OnUtteranceCompletedListener;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.comdosoft.ExerciseBook.pojo.AnswerJson;
 import com.comdosoft.ExerciseBook.pojo.HistoryPojo;
 import com.comdosoft.ExerciseBook.pojo.ListHistoryPojo;
 import com.comdosoft.ExerciseBook.pojo.ListeningPojo;
@@ -41,13 +43,12 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
-public class SpeakPrepareActivity extends Activity implements Urlinterface,
-		OnPreparedListener, OnCompletionListener, OnInitListener,
-		OnUtteranceCompletedListener {
+public class SpeakPrepareActivity extends AnswerBaseActivity implements
+		Urlinterface, OnPreparedListener, OnCompletionListener, OnInitListener,
+		OnUtteranceCompletedListener, OnClickListener {
 	private int mp3Index = 0;
 	private String content = "";
 	private LinearLayout layout;
-	// private TextView question_speak_content;
 	private TextView img_title;
 	private MediaPlayer player;
 	private String message;
@@ -71,6 +72,9 @@ public class SpeakPrepareActivity extends Activity implements Urlinterface,
 	private int specified_time;
 	private int questions_item;
 	private int branch_item;
+	private int status;
+	private int type;
+	private String json;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			Builder builder = new Builder(SpeakPrepareActivity.this);
@@ -92,12 +96,12 @@ public class SpeakPrepareActivity extends Activity implements Urlinterface,
 			case 4:
 				Log.i("linshi", "kai");
 				question_speak_img.setImageDrawable(getResources().getDrawable(
-						R.drawable.yuting1));
+						R.drawable.dictation_laba2));
 				break;
 			case 5:
 				Log.i("linshi", "guan");
 				question_speak_img.setImageDrawable(getResources().getDrawable(
-						R.drawable.yuting2));
+						R.drawable.dictation_laba1));
 				break;
 			case 6:
 				prodialog.dismiss();
@@ -146,13 +150,19 @@ public class SpeakPrepareActivity extends Activity implements Urlinterface,
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.question_speak_prepare);
 		eb = (ExerciseBook) getApplication();
+		findViewById(R.id.base_back_linearlayout).setOnClickListener(this);
+		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
+		setTimePropEnd();// 禁用道具
+		setTruePropEnd();// 禁用道具
+
 		initialize();
 		tvlist = new ArrayList<TextView>();
 
 		Intent intent = getIntent();
 
 		path = intent.getStringExtra("path");
-		String json = intent.getStringExtra("json");
+		json = intent.getStringExtra("json");
+		Log.i("suanfa", json);
 		SetQuestionsJson(json);
 
 		Log.i("suanfa", "list集合size：" + list.size());
@@ -160,20 +170,37 @@ public class SpeakPrepareActivity extends Activity implements Urlinterface,
 		if (answer_file.exists()) {
 			String json2 = ExerciseBookTool.getJson(path);
 			SetAnswer_Json(json2);
-			if (questions_item == -1) {// -1表示已经做完所有的题目
-				Log.i("suanfa", "全部题目已完成");
-				questionlist = list.get(eb.getQuestions_index())
+			switch (status) {
+			case 0:
+				if (questions_item == -1) {// 大题索引为-1表示没做
+					Log.i("suanfa", "没有做过");
+					type = 0;
+					questionlist = list.get(0).getQuesttionList();
+					eb.setQuestion_id(list.get(0).getId());
+					eb.setBranch_number(list.get(0).getQuesttionList().size());
+				} else {
+					type = 1;
+					questionlist = list.get(questions_item).getQuesttionList();
+					eb.setQuestion_id(list.get(questions_item).getId());
+					Log.i("suanfa", "id/" + list.get(questions_item).getId());
+					eb.setBranch_number(list.get(questions_item)
+							.getQuesttionList().size());
+				}
+				break;
+			case 1:
+				type = 2;
+				questionlist = list.get(eb.getQuestion_item())
 						.getQuesttionList();
-			} else {
-				Log.i("suanfa", "继续做题");
-				questionlist = list.get(questions_item).getQuesttionList();
+				eb.setQuestion_id(list.get(eb.getQuestion_item()).getId());
+				eb.setBranch_number(list.get(eb.getQuestion_item())
+						.getQuesttionList().size());
+				break;
 			}
-		} else {
-			Log.i("suanfa", "json文件不存在   从头加载" + eb.getQuestions_index());
-			questionlist = list.get(eb.getQuestions_index()).getQuesttionList();
 		}
-		for (int i = 0; i < questionlist.size(); i++) {
-			setTextView(i);
+		if (questionlist.size() > 0) {
+			for (int i = 0; i < questionlist.size(); i++) {
+				setTextView(i);
+			}
 		}
 	}
 
@@ -234,6 +261,7 @@ public class SpeakPrepareActivity extends Activity implements Urlinterface,
 				JSONObject time_limit = obj.getJSONObject("reading");
 				questions_item = time_limit.getInt("questions_item");
 				branch_item = time_limit.getInt("branch_item");
+				status = time_limit.getInt("status");
 				Log.i("aaa", specified_time + "--" + branch_item);
 				JSONArray questions = time_limit.getJSONArray("questions");
 				if (questions.length() > 0) {
@@ -259,7 +287,6 @@ public class SpeakPrepareActivity extends Activity implements Urlinterface,
 						Toast.LENGTH_SHORT).show();
 			}
 		}
-		Log.i("suanfa", questions_item + "/" + branch_item);
 	}
 
 	// 添加textview
@@ -272,85 +299,67 @@ public class SpeakPrepareActivity extends Activity implements Urlinterface,
 	}
 
 	public void onclicks(View v) {
-		Intent intent = new Intent();
-		switch (v.getId()) {
-		// case R.id.question_speak_exit:
-		// // MyDialog("确认不在继续答题吗？", "确定", "取消");
-		// break;
-		// case R.id.question_speak_next:
-		// stop();
-		//
-		// SpeakPrepareActivity.this.finish();
-		// intent.setClass(SpeakPrepareActivity.this, SpeakBeginActivity.class);
-		// startActivity(intent);
-		//
-		// break;
-		case R.id.question_speak_img:
-			boolean staick = false;
-			if (ExerciseBookTool.isConnect(getApplicationContext())) {
-				mp3List = new ArrayList<String>();
-				for (int i = 0; i < questionlist.size(); i++) {
-					if (questionlist.get(i).getUrl() == "") {
-						staick = true;
-					}
-					mp3List.add(IP + questionlist.get(i).getUrl());
-				}
-				// 从文件系统播放
-				if (staick) {
-					if (mTts != null) {
-						if (mTts.isSpeaking()) {
-							mTts_static = false;
-							handler.sendEmptyMessage(5);
-							handler.sendEmptyMessage(10);
-							onPause();
-						} else {
-							mTts_static = true;
-							handler.sendEmptyMessage(4);
-							index = 0;
-							handler.sendEmptyMessage(9);
-							// 检查TTS数据是否已经安装并且可用
-							Intent checkIntent = new Intent();
-							checkIntent
-									.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
-							startActivityForResult(checkIntent,
-									REQ_TTS_STATUS_CHECK);
-						}
-					} else {
-						mTts_static = true;
-						handler.sendEmptyMessage(4);
-						index = 0;
-						handler.sendEmptyMessage(9);
-						// 检查TTS数据是否已经安装并且可用
-						Intent checkIntent = new Intent();
-						checkIntent
-								.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
-						startActivityForResult(checkIntent,
-								REQ_TTS_STATUS_CHECK);
-					}
-				} else {
-					if (player.isPlaying()) {// 暂停播放
-						stop();
-					} else {
-						if (mp3Index >= mp3List.size()) {
-							mp3Index = 0;
-							handler.sendEmptyMessage(7);
-							new Thread(new setPlay()).start();
-						} else if (playFlag) {
-							handler.sendEmptyMessage(4);
-							player.start();
-						} else {
-							playFlag = true;
-							handler.sendEmptyMessage(7);
-							new Thread(new setPlay()).start();
-						}
-					}
-				}
+		// boolean staick = false;
+		// if (ExerciseBookTool.isConnect(getApplicationContext())) {
+		// mp3List = new ArrayList<String>();
+		// for (int i = 0; i < questionlist.size(); i++) {
+		// if (questionlist.get(i).getUrl() == "") {
+		// staick = true;
+		// }
+		// mp3List.add(IP + questionlist.get(i).getUrl());
+		// }
+		// 从文件系统播放
+		// if (staick) {
+		if (mTts != null) {
+			if (mTts.isSpeaking()) {
+				mTts_static = false;
+				handler.sendEmptyMessage(5);
+				handler.sendEmptyMessage(10);
+				onPause();
 			} else {
-				Toast.makeText(getApplicationContext(),
-						ExerciseBookParams.INTERNET, Toast.LENGTH_SHORT).show();
+				mTts_static = true;
+				handler.sendEmptyMessage(4);
+				index = 0;
+				handler.sendEmptyMessage(9);
+				// 检查TTS数据是否已经安装并且可用
+				Intent checkIntent = new Intent();
+				checkIntent
+						.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
+				startActivityForResult(checkIntent, REQ_TTS_STATUS_CHECK);
 			}
-			break;
+		} else {
+			mTts_static = true;
+			handler.sendEmptyMessage(4);
+			index = 0;
+			handler.sendEmptyMessage(9);
+			// 检查TTS数据是否已经安装并且可用
+			Intent checkIntent = new Intent();
+			checkIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
+			startActivityForResult(checkIntent, REQ_TTS_STATUS_CHECK);
 		}
+		// }
+		// else {
+		// if (player.isPlaying()) {// 暂停播放
+		// stop();
+		// } else {
+		// if (mp3Index >= mp3List.size()) {
+		// mp3Index = 0;
+		// handler.sendEmptyMessage(7);
+		// new Thread(new setPlay()).start();
+		// } else if (playFlag) {
+		// handler.sendEmptyMessage(4);
+		// player.start();
+		// } else {
+		// playFlag = true;
+		// handler.sendEmptyMessage(7);
+		// new Thread(new setPlay()).start();
+		// }
+		// }
+		// }
+		// } else {
+		// Toast.makeText(getApplicationContext(),
+		// ExerciseBookParams.INTERNET, Toast.LENGTH_SHORT).show();
+		// }
 	}
 
 	/**
@@ -546,6 +555,46 @@ public class SpeakPrepareActivity extends Activity implements Urlinterface,
 			} else {
 				handler.sendEmptyMessage(10);
 			}
+		}
+	}
+
+	public void onClick(View v) {
+		Intent intent = new Intent();
+		switch (v.getId()) {
+		case R.id.base_back_linearlayout:
+			SpeakPrepareActivity.this.finish();
+			intent.setClass(SpeakPrepareActivity.this,
+					HomeWorkIngActivity.class);
+			startActivity(intent);
+			break;
+		case R.id.base_check_linearlayout:
+			// 0没做过----1做过了但没做完----2表示做完了
+			switch (type) {
+			case 0:
+				eb.setQuestion_list(questionlist);
+				break;
+			case 1:
+				if (branch_item == -1) {// 本大题的小题还没做
+					eb.setQuestion_list(list.get(questions_item)
+							.getQuesttionList());
+				} else {// 删掉做过的题目
+					for (int i = 0; i < branch_item + 1; i++) {
+						questionlist.remove(0);
+					}
+					eb.setQuestion_list(questionlist);
+				}
+				break;
+			case 2:
+				eb.setQuestion_list(questionlist);
+				break;
+			}
+
+			intent.putExtra("path", path);
+			intent.putExtra("json", json);
+			intent.setClass(SpeakPrepareActivity.this, SpeakBeginActivity.class);
+			startActivity(intent);
+			SpeakPrepareActivity.this.finish();
+			break;
 		}
 	}
 }
