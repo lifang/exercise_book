@@ -203,19 +203,10 @@
         </activity>
         <activity android:name=".MessageActivity" />
         <activity
-<<<<<<< HEAD
             android:name=".HomeWorkIngActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity android:name=".MCardBagActivity" >
-=======
-            android:name=".RecordMainActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".TenSpeedActivity"
-            android:screenOrientation="portrait" />
-        <activity android:name=".AnswerWireActivity" >
->>>>>>> 47252abb146ebbddd865c5efb2e4e5dc62992a1c
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -223,10 +214,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".RecordMainActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".TenSpeedActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".AnswerWireActivity" >
+        </activity>
+        <activity
+            android:name=".RecordMainActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".SpeakBeginActivity"

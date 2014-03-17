@@ -30,6 +30,7 @@ public class ExerciseBook extends Application {
 	private int question_item;
 
 	public ExerciseBook() {
+		this.setMneu(true);
 		this.setMainItem(0);
 		this.setRefresh(1);
 		this.setMenu_num(0);

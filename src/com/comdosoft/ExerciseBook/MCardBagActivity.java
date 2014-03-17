@@ -68,6 +68,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface
 	private Button button3;
 	private Button button4;
 	List<Button>  btnList;
+	GuidePageAdapter pageAdapter;
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
@@ -85,23 +86,30 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface
 		btnList.add(button3);
 		button4=(Button) findViewById(R.id.button4);
 		btnList.add(button4);
+		Allmap = new HashMap<Integer, List>();
+		cardList = new ArrayList<knowledges_card>();
+		tagsList = new ArrayList<tags>();
+		getKonwledges();
+		student_id = preferences.getString("id", "1");
+		school_class_id = preferences.getString("school_class_id", "1");
 		for(int i=0;i<btnList.size();i++)
 		{
 			final String mistype=String.valueOf(i);
 			btnList.get(i).setOnClickListener(new OnClickListener(){
 				public void onClick(View v) {
 					Thread thread = new Thread() {
+						String json;
 						public void run() {
-							String json;
 							try {
+								viewPager = (ViewPager) findViewById(R.id.guidePages);
 								Map<String, String> map = new HashMap<String, String>();
 								map.put("student_id", "1");
 								map.put("school_class_id", "1");
 								map.put("mistake_types", mistype);
 								json = ExerciseBookTool.sendGETRequest(
 										get_knowledges_card, map);
-								parsejson(json);
-
+								parsejson(json,false);
+								handler.sendEmptyMessage(1);
 							} catch (Exception e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -109,25 +117,29 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface
 						}
 					};
 					thread.start();
+					
+					
+//					viewPager.getAdapter().notifyDataSetChanged();
 				}
 			});
 		}
-		student_id = preferences.getString("id", "1");
-		school_class_id = preferences.getString("school_class_id", "1");
-		getKonwledges();
+
 		cardbatFind.setOnClickListener(new OnClickListener()
 		{
 			public void onClick(View v) {
 				Thread thread = new Thread() {
 					public void run() {
 						try {
+							viewPager = (ViewPager) findViewById(R.id.guidePages);
 							Map<String, String> map = new HashMap<String, String>();
 							map.put("student_id", "1");
 							map.put("school_class_id", "1");
-
+							map.put("name",String.valueOf(cardbagEt.getText()));
 							String json = ExerciseBookTool.sendGETRequest(
 									get_knowledges_card, map);
-							parsejson(json);
+							pageAdapter=new GuidePageAdapter();
+							parsejson(json,false);
+							handler.sendEmptyMessage(1);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -141,12 +153,14 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface
 		Thread thread = new Thread() {
 			public void run() {
 				try {
+					viewPager = (ViewPager) findViewById(R.id.guidePages);
 					Map<String, String> map = new HashMap<String, String>();
 					map.put("student_id", "1");
 					map.put("school_class_id", "1");
 					String json = ExerciseBookTool.sendGETRequest(
 							get_knowledges_card, map);
-					parsejson(json);
+					pageAdapter=new GuidePageAdapter();
+					parsejson(json,true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -154,12 +168,12 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface
 		};
 		thread.start();
 	}
-	private void parsejson(String json) {
+	private void parsejson(String json,Boolean flag) {
 		// cardList.clear();
 		int count1 = 0;
-		Allmap = new HashMap<Integer, List>();
-		cardList = new ArrayList<knowledges_card>();
-		tagsList = new ArrayList<tags>();
+		Allmap.clear();
+		cardList.clear();
+		tagsList.clear();
 		try {
 			JSONObject jsonobject = new JSONObject(json);
 			if (jsonobject.getString("status").equals("success")) {
@@ -234,7 +248,10 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface
 					tagsList.add(new tags(card_bag_id, created_at, id, name,
 							update_at));
 				}
-				handler.sendEmptyMessage(1);
+				if(flag)
+				{
+					handler.sendEmptyMessage(1);
+				}
 			} else {
 				Message msg = new Message();
 				msg.what = 0;
@@ -248,9 +265,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface
 	}
 
 	Handler handler = new Handler() {
-		@Override
 		public void handleMessage(Message msg) {
-			// TODO Auto-generated method stub
 			super.handleMessage(msg);
 			switch (msg.what) {
 			case 0:
@@ -259,6 +274,8 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface
 				break;
 			case 1:
 				setViewPager();
+				viewPager.setAdapter(new GuidePageAdapter());
+				viewPager.setOnPageChangeListener(new GuidePageChangeListener());
 				break;
 			case 2:
 				getKonwledges();
@@ -272,6 +289,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface
 	};
 	public void setViewPager()
 	{
+		Log.i("2", " setAllmap:"+Allmap.size());
 		group = (ViewGroup) findViewById(R.id.viewGroup);
 		viewPager = (ViewPager) findViewById(R.id.guidePages);
 		clickmap=new HashMap<Integer, List<View>>();
@@ -283,8 +301,15 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface
 		imageViews = new ImageView[Allmap.size()];
 		LinearLayout imageL;
 		//		page = 1;
+		viewList.clear();
+		group.removeAllViews();
+		for(int i=0;i<imageViews.length;i++)
+		{
+			imageViews[i]=null;
+		}
 		for(int i=0;i<Allmap.size();i++)
 		{
+			
 			List<View> listv=new ArrayList<View>();
 			//增加下面的小图标
 			imageL = new LinearLayout(MCardBagActivity.this);
@@ -293,13 +318,14 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface
 			imageView.setLayoutParams(new LayoutParams(20, 20));
 			imageView.setPadding(10, 0, 10, 0);
 			imageViews[i] = imageView;
+			Log.i("1", "i:"+i);
 			if (i == 0) {
-				imageViews[i].setBackgroundResource(R.drawable.page_indicator);
+				imageView.setBackgroundResource(R.drawable.page_indicator);
 			} else {
-				imageViews[i]
-						.setBackgroundResource(R.drawable.page_inicator_focused);
+				imageView
+				.setBackgroundResource(R.drawable.page_inicator_focused);
 			}
-			imageL.addView(imageViews[i]);
+			imageL.addView(imageView);
 			group.addView(imageL);
 			//图标结束
 			ViewGroup view = (android.view.ViewGroup) inflater.inflate(R.layout.cardbag_gridview, null);			//增加viewpager试图
@@ -307,6 +333,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface
 			List<knowledges_card> list1=Allmap.get(i+1);
 			for(int j=0;j<Allmap.get(i+1).size();j++)
 			{
+				Log.i("1", "j:"+j);
 				ListBool[i][j]=true;	//卡片集合
 				PageBool[i][j]=true;    //所有卡片的T/F
 				if((j+1)%2!=0)
@@ -315,7 +342,6 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface
 					linear.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT));
 					linear.setOrientation(LinearLayout.HORIZONTAL);
 				}
-
 				ViewGroup v=(android.view.ViewGroup) inflater.inflate(R.layout.cardbag_grdiview_iteam, null);
 				v.setPadding(53, 23, 23, 23);
 				linear.addView(v);
@@ -324,15 +350,13 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface
 				{
 					view.addView(linear);
 				}
-
 				setFontCard((android.view.ViewGroup) v,list1.get(j), j,i);
 			}
 			clickmap.put(i, listv);
 			viewList.add(view);
-		}
-		viewPager.setOffscreenPageLimit(pageCount);
-		viewPager.setAdapter(new GuidePageAdapter());
-		viewPager.setOnPageChangeListener(new GuidePageChangeListener());
+		}	
+		Log.i("asd", "ViewList.size:"+viewList.size());
+		
 	}
 	public void NoClick(int page,int index)
 	{
@@ -466,12 +490,13 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface
 
 		@Override
 		public int getItemPosition(Object object) {
-			return super.getItemPosition(object);
+			return POSITION_NONE;  
 		}
 
 		@Override
 		public void destroyItem(View arg0, int arg1, Object arg2) {
-			((ViewPager) arg0).removeView(viewList.get(arg1));
+			Log.i("asd", viewList.size()+"!!!"+arg1);
+//			((ViewPager) arg0).removeView(viewList.get(arg1));
 		}
 
 		@Override
