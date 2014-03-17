@@ -20,7 +20,7 @@
             android:orientation="horizontal" >
 
             <EditText
-                android:id="@+id/cardbatEt"
+                android:id="@+id/cardbagEt"
                 android:layout_width="306px"
                 android:layout_height="71px"
                 android:background="@drawable/cardet"

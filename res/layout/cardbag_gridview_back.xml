@@ -23,7 +23,7 @@
                 android:textSize="33px" />
 
             <TextView
-                android:id="@+id/rightanswers"
+                android:id="@+id/rightanswerb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/reson"

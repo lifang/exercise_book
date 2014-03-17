@@ -14,6 +14,8 @@ import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,21 +61,52 @@ public class CardBagActivity extends Table_TabHost implements Urlinterface {
 	List<tags> tagsList;
 	private int allsize;
 	public Map<Integer, List> Allmap;
+	private int choiceindex;
+	private EditText cardbagEt;
+	private ImageView cardbatFind;
+	List<tags> tagList = new ArrayList<tags>();
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.cardbag);
 		getKonwledges();
+		cardbagEt=(EditText) findViewById(R.id.cardbagEt);
+		cardbatFind=(ImageView) findViewById(R.id.cardbatFind);
+		cardbatFind.setOnClickListener(new OnClickListener()
+		{
+
+			@Override
+			public void onClick(View v) {
+				Thread thread = new Thread() {
+					public void run() {
+						try {
+							for (int i = 0; i < 5; i++) {
+								for (int j = 0; j < 4; j++) {
+									allbool[i][j] = true;
+									biaoqianbool[i][j] = true;
+								}
+							}
+							Map<String, String> map = new HashMap<String, String>();
+							map.put("student_id", "1");
+							map.put("school_class_id", "1");
+							map.put("name", String.valueOf(cardbagEt.getText()));
+							String json = ExerciseBookTool.sendGETRequest(
+									search_tag_card, map);
+							parsejson(json);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				};
+				thread.start();
+			}
+		});
+
 	}
+
 	public void getKonwledges() {
 		Thread thread = new Thread() {
 			public void run() {
 				try {
-					for (int i = 0; i < 5; i++) {
-						for (int j = 0; j < 4; j++) {
-							allbool[i][j] = true;
-							biaoqianbool[i][j] = true;
-						}
-					}
 					Map<String, String> map = new HashMap<String, String>();
 					map.put("student_id", "1");
 					map.put("school_class_id", "1");
@@ -108,7 +141,7 @@ public class CardBagActivity extends Table_TabHost implements Urlinterface {
 					String card_bag_id = jsonobject2.getString("card_bag_id");
 					JSONArray tagsarray = jsonobject2
 							.getJSONArray("card_tags_id");
-					List<Integer> intlist=new ArrayList<Integer>();
+					List<Integer> intlist = new ArrayList<Integer>();
 					for (int j = 0; j < tagsarray.length(); j++) {
 						intlist.add(tagsarray.getInt(j));
 					}
@@ -195,6 +228,7 @@ public class CardBagActivity extends Table_TabHost implements Urlinterface {
 						Toast.LENGTH_SHORT).show();
 				break;
 			case 1:
+				Log.i("2", "case1");
 				setViewPager();
 				break;
 			case 2:
@@ -223,9 +257,8 @@ public class CardBagActivity extends Table_TabHost implements Urlinterface {
 			View v = inflater.inflate(R.layout.cardbag_gridview, null);
 			viewList.add(v);
 		}
-		group.removeAllViews();
+		// group.removeAllViews();
 		imageViews = new ImageView[viewList.size()];
-		Log.i("aa", viewList.size() + "aa//" + imageViews.length);
 		LinearLayout imageL;
 		// imageL.removeAllViews();
 		for (int i = 0; i < viewList.size(); i++) {
@@ -249,56 +282,62 @@ public class CardBagActivity extends Table_TabHost implements Urlinterface {
 		page = 1;
 		viewPager.setOnPageChangeListener(new GuidePageChangeListener());
 	}
-	public class LabelAdapter extends BaseAdapter 
-	{
-		//		private Context content;
+
+	public class LabelAdapter extends BaseAdapter {
+		// private Context content;
 		private String card_id;
 		private List<Integer> useadp;
-		public LabelAdapter(String card_id,List<Integer> usetags)
-		{
-			this.card_id=card_id;
-			this.useadp=usetags;
+
+		public LabelAdapter(String card_id, List<Integer> usetags) {
+			this.card_id = card_id;
+			// this.useadp = usetags;
+			knowledges_card usead = (knowledges_card) Allmap.get(page).get(
+					choiceindex);
+			useadp = usead.getTagsarr();
 		}
+
 		public int getCount() {
-			return tagsList.size();
+			return tagList.size();
 		}
 
 		public Object getItem(int position) {
-			return tagsList.get(position);
+			return tagList.get(position);
 		}
 
 		public long getItemId(int position) {
 			return position;
 		}
-		public void refresh(List<Integer> d) {    
-			useadp = d;    
-			notifyDataSetChanged();    
-		}    
+
+		public void refresh(List<Integer> d) {
+			useadp = d;
+			notifyDataSetChanged();
+		}
+
 		class Holder {
 			ImageView img;
 			TextView tv;
 		}
-		public View getView(final int position, View convertView, ViewGroup parent) {
-			LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+
+		public View getView(final int position, View convertView,
+				ViewGroup parent) {
+			LayoutInflater inflater = LayoutInflater
+					.from(getApplicationContext());
 			Holder holder = null;
-			if (convertView == null) {
-				convertView = inflater.inflate(R.layout.biaoqian_iteam, null);
-				holder = new Holder();
-				holder.img = (ImageView) convertView.findViewById(R.id.bq_iteam_iv);
-				holder.tv = (TextView) convertView.findViewById(R.id.bq_iteam_tv);
-				convertView.setTag(holder);
-			} else {
-				holder = (Holder) convertView.getTag();
-			}
-			Log.i("2", useadp.size()+"---适配器中useadp:"+useadp.size());
+			convertView = inflater.inflate(R.layout.biaoqian_iteam, null);
+			holder = new Holder();
+			holder.img = (ImageView) convertView.findViewById(R.id.bq_iteam_iv);
+			holder.tv = (TextView) convertView.findViewById(R.id.bq_iteam_tv);
+			convertView.setTag(holder);
 			for (int i = 0; i < useadp.size(); i++) {
-				if (useadp.get(i) == Integer.valueOf(tagsList.get(position).getId())) {
-					holder.img.setImageDrawable(getApplicationContext().getResources().getDrawable(
-							R.drawable.biaoqianf));
+				if (useadp.get(i) == Integer.valueOf(tagList.get(position)
+						.getId())) {
+					Log.i("bbb", useadp.get(i) + ":use");
+					holder.img.setImageDrawable(getApplicationContext()
+							.getResources().getDrawable(R.drawable.biaoqianf));
 				}
 			}
 			holder.tv.setText(tagsList.get(position).getName());
-			holder.tv.setOnClickListener(new OnClickListener() {
+			convertView.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
 					Thread thread = new Thread() {
 						public void run() {
@@ -312,8 +351,8 @@ public class CardBagActivity extends Table_TabHost implements Urlinterface {
 								String json = ExerciseBookTool.sendGETRequest(
 										knoledge_tag_relation, map);
 								JSONObject jsonobject = new JSONObject(json);
-								if (jsonobject.getString("status")
-										.equals("success")) {
+								if (jsonobject.getString("status").equals(
+										"success")) {
 									int type = jsonobject.getInt("type");
 									Message msg = new Message();
 									switch (type) {
@@ -325,6 +364,7 @@ public class CardBagActivity extends Table_TabHost implements Urlinterface {
 										msg.obj = "删除成功";
 										Log.i("bbb", "删除成功");
 										useadp.remove(position);
+										// Allmap.get(page).get(choiceindex)
 										break;
 									case 2:
 										msg.obj = "添加成功";
@@ -346,6 +386,7 @@ public class CardBagActivity extends Table_TabHost implements Urlinterface {
 			});
 			return convertView;
 		}
+
 		Handler handler1 = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
@@ -394,22 +435,19 @@ public class CardBagActivity extends Table_TabHost implements Urlinterface {
 				cz();
 				if (setpageList(0) != null)
 					pageList = setpageList(0);
-				Log.i("asd", Allmap.get(1).size() + "addViewcase0");
 				v = viewList.get(0);
 				ViewGroup = v;
-				setFontNews(v, pageList);
+				//				setFontNews(v, pageList);
 				break;
 			case 1:
 				page = 2;
 				count = 0;
 				cz();
-
 				if (setpageList(1) != null)
 					pageList = setpageList(1);
-				Log.i("asd", Allmap.get(2).size() + "addViewcase1");
 				v = viewList.get(1);
 				ViewGroup = v;
-				setFontNews(v, pageList);
+				//				setFontNews(v, pageList);
 				break;
 			case 2:
 				page = 3;
@@ -418,9 +456,8 @@ public class CardBagActivity extends Table_TabHost implements Urlinterface {
 				v = viewList.get(2);
 				if (setpageList(2) != null)
 					pageList = setpageList(2);
-				Log.i("asd", Allmap.get(3).size() + "addViewcase2");
 				ViewGroup = v;
-				setFontNews(v, pageList);
+				//				setFontNews(v, pageList);
 				break;
 			case 3:
 				page = 4;
@@ -430,7 +467,7 @@ public class CardBagActivity extends Table_TabHost implements Urlinterface {
 				if (setpageList(3) != null)
 					pageList = setpageList(3);
 				ViewGroup = v;
-				setFontNews(v, pageList);
+				//				setFontNews(v, pageList);
 				break;
 			case 4:
 				page = 5;
@@ -440,7 +477,7 @@ public class CardBagActivity extends Table_TabHost implements Urlinterface {
 				if (setpageList(4) != null)
 					pageList = setpageList(4);
 				ViewGroup = v;
-				setFontNews(v, pageList);
+				//				setFontNews(v, pageList);
 				break;
 			case 5:
 				page = 6;
@@ -450,7 +487,7 @@ public class CardBagActivity extends Table_TabHost implements Urlinterface {
 				if (setpageList(5) != null)
 					pageList = setpageList(5);
 				ViewGroup = v;
-				setFontNews(v, pageList);
+				//				setFontNews(v, pageList);
 				break;
 			default:
 				break;
@@ -515,311 +552,357 @@ public class CardBagActivity extends Table_TabHost implements Urlinterface {
 			allbool[page][i] = true;
 		}
 	}
-
-	// 设置单个页面
-	public void setFontText(View v, final knowledges_card card) {
-		TextView reson;
-		TextView wronganswer;
-		ImageView fontIv;
-		TextView rightanswer;
-		TextView youranswer;
-		TextView rightanswers;
-		ImageView cardbatread;
-		ImageView cardbatdel;
-		final LinearLayout linearll;
-		EditText biaoqianet;
-		final ListView listView;
-		final String id = card.getId();
-		if (allbool[page][count]) {
-			reson = (TextView) v.findViewById(R.id.reson);
-			wronganswer = (TextView) v.findViewById(R.id.wronganswer);
-			fontIv = (ImageView) v.findViewById(R.id.fontIv);
-			rightanswer = (TextView) v.findViewById(R.id.rightanswer);
-			youranswer = (TextView) v.findViewById(R.id.youranswer);
-			linearll = (LinearLayout) v.findViewById(R.id.biaoqian);
-			biaoqianet = (EditText) v.findViewById(R.id.biaoqianet);
-			listView = (ListView) v.findViewById(R.id.biaoqianlv);
-			listView.setDividerHeight(0);
-
-			reson.setText(findmisR(Integer.valueOf(card.getMistake_types())));
-			wronganswer.setText(card.getAnswer());
-			rightanswer.setText("正确答案:");
-			youranswer.setText(card.getYour_answer());
-			Adapter listad=new LabelAdapter(card.getCard_bag_id(), card.getTagsarr());
-			Log.i("bbb", card.getTagsarr().size()+"个人的tags");
-			listView.setAdapter((ListAdapter) listad);
-			fontIv.setOnClickListener(new OnClickListener() {
-				public void onClick(View v) {
-					Log.i("3", "page:"+page+"/count:"+count+"t/f:"+biaoqianbool[page][count]);
-					if (biaoqianbool[page][count]) {
-						linearll.setVisibility(View.VISIBLE);
-						biaoqianbool[page][count] = false;
-						
-					} else {
-						linearll.setVisibility(View.GONE);
-						biaoqianbool[page][count] = true;
-					}
-				
-				}
-			});
-		} else {
-			reson = (TextView) v.findViewById(R.id.reson);
-			rightanswers = (TextView) v.findViewById(R.id.rightanswers);
-			cardbatread = (ImageView) v.findViewById(R.id.cardbatread);
-			cardbatdel = (ImageView) v.findViewById(R.id.cardbatdel);
-			reson.setText("原题:");
-			rightanswers.setText(card.getContent() + "");
-			cardbatdel.setOnClickListener(new OnClickListener() {
-				public void onClick(View v) {
-					Log.i("bbb", "删除点击");
-					Thread thread = new Thread() {
-						public void run() {
-							try {
-								Map<String, String> map = new HashMap<String, String>();
-								map.put("knowledges_card_id", id);
-								Log.i("homework", "page:" + page + "/count:"
-										+ count + "/id:" + id);
-								String json = ExerciseBookTool.sendGETRequest(
-										delete_knowledges_card, map);
-								Log.i("homework", json);
-								JSONObject jsonobj = new JSONObject(json);
-								String notice = jsonobj.getString("notice");
-								Message msg = new Message();
-								if (jsonobj.getString("status").equals(
-										"success")) {
-
-									handler.sendEmptyMessage(2);
-								} else {
-									msg.what = 0;
-									msg.obj = jsonobj.getString("notice");
-									handler.sendMessage(msg);
-								}
-							} catch (Exception e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						}
-					};
-					thread.start();
-				}
-			});
-			cardbatread.setOnClickListener(new OnClickListener() {
-				public void onClick(View v) {
-					Log.i("homework", "cardbatread点击");
-				}
-			});
-		}
-	}
-
-	public int findmisR(int type) {
-		switch (type) {
-		case 0:
-			return R.string.reson1;
-		case 1:
-			return R.string.reson2;
-		case 2:
-			return R.string.reson3;
-		case 3:
-			return R.string.reson4;
-		case 4:
-			return R.string.reson5;
-		default:
-			break;
-		}
-		return 0;
-	}
-
-	public void setFontNews(final View viewGroup, List<knowledges_card> parkList) {
-		flater = getLayoutInflater();
-		LinearLayout l1 = (LinearLayout) viewGroup.findViewById(R.id.inll1);
-		LinearLayout l2 = (LinearLayout) viewGroup.findViewById(R.id.inll2);
-		LinearLayout l3 = (LinearLayout) viewGroup.findViewById(R.id.inll3);
-		LinearLayout l4 = (LinearLayout) viewGroup.findViewById(R.id.inll4);
-		int size = 0;
-		switch (pageList.size()) {
-		case 4:
-			break;
-		case 3:
-			l4.setVisibility(View.GONE);
-			break;
-		case 2:
-			l4.setVisibility(View.GONE);
-			l3.setVisibility(View.GONE);
-			break;
-		case 1:
-			l4.setVisibility(View.GONE);
-			l3.setVisibility(View.GONE);
-			l2.setVisibility(View.GONE);
-			break;
-		default:
-			break;
-		}
-
-		View v = viewGroup.findViewById(R.id.include1);
-		if (size < parkList.size()) {
-			setFontText(v, parkList.get(size));
-			size++;
-		}
-		l1.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				count = 0;
-				selectLinearlayout = (LinearLayout) viewGroup
-						.findViewById(R.id.inll1);
-				if (allbool[page][0]) {
-					selectview2 = flater.inflate(
-							R.layout.cardbag_gridview_back, null);
-					allbool[page][0] = false;
-				} else {
-					selectview2 = flater.inflate(
-							R.layout.cardbag_grdiview_iteam, null);
-					allbool[page][0] = true;
-				}
-				ViewGroup = viewGroup;
-				selectview = viewGroup.findViewById(R.id.inll1);
-				applyRotation(0, 90);
-			}
-		});
-
-		View v1 = viewGroup.findViewById(R.id.include2);
-		if (size < parkList.size()) {
-			setFontText(v1, parkList.get(size));
-			size++;
-		}
-		l2.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				count = 1;
-				selectLinearlayout = (LinearLayout) viewGroup
-						.findViewById(R.id.inll2);
-				if (allbool[page][1]) {
-					selectview2 = flater.inflate(
-							R.layout.cardbag_gridview_back, null);
-					allbool[page][1] = false;
-				} else {
-					selectview2 = flater.inflate(
-							R.layout.cardbag_grdiview_iteam, null);
-					allbool[page][1] = true;
-				}
-				ViewGroup = viewGroup;
-				selectview = viewGroup.findViewById(R.id.inll2);
-				applyRotation(0, 90);
-			}
-		});
-
-		View v2 = viewGroup.findViewById(R.id.include3);
-		if (size < parkList.size()) {
-			setFontText(v2, parkList.get(size));
-			size++;
-		}
-		l3.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				count = 2;
-				selectLinearlayout = (LinearLayout) viewGroup
-						.findViewById(R.id.inll3);
-				if (allbool[page][2]) {
-					selectview2 = flater.inflate(
-							R.layout.cardbag_gridview_back, null);
-					allbool[page][2] = false;
-				} else {
-					selectview2 = flater.inflate(
-							R.layout.cardbag_grdiview_iteam, null);
-					allbool[page][2] = true;
-				}
-				ViewGroup = viewGroup;
-				selectview = viewGroup.findViewById(R.id.inll3);
-				applyRotation(0, 90);
-			}
-		});
-
-		View v4 = viewGroup.findViewById(R.id.include4);
-		if (size < parkList.size()) {
-			setFontText(v4, parkList.get(size));
-			size++;
-		}
-		l4.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				Log.i("homework", "点击次数");
-				count = 3;
-				selectLinearlayout = (LinearLayout) viewGroup
-						.findViewById(R.id.inll4);
-				if (allbool[page][3]) {
-					selectview2 = flater.inflate(
-							R.layout.cardbag_gridview_back, null);
-					allbool[page][3] = false;
-				} else {
-					selectview2 = flater.inflate(
-							R.layout.cardbag_grdiview_iteam, null);
-					allbool[page][3] = true;
-				}
-				ViewGroup = viewGroup;
-				selectview = viewGroup.findViewById(R.id.inll4);
-				applyRotation(0, 90);
-			}
-		});
-	}
-
-	private void applyRotation(float start, float end) {
-		// 计算中心点
-		final float centerX = selectview.getWidth() / 2.0f;
-		final float centerY = selectview.getHeight() / 2.0f;
-		final Rotate3dAnimation rotation = new Rotate3dAnimation(start, end,
-				centerX, centerY, 310.0f, true);
-		rotation.setDuration(500);
-		rotation.setFillAfter(true);
-		rotation.setInterpolator(new AccelerateInterpolator());
-		// 设置监听
-		rotation.setAnimationListener(new DisplayNextView());
-		selectview.startAnimation(rotation);
-	}
-
-	private final class DisplayNextView implements Animation.AnimationListener {
-
-		public void onAnimationStart(Animation animation) {
-		}
-
-		// 动画结束
-		public void onAnimationEnd(Animation animation) {
-			selectLinearlayout.post(new SwapViews());
-			selectLinearlayout.removeAllViews();
-			selectLinearlayout.addView(selectview2);
-			List<knowledges_card> ca = Allmap.get(page);
-			Log.i("homework", "切换背景page:" + page + "/count:" + count);
-			switch (count) {
-			case 0:
-				View v = ViewGroup.findViewById(R.id.inll1);
-				setFontText(v, ca.get(0));
-				break;
-			case 1:
-				View v1 = ViewGroup.findViewById(R.id.inll2);
-				setFontText(v1, ca.get(1));
-				break;
-			case 2:
-				View v2 = ViewGroup.findViewById(R.id.inll3);
-				setFontText(v2, ca.get(2));
-				break;
-			case 3:
-				View v3 = ViewGroup.findViewById(R.id.inll4);
-				setFontText(v3, ca.get(3));
-				break;
-			}
-		}
-
-		public void onAnimationRepeat(Animation animation) {
-		}
-	}
-
-	private final class SwapViews implements Runnable {
-		public void run() {
-			final float centerX = selectview.getWidth() / 2.0f;
-			final float centerY = selectview.getHeight() / 2.0f;
-			Rotate3dAnimation rotation = null;
-			selectview.requestFocus();
-			rotation = new Rotate3dAnimation(-90, 0, centerX, centerY, 310.0f,
-					false);
-			rotation.setDuration(500);
-			rotation.setFillAfter(true);
-			rotation.setInterpolator(new DecelerateInterpolator());
-			// 开始动画
-			selectview.startAnimation(rotation);
-		}
-	}
 }
+
+// 设置单个页面
+//	public void setFontText(View v, final knowledges_card card, final int index) {
+//		TextView reson;
+//		TextView wronganswer;
+//		ImageView fontIv;
+//		TextView rightanswer;
+//		TextView youranswer;
+//		TextView rightanswers;
+//		ImageView cardbatread;
+//		ImageView cardbatdel;
+//		final LinearLayout linearll;
+//		final EditText biaoqianet;
+//		final ListView listView;
+//		final String id = card.getId();
+//
+//		if (allbool[page][count]) {
+//			reson = (TextView) v.findViewById(R.id.reson);
+//			wronganswer = (TextView) v.findViewById(R.id.wronganswer);
+//			fontIv = (ImageView) v.findViewById(R.id.fontIv);
+//			rightanswer = (TextView) v.findViewById(R.id.rightanswer);
+//			youranswer = (TextView) v.findViewById(R.id.youranswer);
+//			linearll = (LinearLayout) v.findViewById(R.id.biaoqian);
+//			biaoqianet = (EditText) v.findViewById(R.id.biaoqianet);
+//			listView = (ListView) v.findViewById(R.id.biaoqianlv);
+//			listView.setDividerHeight(0);
+//			reson.setText(findmisR(Integer.valueOf(card.getMistake_types())));
+//			wronganswer.setText(card.getYour_answer());
+//			rightanswer.setText("正确答案:");
+//			youranswer.setText(card.getAnswer());
+//			tagList.clear();
+//			for (int i = 0; i < tagsList.size(); i++) {
+//				tagList.add(tagsList.get(i));
+//			}
+//			Adapter listad = new LabelAdapter(card.getCard_bag_id(),
+//					card.getTagsarr());
+//			listView.setAdapter((ListAdapter) listad);
+//			biaoqianet.addTextChangedListener(new TextWatcher() {
+//
+//				@Override
+//				public void onTextChanged(CharSequence s, int start, int before, int count) {
+//					tagList.clear();
+//					for (int i = 0; i < tagsList.size(); i++) {
+//						if (tagsList.get(i).getName().indexOf(String.valueOf(biaoqianet.getText())) != -1) {
+//							tagList.add(tagsList.get(i));
+//						}
+//
+//					}
+//					Adapter listad = new LabelAdapter(card.getCard_bag_id(),
+//							card.getTagsarr());
+//					listView.setAdapter((ListAdapter) listad);
+//
+//				}
+//
+//				@Override
+//				public void beforeTextChanged(CharSequence s, int start, int count,
+//						int after) {
+//
+//				}
+//
+//				@Override
+//				public void afterTextChanged(Editable s) {
+//
+//				}
+//			});
+//			tagList.clear();
+//			tagList.addAll(tagsList);
+//
+//			fontIv.setOnClickListener(new OnClickListener() {
+//				public void onClick(View v) {
+//					Log.i("bbb", "index:" + index);
+//					Log.i("bbb", card.getTagsarr().size() + "个人的tags" + "page:"
+//							+ page + "//count:" + count);
+//					choiceindex = index;
+//					if (biaoqianbool[page][index]) {
+//						linearll.setVisibility(View.VISIBLE);
+//						biaoqianbool[page][index] = false;
+//
+//					} else {
+//						linearll.setVisibility(View.GONE);
+//						biaoqianbool[page][index] = true;
+//					}
+//
+//				}
+//			});
+//		} else {
+//			reson = (TextView) v.findViewById(R.id.reson);
+//			rightanswers = (TextView) v.findViewById(R.id.rightanswers);
+//			cardbatread = (ImageView) v.findViewById(R.id.cardbatread);
+//			cardbatdel = (ImageView) v.findViewById(R.id.cardbatdel);
+//			reson.setText("原题:");
+//			rightanswers.setText(card.getContent() + "");
+//			cardbatdel.setOnClickListener(new OnClickListener() {
+//				public void onClick(View v) {
+//					Log.i("bbb", "删除点击");
+//					Thread thread = new Thread() {
+//						public void run() {
+//							try {
+//								Map<String, String> map = new HashMap<String, String>();
+//								map.put("knowledges_card_id", id);
+//								Log.i("homework", "page:" + page + "/count:"
+//										+ count + "/id:" + id);
+//								String json = ExerciseBookTool.sendGETRequest(
+//										delete_knowledges_card, map);
+//								Log.i("homework", json);
+//								JSONObject jsonobj = new JSONObject(json);
+//								String notice = jsonobj.getString("notice");
+//								Message msg = new Message();
+//								if (jsonobj.getString("status").equals(
+//										"success")) {
+//
+//									handler.sendEmptyMessage(2);
+//								} else {
+//									msg.what = 0;
+//									msg.obj = jsonobj.getString("notice");
+//									handler.sendMessage(msg);
+//								}
+//							} catch (Exception e) {
+//								// TODO Auto-generated catch block
+//								e.printStackTrace();
+//							}
+//						}
+//					};
+//					thread.start();
+//				}
+//			});
+//			cardbatread.setOnClickListener(new OnClickListener() {
+//				public void onClick(View v) {
+//					Log.i("homework", "cardbatread点击");
+//				}
+//			});
+//		}
+//	}
+//
+//	public int findmisR(int type) {
+//		switch (type) {
+//		case 0:
+//			return R.string.reson1;
+//		case 1:
+//			return R.string.reson2;
+//		case 2:
+//			return R.string.reson3;
+//		case 3:
+//			return R.string.reson4;
+//		case 4:
+//			return R.string.reson5;
+//		default:
+//			break;
+//		}
+//		return 0;
+//	}
+//	public void setOnclick()
+//	{
+//		for(int i=0;i<4;i++)
+//		{
+//			if()
+//		}
+//	}
+//	public void setFontNews(final View viewGroup, List<knowledges_card> parkList) {
+//		flater = getLayoutInflater();
+//		LinearLayout l1 = (LinearLayout) viewGroup.findViewById(R.id.inll1);
+//		LinearLayout l2 = (LinearLayout) viewGroup.findViewById(R.id.inll2);
+//		LinearLayout l3 = (LinearLayout) viewGroup.findViewById(R.id.inll3);
+//		LinearLayout l4 = (LinearLayout) viewGroup.findViewById(R.id.inll4);
+//		int size = 0;
+//		switch (pageList.size()) {
+//		case 4:
+//			break;
+//		case 3:
+//			l4.setVisibility(View.GONE);
+//			break;
+//		case 2:
+//			l4.setVisibility(View.GONE);
+//			l3.setVisibility(View.GONE);
+//			break;
+//		case 1:
+//			l4.setVisibility(View.GONE);
+//			l3.setVisibility(View.GONE);
+//			l2.setVisibility(View.GONE);
+//			break;
+//		default:
+//			break;
+//		}
+//
+//		View v = viewGroup.findViewById(R.id.include1);
+//		if (size < parkList.size()) {
+//			setFontText(v, parkList.get(size), 0);
+//			size++;
+//		}
+//		l1.setOnClickListener(new View.OnClickListener() {
+//			public void onClick(View v) {
+//				count = 0;
+//				selectLinearlayout = (LinearLayout) viewGroup
+//						.findViewById(R.id.inll1);
+//				if (allbool[page][0]) {
+//					selectview2 = flater.inflate(
+//							R.layout.cardbag_gridview_back, null);
+//					allbool[page][0] = false;
+//				} else {
+//					selectview2 = flater.inflate(
+//							R.layout.cardbag_grdiview_iteam, null);
+//					allbool[page][0] = true;
+//				}
+//				ViewGroup = viewGroup;
+//				selectview = viewGroup.findViewById(R.id.inll1);
+//				applyRotation(0, 90);
+//			}
+//		});
+//
+//		View v1 = viewGroup.findViewById(R.id.include2);
+//		if (size < parkList.size()) {
+//			setFontText(v1, parkList.get(size), 1);
+//			size++;
+//		}
+//		l2.setOnClickListener(new View.OnClickListener() {
+//			public void onClick(View v) {
+//				count = 1;
+//				selectLinearlayout = (LinearLayout) viewGroup
+//						.findViewById(R.id.inll2);
+//				if (allbool[page][1]) {
+//					selectview2 = flater.inflate(
+//							R.layout.cardbag_gridview_back, null);
+//					allbool[page][1] = false;
+//				} else {
+//					selectview2 = flater.inflate(
+//							R.layout.cardbag_grdiview_iteam, null);
+//					allbool[page][1] = true;
+//				}
+//				ViewGroup = viewGroup;
+//				selectview = viewGroup.findViewById(R.id.inll2);
+//				applyRotation(0, 90);
+//			}
+//		});
+//
+//		View v2 = viewGroup.findViewById(R.id.include3);
+//		if (size < parkList.size()) {
+//			setFontText(v2, parkList.get(size), 2);
+//			size++;
+//		}
+//		l3.setOnClickListener(new View.OnClickListener() {
+//			public void onClick(View v) {
+//				count = 2;
+//				selectLinearlayout = (LinearLayout) viewGroup
+//						.findViewById(R.id.inll3);
+//				if (allbool[page][2]) {
+//					selectview2 = flater.inflate(
+//							R.layout.cardbag_gridview_back, null);
+//					allbool[page][2] = false;
+//				} else {
+//					selectview2 = flater.inflate(
+//							R.layout.cardbag_grdiview_iteam, null);
+//					allbool[page][2] = true;
+//				}
+//				ViewGroup = viewGroup;
+//				selectview = viewGroup.findViewById(R.id.inll3);
+//				applyRotation(0, 90);
+//			}
+//		});
+//
+//		View v4 = viewGroup.findViewById(R.id.include4);
+//		if (size < parkList.size()) {
+//			setFontText(v4, parkList.get(size), 3);
+//			size++;
+//		}
+//		l4.setOnClickListener(new View.OnClickListener() {
+//			public void onClick(View v) {
+//				Log.i("homework", "点击次数");
+//				count = 3;
+//				selectLinearlayout = (LinearLayout) viewGroup
+//						.findViewById(R.id.inll4);
+//				if (allbool[page][3]) {
+//					selectview2 = flater.inflate(
+//							R.layout.cardbag_gridview_back, null);
+//					allbool[page][3] = false;
+//				} else {
+//					selectview2 = flater.inflate(
+//							R.layout.cardbag_grdiview_iteam, null);
+//					allbool[page][3] = true;
+//				}
+//				ViewGroup = viewGroup;
+//				selectview = viewGroup.findViewById(R.id.inll4);
+//				applyRotation(0, 90);
+//			}
+//		});
+//	}
+//
+//	private void applyRotation(float start, float end) {
+//		// 计算中心点
+//		final float centerX = selectview.getWidth() / 2.0f;
+//		final float centerY = selectview.getHeight() / 2.0f;
+//		final Rotate3dAnimation rotation = new Rotate3dAnimation(start, end,
+//				centerX, centerY, 310.0f, true);
+//		rotation.setDuration(500);
+//		rotation.setFillAfter(true);
+//		rotation.setInterpolator(new AccelerateInterpolator());
+//		// 设置监听
+//		rotation.setAnimationListener(new DisplayNextView());
+//		selectview.startAnimation(rotation);
+//	}
+//
+//	private final class DisplayNextView implements Animation.AnimationListener {
+//
+//		public void onAnimationStart(Animation animation) {
+//		}
+//
+//		// 动画结束
+//		public void onAnimationEnd(Animation animation) {
+//			//			selectLinearlayout.post(new SwapViews());
+//			selectLinearlayout.removeAllViews();
+//			selectLinearlayout.addView(selectview2);
+//			final float centerX = selectview.getWidth() / 2.0f;
+//			final float centerY = selectview.getHeight() / 2.0f;
+//			Rotate3dAnimation rotation = null;
+//			selectview.requestFocus();
+//			rotation = new Rotate3dAnimation(-90, 0, centerX, centerY, 310.0f,
+//					false);
+//			rotation.setDuration(500);
+//			rotation.setFillAfter(true);
+//			rotation.setInterpolator(new DecelerateInterpolator());
+//			// 开始动画
+//			selectview.startAnimation(rotation);
+//			List<knowledges_card> ca = Allmap.get(page);
+//			Log.i("homework", "切换背景page:" + page + "/count:" + count);
+//			switch (count) {
+//			case 0:
+//				View v = ViewGroup.findViewById(R.id.inll1);
+//				setFontText(v, ca.get(0), 0);
+//				break;
+//			case 1:
+//				View v1 = ViewGroup.findViewById(R.id.inll2);
+//				setFontText(v1, ca.get(1), 1);
+//				break;
+//			case 2:
+//				View v2 = ViewGroup.findViewById(R.id.inll3);
+//				setFontText(v2, ca.get(2), 2);
+//				break;
+//			case 3:
+//				View v3 = ViewGroup.findViewById(R.id.inll4);
+//				setFontText(v3, ca.get(3), 3);
+//				break;
+//			}
+//		}
+
+//		public void onAnimationRepeat(Animation animation) {
+//		}
+//	}
+//
+//	private final class SwapViews implements Runnable {
+//		public void run() {
+//
+//		}
+//	}
+//}

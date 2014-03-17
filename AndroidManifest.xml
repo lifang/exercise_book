@@ -82,6 +82,7 @@
                 <category android:name="com.comdosoft.ExerciseBook" />
             </intent-filter>
         </receiver>
+        <!-- Required -->
         <!-- Required SDK核心功能 -->
         <activity
             android:name="cn.jpush.android.ui.PushActivity"
@@ -210,19 +211,19 @@
             android:name=".HomeWorkIngActivity"
             android:screenOrientation="portrait" >
         </activity>
-        <activity
-            android:name=".RecordMainActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".TenSpeedActivity"
-            android:screenOrientation="portrait" />
-        <activity android:name=".CardBagActivity" >
+        <activity android:name=".MCardBagActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".RecordMainActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".TenSpeedActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".SpeakBeginActivity"
             android:screenOrientation="portrait" />
