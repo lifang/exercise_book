@@ -30,5 +30,5 @@
     <color name="question_color">#404853</color>
     <color name="dialog_text">#FCE3CE</color>
     <color name="lvse">#92B81B</color>
-
+    <color name="question_bg">#EEECEC</color>
 </resources>

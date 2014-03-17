@@ -1,4 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lint>
 
+<<<<<<< HEAD
+=======
+    <issue
+        id="HandlerLeak"
+        severity="ignore" />
+
+    <issue
+        id="ResourceAsColor"
+        severity="ignore" />
+
+    <issue id="ValidFragment" >
+
+        <ignore path="src/com/comdosoft/ExerciseBook/CardBagActivity.java" />
+
+        <ignore path="src/com/comdosoft/ExerciseBook/CardFrontFragment.java" />
+    </issue>
+
+>>>>>>> 47252abb146ebbddd865c5efb2e4e5dc62992a1c
 </lint>

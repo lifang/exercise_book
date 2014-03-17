@@ -15,6 +15,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -30,8 +31,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-
-import com.comdosoft.ExerciseBook.TenSpeedActivity;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -49,13 +48,42 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
+
+import com.comdosoft.ExerciseBook.pojo.AnswerJson;
+import com.google.gson.Gson;
 
 public class ExerciseBookTool implements Urlinterface {
 
 	private static int connectTimeOut = 5000;
 	private static int readTimeOut = 10000;
 	private static String requestEncoding = "UTF-8";
+
+
+	// 获取历史answer
+	public static String getAnswer_Json_history(String path) {
+		return ExerciseBookTool.getJson(path);
+	}
+	// 返回calendar格式的时间
+	public static Calendar getCalender_time(String date) {
+		Calendar wrok_day = Calendar.getInstance();
+		String day = date.split(" ")[0];
+		String[] dayarr = day.split("-");
+		String t = date.split(" ")[1];
+		String[] timearr = t.split(":");
+		wrok_day.set(Integer.valueOf(dayarr[0]), Integer.valueOf(dayarr[1])-1,
+				Integer.valueOf(dayarr[2]), Integer.valueOf(timearr[0]),
+				Integer.valueOf(timearr[1]), Integer.valueOf(timearr[2]));
+		return wrok_day;
+	}
+
+	// 计算正确率
+	public static int getRatio(List<Integer> ratio) {
+		int size = 0;
+		for (int i = 0; i < ratio.size(); i++) {
+			size += ratio.get(i);
+		}
+		return size / ratio.size();
+	}
 
 	/**
 	 * 新建Json文件时，写入json数据
@@ -64,7 +92,8 @@ public class ExerciseBookTool implements Urlinterface {
 	 * @param sets
 	 * @throws IOException
 	 */
-	public static void writeFile(String filePath, String sets) throws IOException {
+	public static void writeFile(String filePath, String sets)
+			throws IOException {
 		FileWriter fw = new FileWriter(filePath);
 		PrintWriter out = new PrintWriter(fw);
 		out.write(sets);
@@ -544,9 +573,9 @@ public class ExerciseBookTool implements Urlinterface {
 		thread.start();
 
 	}
-	
-	
-	public static void set_bk(final String url, final ImageView imageView,final ImageMemoryCache memoryCache) {
+
+	public static void set_bk(final String url, final ImageView imageView,
+			final ImageMemoryCache memoryCache) {
 
 		final Handler mHandler = new Handler() {
 			public void handleMessage(android.os.Message msg) {

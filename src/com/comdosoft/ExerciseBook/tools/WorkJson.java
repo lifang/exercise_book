@@ -47,8 +47,6 @@ public class WorkJson {
 			}
 		}
 		
-		
-		
 		return work_list;
 	}
 }

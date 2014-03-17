@@ -1,22 +1,22 @@
 package com.comdosoft.ExerciseBook.pojo;
 
-public class Branch_UnswerPoJo {
-	private int id;
+public class Branch_AnswerPoJo {
+	private String id;
 	private String answer;
-	private int ratio;
+	private String ratio;
 
-	public Branch_UnswerPoJo(int id, String answer, int ratio) {
+	public Branch_AnswerPoJo(String id, String answer, String ratio) {
 		super();
 		this.id = id;
 		this.answer = answer;
 		this.ratio = ratio;
 	}
 
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -28,11 +28,11 @@ public class Branch_UnswerPoJo {
 		this.answer = answer;
 	}
 
-	public int getRatio() {
+	public String getRatio() {
 		return ratio;
 	}
 
-	public void setRatio(int ratio) {
+	public void setRatio(String ratio) {
 		this.ratio = ratio;
 	}
 
