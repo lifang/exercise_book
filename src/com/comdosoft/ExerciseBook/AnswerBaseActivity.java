@@ -1,10 +1,12 @@
 package com.comdosoft.ExerciseBook;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -12,7 +14,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 // 答题父类
-public class AnswerBaseActivity extends Activity {
+public class AnswerBaseActivity extends Activity implements OnClickListener {
 
 	private String[] answerArr = new String[] { "你的搭配: ", "你的选择: ", "你的排序: ",
 			"你的作答: " };
@@ -48,6 +50,7 @@ public class AnswerBaseActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		super.setContentView(R.layout.answer_base);
+		findViewById(R.id.base_back_linearlayout).setOnClickListener(this);
 		middleLayout = (LinearLayout) findViewById(R.id.base_LinearLayout);
 		base_time_linearlayout = (LinearLayout) findViewById(R.id.base_time_linearlayout);
 		base_history_linearlayout = (LinearLayout) findViewById(R.id.base_history_linearlayout);
@@ -195,6 +198,21 @@ public class AnswerBaseActivity extends Activity {
 				e.printStackTrace();
 			}
 			super.run();
+		}
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.base_back_linearlayout:
+			Intent inent = new Intent();
+			if (type == 0) {
+				inent.setClass(this, HomeWorkIngActivity.class);
+			} else {
+				inent.setClass(this, RecordMainActivity.class);
+			}
+			startActivity(inent);
+			break;
 		}
 	}
 

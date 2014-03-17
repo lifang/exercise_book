@@ -68,8 +68,6 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 		}
 		super.onCreate(savedInstanceState);
 		super.setContentView(R.layout.answer_wire);
-		findViewById(R.id.base_back_linearlayout).setOnClickListener(
-				new MyClick());
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(
 				new MyClick());
 		findViewById(R.id.base_propTrue).setOnClickListener(new MyClick());
@@ -137,8 +135,7 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 
 	public void analysisJSON(String json) {
 		try {
-			JSONObject jsonObject = new JSONObject(json)
-					.getJSONObject("lining");
+			JSONObject jsonObject = new JSONObject(json);
 			specified_time = jsonObject.getInt("specified_time");
 			JSONArray jArr = new JSONArray(jsonObject.getString("questions"));
 			for (int i = 0; i < jArr.length(); i++) {
@@ -310,7 +307,7 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 
 		}
 
-		Toast.makeText(getApplicationContext(), "正确个数:" + count, 0).show();
+		// Toast.makeText(getApplicationContext(), "正确个数:" + count, 0).show();
 	}
 
 	public void setCancelStatusForIndex(int index) {
@@ -410,8 +407,6 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 				// if (index % 2 != 0) {
 				// last = -1;
 				// }
-				break;
-			case R.id.base_back_linearlayout:
 				break;
 			case R.id.base_check_linearlayout:
 				if (coordinate.size() == answerList.size() / 2) {

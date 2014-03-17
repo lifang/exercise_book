@@ -11,7 +11,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -37,8 +39,8 @@ import com.comdosoft.ExerciseBook.tools.WorkJson;
 import com.google.gson.Gson;
 
 public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
-	private String id = "73";
-	private String school_class_id = "85";
+	private String id;
+	private String school_class_id;
 	private String json = "{\"status\":\"success\",\"notice\":\"\u83b7\u53d6\u6210\u529f\uff01\",\"tasks\":[{\"id\":130,\"name\":\"\",\"start_time\":\"2014-03-12T14:44:45+08:00\",\"question_types\":[0,1,2,3,4,5,6],\"finish_types\":[],\"end_time\":\"2014-03-13T18:00:00+08:00\",\"question_packages_url\":\"/que_ps/question_p_264/resourse.zip\"}],\"knowledges_cards_count\":null}";
 	private ExerciseBook eb;
 	private LinearLayout mylayout;
@@ -98,10 +100,16 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 		setContentView(R.layout.homework_ing);
 		eb = (ExerciseBook) getApplication();// 初始化
 		eb.getActivityList().add(this);
+		SharedPreferences preferences = getSharedPreferences(SHARED,
+				Context.MODE_PRIVATE);
+		id = preferences.getString("id", "0");
+		school_class_id = preferences.getString("school_class_id", "0");
+		Log.i("aaa", id + "/" + school_class_id);
 		eb.setUid(id);
 		eb.setClass_id(school_class_id);
 		initialize();// 初始化
 		instance = this;
+
 		prodialog = new ProgressDialog(HomeWorkIngActivity.this);
 		prodialog.setMessage("正在获取最新作业");
 		prodialog.setCanceledOnTouchOutside(false);
@@ -142,6 +150,42 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 			json_list.add(obj.getString("cloze"));
 			json_list.add(obj.getString("sort"));
 		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void initAnswer() {
+		try {
+			File file = new File(path);
+			if (!file.exists()) {
+				file.mkdirs();
+			}
+			file = new File(path + "/answer.js");
+			if (!file.exists()) {
+				file.createNewFile();
+				Log.i("linshi", path + "/answer.js");
+				AnswerJson answer = new AnswerJson(eb.getWork_id(), "0",
+						new String[] {}, new AnswerPojo("0", "", "-1", "-1",
+								"0", new ArrayList<Answer_QuestionsPojo>()),
+						new AnswerPojo("0", "", "-1", "-1", "0",
+								new ArrayList<Answer_QuestionsPojo>()),
+						new AnswerPojo("0", "", "-1", "-1", "0",
+								new ArrayList<Answer_QuestionsPojo>()),
+						new AnswerPojo("0", "", "-1", "-1", "0",
+								new ArrayList<Answer_QuestionsPojo>()),
+						new AnswerPojo("0", "", "-1", "-1", "0",
+								new ArrayList<Answer_QuestionsPojo>()),
+						new AnswerPojo("0", "", "-1", "-1", "0",
+								new ArrayList<Answer_QuestionsPojo>()),
+						new AnswerPojo("0", "", "-1", "-1", "0",
+								new ArrayList<Answer_QuestionsPojo>()));
+				// String json=JSONArray.fromObject(answer);
+				Gson gson = new Gson();
+				String result = gson.toJson(answer);
+				Log.i("linshi", result);
+				ExerciseBookTool.writeFile(path + "/answer.js", result);
+			}
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -215,38 +259,10 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 				if (obj.getString("status").equals("success")) {
 					work_list = WorkJson.json(json);
 					Log.i("linshi", work_list.size() + "-size");
-					eb.setWork_id(work_list.get(0).getId() + "");
-					getJsonPath();
-					File file = new File(path);
-					if (!file.exists()) {
-						file.mkdirs();
-					}
-					file = new File(path + "/answer.js");
-					if (!file.exists()) {
-						file.createNewFile();
-
-						Log.i("linshi", path + "/answer.js");
-						AnswerJson answer = new AnswerJson(eb.getWork_id(),
-								"0", new String[] {}, new AnswerPojo("0", "",
-										"-1", "-1", "0",
-										new ArrayList<Answer_QuestionsPojo>()),
-								new AnswerPojo("0", "", "-1", "-1", "0",
-										new ArrayList<Answer_QuestionsPojo>()),
-								new AnswerPojo("0", "", "-1", "-1", "0",
-										new ArrayList<Answer_QuestionsPojo>()),
-								new AnswerPojo("0", "", "-1", "-1", "0",
-										new ArrayList<Answer_QuestionsPojo>()),
-								new AnswerPojo("0", "", "-1", "-1", "0",
-										new ArrayList<Answer_QuestionsPojo>()),
-								new AnswerPojo("0", "", "-1", "-1", "0",
-										new ArrayList<Answer_QuestionsPojo>()),
-								new AnswerPojo("0", "", "-1", "-1", "0",
-										new ArrayList<Answer_QuestionsPojo>()));
-						// String json=JSONArray.fromObject(answer);
-						Gson gson = new Gson();
-						String result = gson.toJson(answer);
-						Log.i("linshi", result);
-						ExerciseBookTool.writeFile(path + "/answer.js", result);
+					if (work_list.size() != 0) {
+						eb.setWork_id(work_list.get(0).getId() + "");
+						getJsonPath();
+						initAnswer();// 初始化answer
 					}
 					handler.sendEmptyMessage(0);
 				} else {
@@ -254,7 +270,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 					handler.sendEmptyMessage(1);
 				}
 			} catch (Exception e) {
-				handler.sendEmptyMessage(2);
+				// handler.sendEmptyMessage(2);
 				// e.printStackTrace();
 			}
 		}
@@ -269,7 +285,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	public void startDekaron(int i) {
 		switch (i) {
 		case 0:
-			intent.setClass(this, TenSpeedActivity.class);
+			intent.setClass(this, SpeakPrepareActivity.class);
 			break;
 		case 1:
 			intent.setClass(this, SpeakPrepareActivity.class);
@@ -278,21 +294,21 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 			intent.setClass(this, TenSpeedActivity.class);
 			break;
 		case 3:
-			intent.setClass(this, TenSpeedActivity.class);
+			intent.setClass(this, AnswerSelectActivity.class);
 			break;
 		case 4:
-			intent.setClass(this, TenSpeedActivity.class);
+			intent.setClass(this, AnswerWireActivity.class);
 			break;
 		case 5:
 			intent.setClass(this, ClozeActivity.class);
 			break;
 		case 6:
-			intent.setClass(this, TenSpeedActivity.class);
+			intent.setClass(this, AnswerOrderActivity.class);
 			break;
 		}
 		intent.putExtra("json", json_list.get(i));
 		intent.putExtra("path", path + "/answer.js");
-		Log.i("aaa", work_list.get(0).getEnd_time() + "-end time");
+		Log.i("aaa", json_list.get(i));
 		eb.setWork_end_dath(work_list.get(0).getEnd_time());
 		startActivity(intent);
 		this.finish();

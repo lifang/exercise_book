@@ -31,6 +31,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -51,14 +52,13 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-import com.comdosoft.ExerciseBook.pojo.AnswerJson;
-import com.google.gson.Gson;
-
 public class ExerciseBookTool implements Urlinterface {
 
 	private static int connectTimeOut = 5000;
 	private static int readTimeOut = 10000;
 	private static String requestEncoding = "UTF-8";
+
+	// 获取历史正确率
 
 	// 获取历史索引
 	private int[] getAnswer_Item(String json) {
@@ -97,8 +97,28 @@ public class ExerciseBookTool implements Urlinterface {
 	}
 
 	// 计算正确率
-	public static int getRatio(List<Integer> ratio) {
+	public static int getRatio(String path, String key) {
+		List<Integer> ratio = new ArrayList<Integer>();
+		String answer_history = getJson(path);
+		try {
+			JSONObject obj = new JSONObject(answer_history);
+			JSONObject js = obj.getJSONObject(key);
+			Log.i("aaa", js.toString());
+			JSONArray arr = js.getJSONArray("questions");
+			for (int i = 0; i < arr.length(); i++) {
+				JSONObject item = arr.getJSONObject(i);
+				JSONArray ar = item.getJSONArray("branch_questions");
+				Log.i("aaa", ar.length()+"-ar");
+				for (int j = 0; j < ar.length(); j++) {
+					JSONObject o = ar.getJSONObject(j);
+					ratio.add(o.getInt("ratio"));
+				}
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 		int size = 0;
+		Log.i("aaa", ratio.size() + "-ratio");
 		for (int i = 0; i < ratio.size(); i++) {
 			size += ratio.get(i);
 		}

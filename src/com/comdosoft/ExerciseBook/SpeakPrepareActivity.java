@@ -96,12 +96,12 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 			case 4:
 				Log.i("linshi", "kai");
 				question_speak_img.setImageDrawable(getResources().getDrawable(
-						R.drawable.dictation_laba2));
+						R.drawable.yuting1));
 				break;
 			case 5:
 				Log.i("linshi", "guan");
 				question_speak_img.setImageDrawable(getResources().getDrawable(
-						R.drawable.dictation_laba1));
+						R.drawable.yuting2));
 				break;
 			case 6:
 				prodialog.dismiss();

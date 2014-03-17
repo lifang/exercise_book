@@ -15,6 +15,7 @@ import com.comdosoft.ExerciseBook.tools.AnswerTools;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -46,6 +47,7 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		super.setContentView(R.layout.answer_select);
+		findViewById(R.id.base_back_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
 		listView = (ListView) findViewById(R.id.answer_select_listview);
 		answerImg = (ImageView) findViewById(R.id.answer_select_img);
@@ -55,6 +57,8 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 
 		Intent intent = getIntent();
 		json = intent.getStringExtra("json");
+
+		Log.i("aaa", json);
 
 		analysisJson(json);
 
@@ -72,8 +76,7 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 	// 解析选择题JSON
 	public void analysisJson(String json) {
 		try {
-			JSONObject jsonObject = new JSONObject(json)
-					.getJSONObject("selecting");
+			JSONObject jsonObject = new JSONObject(json);
 			specified_time = jsonObject.getInt("specified_time");
 			JSONArray jArr = new JSONArray(jsonObject.getString("questions"));
 			for (int i = 0; i < jArr.length(); i++) {
@@ -88,7 +91,7 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 					int type = AnswerTools.getSelectType(s);
 					String content = AnswerTools.getSelectContent(s);
 					List<String> arr = AnswerTools.getSelectOption(jb
-							.getString("option"));
+							.getString("opption"));
 					List<String> answer = AnswerTools.getSelectAnswer(jb
 							.getString("answer"));
 
@@ -202,6 +205,9 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 					ChangeView(++i);
 				}
 			}
+			break;
+		case R.id.base_back_linearlayout:
+			super.onClick(v);
 			break;
 		}
 	}

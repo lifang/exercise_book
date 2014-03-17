@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -64,6 +65,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case 0:
+				Log.i("aaa", "---");
 				myLayout.removeAllViews();
 				content = cloze.getContent();
 				setTextView();
@@ -79,6 +81,8 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.cloze);
+		setTimePropEnd();// 禁用道具
+		setTruePropEnd();// 禁用道具
 		eb = (ExerciseBook) getApplication();
 		findViewById(R.id.base_back_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
@@ -329,6 +333,10 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 						SetAnswer();
 						break;
 					case 1:
+						intent.putExtra("precision",
+								ExerciseBookTool.getRatio(path, "cloze"));// 正确率100时获取精准成就
+						intent.putExtra("use_time", getSecond());// 用户使用的时间
+						intent.putExtra("specified_time", specified_time);// 任务基础时间
 						intent.setClass(ClozeActivity.this,
 								WorkEndActivity.class);
 						ClozeActivity.this.startActivityForResult(intent, 1);
@@ -345,7 +353,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == 0) {
+		if (requestCode == 1) {
 			Log.i("aaa", "resultCode:" + resultCode);
 			Intent intent = new Intent();
 			switch (resultCode) {
@@ -360,5 +368,16 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 				break;
 			}
 		}
+	}
+
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			ClozeActivity.this.finish();
+			Intent intent = new Intent();
+			intent.setClass(ClozeActivity.this, HomeWorkIngActivity.class);
+			startActivity(intent);
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 }

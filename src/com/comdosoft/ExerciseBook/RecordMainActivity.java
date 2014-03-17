@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -21,6 +22,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -62,6 +64,8 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 	private ExerciseBook eb;
 	private LinearLayout ll;
 	private String date;
+	private String path;
+	private List<String> json_list;
 
 	private GestureDetector gestureDetector = null;
 	private CalendarAdapter calV = null;
@@ -286,7 +290,9 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 	class get_more_tasks implements Runnable {
 		public void run() {
 			Map<String, String> map = new HashMap<String, String>();
-			map.put("today_newer_id", eb.getToday_newer_id() + "");
+			if (eb.getToday_newer_id() != 0) {
+				map.put("today_newer_id", eb.getToday_newer_id() + "");
+			}
 			map.put("student_id", eb.getUid());
 			map.put("school_class_id", eb.getClass_id());
 			String json;
@@ -511,34 +517,68 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 		}
 	}
 
+	private void SetJson(String json) {
+		json_list = new ArrayList<String>();
+		try {
+			JSONObject obj = new JSONObject(json);
+			json_list.add(obj.getString("listening"));
+			json_list.add(obj.getString("reading"));
+			json_list.add(obj.getString("time_limit"));
+			json_list.add(obj.getString("selecting"));
+			json_list.add(obj.getString("lining"));
+			json_list.add(obj.getString("cloze"));
+			json_list.add(obj.getString("sort"));
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	// 跳转到挑战
+	/**
+	 * 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
+	 * 
+	 * @param i
+	 */
 	public void startDekaron(int i) {
-		eb.setWork_id(work_list.get(0).getId() + "");
 		switch (i) {
 		case 0:
-			intent.setClass(this, TenSpeedActivity.class);
+			intent.setClass(this, AnswerDictationPrepareActivity.class);
 			break;
 		case 1:
-			// intent.setClass(this, SpeakPrepareActivity.class);
-			// intent.setClass(this, ClozeActivity.class);
-			intent.setClass(this, WorkEndActivity.class);
+			intent.setClass(this, SpeakPrepareActivity.class);
 			break;
 		case 2:
 			intent.setClass(this, TenSpeedActivity.class);
 			break;
 		case 3:
-			intent.setClass(this, TenSpeedActivity.class);
+			intent.setClass(this, AnswerSelectActivity.class);
 			break;
 		case 4:
-			intent.setClass(this, TenSpeedActivity.class);
+			intent.setClass(this, AnswerWireActivity.class);
 			break;
 		case 5:
-			intent.setClass(this, TenSpeedActivity.class);
+			intent.setClass(this, ClozeActivity.class);
 			break;
 		case 6:
-			intent.setClass(this, TenSpeedActivity.class);
+			intent.setClass(this, AnswerOrderActivity.class);
 			break;
 		}
-//		this.finish();
+		intent.putExtra("json", json_list.get(i));
+		intent.putExtra("path", path + "/answer.js");
+		Log.i("aaa", json_list.get(i));
+		eb.setWork_end_dath(work_list.get(0).getEnd_time());
 		startActivity(intent);
+		this.finish();
+	}
+
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			RecordMainActivity.this.finish();
+			Intent intent = new Intent();
+			intent.setClass(RecordMainActivity.this, HomeWorkIngActivity.class);
+			startActivity(intent);
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 }
