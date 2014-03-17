@@ -1,0 +1,26 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"  
+    xmlns:tools="http://schemas.android.com/tools"  
+    android:layout_width="match_parent"  
+    android:layout_height="match_parent"  
+    android:gravity="center_horizontal"  
+    android:orientation="vertical"  
+    tools:context=".MainActivity" >  
+  
+    <Button  
+        android:id="@+id/next_btn"  
+        android:layout_width="wrap_content"  
+        android:layout_height="wrap_content"  
+        android:layout_marginTop="20dip"  
+        android:text="下一个" />  
+  
+    <TextView  
+        android:id="@+id/tv"  
+        android:layout_width="300dip"  
+        android:layout_height="300dip"  
+        android:layout_gravity="center"  
+        android:background="@drawable/achievement1"  
+        android:gravity="center"  
+        android:textColor="#ffffff"  
+        android:textSize="15sp" />  
+  
+</LinearLayout>  

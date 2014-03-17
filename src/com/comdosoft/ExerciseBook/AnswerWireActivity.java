@@ -13,6 +13,7 @@ import com.comdosoft.ExerciseBook.pojo.AnswerWirePojo;
 import com.comdosoft.ExerciseBook.pojo.PersonListPorjo;
 import com.comdosoft.ExerciseBook.pojo.PersonPojo;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
@@ -83,7 +84,10 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 		}
 		test();
 
+		Intent intent = getIntent();
+		JSON = intent.getStringExtra("json");
 		analysisJSON(JSON);
+
 		updataView(mAOPList.get(mIndex++).getAnswer());
 	}
 
@@ -403,9 +407,9 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 						last = index;
 					}
 				}
-//				if (index % 2 != 0) {
-//					last = -1;
-//				}
+				// if (index % 2 != 0) {
+				// last = -1;
+				// }
 				break;
 			case R.id.base_back_linearlayout:
 				break;

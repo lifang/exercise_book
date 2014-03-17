@@ -113,8 +113,8 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 						Toast.makeText(getApplicationContext(), notice, 0)
 								.show();
 					} catch (JSONException e) {
-						Toast.makeText(getApplicationContext(),
-								"修改头像失败", 0).show();
+						Toast.makeText(getApplicationContext(), "修改头像失败", 0)
+								.show();
 						e.printStackTrace();
 					}
 
@@ -408,7 +408,8 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 		public void onClick(View v) {
 
 			Intent intentp = new Intent();
-//			intentp.setClass(HomePageMainActivity.this, RankingOfPointsActivity.class);//
+			// intentp.setClass(HomePageMainActivity.this,
+			// RankingOfPointsActivity.class);//
 			intentp.setClass(HomePageMainActivity.this, SettingPhoto.class);//
 			startActivityForResult(intentp, 0);
 		}
@@ -467,7 +468,6 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 
 	}
 
-	
 	class mod_avatar implements Runnable {
 		public void run() {
 			try {
@@ -491,13 +491,10 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 				mHandler.sendMessage(msg);
 
 			} catch (Exception e) {
-				Toast.makeText(getApplicationContext(),
-						"修改头像失败", 0).show();
+				Toast.makeText(getApplicationContext(), "修改头像失败", 0).show();
 				mHandler.sendEmptyMessage(7);
 			}
 		}
 	}
-	
-
 
 }

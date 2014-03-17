@@ -1,0 +1,15 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/white" >
+
+    <com.comdosoft.ExerciseBook.tools.PredicateLayout
+        android:id="@+id/myLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp" >
+    </com.comdosoft.ExerciseBook.tools.PredicateLayout>
+
+</LinearLayout>

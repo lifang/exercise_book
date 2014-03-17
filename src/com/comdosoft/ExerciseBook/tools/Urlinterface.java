@@ -6,6 +6,7 @@ public interface Urlinterface {
 	// static final String IP="http://58.240.210.42:3004";
 	static String[] namearr = new String[] { "听写任务", "朗读任务", "十速挑战", "选择挑战",
 			"连线挑战", "完形填空", "排序挑战" };
+	// static final String IP = "http://192.168.199.196:3004";
 	static final String IP = "http://58.240.210.42:3004";
 	// static final String IP = "http://192.168.0.250:3004";
 	// static final String IP = "http://192.168.199.196:3004";
@@ -52,6 +53,9 @@ public interface Urlinterface {
 	String QQ_LOGIN = IP + "/api/students/login"; // qq登录
 	String add_concern = IP + "/api/students/add_concern"; // 关注消息
 	String get_my_achievements = IP + "/api/students/get_my_archivements"; // 获得成就
+	String get_knowledges_card=IP+"/api/students/get_knowledges_card";			//获取卡包信息
+	String delete_knowledges_card=IP+"/api/students/delete_knowledges_card";		//删除卡片
+	String knoledge_tag_relation=IP+"/api/students/knoledge_tag_relation";
 	// 获取当天作业
 	static final String get_newer_task = IP + "/api/students/get_newer_task";
 	// 过往记录列表

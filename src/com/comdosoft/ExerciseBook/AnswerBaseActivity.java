@@ -97,6 +97,12 @@ public class AnswerBaseActivity extends Activity {
 		return second;
 	}
 
+	// 设置时间
+	public void setSecond(int s) {
+		second = s;
+		mHandler.sendEmptyMessage(1);
+	}
+
 	// 获取检查按钮文本
 	public String getCheck() {
 		return check.getText().toString();

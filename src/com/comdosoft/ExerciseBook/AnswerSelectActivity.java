@@ -12,6 +12,8 @@ import org.json.JSONObject;
 import com.comdosoft.ExerciseBook.pojo.AnswerSelectItemPojo;
 import com.comdosoft.ExerciseBook.pojo.SelectPojo;
 import com.comdosoft.ExerciseBook.tools.AnswerTools;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -50,6 +52,9 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 		answerLaba = (ImageView) findViewById(R.id.answer_select_laba);
 		answerText = (TextView) findViewById(R.id.answer_select_text);
 		answer_select_answerLinearLayout = (LinearLayout) findViewById(R.id.answer_select_answerLinearLayout);
+
+		Intent intent = getIntent();
+		json = intent.getStringExtra("json");
 
 		analysisJson(json);
 

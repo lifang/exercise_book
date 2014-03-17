@@ -1,41 +1,60 @@
 package com.comdosoft.ExerciseBook;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
 import java.util.TimerTask;
 
-import android.app.Activity;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.comdosoft.ExerciseBook.pojo.AnswerJson;
+import com.comdosoft.ExerciseBook.pojo.Answer_QuestionsPojo;
+import com.comdosoft.ExerciseBook.pojo.Branch_AnswerPoJo;
+import com.comdosoft.ExerciseBook.pojo.Time_LimitPojo;
+import com.comdosoft.ExerciseBook.tools.ExerciseBook;
+import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
+import com.google.gson.Gson;
 
-public class TenSpeedActivity extends Activity implements Urlinterface {
+public class TenSpeedActivity extends AnswerBaseActivity implements
+		Urlinterface, OnClickListener {
 
+	private String json;
 	private TextView question;
 	private ImageView question_number;
 	private Button one_btn;
 	private Button two_btn;
-	private List<String> questionlist;
-	private List<Boolean> boolean_list;
-	private List<Boolean> user_boolean;
+	private List<Time_LimitPojo> branch_questions;
 	private String type = "2";// 任务类型 2表示十速挑战
 	private int index = 0;// 题目索引
-	private int img_index = 10;// 图片索引
-	private int time = 0;// 做题时间
+	private int img_index = 1;// 图片索引
+	private int user_boolean = 0;
 	private String notice;
-	private Timer timer;// 计时器
+	private ExerciseBook eb;
+	public String path = "";
+	private int specified_time;
+	private int questions_id;
+	private String user_select = "";
+	private Gson gson;
+	private List<Integer> ratio;
+	private boolean jz = true;// 精准成就判断
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case 0:
-				time += 1;
 				break;
 			case 1:
 				int imgid = 0;
@@ -47,9 +66,10 @@ public class TenSpeedActivity extends Activity implements Urlinterface {
 					imgid = 0;
 				}
 				question_number.setBackgroundResource(imgid);
-
-				question.setText(questionlist.get(index));
-
+				Log.i("aaa", "---->" + branch_questions.size() + "==" + index);
+				question.setText(branch_questions.get(index).getContent());
+				one_btn.setText(branch_questions.get(index).getOpption()[0]);
+				two_btn.setText(branch_questions.get(index).getOpption()[1]);
 				two_btn.setBackgroundResource(R.drawable.loginbtn_hui);
 				one_btn.setBackgroundResource(R.drawable.loginbtn_hui);
 				break;
@@ -61,32 +81,22 @@ public class TenSpeedActivity extends Activity implements Urlinterface {
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.ten_speed);
-
+		super.setContentView(R.layout.ten_speed);
+		findViewById(R.id.base_back_linearlayout).setOnClickListener(this);
+		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
+		setTimePropEnd();// 禁用道具
+		setTruePropEnd();// 禁用道具
+		eb = (ExerciseBook) getApplication();
 		initialize();
-		questionlist = new ArrayList<String>();
-		boolean_list = new ArrayList<Boolean>();
-		user_boolean = new ArrayList<Boolean>();
-		questionlist.add("马龙是狗?");
-		questionlist.add("马龙是人?");
-		questionlist.add("马龙是逗比?");
-		questionlist.add("马龙是狗?");
-		questionlist.add("马龙是人?");
-		questionlist.add("马龙是逗比?");
-		questionlist.add("马龙是狗?");
-		questionlist.add("马龙是人?");
-		questionlist.add("马龙是逗比?");
-		questionlist.add("马龙是狗?");
-		boolean_list.add(true);
-		boolean_list.add(true);
-		boolean_list.add(true);
-		boolean_list.add(true);
-		boolean_list.add(true);
-		boolean_list.add(true);
-		boolean_list.add(true);
-		boolean_list.add(true);
-		boolean_list.add(true);
-		boolean_list.add(true);
+		branch_questions = new ArrayList<Time_LimitPojo>();
+		ratio = new ArrayList<Integer>();
+		gson = new Gson();
+		Intent intent = getIntent();
+		path = intent.getStringExtra("path");
+		json = intent.getStringExtra("json");
+
+		SetJson(json);
+
 	}
 
 	// 初始化
@@ -97,8 +107,39 @@ public class TenSpeedActivity extends Activity implements Urlinterface {
 		two_btn = (Button) findViewById(R.id.two_btn);
 		handler.sendEmptyMessage(1);
 
-		timer = new Timer(true);
-		timer.schedule(task, 1000, 1000);
+	}
+
+	private void SetJson(String json) {
+		Log.i("aaa", "--" + json);
+		if (json != "") {
+			try {
+				JSONObject time_limit = new JSONObject(json);
+				specified_time = time_limit.getInt("specified_time");
+				Log.i("aaa", specified_time + "--");
+				JSONArray questions = time_limit.getJSONArray("questions");
+				if (questions.length() > 0) {
+					JSONObject jo = questions.getJSONObject(0);
+					questions_id = jo.getInt("id");
+					Log.i("aaa", questions_id + "--");
+					JSONArray jsonarr = jo.getJSONArray("branch_questions");
+					img_index = jsonarr.length();
+					for (int i = 0; i < jsonarr.length(); i++) {
+						JSONObject item = jsonarr.getJSONObject(i);
+						String[] opption = item.getString("opption").split(
+								";\\|\\|;");
+						Time_LimitPojo tl = new Time_LimitPojo(
+								item.getInt("id"), item.getString("content"),
+								opption, item.getString("anwser"));
+						Log.i("aaa", tl.toString());
+						branch_questions.add(tl);
+					}
+				}
+			} catch (JSONException e) {
+				Toast.makeText(TenSpeedActivity.this, "解析json发生错误",
+						Toast.LENGTH_SHORT).show();
+			}
+			handler.sendEmptyMessage(1);
+		}
 	}
 
 	TimerTask task = new TimerTask() {
@@ -107,32 +148,128 @@ public class TenSpeedActivity extends Activity implements Urlinterface {
 		}
 	};
 
-	public void onclick(View v) {
-		if (img_index > 1) {
-			boolean tf = false;
+	public void btnonclick(View v) {
+		if (img_index > 0) {
 			switch (v.getId()) {
 			case R.id.one_btn:
 				one_btn.setBackgroundResource(R.drawable.loginbtn_lv);
 				two_btn.setBackgroundResource(R.drawable.loginbtn_hui);
-				tf = true;
+				user_select = branch_questions.get(index).getOpption()[0];
 				break;
 			case R.id.two_btn:
 				two_btn.setBackgroundResource(R.drawable.loginbtn_lv);
 				one_btn.setBackgroundResource(R.drawable.loginbtn_hui);
-				tf = false;
+				user_select = branch_questions.get(index).getOpption()[1];
 				break;
 			}
-			if (tf == boolean_list.get(index)) {
-				user_boolean.add(true);
+		}
+	}
+
+	public void setAnswerJson(String answer_history, String answer, int ratio,
+			int id) {
+		AnswerJson answerJson = gson.fromJson(answer_history, AnswerJson.class);
+		answerJson.time_limit.setUpdate_time("2014-03-12 08:00:00");
+		int q_item = Integer.valueOf(answerJson.time_limit.getQuestions_item());
+		int b_item = Integer.valueOf(answerJson.time_limit.getBranch_item());
+
+		b_item += 1;
+		answerJson.time_limit.setBranch_item(b_item + "");
+		answerJson.time_limit.setUse_time(getSecond() + "");
+		if (answerJson.time_limit.getQuestions().size() == 0) {
+			List<Branch_AnswerPoJo> Branch_Unswer = new ArrayList<Branch_AnswerPoJo>();
+			Answer_QuestionsPojo aq = new Answer_QuestionsPojo(questions_id
+					+ "", new ArrayList<Branch_AnswerPoJo>());
+			answerJson.time_limit.getQuestions().add(aq);
+			q_item += 1;
+			answerJson.time_limit.setQuestions_item(q_item + "");
+		}
+
+		answerJson.time_limit.getQuestions().get(q_item).getBranch_questions()
+				.add(new Branch_AnswerPoJo(id + "", answer, ratio + ""));
+
+		String str = gson.toJson(answerJson);
+		try {
+			ExerciseBookTool.writeFile(path, str);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Log.i("linshi", str);
+	}
+
+	public void onClick(View v) {
+		Intent intent = new Intent();
+		switch (v.getId()) {
+		case R.id.base_back_linearlayout:
+			TenSpeedActivity.this.finish();
+			intent.setClass(TenSpeedActivity.this, HomeWorkIngActivity.class);
+			startActivity(intent);
+			break;
+		case R.id.base_check_linearlayout:
+			if (user_select.equals(branch_questions.get(index).getAnwser())) {
+				user_boolean = 100;
 			} else {
-				user_boolean.add(false);
+				user_boolean = 0;
 			}
+			ratio.add(user_boolean);
 			img_index -= 1;
+			String answer_history = ExerciseBookTool.getAnswer_Json_history(path);
+			try {
+				JSONObject obj = new JSONObject(answer_history);
+				if (obj.getJSONObject("time_limit").getString("status")
+						.equals("0")) {
+					setAnswerJson(answer_history, user_select, user_boolean,
+							branch_questions.get(index).getId());
+				}
+			} catch (Exception e) {
+				Toast.makeText(TenSpeedActivity.this, "json写入发生错误",
+						Toast.LENGTH_SHORT).show();
+			}
 			index += 1;
-			handler.sendEmptyMessage(1);
-		}else{
-			Log.i("aaa", time+"");
-			timer.cancel();
+
+			if (img_index <= 0) {
+				AnswerJson answerJson = gson.fromJson(answer_history,
+						AnswerJson.class);
+				answerJson.time_limit.setStatus("1");// 0表示未完成 1表示完成
+				String str = gson.toJson(answerJson);
+				try {
+					ExerciseBookTool.writeFile(path, str);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				intent.putExtra("precision", ExerciseBookTool.getRatio(ratio));// 正确率100时获取精准成就
+				intent.putExtra("use_time", getSecond());// 用户使用的时间
+				intent.putExtra("specified_time", specified_time);// 任务基础时间
+				intent.setClass(TenSpeedActivity.this, WorkEndActivity.class);
+				TenSpeedActivity.this.startActivityForResult(intent, 0);
+			} else {
+				handler.sendEmptyMessage(1);
+			}
+			break;
+		}
+	}
+
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == 0) {
+			Log.i("aaa", "resultCode:" + resultCode);
+			Intent intent = new Intent();
+			switch (resultCode) {
+			case 0:
+				TenSpeedActivity.this.finish();
+				intent.setClass(TenSpeedActivity.this,
+						HomeWorkIngActivity.class);
+				startActivity(intent);
+				break;
+			case 1:
+				index = 0;// 题目索引
+				img_index = 1;// 图片索引
+				user_boolean = 0;
+
+				branch_questions = new ArrayList<Time_LimitPojo>();
+				ratio = new ArrayList<Integer>();
+				SetJson(json);
+				break;
+			}
 		}
 	}
 }

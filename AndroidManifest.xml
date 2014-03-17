@@ -6,7 +6,7 @@
 
     <uses-sdk
         android:minSdkVersion="11"
-        android:targetSdkVersion="17" />
+        android:targetSdkVersion="19" />
     <!-- 在SDCard中创建于删除文件的权限 -->
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
 
@@ -82,7 +82,6 @@
                 <category android:name="com.comdosoft.ExerciseBook" />
             </intent-filter>
         </receiver>
-        <!-- Required -->
         <!-- Required SDK核心功能 -->
         <activity
             android:name="cn.jpush.android.ui.PushActivity"
@@ -135,14 +134,9 @@
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name=".AnswerOrderActivity"
+            android:name=".LoginActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".HomePageMainActivity"
@@ -208,15 +202,31 @@
         </activity>
         <activity android:name=".MessageActivity" />
         <activity
-            android:name=".HomeWorkIngActivity"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
             android:name=".RecordMainActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".TenSpeedActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".AnswerWireActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".SpeakBeginActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".SpeakPrepareActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ClozeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".WorkEndActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Dialog" />
         <activity
             android:name=".ErrorDisplay"
             android:theme="@android:style/Theme.Translucent"
