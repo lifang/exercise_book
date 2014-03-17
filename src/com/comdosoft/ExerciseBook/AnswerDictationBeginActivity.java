@@ -9,8 +9,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -26,14 +24,12 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
-
 import com.comdosoft.ExerciseBook.pojo.DictationPojo;
 import com.comdosoft.ExerciseBook.pojo.QuestionPojo;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
@@ -74,7 +70,6 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 	private Map<String, Integer> errorMap = new HashMap<String, Integer>();
 	private LinearLayout editLinearLayout;
 	private TextView mesText;
-	private TextView page;
 	private TextView check;
 	private ImageView mPlayImg;
 	private StringBuffer answer = new StringBuffer();

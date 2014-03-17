@@ -34,6 +34,7 @@ public class ExerciseBook extends Application {
 		this.setRefresh(1);
 		this.setMenu_num(0);
 		this.setQuestion_item(0);
+		this.setMneu(true);
 	}
 
 	public List<Activity> getActivityList() {
