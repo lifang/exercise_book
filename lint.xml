@@ -1,18 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lint>
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
->>>>>>> 7752aef7bb02c69773d3158a847e615e989bb97b
     <issue
         id="HandlerLeak"
         severity="ignore" />
 
->>>>>>> bbae6282203efc2704e3540c9df9d3f7e429c551
     <issue
         id="ResourceAsColor"
         severity="ignore" />
@@ -24,11 +16,4 @@
         <ignore path="src/com/comdosoft/ExerciseBook/CardFrontFragment.java" />
     </issue>
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
->>>>>>> 47252abb146ebbddd865c5efb2e4e5dc62992a1c
->>>>>>> bbae6282203efc2704e3540c9df9d3f7e429c551
->>>>>>> 7752aef7bb02c69773d3158a847e615e989bb97b
 </lint>
