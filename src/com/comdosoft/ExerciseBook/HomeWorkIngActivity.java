@@ -269,7 +269,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	public void startDekaron(int i) {
 		switch (i) {
 		case 0:
-			intent.setClass(this, TenSpeedActivity.class);
+			intent.setClass(this, AnswerDictationBeginActivity.class);
 			break;
 		case 1:
 			intent.setClass(this, SpeakPrepareActivity.class);
@@ -278,22 +278,22 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 			intent.setClass(this, TenSpeedActivity.class);
 			break;
 		case 3:
-			intent.setClass(this, TenSpeedActivity.class);
+			intent.setClass(this, AnswerSelectActivity.class);
 			break;
 		case 4:
-			intent.setClass(this, TenSpeedActivity.class);
+			intent.setClass(this, AnswerWireActivity.class);
 			break;
 		case 5:
 			intent.setClass(this, ClozeActivity.class);
 			break;
 		case 6:
-			intent.setClass(this, TenSpeedActivity.class);
+			intent.setClass(this, AnswerOrderActivity.class);
 			break;
 		}
-		intent.putExtra("json", json_list.get(i));
-		intent.putExtra("path", path + "/answer.js");
-		Log.i("aaa", work_list.get(0).getEnd_time() + "-end time");
-		eb.setWork_end_dath(work_list.get(0).getEnd_time());
+		// intent.putExtra("json", json_list.get(i));
+		// intent.putExtra("path", path + "/answer.js");
+		// Log.i("aaa", work_list.get(0).getEnd_time() + "-end time");
+		// eb.setWork_end_dath(work_list.get(0).getEnd_time());
 		startActivity(intent);
 		this.finish();
 	}

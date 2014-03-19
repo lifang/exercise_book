@@ -1,23 +1,51 @@
 package com.comdosoft.ExerciseBook;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import com.comdosoft.ExerciseBook.pojo.AnswerBasePojo;
+import com.comdosoft.ExerciseBook.pojo.AnswerJson;
+import com.comdosoft.ExerciseBook.pojo.AnswerMyPojo;
+import com.comdosoft.ExerciseBook.pojo.AnswerPojo;
+import com.comdosoft.ExerciseBook.pojo.Answer_QuestionsPojo;
+import com.comdosoft.ExerciseBook.pojo.Branch_AnswerPoJo;
+import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
+import com.google.gson.Gson;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 // 答题父类
-public class AnswerBaseActivity extends Activity {
+public class AnswerBaseActivity extends Activity implements OnClickListener {
 
-	private String[] answerArr = new String[] { "你的搭配: ", "你的选择: ", "你的排序: ",
-			"你的作答: " };
+	public int mQindex = 0;
+	public int mBindex = 0;
+	private int mRecordIndex = 0;
+	private int mQuestionType = 0;
 	private int second;
 	private int type = 0;
+	public int ratio = 0;
+	private boolean flag = true;
+	private String[] answerArr = new String[] { "你的搭配: ", "你的选择: ", "你的排序: ",
+			"你的作答: " };
+	private String[] questionArr = new String[] { "selecting", "sort",
+			"lining", "listening" };
+
+	private List<String> mRecoirdAnswer = new ArrayList<String>();
+	private List<Integer> mRecoirdRatio = new ArrayList<Integer>();
+	public List<List<AnswerBasePojo>> mQuestList = new ArrayList<List<AnswerBasePojo>>();
+
 	private LinearLayout middleLayout;
 	private LinearLayout base_history_linearlayout;
 	private LinearLayout base_time_linearlayout;
@@ -30,7 +58,10 @@ public class AnswerBaseActivity extends Activity {
 	private TextView base_answer_text;
 	private ImageView propTrue;
 	private ImageView propTime;
-	private boolean flag = true;
+
+	public AnswerMyPojo amp;
+	private Gson gson = new Gson();
+	private AnswerJson answerJson;
 	private Thread mTimer = new Timer();
 	private Handler mHandler = new Handler() {
 		@Override
@@ -48,6 +79,7 @@ public class AnswerBaseActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		super.setContentView(R.layout.answer_base);
+		findViewById(R.id.base_back_linearlayout).setOnClickListener(this);
 		middleLayout = (LinearLayout) findViewById(R.id.base_LinearLayout);
 		base_time_linearlayout = (LinearLayout) findViewById(R.id.base_time_linearlayout);
 		base_history_linearlayout = (LinearLayout) findViewById(R.id.base_history_linearlayout);
@@ -61,9 +93,46 @@ public class AnswerBaseActivity extends Activity {
 		useTimeText = (TextView) findViewById(R.id.base_useTimeText);
 		base_answer_text = (TextView) findViewById(R.id.base_answer_text);
 
+	}
+
+	// 设置子布局View
+	public void setContentView(int layoutId) {
+		View middleView = getLayoutInflater().inflate(layoutId, null);
+		if (null != middleLayout) {
+			middleLayout.removeAllViews();
+			middleLayout.addView(middleView, LayoutParams.MATCH_PARENT,
+					LayoutParams.MATCH_PARENT);
+		}
+	}
+
+	// 设置题目类型
+	public void setQuestionType(int type) {
+		this.mQuestionType = type;
+		amp = getAnswerItem(
+				ExerciseBookTool
+						.getAnswer_Json_history("/sdcard/Exercisebook_app/73/85/130/answer.js"),
+				questionArr[type]);
+
+		mQindex = amp.getQuestions_item();
+		mBindex = amp.getBranch_item();
+
+		setUseTime(amp.getUse_time());
+
+		if (amp.getStatus() == 1) {
+			setType(1);
+			mRecoirdAnswer = amp.getAnswer();
+			mRecoirdRatio = amp.getRatio();
+			nextRecord();
+		} else {
+			setType(0);
+		}
+	}
+
+	// 设置答题|记录 type 0答题 1历史
+	public void setType(int type) {
+		this.type = type;
 		if (type == 0) {
 			mTimer.start();
-			// new Timer().start();
 			base_time_linearlayout.setVisibility(View.VISIBLE);
 			base_history_linearlayout.setVisibility(View.GONE);
 			base_answer_linearlayout.setVisibility(View.GONE);
@@ -77,28 +146,13 @@ public class AnswerBaseActivity extends Activity {
 		}
 	}
 
-	// 设置子布局View
-	public void setContentView(int layoutId) {
-		View middleView = getLayoutInflater().inflate(layoutId, null);
-		if (null != middleLayout) {
-			middleLayout.removeAllViews();
-			middleLayout.addView(middleView, LayoutParams.MATCH_PARENT,
-					LayoutParams.MATCH_PARENT);
-		}
-	}
-
-	// 设置题目类型 type 0答题 1历史
-	public void setType(int type) {
-		this.type = type;
-	}
-
 	// 获取时间(秒)
-	public int getSecond() {
+	public int getUseTime() {
 		return second;
 	}
 
 	// 设置时间
-	public void setSecond(int s) {
+	public void setUseTime(int s) {
 		second = s;
 		mHandler.sendEmptyMessage(1);
 	}
@@ -196,6 +250,147 @@ public class AnswerBaseActivity extends Activity {
 			}
 			super.run();
 		}
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.base_back_linearlayout:
+			Intent inent = new Intent();
+			if (type == 0) {
+				inent.setClass(this, HomeWorkIngActivity.class);
+			} else {
+				inent.setClass(this, HomeWorkIngActivity.class);
+			}
+			startActivity(inent);
+			break;
+		}
+	}
+
+	// 切换下一记录
+	public void nextRecord() {
+		setAccuracyAndUseTime(mRecoirdRatio.get(mRecordIndex),
+				amp.getUse_time());
+		setMyAnswer(mRecoirdAnswer.get(mRecordIndex), 1);
+		if (mRecordIndex < mRecoirdAnswer.size() - 1) {
+			mRecordIndex++;
+		}
+	}
+
+	// 计算索引&更新View
+	public void calculateIndexAndUpdateView() {
+		if (mQindex == mQuestList.size() - 1
+				&& mBindex == mQuestList.get(mQindex).size() - 1) {
+		} else if (mQindex < mQuestList.size()
+				&& mBindex < mQuestList.get(mQindex).size()) {
+			if (++mBindex >= mQuestList.get(mQindex).size()
+					&& mQindex < mQuestList.size() - 1) {
+				mBindex = 0;
+				mQindex++;
+			}
+			if (mBindex < mQuestList.get(mQindex).size()) {
+				updateView();
+			}
+		}
+	}
+
+	public void updateView() {
+	}
+
+	public AnswerPojo getAnswerPojo() {
+		switch (mQuestionType) {
+		case 0:
+			return answerJson.selecting;
+		case 1:
+			return answerJson.sort;
+		case 2:
+			return answerJson.lining;
+		case 3:
+			return answerJson.listening;
+		}
+		return null;
+	}
+
+	// 保存答题记录
+	public void saveAnswerJson(String answer, int ratio, int qid, int bid) {
+		String answer_history = ExerciseBookTool
+				.getAnswer_Json_history("/sdcard/Exercisebook_app/73/85/130/answer.js");
+		answerJson = gson.fromJson(answer_history, AnswerJson.class);
+		AnswerPojo ap = getAnswerPojo();
+		ap.setUpdate_time("2014-03-17 08:00:00");
+		ap.setUse_time(getUseTime() + "");
+
+		if (ap.getQuestions().size() == 0) {
+			Answer_QuestionsPojo aq = new Answer_QuestionsPojo(qid + "",
+					new ArrayList<Branch_AnswerPoJo>());
+			ap.getQuestions().add(aq);
+		}
+
+		ap.getQuestions().get(mQindex).getBranch_questions()
+				.add(new Branch_AnswerPoJo(bid + "", answer, ratio + ""));
+
+		if (mQindex == mQuestList.size() - 1
+				&& mBindex == mQuestList.get(mQindex).size() - 1) {// 结束
+			ap.setStatus("1");
+		} else if (mBindex == mQuestList.get(mQindex).size() - 1) {// 本小题做完
+			ap.setQuestions_item(mQindex + 1 + "");
+			ap.setBranch_item("0");
+			Answer_QuestionsPojo aq = new Answer_QuestionsPojo(mQuestList
+					.get(mQindex + 1).get(0).getQuestions_id()
+					+ "", new ArrayList<Branch_AnswerPoJo>());
+			ap.getQuestions().add(aq);
+		}
+
+		calculateIndexAndUpdateView();
+
+		ap.setQuestions_item(mQindex + "");
+		ap.setBranch_item(mBindex + "");
+
+		String str = gson.toJson(answerJson);
+		this.ratio = 0;
+		try {
+			ExerciseBookTool.writeFile(
+					"/sdcard/Exercisebook_app/73/85/130/answer.js", str);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	// 获取答题记录对象
+	public AnswerMyPojo getAnswerItem(String json, String type) {
+		try {
+			if (json != "") {
+				JSONObject obj = new JSONObject(json);
+				JSONObject jo = obj.getJSONObject(type);
+				int status = jo.getInt("status");
+				int use_time = jo.getInt("use_time");
+				if (status == 0) {
+					int questions_item = jo.getInt("questions_item");
+					int branch_item = jo.getInt("branch_item");
+					questions_item = questions_item == -1 ? 0 : questions_item;
+					branch_item = branch_item == -1 ? 0 : branch_item;
+					return new AnswerMyPojo(questions_item, branch_item,
+							use_time, status);
+				} else {
+					List<String> answer = new ArrayList<String>();
+					List<Integer> ratio = new ArrayList<Integer>();
+					JSONArray ja = jo.getJSONArray("questions");
+					for (int i = 0; i < ja.length(); i++) {
+						JSONArray jArr = ja.getJSONObject(i).getJSONArray(
+								"branch_questions");
+						for (int j = 0; j < jArr.length(); j++) {
+							answer.add(jArr.getJSONObject(j)
+									.getString("answer"));
+							ratio.add(jArr.getJSONObject(j).getInt("ratio"));
+						}
+					}
+					return new AnswerMyPojo(status, use_time, answer, ratio);
+				}
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }

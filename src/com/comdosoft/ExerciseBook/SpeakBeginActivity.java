@@ -548,7 +548,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 
 		b_item += 1;
 		answerJson.reading.setBranch_item(b_item + "");
-		answerJson.reading.setUse_time(getSecond() + "");
+		answerJson.reading.setUse_time(getUseTime() + "");
 		if (answerJson.reading.getQuestions().size() == 0) {
 			Answer_QuestionsPojo aq = new Answer_QuestionsPojo(qid + "",
 					new ArrayList<Branch_AnswerPoJo>());

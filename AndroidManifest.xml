@@ -207,7 +207,19 @@
         <activity
             android:name=".TenSpeedActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".AnswerWireActivity" >
+        <activity
+            android:name=".AnswerWireActivity"
+            android:screenOrientation="portrait" />
+         <activity
+            android:name=".AnswerDictationBeginActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".AnswerSelectActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".AnswerOrderActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".HomeWorkIngActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

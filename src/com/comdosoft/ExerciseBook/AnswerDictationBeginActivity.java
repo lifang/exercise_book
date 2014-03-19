@@ -9,6 +9,11 @@ import java.util.Map;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -30,6 +35,8 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+
+import com.comdosoft.ExerciseBook.pojo.AnswerBasePojo;
 import com.comdosoft.ExerciseBook.pojo.DictationPojo;
 import com.comdosoft.ExerciseBook.pojo.QuestionPojo;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
@@ -39,15 +46,16 @@ import com.comdosoft.ExerciseBook.tools.ListeningQuestionList;
 import com.comdosoft.ExerciseBook.tools.Soundex_Levenshtein;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
-// 拼写答题    马龙    2014年2月12日
 public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		OnClickListener, ExerciseBookParams, OnPreparedListener,
 		OnCompletionListener, Urlinterface {
 
+	private String JSON = "{ \"specified_time\": \"100\", \"questions\": [ { \"id\": \"284\", \"branch_questions\": [ { \"id\": \"181\", \"content\": \"This is an apple!\", \"resource_url\": \"/question_packages/201402/questions_package_222/media_181.mp3\" } ] }, { \"id\": \"285\", \"branch_questions\": [ { \"id\": \"182\", \"content\": \"Why is google\", \"resource_url\": \"/question_packages/201402/questions_package_222/media_181.mp3\" } ] } ] }";
 	private String REG = "(?i)[^a-zA-Z0-9\u4E00-\u9FA5]";
 	private String regEx = "[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
 	private String vowelREG = "[aeiouAEIOU]";
 	private String symbol;
+	private int specified_time = 0;
 	private int editTextIndex = 0;
 	private int linearLayoutIndex = 0;
 	private int mesLinearLayoutIndex = 0;
@@ -114,25 +122,17 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		mPlayImg = (ImageView) findViewById(R.id.question_dictation_play);
 		mPlayImg.setOnClickListener(this);
 
-		mPd = new ProgressDialog(this);
-		mPd.setMessage(ExerciseBookParams.PD_FINISH_QUESTION);
-
-		homeWork = (ExerciseBook) getApplication();
-//		homeWork.setNewsFlag(true);
-//		publish_question_package_id = homeWork.getP_q_package_id();
-		student_id = homeWork.getUser_id();
-//		class_id = homeWork.getClass_id();
-
-		smallIndex = ListeningQuestionList.Small_Index;
 		etlp = new LayoutParams(LayoutParams.WRAP_CONTENT,
 				LayoutParams.WRAP_CONTENT);
 		etlp.leftMargin = 10;
 
-		init();
+		analysisJSON(JSON);
+
+		updateView();
 	}
 
 	// 初始化
-	public void init() {
+	public void updateView() {
 		// 清除数据
 		mesFlag = false;
 		linearLayoutIndex = 0;
@@ -149,16 +149,9 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 
 		handler.sendEmptyMessage(3);
 
-		// 获取已答过题目记录数
-		bigIndex = ListeningQuestionList.Record_Count;
-
-		// 获取小题数据
-		qpList = ListeningQuestionList.getListeningPojo(bigIndex)
-				.getQuesttionList();
-
 		// 获取当前大&小题数据
-		mp3URL = IP + qpList.get(smallIndex).getUrl();
-		String content = qpList.get(smallIndex).getContent();
+		mp3URL = mQuestList.get(mQindex).get(mBindex).getPath();
+		String content = mQuestList.get(mQindex).get(mBindex).getContent();
 		String[] sArr = content.split(" ");
 		for (int i = 0; i < sArr.length; i++) {
 			String s = sArr[i];
@@ -181,7 +174,7 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 	// 添加答题格子
 	public void initView(final int i) {
 		String value = dictationList.get(i).getValue();
-		EditText et = new EditText(getApplicationContext());
+		EditText et = new EditText(this);
 		// et.setText(filterString(value));
 		et.setImeOptions(EditorInfo.IME_ACTION_NEXT);
 		et.setOnEditorActionListener(new OnEditorActionListener() {
@@ -204,7 +197,6 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		et.setHeight(40);
 		et.setGravity(Gravity.CENTER);
 		et.setLayoutParams(etlp);
-		et.setSingleLine(true);
 		if (i == 0 || i % 4 == 0) {
 			LinearLayout linear = new LinearLayout(getApplicationContext());
 			linear.setOrientation(LinearLayout.HORIZONTAL);
@@ -304,6 +296,32 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		return s;
 	}
 
+	public void analysisJSON(String json) {
+		try {
+			JSONObject jsonObject = new JSONObject(json);
+			specified_time = jsonObject.getInt("specified_time");
+			JSONArray jArr = new JSONArray(jsonObject.getString("questions"));
+			for (int i = 0; i < jArr.length(); i++) {
+				List<AnswerBasePojo> mBranchList = new ArrayList<AnswerBasePojo>();
+				JSONObject jo = jArr.getJSONObject(i);
+				int question_id = jo.getInt("id");
+				JSONArray jsonArr = new JSONArray(
+						jo.getString("branch_questions"));
+				for (int j = 0; j < jsonArr.length(); j++) {
+					JSONObject jb = jsonArr.getJSONObject(j);
+					int branch_question_id = jb.getInt("id");
+					String answer = jb.getString("content");
+					String path = jb.getString("resource_url");
+					mBranchList.add(new AnswerBasePojo(question_id,
+							branch_question_id, answer, path));
+				}
+				mQuestList.add(mBranchList);
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
 	// 检查算法
 	public void check() {
 		mesFlag = false;
@@ -386,87 +404,10 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 
 		} else {
 			// Next
-			if (bigIndex < ListeningQuestionList.getListeningPojoList().size()) {
-				if (answer.length() > 0) {
-					answer.delete(answer.length() - 3, answer.length());
-				}
-				mPd.setMessage(ExerciseBookParams.PD_FINISH_QUESTION);
-				mPd.show();
-				new MyTrehad(bigIndex, smallIndex).start();
-				ListeningQuestionList.Small_Index = ListeningQuestionList.Small_Index + 1;
-				if (smallIndex == qpList.size()) {
-					// 切换大题
-					bigIndex++;
-					smallIndex = 0;
-
-					ListeningQuestionList.Small_Index = 0;
-					ListeningQuestionList.Record_Count = ListeningQuestionList.Record_Count + 1;
-
-					if (bigIndex == ListeningQuestionList
-							.getListeningPojoList().size()) {
-						mPd.show();
-//						if (homeWork.getHistory_item() == homeWork
-//								.getQuestion_allNumber()) {
-//							new SendWorkOver().start();
-//						} else if (homeWork.getQuestion_allNumber() == 0) {
-//							new SendWorkOver().start();
-//						}
-//						MyDialog("恭喜完成今天的听写作业!", "确认", "取消", 2);
-						return;
-					}
-
-//					MyDialog("你已经答完本题确认继续下一题吗?", "确认", "取消", 1);
-					return;
-				}
-				check.setText("检查");
-				init();
-			}
-		}
-	}
-
-	// 提交答题记录
-	class MyTrehad extends Thread {
-		private int bIndex, sIndex;
-
-		public void MyThread() {
-		}
-
-		public MyTrehad(int bIndex, int sIndex) {
-			super();
-			this.bIndex = bIndex;
-			this.sIndex = sIndex;
-		}
-
-		public void run() {
-			super.run();
-			StringBuffer sb = new StringBuffer();
-			Iterator iterator = errorMap.entrySet().iterator();
-			while (iterator.hasNext()) {
-				Map.Entry<String, Integer> entry = (Map.Entry<String, Integer>) iterator
-						.next();
-				sb.append(entry.getKey()).append("-!-");
-			}
-			if (sb.length() > 0) {
-				sb.delete(sb.length() - 3, sb.length());
-			}
-			Map<String, String> map = new HashMap<String, String>();
-			map.put("student_id", student_id + "");
-			map.put("school_class_id", class_id + "");
-			map.put("publish_question_package_id", publish_question_package_id
-					+ "");
-			map.put("question_id",
-					ListeningQuestionList.getListeningPojo(bIndex).getId() + "");
-			map.put("branch_question_id", qpList.get(sIndex - 1).getId() + "");
-			map.put("answer", sb.toString() + "");
-			map.put("question_types", "0");
-
-			log = ExerciseBookTool.doPost(RECORD_ANSWER_INFO, map);
-			Log.i("Ax", log);
-			Log.i("Ax", "error:" + sb.toString());
-			answer.delete(0, answer.length());
-			sb.delete(0, sb.length());
-			errorMap.clear();
-			handler.sendEmptyMessage(1);
+			check.setText("检查");
+			AnswerBasePojo aop = mQuestList.get(mQindex).get(mBindex);
+			saveAnswerJson("", ratio, aop.getQuestions_id(),
+					aop.getBranch_questions_id());
 		}
 	}
 
@@ -482,14 +423,6 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 			handler.sendEmptyMessage(2);
 		}
 	}
-
-	public void myFinish() {
-		finish();
-		Intent intent = new Intent();
-		intent.setClass(AnswerDictationBeginActivity.this, HomeWorkIngActivity.class);
-		startActivity(intent);
-	}
-
 
 	// 播放音频
 	public void playerAmr() {
@@ -526,7 +459,7 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.base_back_linearlayout:
-//			MyDialog("你还没有做完题,确认要退出吗?", "确认", "取消", 0);
+			// MyDialog("你还没有做完题,确认要退出吗?", "确认", "取消", 0);
 			break;
 		case R.id.base_check_linearlayout:
 			check();

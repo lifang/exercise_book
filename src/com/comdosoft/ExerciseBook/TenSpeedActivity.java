@@ -110,7 +110,7 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 	}
 
 	private void SetJson(String json) {
-		Log.i("aaa", "--" + json);
+		Log.i("Ax", "--" + json);
 		if (json != "") {
 			try {
 				JSONObject time_limit = new JSONObject(json);
@@ -174,7 +174,7 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 
 		b_item += 1;
 		answerJson.time_limit.setBranch_item(b_item + "");
-		answerJson.time_limit.setUse_time(getSecond() + "");
+		answerJson.time_limit.setUse_time(getUseTime() + "");
 		if (answerJson.time_limit.getQuestions().size() == 0) {
 			List<Branch_AnswerPoJo> Branch_Unswer = new ArrayList<Branch_AnswerPoJo>();
 			Answer_QuestionsPojo aq = new Answer_QuestionsPojo(questions_id
@@ -237,7 +237,7 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 					e.printStackTrace();
 				}
 				intent.putExtra("precision", ExerciseBookTool.getRatio(ratio));// 正确率100时获取精准成就
-				intent.putExtra("use_time", getSecond());// 用户使用的时间
+				intent.putExtra("use_time", getUseTime());// 用户使用的时间
 				intent.putExtra("specified_time", specified_time);// 任务基础时间
 				intent.setClass(TenSpeedActivity.this, WorkEndActivity.class);
 				TenSpeedActivity.this.startActivityForResult(intent, 0);
