@@ -25,6 +25,7 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 	private int mAnswerIndex = 0;
 	private int mSubjectIndex = 0;
 	private int mOptionIndex = 0;
+	@SuppressWarnings("unused")
 	private int specified_time = 0;
 	private String[] answerArr = new String[] {};
 	private String mAnswerStr;
@@ -223,6 +224,7 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 		}
 	}
 
+	// 后退一步
 	public void backAnswer(int i) {
 		EditText edit = mSubjectEditList.get(i);
 		edit.setBackgroundResource(R.drawable.answer_order_item_style);
@@ -284,11 +286,13 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 				if (amp.getStatus() == 0) {
 					if (mAnswerList.size() == answerList.size()) {
 						check();
-						AnswerBasePojo aop = mQuestList.get(mQindex).get(
-								mBindex);
-						saveAnswerJson(mAnswerStr, ratio,
-								aop.getQuestions_id(),
-								aop.getBranch_questions_id());
+						if (status == 0) {
+							AnswerBasePojo aop = mQuestList.get(mQindex).get(
+									mBindex);
+							saveAnswerJson(mAnswerStr, ratio,
+									aop.getQuestions_id(),
+									aop.getBranch_questions_id());
+						}
 					} else {
 						Toast.makeText(getApplicationContext(), "请完成未选择的题!", 0)
 								.show();

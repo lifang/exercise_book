@@ -31,18 +31,20 @@ public class AnswerBaseActivity extends Activity implements OnClickListener {
 
 	public int mQindex = 0;
 	public int mBindex = 0;
-	private int mRecordIndex = 0;
+	public int mRecordIndex = 0;
 	private int mQuestionType = 0;
 	private int second;
 	private int type = 0;
 	public int ratio = 0;
+	public int status = 0;
 	private boolean flag = true;
-	private String[] answerArr = new String[] { "你的搭配: ", "你的选择: ", "你的排序: ",
+	private String recordMes;
+	private String[] answerArr = new String[] { "你的选择: ", "你的排序: ", "你的搭配: ",
 			"你的作答: " };
 	private String[] questionArr = new String[] { "selecting", "sort",
 			"lining", "listening" };
 
-	private List<String> mRecoirdAnswer = new ArrayList<String>();
+	public List<String> mRecoirdAnswer = new ArrayList<String>();
 	private List<Integer> mRecoirdRatio = new ArrayList<Integer>();
 	public List<List<AnswerBasePojo>> mQuestList = new ArrayList<List<AnswerBasePojo>>();
 
@@ -92,7 +94,6 @@ public class AnswerBaseActivity extends Activity implements OnClickListener {
 		accuracyText = (TextView) findViewById(R.id.base_accuracyText);
 		useTimeText = (TextView) findViewById(R.id.base_useTimeText);
 		base_answer_text = (TextView) findViewById(R.id.base_answer_text);
-
 	}
 
 	// 设置子布局View
@@ -108,23 +109,19 @@ public class AnswerBaseActivity extends Activity implements OnClickListener {
 	// 设置题目类型
 	public void setQuestionType(int type) {
 		this.mQuestionType = type;
-		amp = getAnswerItem(
-				ExerciseBookTool
-						.getAnswer_Json_history("/sdcard/Exercisebook_app/73/85/130/answer.js"),
-				questionArr[type]);
+		amp = getAnswerItem(ExerciseBookTool
+				.getAnswer_Json_history("/sdcard/Exercisebook_app/73/85/130/answer.js"));
 
 		mQindex = amp.getQuestions_item();
 		mBindex = amp.getBranch_item();
 
 		setUseTime(amp.getUse_time());
+		setType(amp.getStatus());
 
 		if (amp.getStatus() == 1) {
-			setType(1);
 			mRecoirdAnswer = amp.getAnswer();
 			mRecoirdRatio = amp.getRatio();
 			nextRecord();
-		} else {
-			setType(0);
 		}
 	}
 
@@ -137,7 +134,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener {
 			base_history_linearlayout.setVisibility(View.GONE);
 			base_answer_linearlayout.setVisibility(View.GONE);
 		} else {
-			check.setText("下一个");
+			setCheckText("下一个");
 			propTrue.setImageResource(R.drawable.base_prop3);
 			propTime.setImageResource(R.drawable.base_prop4);
 			base_time_linearlayout.setVisibility(View.GONE);
@@ -158,12 +155,12 @@ public class AnswerBaseActivity extends Activity implements OnClickListener {
 	}
 
 	// 获取检查按钮文本
-	public String getCheck() {
+	public String getCheckText() {
 		return check.getText().toString();
 	}
 
 	// 设置检查按钮文本
-	public void setCheck(String text) {
+	public void setCheckText(String text) {
 		check.setText(text);
 	}
 
@@ -179,8 +176,8 @@ public class AnswerBaseActivity extends Activity implements OnClickListener {
 	}
 
 	// 设置自己的答案
-	public void setMyAnswer(String s, int i) {
-		base_answer_text.setText(answerArr[i] + s);
+	public void setMyAnswer(String s) {
+		base_answer_text.setText(answerArr[mQuestionType] + s);
 	}
 
 	// 时间道具使用完
@@ -193,6 +190,10 @@ public class AnswerBaseActivity extends Activity implements OnClickListener {
 	public void setTruePropEnd() {
 		propTrue.setImageResource(R.drawable.base_prop3);
 		propTrue.setClickable(false);
+	}
+
+	public String getRecordMes() {
+		return recordMes;
 	}
 
 	// 时间int秒数转string
@@ -263,6 +264,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener {
 				inent.setClass(this, HomeWorkIngActivity.class);
 			}
 			startActivity(inent);
+			finish();
 			break;
 		}
 	}
@@ -271,7 +273,16 @@ public class AnswerBaseActivity extends Activity implements OnClickListener {
 	public void nextRecord() {
 		setAccuracyAndUseTime(mRecoirdRatio.get(mRecordIndex),
 				amp.getUse_time());
-		setMyAnswer(mRecoirdAnswer.get(mRecordIndex), 1);
+		if (mQuestionType == 3) {
+			recordMes = null;
+			String s[] = mRecoirdAnswer.get(mRecordIndex).split(";&&;");
+			if (s.length > 1) {
+				recordMes = s[1];
+			}
+			setMyAnswer(s[0].replaceAll(";\\|\\|;", " "));
+		} else {
+			setMyAnswer(mRecoirdAnswer.get(mRecordIndex));
+		}
 		if (mRecordIndex < mRecoirdAnswer.size() - 1) {
 			mRecordIndex++;
 		}
@@ -281,6 +292,8 @@ public class AnswerBaseActivity extends Activity implements OnClickListener {
 	public void calculateIndexAndUpdateView() {
 		if (mQindex == mQuestList.size() - 1
 				&& mBindex == mQuestList.get(mQindex).size() - 1) {
+			// 最后一题
+
 		} else if (mQindex < mQuestList.size()
 				&& mBindex < mQuestList.get(mQindex).size()) {
 			if (++mBindex >= mQuestList.get(mQindex).size()
@@ -295,6 +308,16 @@ public class AnswerBaseActivity extends Activity implements OnClickListener {
 	}
 
 	public void updateView() {
+	}
+
+	public void roundOver() {
+		Intent intent = new Intent();
+		intent.putExtra("precision", ExerciseBookTool.getRatio(
+				"/sdcard/Exercisebook_app/73/85/130/answer.js",
+				questionArr[mQuestionType]));// 正确率100时获取精准成就
+		intent.putExtra("use_time", getUseTime());// 用户使用的时间
+		intent.putExtra("specified_time", 100);// 任务基础时间
+		intent.setClass(this, WorkEndActivity.class);
 	}
 
 	public AnswerPojo getAnswerPojo() {
@@ -357,11 +380,11 @@ public class AnswerBaseActivity extends Activity implements OnClickListener {
 	}
 
 	// 获取答题记录对象
-	public AnswerMyPojo getAnswerItem(String json, String type) {
+	public AnswerMyPojo getAnswerItem(String json) {
 		try {
 			if (json != "") {
 				JSONObject obj = new JSONObject(json);
-				JSONObject jo = obj.getJSONObject(type);
+				JSONObject jo = obj.getJSONObject(questionArr[mQuestionType]);
 				int status = jo.getInt("status");
 				int use_time = jo.getInt("use_time");
 				if (status == 0) {
