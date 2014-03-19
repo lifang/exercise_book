@@ -300,7 +300,8 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	public void Start_Acvivity(int i) {// 做题跳转
 		switch (questiontype_list.get(i)) {
 		case 0:
-			intent.setClass(this, SpeakPrepareActivity.class);
+
+			intent.setClass(this, AnswerDictationBeginActivity.class);
 			break;
 		case 1:
 			intent.setClass(this, SpeakPrepareActivity.class);

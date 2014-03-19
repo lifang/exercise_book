@@ -258,6 +258,9 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 				JSONObject time_limit = obj.getJSONObject("reading");
 				questions_item = time_limit.getInt("questions_item");
 				branch_item = time_limit.getInt("branch_item");
+				int use_time = time_limit.getInt("use_time");
+				setUseTime(use_time);
+				setStart();
 				status = time_limit.getInt("status");
 				Log.i("aaa", specified_time + "--" + branch_item);
 				JSONArray questions = time_limit.getJSONArray("questions");
@@ -559,10 +562,7 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 		Intent intent = new Intent();
 		switch (v.getId()) {
 		case R.id.base_back_linearlayout:
-			SpeakPrepareActivity.this.finish();
-			intent.setClass(SpeakPrepareActivity.this,
-					HomeWorkIngActivity.class);
-			startActivity(intent);
+			super.onClick(v);
 			break;
 		case R.id.base_check_linearlayout:
 			// 0没做过----1做过了但没做完----2表示做完了

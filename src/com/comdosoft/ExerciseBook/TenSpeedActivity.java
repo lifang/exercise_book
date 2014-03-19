@@ -106,7 +106,6 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 			img_index = branch_questions.size() - (branch_item + 1);
 			index = branch_item + 1;
 		}
-		Log.i("aaa", index + "/" + img_index);
 		handler.sendEmptyMessage(1);
 	}
 
@@ -121,7 +120,7 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 	}
 
 	private void SetJson(String json) {
-		Log.i("aaa", "--" + json);
+		Log.i("Ax", "--" + json);
 		if (json != "") {
 			try {
 				JSONObject time_limit = new JSONObject(json);
@@ -159,22 +158,11 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 				JSONObject obj = new JSONObject(json);
 				JSONObject time_limit = obj.getJSONObject("time_limit");
 				branch_item = time_limit.getInt("branch_item");
+				int use_time = time_limit.getInt("use_time");
+				setUseTime(use_time);
+				setStart();
 				Log.i("aaa", branch_item + "/" + branch_questions.size());
 				status = time_limit.getInt("status");
-				// Log.i("aaa", specified_time + "--" + branch_item);
-				// JSONArray questions = time_limit.getJSONArray("questions");
-				// if (questions.length() > 0) {
-				// JSONObject jo = questions.getJSONObject(0);
-				// JSONArray jsonarr = jo.getJSONArray("branch_questions");
-				// HistoryPojo tl;
-				// branch_answer = new ArrayList<HistoryPojo>();
-				// for (int j = 0; j < jsonarr.length(); j++) {
-				// JSONObject item = jsonarr.getJSONObject(j);
-				// tl = new HistoryPojo(item.getInt("id"),
-				// item.getString("answer"), item.getInt("ratio"));
-				// branch_answer.add(tl);
-				// }
-				// }
 			} catch (JSONException e) {
 				Toast.makeText(TenSpeedActivity.this, "解析anwserjson发生错误",
 						Toast.LENGTH_SHORT).show();
@@ -207,7 +195,7 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 
 	private int Again() {
 		int type = 0;
-		if (index +1 == branch_questions.size()) {// 结束
+		if (index + 1 == branch_questions.size()) {// 结束
 			type = 1;
 		}
 		return type;
@@ -223,7 +211,7 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 
 		b_item += 1;
 		answerJson.time_limit.setBranch_item(b_item + "");
-		answerJson.time_limit.setUse_time(getSecond() + "");
+		answerJson.time_limit.setUse_time(getUseTime() + "");
 		if (answerJson.time_limit.getQuestions().size() == 0) {
 			Answer_QuestionsPojo aq = new Answer_QuestionsPojo(questions_id
 					+ "", new ArrayList<Branch_AnswerPoJo>());
@@ -260,9 +248,7 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 		Intent intent = new Intent();
 		switch (v.getId()) {
 		case R.id.base_back_linearlayout:
-			TenSpeedActivity.this.finish();
-			intent.setClass(TenSpeedActivity.this, HomeWorkIngActivity.class);
-			startActivity(intent);
+			super.onClick(v);
 			break;
 		case R.id.base_check_linearlayout:
 			if (user_select.equals(branch_questions.get(index).getAnwser())) {
@@ -296,7 +282,7 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 			case 1:
 				intent.putExtra("precision",
 						ExerciseBookTool.getRatio(path, "time_limit"));// 正确率100时获取精准成就
-				intent.putExtra("use_time", getSecond());// 用户使用的时间
+				intent.putExtra("use_time", getUseTime());// 用户使用的时间
 				intent.putExtra("specified_time", specified_time);// 任务基础时间
 				intent.setClass(TenSpeedActivity.this, WorkEndActivity.class);
 				TenSpeedActivity.this.startActivityForResult(intent, 0);

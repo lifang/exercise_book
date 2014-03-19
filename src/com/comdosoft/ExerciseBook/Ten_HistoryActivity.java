@@ -1,7 +1,6 @@
 package com.comdosoft.ExerciseBook;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimerTask;
@@ -10,7 +9,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,12 +21,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.comdosoft.ExerciseBook.pojo.AnswerJson;
 import com.comdosoft.ExerciseBook.pojo.AnswerPojo;
-import com.comdosoft.ExerciseBook.pojo.Answer_QuestionsPojo;
-import com.comdosoft.ExerciseBook.pojo.Branch_AnswerPoJo;
 import com.comdosoft.ExerciseBook.pojo.Time_LimitPojo;
-import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 import com.google.gson.Gson;
@@ -172,9 +166,7 @@ public class Ten_HistoryActivity extends AnswerBaseActivity implements
 		Intent intent = new Intent();
 		switch (v.getId()) {
 		case R.id.base_back_linearlayout:
-			Ten_HistoryActivity.this.finish();
-			intent.setClass(Ten_HistoryActivity.this, HomeWorkIngActivity.class);
-			startActivity(intent);
+			super.onClick(v);
 			break;
 		case R.id.base_check_linearlayout:
 			if (index + 1 < branch_questions.size()) {
@@ -182,11 +174,7 @@ public class Ten_HistoryActivity extends AnswerBaseActivity implements
 				img_index -= 1;
 				handler.sendEmptyMessage(1);
 			} else {
-				// MyDialog("没有更多历史记录了,点击确定退出!", 1, Cloze_HistoryActivity.this);
-				Ten_HistoryActivity.this.finish();
-				intent.setClass(Ten_HistoryActivity.this,
-						HomeWorkIngActivity.class);
-				startActivity(intent);
+				MyDialog("没有更多历史记录了,点击确定退出!", 1);
 			}
 			break;
 		}

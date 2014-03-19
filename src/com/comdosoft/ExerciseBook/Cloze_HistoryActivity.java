@@ -8,9 +8,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
-import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
@@ -21,8 +18,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,16 +54,6 @@ public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 			switch (msg.what) {
 			case 0:
 				cloze = list.get(index);
-				Branch_list.clear();
-				if (answer.getQuestions() != null) {
-					Branch_list = answer.getQuestions().get(index)
-							.getBranch_questions();
-					setAccuracyAndUseTime(100,
-							Integer.valueOf(answer.getUse_time()));
-				} else {
-					setAccuracyAndUseTime(0, 0);
-				}
-
 				myLayout.removeAllViews();
 				content = cloze.getContent();
 				setTextView();
@@ -86,7 +71,7 @@ public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 		setContentView(R.layout.cloze_history);
 		setTimePropEnd();// 禁用道具
 		setTruePropEnd();// 禁用道具
-		setCheck("下一个");
+		setType(1);
 		findViewById(R.id.base_back_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
 		gson = new Gson();
@@ -219,58 +204,17 @@ public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 		Intent intent = new Intent();
 		switch (v.getId()) {
 		case R.id.base_back_linearlayout:
-			Cloze_HistoryActivity.this.finish();
-			intent.setClass(Cloze_HistoryActivity.this,
-					HomeWorkIngActivity.class);
-			startActivity(intent);
+			super.onClick(v);
 			break;
 		case R.id.base_check_linearlayout:
 			if (index + 1 < list.size()) {
 				index += 1;
 				handler.sendEmptyMessage(0);
 			} else {
-				MyDialog("没有更多历史记录了,点击确定退出!", 1, Cloze_HistoryActivity.this);
+				MyDialog("没有更多历史记录了,点击确定退出!", 1);
 			}
 			break;
 		}
-	}
-
-	// 自定义dialog设置
-	private void MyDialog(String title, final int type, final Context context) {
-		// type :0表示退出 1表示结束
-		final Dialog dialog = new Dialog(this, R.style.Transparent);
-		dialog.setContentView(R.layout.my_dialog);
-		dialog.setCancelable(true);
-
-		ImageView dialog_img = (ImageView) dialog.findViewById(R.id.dialog_img);
-
-		TextView title_tv = (TextView) dialog.findViewById(R.id.dialog_title);
-		title_tv.setText(title);
-		Button dialog_ok = (Button) dialog.findViewById(R.id.dialog_ok);
-		dialog_ok.setText("确定");
-		Button dialog_no = (Button) dialog.findViewById(R.id.dialog_no);
-		dialog_no.setText("取消");
-		dialog_ok.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				dialog.dismiss();
-				((Activity) context).finish();
-				Intent intent = new Intent(context.getApplicationContext(),
-						HomeWorkIngActivity.class);
-				startActivity(intent);
-			}
-		});
-		dialog_no.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				dialog.dismiss();
-			}
-		});
-		if (type == 1) {
-			dialog_no.setVisibility(View.GONE);
-			dialog_ok.setBackgroundColor(getResources().getColor(R.color.lvse));
-		} else {
-			dialog_img.setVisibility(View.GONE);
-		}
-		dialog.show();
 	}
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {

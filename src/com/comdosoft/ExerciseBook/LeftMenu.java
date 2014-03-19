@@ -189,8 +189,7 @@ public class LeftMenu extends Activity implements Urlinterface {
 				eb.setMenu_num(3);
 				eb.setMneu(true);
 				clearActivity();
-				Intent intent = new Intent(LeftMenu.this,
-						MCardBagActivity.class);
+				Intent intent=new Intent(LeftMenu.this,MCardBagActivity.class);
 				startActivity(intent);
 			}
 		});

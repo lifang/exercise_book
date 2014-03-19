@@ -172,8 +172,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 			} else {
 				handler.sendEmptyMessage(7);
 				Intent checkIntent = new Intent();
-				checkIntent
-						.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
+				checkIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
 				startActivityForResult(checkIntent, REQ_TTS_STATUS_CHECK);
 			}
 			break;
@@ -505,7 +504,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 
 		b_item += 1;
 		answerJson.reading.setBranch_item(b_item + "");
-		answerJson.reading.setUse_time(getSecond() + "");
+		answerJson.reading.setUse_time(getUseTime() + "");
 		if (answerJson.reading.getQuestions().size() == 0) {
 			Answer_QuestionsPojo aq = new Answer_QuestionsPojo(qid + "",
 					new ArrayList<Branch_AnswerPoJo>());
@@ -546,9 +545,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 		switch (v.getId()) {
 		case R.id.base_back_linearlayout:
 			eb.setQuestion_item(0);
-			SpeakBeginActivity.this.finish();
-			intent.setClass(SpeakBeginActivity.this, HomeWorkIngActivity.class);
-			startActivity(intent);
+			super.onClick(v);
 			break;
 		case R.id.base_check_linearlayout:
 			int type;
@@ -572,7 +569,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 					case 1:
 						intent.putExtra("precision",
 								ExerciseBookTool.getRatio(path, "reading"));// 正确率100时获取精准成就
-						intent.putExtra("use_time", getSecond());// 用户使用的时间
+						intent.putExtra("use_time", getUseTime());// 用户使用的时间
 						intent.putExtra("specified_time", specified_time);// 任务基础时间
 						intent.setClass(SpeakBeginActivity.this,
 								WorkEndActivity.class);

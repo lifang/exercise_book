@@ -33,7 +33,6 @@ import com.comdosoft.ExerciseBook.pojo.Answer_QuestionsPojo;
 import com.comdosoft.ExerciseBook.pojo.Branch_AnswerPoJo;
 import com.comdosoft.ExerciseBook.pojo.Branch_PoJo;
 import com.comdosoft.ExerciseBook.pojo.ClozePojo;
-import com.comdosoft.ExerciseBook.pojo.Time_LimitPojo;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.PredicateLayout;
@@ -107,8 +106,8 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 					cloze = list.get(0);
 					question_id = list.get(0).getId();
 				} else {
-					cloze = list.get(questions_item);
-					question_id = list.get(questions_item).getId();
+					cloze = list.get(index);
+					question_id = list.get(index).getId();
 				}
 				break;
 			case 1:
@@ -194,6 +193,9 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 				JSONObject obj = new JSONObject(json);
 				JSONObject cloze = obj.getJSONObject("cloze");
 				questions_item = cloze.getInt("questions_item");
+				int use_time = cloze.getInt("use_time");
+				setUseTime(use_time);
+				setStart();
 				status = cloze.getInt("status");
 			} catch (JSONException e) {
 				e.printStackTrace();
@@ -256,7 +258,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 
 		b_item += 1;
 		answerJson.cloze.setBranch_item(b_item + "");
-		answerJson.cloze.setUse_time(getSecond() + "");
+		answerJson.cloze.setUse_time(getUseTime() + "");
 		Answer_QuestionsPojo aq = new Answer_QuestionsPojo(id + "",
 				new ArrayList<Branch_AnswerPoJo>());
 		answerJson.cloze.getQuestions().add(aq);
@@ -268,6 +270,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 					.getAnswer()) {
 				ratio = 100;
 			}
+			Log.i("aaa", "ratio:" + ratio);
 			answerJson.cloze
 					.getQuestions()
 					.get(q_item)
@@ -302,9 +305,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		Intent intent = new Intent();
 		switch (v.getId()) {
 		case R.id.base_back_linearlayout:
-			ClozeActivity.this.finish();
-			intent.setClass(ClozeActivity.this, HomeWorkIngActivity.class);
-			startActivity(intent);
+			super.onClick(v);
 			break;
 		case R.id.base_check_linearlayout:
 			if (user_select.size() != cloze.getList().size()) {
@@ -314,7 +315,6 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 				int type = 0;
 				String answer_history = ExerciseBookTool
 						.getAnswer_Json_history(path);
-
 				try {
 					JSONObject obj = new JSONObject(answer_history);
 					if (obj.getJSONObject("cloze").getString("status")
@@ -335,7 +335,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 					case 1:
 						intent.putExtra("precision",
 								ExerciseBookTool.getRatio(path, "cloze"));// 正确率100时获取精准成就
-						intent.putExtra("use_time", getSecond());// 用户使用的时间
+						intent.putExtra("use_time", getUseTime());// 用户使用的时间
 						intent.putExtra("specified_time", specified_time);// 任务基础时间
 						intent.setClass(ClozeActivity.this,
 								WorkEndActivity.class);

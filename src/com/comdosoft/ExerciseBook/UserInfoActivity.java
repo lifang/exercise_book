@@ -43,7 +43,7 @@ import com.comdosoft.ExerciseBook.tools.Urlinterface;
 public class UserInfoActivity extends Activity {
 	// private MyDialog dialog;
 	private LinearLayout layout;
-	private LinearLayout imageView1,imageView2;
+	private RelativeLayout imageView1,imageView2;
 	private TextView userinfo_username;
 	private TextView userinfo_classname;
 	public static UserInfoActivity instance = null;
@@ -105,18 +105,17 @@ public class UserInfoActivity extends Activity {
 		userinfo_classname = (TextView) findViewById(R.id.userinfo_classname); // 班级名
 		userinfo_username.setText(nickName);
 		userinfo_classname.setText(classname);
-		imageView1 = (LinearLayout) findViewById(R.id.imageView1);// 修改用户名图标
+		imageView1 = (RelativeLayout) findViewById(R.id.imageView1);// 修改用户名图标
 		imageView1.setOnClickListener(listener);
-		imageView2 = (LinearLayout) findViewById(R.id.imageView2);// 切换班级图标
+		imageView2 = (RelativeLayout) findViewById(R.id.imageView2);// 切换班级图标
 		imageView2.setOnClickListener(listener2);
 		layout = (LinearLayout) findViewById(R.id.main_dialog_layout);
 		layout.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-//				Toast.makeText(getApplicationContext(), "点击别的地方消失",
-//						Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), "点击页面外的地方消失",
+						Toast.LENGTH_SHORT).show();
 			}
 		});
 		if (ExerciseBookTool.isConnect(UserInfoActivity.this)) {

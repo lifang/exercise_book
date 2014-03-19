@@ -66,9 +66,13 @@ public class SpeakHistoryActivity extends AnswerBaseActivity implements
 				PredicateLayout.removeAllViews();
 				content = eb.getQuestion_list().get(index).getContent();
 				if (answer.getQuestions() != null) {
-					error_str = answer.getQuestions()
-							.get(eb.getQuestion_item()).getBranch_questions()
-							.get(index).getAnswer();
+					try {
+						error_str = answer.getQuestions()
+								.get(eb.getQuestion_item())
+								.getBranch_questions().get(index).getAnswer();
+					} catch (Exception e) {
+						error_str = "";
+					}
 				} else {
 					error_str = "";
 				}
@@ -374,19 +378,13 @@ public class SpeakHistoryActivity extends AnswerBaseActivity implements
 		switch (v.getId()) {
 		case R.id.base_back_linearlayout:
 			eb.setQuestion_item(0);
-			SpeakHistoryActivity.this.finish();
-			intent.setClass(SpeakHistoryActivity.this,
-					HomeWorkIngActivity.class);
-			startActivity(intent);
+			super.onClick(v);
 			break;
 		case R.id.base_check_linearlayout:
 			if (eb.getQuestion_item() + 1 == eb.getList().size()
 					&& index + 1 == eb.getBranch_number()) {// 结束
 				eb.setQuestion_item(0);
-				SpeakHistoryActivity.this.finish();
-				intent.setClass(SpeakHistoryActivity.this,
-						HomeWorkIngActivity.class);
-				startActivity(intent);
+				MyDialog("没有更多历史记录了,点击确定退出!", 1);
 			} else if (index + 1 == eb.getBranch_number()) {// 本小题做完
 				eb.setQuestion_item(eb.getQuestion_item() + 1);
 				SpeakHistoryActivity.this.finish();

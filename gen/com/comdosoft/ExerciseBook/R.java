@@ -330,8 +330,8 @@ public final class R {
         public static final int huifu_count=0x7f0b005a;
         public static final int huifu_item=0x7f0b0059;
         public static final int image=0x7f0b0087;
-        public static final int imageView1=0x7f0b00e2;
-        public static final int imageView2=0x7f0b00e4;
+        public static final int imageView1=0x7f0b00e1;
+        public static final int imageView2=0x7f0b00e3;
         public static final int img_tab_now=0x7f0b0075;
         public static final int label=0x7f0b00a7;
         public static final int layout=0x7f0b0064;
@@ -452,12 +452,12 @@ public final class R {
         public static final int user_face=0x7f0b0053;
         public static final int user_left=0x7f0b0052;
         public static final int user_name=0x7f0b0076;
-        public static final int userinfo_classname=0x7f0b00e3;
+        public static final int userinfo_classname=0x7f0b00e4;
         public static final int userinfo_jiezu1=0x7f0b00eb;
         public static final int userinfo_jiezu2=0x7f0b00ec;
         public static final int userinfo_jingzhun1=0x7f0b00e7;
         public static final int userinfo_jingzhun2=0x7f0b00e8;
-        public static final int userinfo_username=0x7f0b00e1;
+        public static final int userinfo_username=0x7f0b00e2;
         public static final int userinfo_xunsu1=0x7f0b00e9;
         public static final int userinfo_xunsu2=0x7f0b00ea;
         public static final int userinfo_youyi1=0x7f0b00e5;

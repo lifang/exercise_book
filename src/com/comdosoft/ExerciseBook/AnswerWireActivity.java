@@ -3,24 +3,17 @@ package com.comdosoft.ExerciseBook;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.comdosoft.ExerciseBook.pojo.AnswerOrderPojo;
+import com.comdosoft.ExerciseBook.pojo.AnswerBasePojo;
 import com.comdosoft.ExerciseBook.pojo.AnswerWirePojo;
-import com.comdosoft.ExerciseBook.pojo.PersonListPorjo;
-import com.comdosoft.ExerciseBook.pojo.PersonPojo;
-
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,14 +26,10 @@ import android.widget.TextView;
 public class AnswerWireActivity extends AnswerBaseActivity {
 
 	private int last = -1;
-	private int type = 0;
 	private int specified_time = 0;
-	private int mIndex = 0;
-	private String test = "This is<=>an apple;||;A<=>B;||;ZhangDaCa<=>Dog";
-	private String testA = "iOS<=>Android;||;iPhone5s<=>Iphone5";
 	private String JSON = "{    \"lining\":{\"specified_time\": \"100\",  \"questions\":[ {\"id\": \"284\",  \"branch_questions\": [{\"id\": \"181\", \"content\": \"This is<=>an apple;||;A<=>B;||;ZhangDaCa<=>Dog\"}]},{\"id\": \"285\", \"branch_questions\": [{\"id\": \"182\", \"content\": \"C<=>D;||;Chen<=>Long;||;Gao<=>Shi\"}]}, {\"id\": \"285\", \"branch_questions\": [ {\"id\": \"182\", \"content\": \"Ma<=>Long;||;123<=>456;||;1111<=>2222\"} ]},  {\"id\": \"291\",\"branch_questions\": [ {\"id\": \"182\", \"content\": \"ZhangDaCa<=>ZXN;||;ChenLong<=>CL;||;MaLong<=>ML\"}]}] }}";
+	private StringBuffer sb = new StringBuffer();
 
-	private List<AnswerOrderPojo> mAOPList = new ArrayList<AnswerOrderPojo>();
 	private LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT,
 			LayoutParams.WRAP_CONTENT);
 	private LinearLayout leftLinearLayout;
@@ -63,9 +52,6 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		if (type == 1) {
-			setType(1);
-		}
 		super.onCreate(savedInstanceState);
 		super.setContentView(R.layout.answer_wire);
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(
@@ -76,38 +62,18 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 		imgCanvas = (ImageView) findViewById(R.id.answer_wire_canvas);
 		lp.topMargin = 50;
 
-		if (type == 1) {
-			setAccuracyAndUseTime(85, 1000);
-			setMyAnswer("This is      ZhangDaCa Dog      A B", 0);
-		}
-		test();
+		// Intent intent = getIntent();
+		// JSON = intent.getStringExtra("json");
 
-		Intent intent = getIntent();
-		JSON = intent.getStringExtra("json");
+		setQuestionType(2);
+
 		analysisJSON(JSON);
 
-		updataView(mAOPList.get(mIndex++).getAnswer());
+		// mAOPList.get(mIndex++).getAnswer()
+		updateView();
 	}
 
-	public void test() {
-		try {
-			PersonListPorjo plp = new PersonListPorjo();
-			plp.setId(1);
-			List<PersonPojo> pl = new ArrayList<PersonPojo>();
-			for (int i = 0; i < 3; i++) {
-				pl.add(new PersonPojo("a" + i, i + 18, 1));
-			}
-			plp.setPersons(pl);
-			JSONObject jo = new JSONObject();
-			jo.put("person", plp);
-			Log.i("Ax", jo.toString());
-
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void updataView(String str) {
+	public void updateView() {
 		answerList.clear();
 		orderAnswerList.clear();
 		coordinate.clear();
@@ -116,14 +82,14 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 		leftLinearLayout.removeAllViews();
 		rightLinearLayout.removeAllViews();
 
-		initData(str);
+		initData();
 
 		for (int i = 0; i < answerList.size(); i += 2) {
 			initLeftView(i);
 			initRightView(i + 1);
 		}
 
-		if (type == 1) {
+		if (amp.getStatus() == 1) {
 			coordinate = trueList;
 			for (int j = 0; j < answerList.size(); j++) {
 				setCheckStatusForIndex(j);
@@ -139,6 +105,7 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 			specified_time = jsonObject.getInt("specified_time");
 			JSONArray jArr = new JSONArray(jsonObject.getString("questions"));
 			for (int i = 0; i < jArr.length(); i++) {
+				List<AnswerBasePojo> list = new ArrayList<AnswerBasePojo>();
 				JSONObject jo = jArr.getJSONObject(i);
 				int question_id = jo.getInt("id");
 				JSONArray jsonArr = new JSONArray(
@@ -147,17 +114,21 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 					JSONObject jb = jsonArr.getJSONObject(j);
 					int branch_question_id = jb.getInt("id");
 					String answer = jb.getString("content");
-					mAOPList.add(new AnswerOrderPojo(question_id,
+					list.add(new AnswerBasePojo(question_id,
 							branch_question_id, answer));
 				}
+				mQuestList.add(list);
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void initData(String str) {
-		String[] arr = str.split(";\\|\\|;");
+	// 初始化数据
+	public void initData() {
+		String[] arr = mQuestList.get(mQindex).get(mBindex).getContent()
+				.split(";\\|\\|;");
+
 		for (int i = 0; i < arr.length; i++) {
 			answerList.add(arr[i].split("<=>")[0]);
 			answerList.add(arr[i].split("<=>")[1]);
@@ -263,7 +234,6 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 	public void check(int type) {
 		List<Integer[]> intList = new ArrayList<Integer[]>();
 		intList = trueList;
-		StringBuffer sb = new StringBuffer();
 		int count = 0;
 		for (int i = 0; i < coordinate.size(); i++) {
 			int left = coordinate.get(i)[0];
@@ -279,10 +249,8 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 				}
 			}
 
-			if (!flag) {
-				sb.append(orderAnswerList.get(left) + ";||;"
-						+ orderAnswerList.get(right));
-			}
+			sb.append(orderAnswerList.get(left)).append(" ")
+					.append(orderAnswerList.get(right)).append("    ");
 
 			for (int j = 0; j < intList.size(); j++) {
 				if (left == intList.get(j)[0] && right == intList.get(j)[1]) {
@@ -291,7 +259,14 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 			}
 		}
 
+		if (count == coordinate.size()) {
+			ratio = 100;
+		}
+
+		sb.delete(sb.length() - 4, sb.length());
+
 		if (type == 1) {
+			// 使用道具
 			if (intList.size() > 0) {
 				Random r = new Random(System.currentTimeMillis());
 				int index = r.nextInt(intList.size());
@@ -300,11 +275,6 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 				imgCanvas.setImageBitmap(drawView());
 				count++;
 			}
-		} else {
-			if (++mIndex < mAOPList.size()) {
-				updataView(mAOPList.get(mIndex).getAnswer());
-			}
-
 		}
 
 		// Toast.makeText(getApplicationContext(), "正确个数:" + count, 0).show();
@@ -409,11 +379,22 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 				// }
 				break;
 			case R.id.base_check_linearlayout:
-				if (coordinate.size() == answerList.size() / 2) {
-					check(0);
+				if (amp.getStatus() == 0) {
+					if (coordinate.size() == answerList.size() / 2) {
+						check(0);
+						AnswerBasePojo aop = mQuestList.get(mQindex).get(
+								mBindex);
+						saveAnswerJson(sb.toString(), ratio,
+								aop.getQuestions_id(),
+								aop.getBranch_questions_id());
+						sb.delete(0, sb.length());
+					} else {
+						Toast.makeText(getApplicationContext(), "请连接未完成的题", 0)
+								.show();
+					}
 				} else {
-					Toast.makeText(getApplicationContext(), "请连接未完成的题", 0)
-							.show();
+					nextRecord();
+					calculateIndexAndUpdateView();
 				}
 				break;
 			case R.id.base_propTrue:
