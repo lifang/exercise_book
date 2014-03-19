@@ -65,14 +65,10 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 	private ExerciseBook eb;
 	private List<QuestionPojo> branch_questions;
 	private int index = 0;
-	private String message;
 	public String error_str = "";// 记录错误的词
 	private ProgressDialog prodialog;
-	private int over_static;
 	private ImageView question_speak_img;
 	private String path;
-	private boolean playFlag = false;
-	private int width;
 	private Gson gson;
 	private int ratio = 0;
 	private List<Integer> ratio_list;
@@ -93,43 +89,6 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 				content = branch_questions.get(index).getContent();
 				SetTextView();
 				break;
-			// case 1:
-			// prodialog.dismiss();
-			// MyDialog("你已经答完本题确认继续下一题吗?", "确认", "取消", 1);
-			// break;
-			// case 2:
-			// prodialog.dismiss();
-			// eb.setQuestion_index(eb.getQuestion_index() + 1);
-			// eb.setHistory_item(eb.getHistory_item() + 1);
-			// SpeakBeginActivity.this.finish();
-			// intent.setClass(SpeakBeginActivity.this,
-			// SpeakPrepareActivity.class);
-			// startActivity(intent);
-			// break;
-			// case 3:
-			// prodialog.dismiss();
-			// builder.setMessage(message);
-			// builder.setPositiveButton("确定", null);
-			// builder.show();
-			// break;
-			// case 4:
-			// prodialog.dismiss();
-			// SpeakBeginActivity.this.finish();
-			// intent.setClass(SpeakBeginActivity.this,
-			// ebMainActivity.class);
-			// startActivity(intent);
-			// break;
-			// case 5:
-			// // MyDialog("恭喜完成今天的朗读作业!", "确认", "取消", 2);
-			// prodialog.dismiss();
-			// builder.setMessage("提交作业失败");
-			// builder.setPositiveButton("确定", null);
-			// builder.show();
-			// break;
-			// case 6:
-			// prodialog.dismiss();
-			// MyDialog("恭喜完成今天的朗读作业!", "确认", "取消", 2);
-			// break;
 			case 7:
 				question_speak_img.setImageDrawable(getResources().getDrawable(
 						R.drawable.xiao1));
@@ -165,7 +124,6 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 		initialize();
 		SetTextView();
 		Display display = this.getWindowManager().getDefaultDisplay();
-		width = display.getWidth();
 	}
 
 	// 初始化
@@ -612,7 +570,6 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 						handler.sendEmptyMessage(0);
 						break;
 					case 1:
-
 						intent.putExtra("precision",
 								ExerciseBookTool.getRatio(path, "reading"));// 正确率100时获取精准成就
 						intent.putExtra("use_time", getSecond());// 用户使用的时间

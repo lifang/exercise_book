@@ -31,4 +31,7 @@
     <color name="dialog_text">#FCE3CE</color>
     <color name="lvse">#92B81B</color>
     <color name="question_bg">#EEECEC</color>
+    <color name="history">#273039</color>
+    <color name="transparent2">#e0000000</color>
+
 </resources>

@@ -11,7 +11,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -33,13 +32,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.comdosoft.ExerciseBook.pojo.AnswerJson;
 import com.comdosoft.ExerciseBook.pojo.HistoryPojo;
 import com.comdosoft.ExerciseBook.pojo.ListHistoryPojo;
 import com.comdosoft.ExerciseBook.pojo.ListeningPojo;
 import com.comdosoft.ExerciseBook.pojo.QuestionPojo;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
-import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
@@ -154,7 +151,7 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
 		setTimePropEnd();// 禁用道具
 		setTruePropEnd();// 禁用道具
-
+		setCheck("开始");
 		initialize();
 		tvlist = new ArrayList<TextView>();
 
@@ -591,7 +588,13 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 			intent.putExtra("specified_time", specified_time);
 			intent.putExtra("path", path);
 			intent.putExtra("json", json);
-			intent.setClass(SpeakPrepareActivity.this, SpeakBeginActivity.class);
+			if (eb.isHistory_type()) {
+				intent.setClass(SpeakPrepareActivity.this,
+						SpeakHistoryActivity.class);
+			} else {
+				intent.setClass(SpeakPrepareActivity.this,
+						SpeakBeginActivity.class);
+			}
 			startActivity(intent);
 			SpeakPrepareActivity.this.finish();
 			break;

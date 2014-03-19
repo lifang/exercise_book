@@ -46,7 +46,7 @@ public class WorkJson {
 				Log.i("linshi", questiontype_list.size() + "<-");
 			}
 		}
-		
+
 		return work_list;
 	}
 }

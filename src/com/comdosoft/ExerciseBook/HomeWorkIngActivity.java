@@ -10,6 +10,7 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -18,9 +19,9 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
-import android.util.Xml;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
@@ -29,8 +30,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.comdosoft.ExerciseBook.pojo.AnswerJson;
-import com.comdosoft.ExerciseBook.pojo.Answer_QuestionsPojo;
 import com.comdosoft.ExerciseBook.pojo.AnswerPojo;
+import com.comdosoft.ExerciseBook.pojo.Answer_QuestionsPojo;
 import com.comdosoft.ExerciseBook.pojo.WorkPoJo;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
@@ -41,7 +42,7 @@ import com.google.gson.Gson;
 public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	private String id;
 	private String school_class_id;
-	private String json = "{\"status\":\"success\",\"notice\":\"\u83b7\u53d6\u6210\u529f\uff01\",\"tasks\":[{\"id\":130,\"name\":\"\",\"start_time\":\"2014-03-12T14:44:45+08:00\",\"question_types\":[0,1,2,3,4,5,6],\"finish_types\":[],\"end_time\":\"2014-03-13T18:00:00+08:00\",\"question_packages_url\":\"/que_ps/question_p_264/resourse.zip\"}],\"knowledges_cards_count\":null}";
+	private String json = "{\"status\":\"success\",\"notice\":\"\u83b7\u53d6\u6210\u529f\uff01\",\"tasks\":[{\"id\":130,\"name\":\"\",\"start_time\":\"2014-03-12T14:44:45+08:00\",\"question_types\":[0,1,2,3,4,5,6],\"finish_types\":[1,2,5],\"end_time\":\"2014-03-13T18:00:00+08:00\",\"question_packages_url\":\"/que_ps/question_p_264/resourse.zip\"}],\"knowledges_cards_count\":null}";
 	private ExerciseBook eb;
 	private LinearLayout mylayout;
 	private int linear_item = 0;
@@ -57,6 +58,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	static HomeWorkIngActivity instance = null;
 	private String path;
 	private List<String> json_list;
+	private List<Boolean> typeList;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -100,6 +102,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 		setContentView(R.layout.homework_ing);
 		eb = (ExerciseBook) getApplication();// 初始化
 		eb.getActivityList().add(this);
+		typeList = new ArrayList<Boolean>();
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
 		id = preferences.getString("id", "0");
@@ -200,21 +203,25 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 		work_name.setText(namearr[questiontype_list.get(i)].toString());
 		layout.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View arg0) {
-				startDekaron(questiontype_list.get(i));// 跳转到答题页面
+				startDekaron(i);// 跳转到答题页面
 			}
 		});
 		top.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View arg0) {
+				Log.i("aaa", "====================");
 				Intent intent = new Intent(HomeWorkIngActivity.this,
 						RankingOfPointsActivity.class);
 				intent.putExtra("types", questiontype_list.get(i));
 				intent.putExtra("pub_id", Integer.valueOf(eb.getWork_id()));
+				startActivity(intent);
 			}
 		});
 		if (ExerciseBookTool.getExist(questiontype_list.get(i), finish_list)) {
+			typeList.add(true);
 			over_img.setVisibility(View.VISIBLE);
 			top.setVisibility(View.VISIBLE);
 		} else {
+			typeList.add(false);
 			over_img.setVisibility(View.GONE);
 			top.setVisibility(View.GONE);
 		}
@@ -283,12 +290,25 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	 * @param i
 	 */
 	public void startDekaron(int i) {
-		switch (i) {
+		if (typeList.get(i)) {// 已完成
+			MyDialog(i);
+		} else {
+			Start_Acvivity(i);
+		}
+	}
+
+	public void Start_Acvivity(int i) {// 做题跳转
+		switch (questiontype_list.get(i)) {
 		case 0:
 			intent.setClass(this, SpeakPrepareActivity.class);
 			break;
 		case 1:
 			intent.setClass(this, SpeakPrepareActivity.class);
+			if (typeList.get(i)) {// 已完成
+				eb.setHistory_type(true);
+			} else {
+				eb.setHistory_type(false);
+			}
 			break;
 		case 2:
 			intent.setClass(this, TenSpeedActivity.class);
@@ -312,6 +332,73 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 		eb.setWork_end_dath(work_list.get(0).getEnd_time());
 		startActivity(intent);
 		this.finish();
+	}
+
+	public void Start_History_Acvivity(int i) {// 历史记录跳转
+		switch (questiontype_list.get(i)) {
+		case 0:
+			intent.setClass(this, SpeakPrepareActivity.class);
+			break;
+		case 1:
+			intent.setClass(this, SpeakPrepareActivity.class);
+			if (typeList.get(i)) {// 已完成
+				eb.setHistory_type(true);
+			} else {
+				eb.setHistory_type(false);
+			}
+			break;
+		case 2:
+			intent.setClass(this, Ten_HistoryActivity.class);
+			break;
+		case 3:
+			intent.setClass(this, AnswerSelectActivity.class);
+			break;
+		case 4:
+			intent.setClass(this, AnswerWireActivity.class);
+			break;
+		case 5:
+			intent.setClass(this, Cloze_HistoryActivity.class);
+			break;
+		case 6:
+			intent.setClass(this, AnswerOrderActivity.class);
+			break;
+		}
+		intent.putExtra("json", json_list.get(i));
+		intent.putExtra("path", path + "/answer.js");
+		Log.i("aaa", json_list.get(i));
+		eb.setWork_end_dath(work_list.get(0).getEnd_time());
+		startActivity(intent);
+		this.finish();
+	}
+
+	// 自定义dialog设置
+	private void MyDialog(final int type) {
+		// type :0表示退出 1表示结束
+		final Dialog dialog = new Dialog(this, R.style.Transparent);
+		dialog.setContentView(R.layout.my_dialog_main);
+		dialog.setCancelable(true);
+
+		ImageView close = (ImageView) dialog.findViewById(R.id.close);
+		close.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				dialog.dismiss();
+			}
+		});
+		Button history = (Button) dialog.findViewById(R.id.history);
+		Button working = (Button) dialog.findViewById(R.id.working);
+		history.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				dialog.dismiss();
+				Start_History_Acvivity(type);				
+			}
+		});
+		working.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				dialog.dismiss();
+				Start_Acvivity(type);		
+			}
+		});
+		dialog.show();
 	}
 
 	public void onclick(View v) {

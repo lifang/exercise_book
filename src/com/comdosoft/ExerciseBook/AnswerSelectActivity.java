@@ -43,7 +43,6 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 	private int i = 0;
 	private int specified_time = 0;
 
-	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		super.setContentView(R.layout.answer_select);
