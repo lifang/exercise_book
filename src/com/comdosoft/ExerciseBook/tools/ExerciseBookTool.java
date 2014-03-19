@@ -31,6 +31,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -58,11 +60,28 @@ public class ExerciseBookTool implements Urlinterface {
 	private static int readTimeOut = 10000;
 	private static String requestEncoding = "UTF-8";
 
+	// 获取历史索引
+	private int[] getAnswer_Item(String json) {
+		int[] arr = new int[3];
+		if (json != "") {
+			try {
+				JSONObject obj = new JSONObject(json);
+				JSONObject cloze = obj.getJSONObject("cloze");
+				arr[0] = cloze.getInt("questions_item");
+				arr[1] = cloze.getInt("branch_item");
+				arr[2] = cloze.getInt("status");
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+		return arr;
+	}
 
 	// 获取历史answer
 	public static String getAnswer_Json_history(String path) {
 		return ExerciseBookTool.getJson(path);
 	}
+
 	// 返回calendar格式的时间
 	public static Calendar getCalender_time(String date) {
 		Calendar wrok_day = Calendar.getInstance();
@@ -70,9 +89,10 @@ public class ExerciseBookTool implements Urlinterface {
 		String[] dayarr = day.split("-");
 		String t = date.split(" ")[1];
 		String[] timearr = t.split(":");
-		wrok_day.set(Integer.valueOf(dayarr[0]), Integer.valueOf(dayarr[1])-1,
-				Integer.valueOf(dayarr[2]), Integer.valueOf(timearr[0]),
-				Integer.valueOf(timearr[1]), Integer.valueOf(timearr[2]));
+		wrok_day.set(Integer.valueOf(dayarr[0]),
+				Integer.valueOf(dayarr[1]) - 1, Integer.valueOf(dayarr[2]),
+				Integer.valueOf(timearr[0]), Integer.valueOf(timearr[1]),
+				Integer.valueOf(timearr[2]));
 		return wrok_day;
 	}
 

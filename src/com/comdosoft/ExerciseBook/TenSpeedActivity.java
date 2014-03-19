@@ -1,5 +1,6 @@
 package com.comdosoft.ExerciseBook;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +50,8 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 	private int questions_id;
 	private String user_select = "";
 	private Gson gson;
+	private int branch_item;
+	private int status;
 	private List<Integer> ratio;
 	private boolean jz = true;// 精准成就判断
 	private Handler handler = new Handler() {
@@ -96,7 +99,17 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 		json = intent.getStringExtra("json");
 
 		SetJson(json);
-
+		File answer_file = new File(path);
+		if (answer_file.exists()) {
+			String json2 = ExerciseBookTool.getJson(path);
+			SetAnswer_Json(json2);
+		}
+		if (status == 0 && branch_item != -1) {
+			img_index = branch_questions.size() - (branch_item + 1);
+			index = branch_item + 1;
+		}
+		Log.i("aaa", index + "/" + img_index);
+		handler.sendEmptyMessage(1);
 	}
 
 	// 初始化
@@ -130,7 +143,6 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 						Time_LimitPojo tl = new Time_LimitPojo(
 								item.getInt("id"), item.getString("content"),
 								opption, item.getString("anwser"));
-						Log.i("aaa", tl.toString());
 						branch_questions.add(tl);
 					}
 				}
@@ -138,7 +150,37 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 				Toast.makeText(TenSpeedActivity.this, "解析json发生错误",
 						Toast.LENGTH_SHORT).show();
 			}
-			handler.sendEmptyMessage(1);
+		}
+	}
+
+	// 解析json
+	private void SetAnswer_Json(String json) {
+		Log.i("aaa", json);
+		if (json != "") {
+			try {
+				JSONObject obj = new JSONObject(json);
+				JSONObject time_limit = obj.getJSONObject("time_limit");
+				branch_item = time_limit.getInt("branch_item");
+				Log.i("aaa", branch_item + "/" + branch_questions.size());
+				status = time_limit.getInt("status");
+				// Log.i("aaa", specified_time + "--" + branch_item);
+				// JSONArray questions = time_limit.getJSONArray("questions");
+				// if (questions.length() > 0) {
+				// JSONObject jo = questions.getJSONObject(0);
+				// JSONArray jsonarr = jo.getJSONArray("branch_questions");
+				// HistoryPojo tl;
+				// branch_answer = new ArrayList<HistoryPojo>();
+				// for (int j = 0; j < jsonarr.length(); j++) {
+				// JSONObject item = jsonarr.getJSONObject(j);
+				// tl = new HistoryPojo(item.getInt("id"),
+				// item.getString("answer"), item.getInt("ratio"));
+				// branch_answer.add(tl);
+				// }
+				// }
+			} catch (JSONException e) {
+				Toast.makeText(TenSpeedActivity.this, "解析anwserjson发生错误",
+						Toast.LENGTH_SHORT).show();
+			}
 		}
 	}
 
@@ -165,8 +207,17 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 		}
 	}
 
-	public void setAnswerJson(String answer_history, String answer, int ratio,
+	private int Again() {
+		int type = 0;
+		if (index == branch_item) {// 结束
+			type = 1;
+		}
+		return type;
+	}
+
+	public int setAnswerJson(String answer_history, String answer, int ratio,
 			int id) {
+		int type = 0;
 		AnswerJson answerJson = gson.fromJson(answer_history, AnswerJson.class);
 		answerJson.time_limit.setUpdate_time("2014-03-12 08:00:00");
 		int q_item = Integer.valueOf(answerJson.time_limit.getQuestions_item());
@@ -176,7 +227,6 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 		answerJson.time_limit.setBranch_item(b_item + "");
 		answerJson.time_limit.setUse_time(getUseTime() + "");
 		if (answerJson.time_limit.getQuestions().size() == 0) {
-			List<Branch_AnswerPoJo> Branch_Unswer = new ArrayList<Branch_AnswerPoJo>();
 			Answer_QuestionsPojo aq = new Answer_QuestionsPojo(questions_id
 					+ "", new ArrayList<Branch_AnswerPoJo>());
 			answerJson.time_limit.getQuestions().add(aq);
@@ -187,6 +237,17 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 		answerJson.time_limit.getQuestions().get(q_item).getBranch_questions()
 				.add(new Branch_AnswerPoJo(id + "", answer, ratio + ""));
 
+		if (b_item + 1 == branch_questions.size()) {
+			type = 1;
+			answerJson.time_limit.setStatus("1");// 0表示未完成 1表示完成
+			String str = gson.toJson(answerJson);
+			try {
+				ExerciseBookTool.writeFile(path, str);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
 		String str = gson.toJson(answerJson);
 		try {
 			ExerciseBookTool.writeFile(path, str);
@@ -194,6 +255,7 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 			e.printStackTrace();
 		}
 		Log.i("linshi", str);
+		return type;
 	}
 
 	public void onClick(View v) {
@@ -212,13 +274,17 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 			}
 			ratio.add(user_boolean);
 			img_index -= 1;
-			String answer_history = ExerciseBookTool.getAnswer_Json_history(path);
+			String answer_history = ExerciseBookTool
+					.getAnswer_Json_history(path);
+			int type = 0;
 			try {
 				JSONObject obj = new JSONObject(answer_history);
 				if (obj.getJSONObject("time_limit").getString("status")
 						.equals("0")) {
-					setAnswerJson(answer_history, user_select, user_boolean,
-							branch_questions.get(index).getId());
+					type = setAnswerJson(answer_history, user_select,
+							user_boolean, branch_questions.get(index).getId());
+				} else {
+					type = Again();
 				}
 			} catch (Exception e) {
 				Toast.makeText(TenSpeedActivity.this, "json写入发生错误",
@@ -226,23 +292,17 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 			}
 			index += 1;
 
-			if (img_index <= 0) {
-				AnswerJson answerJson = gson.fromJson(answer_history,
-						AnswerJson.class);
-				answerJson.time_limit.setStatus("1");// 0表示未完成 1表示完成
-				String str = gson.toJson(answerJson);
-				try {
-					ExerciseBookTool.writeFile(path, str);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+			switch (type) {
+			case 0:
+				handler.sendEmptyMessage(1);
+				break;
+			case 1:
 				intent.putExtra("precision", ExerciseBookTool.getRatio(ratio));// 正确率100时获取精准成就
 				intent.putExtra("use_time", getUseTime());// 用户使用的时间
 				intent.putExtra("specified_time", specified_time);// 任务基础时间
 				intent.setClass(TenSpeedActivity.this, WorkEndActivity.class);
 				TenSpeedActivity.this.startActivityForResult(intent, 0);
-			} else {
-				handler.sendEmptyMessage(1);
+				break;
 			}
 			break;
 		}
@@ -264,12 +324,13 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 				index = 0;// 题目索引
 				img_index = 1;// 图片索引
 				user_boolean = 0;
-
 				branch_questions = new ArrayList<Time_LimitPojo>();
 				ratio = new ArrayList<Integer>();
 				SetJson(json);
+				handler.sendEmptyMessage(1);
 				break;
 			}
 		}
 	}
+
 }

@@ -588,7 +588,7 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 				eb.setQuestion_list(questionlist);
 				break;
 			}
-
+			intent.putExtra("specified_time", specified_time);
 			intent.putExtra("path", path);
 			intent.putExtra("json", json);
 			intent.setClass(SpeakPrepareActivity.this, SpeakBeginActivity.class);

@@ -75,8 +75,10 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 	private int width;
 	private Gson gson;
 	private int ratio = 0;
+	private List<Integer> ratio_list;
 	private String json;
 	private AnswerJson answerJson;
+	private String specified_time;
 	private int qid;
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
@@ -153,11 +155,12 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 		eb = (ExerciseBook) getApplication();
 
 		qid = eb.getQuestion_id();
-		Log.i("aaa", "qid-" + qid);
 		gson = new Gson();
+		ratio_list = new ArrayList<Integer>();
 		Intent intent = getIntent();
 		path = intent.getStringExtra("path");
 		json = intent.getStringExtra("json");
+		specified_time = intent.getStringExtra("specified_time");
 		initialize();
 		SetTextView();
 		Display display = this.getWindowManager().getDefaultDisplay();
@@ -518,7 +521,6 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 					|| result == TextToSpeech.LANG_NOT_SUPPORTED)
 			// 判断语言是否可用
 			{
-
 				Toast.makeText(SpeakBeginActivity.this, "语音不可用",
 						Toast.LENGTH_SHORT).show();
 				// speakBtn.setEnabled(false);
@@ -567,8 +569,9 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 			q_item += 1;
 			answerJson.reading.setQuestions_item(q_item + "");
 			answerJson.reading.setBranch_item("-1");
-			Answer_QuestionsPojo aq = new Answer_QuestionsPojo(qid + "",
-					new ArrayList<Branch_AnswerPoJo>());
+			Answer_QuestionsPojo aq = new Answer_QuestionsPojo(eb.getList()
+					.get(q_item).getId()
+					+ "", new ArrayList<Branch_AnswerPoJo>());
 			answerJson.reading.getQuestions().add(aq);
 			type = 2;
 		}
@@ -601,7 +604,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 				JSONObject obj = new JSONObject(answer_history);
 				if (obj.getJSONObject("reading").getString("status")
 						.equals("0")) {
-					ratio = 100;
+					ratio_list.add(ratio);
 					type = setAnswerJson(answer_history, error_str, ratio,
 							branch_questions.get(index).getId());
 				} else {
@@ -613,6 +616,10 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 					handler.sendEmptyMessage(0);
 					break;
 				case 1:
+					intent.putExtra("precision",
+							ExerciseBookTool.getRatio(ratio_list));// 正确率100时获取精准成就
+					intent.putExtra("use_time", getUseTime());// 用户使用的时间
+					intent.putExtra("specified_time", specified_time);// 任务基础时间
 					intent.setClass(SpeakBeginActivity.this,
 							WorkEndActivity.class);
 					SpeakBeginActivity.this.startActivityForResult(intent, 1);

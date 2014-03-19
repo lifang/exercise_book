@@ -131,8 +131,10 @@ public class Table_TabHost extends Activity
 		img_tab_now=(ImageView) findViewById(R.id.img_tab_now);
 		img_tab_now.setOnClickListener(new OnClickListener(){
 			public void onClick(View v) {
+				Log.i("asd", "点击"+eb.isMneu()+"");
 				if(eb.isMneu())
 				{
+					
 					Intent  intent = new Intent(Table_TabHost.this,LeftMenu.class);
 					startActivity(intent);
 					eb.setMneu(false);
