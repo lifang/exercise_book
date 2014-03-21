@@ -12,19 +12,22 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.PopupWindow;
-import android.widget.Spinner;
+import android.widget.PopupWindow.OnDismissListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +38,7 @@ import com.comdosoft.ExerciseBook.pojo.Branch_PoJo;
 import com.comdosoft.ExerciseBook.pojo.ClozePojo;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
+import com.comdosoft.ExerciseBook.tools.MyspinnerAdapter;
 import com.comdosoft.ExerciseBook.tools.PredicateLayout;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 import com.google.gson.Gson;
@@ -47,7 +51,6 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 	public String sdpath = Environment.getExternalStorageDirectory() + "/";
 	private String content = "";
 	private PredicateLayout myLayout;
-	private List<PopupWindow> popup_list;
 	private String[] str;
 	private int specified_time;
 	private List<Branch_PoJo> Branchlist;
@@ -60,6 +63,9 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 	private int question_id;
 	private AnswerJson answerJson;
 	private Gson gson;
+	private int propItem = 0;
+	private List<TextView> tv_list;
+	private PopupWindow popupWindow;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -81,10 +87,11 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.cloze);
 		setTimePropEnd();// 禁用道具
-		setTruePropEnd();// 禁用道具
+		// setTruePropEnd();// 禁用道具
 		eb = (ExerciseBook) getApplication();
 		findViewById(R.id.base_back_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
+		findViewById(R.id.base_propTrue).setOnClickListener(this);
 		gson = new Gson();
 		initialize();
 		Intent intent = getIntent();
@@ -126,61 +133,27 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 
 	private void setTextView() {
 		str = content.split("\\[\\[tag\\]\\]");
-		popup_list = new ArrayList<PopupWindow>();
 		user_select = new HashMap<Integer, String>();
+		tv_list = new ArrayList<TextView>();
 		for (int i = 0; i < str.length; i++) {
 			View view1 = View.inflate(this, R.layout.cloze_view, null);
 			TextView text = (TextView) view1.findViewById(R.id.tv);
 			text.setText(str[i].toString());
-			Spinner spinner = (Spinner) view1.findViewById(R.id.spinner);
-
+			final TextView spinner = (TextView) view1
+					.findViewById(R.id.spinner);
 			if (i != str.length - 1) {
-				final int item = i;
 				String Opption = cloze.getList().get(i).getOpption();
-				String[] Opption_str = Opption.split(";\\|\\|;");
-				final List<String> str_list = getlist(Opption_str);// 设置默认显示为空
-				ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-						R.layout.spinnerview, str_list) {
-					public View getDropDownView(int position, View convertView,
-							ViewGroup parent) {
-						View view = getLayoutInflater().inflate(
-								R.layout.my_spinner, parent, false);
-						TextView label = (TextView) view
-								.findViewById(R.id.label);
-						label.setText(str_list.get(position));
-						// ImageView iv = (ImageView)
-						// view.findViewById(R.id.iv);
-						if (position == 0) {
-							label.setVisibility(View.GONE);
-						} else {
-							label.setBackgroundColor(getResources().getColor(
-									R.color.spinner_color));
-							// iv.setVisibility(View.GONE);
-						}
-						// 这里ViewGroup parent就是设置整个下拉列表框的
-						parent.setFadingEdgeLength(0); // 设置模糊边界
-						// parent.setOverScrollMode(View.OVER_SCROLL_NEVER);//
-						// 滚动的
-						// parent.setBackgroundResource(R.drawable.sprin);// 背景
-						return view;
-					}
-				};
-				// adapter.setDropDownViewResource(R.layout.my_spinner);
-				spinner.setAdapter(adapter);
-				spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
-					public void onItemSelected(AdapterView<?> arg0, View arg1,
-							int arg2, long arg3) {
-						if (!str_list.get(arg2).equals("")) {
-							user_select.put(item, str_list.get(arg2));
-						}
-					}
-
-					public void onNothingSelected(AdapterView<?> arg0) {
+				final String[] Opption_str = Opption.split(";\\|\\|;");
+				spinner.setOnClickListener(new OnClickListener() {
+					public void onClick(View v) {
+						showWindow(spinner, Opption_str);
 					}
 				});
 			}
 			if (i == str.length - 1) {
 				spinner.setVisibility(View.GONE);
+			} else {
+				tv_list.add(spinner);
 			}
 			myLayout.addView(view1);
 		}
@@ -239,7 +212,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 
 	private List<String> getlist(String[] str) {
 		List<String> strlist = new ArrayList<String>();
-		strlist.add("");
+		// strlist.add("");
 		for (int i = 0; i < str.length; i++) {
 			strlist.add(str[i]);
 		}
@@ -266,11 +239,12 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		answerJson.cloze.setQuestions_item(q_item + "");
 		for (Map.Entry<Integer, String> entry : answer.entrySet()) {
 			int ratio = 0;
-			if (entry.getValue() == cloze.getList().get(entry.getKey())
-					.getAnswer()) {
+			if (entry.getValue().equals(
+					cloze.getList().get(entry.getKey()).getAnswer())) {
 				ratio = 100;
 			}
-			Log.i("aaa", "ratio:" + ratio);
+			Log.i("aaa", "ratio:"
+					+ cloze.getList().get(entry.getKey()).getAnswer());
 			answerJson.cloze
 					.getQuestions()
 					.get(q_item)
@@ -299,6 +273,40 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 			type = 1;
 		}
 		return type;
+	}
+
+	public void showWindow(final View position, final String[] Opption_str) {
+
+		LinearLayout layout = (LinearLayout) LayoutInflater.from(this).inflate(
+				R.layout.mypinner_dropdown, null);
+		ListView listView = (ListView) layout.findViewById(R.id.listView);
+		MyspinnerAdapter adapter = new MyspinnerAdapter(ClozeActivity.this, Opption_str);
+		listView.setAdapter(adapter);
+		popupWindow = new PopupWindow(position);
+		popupWindow.setWidth(position.getWidth());
+		popupWindow.setHeight(LayoutParams.WRAP_CONTENT);
+		popupWindow.setBackgroundDrawable(new BitmapDrawable());
+		popupWindow.setOutsideTouchable(true);
+		popupWindow.setFocusable(true);
+		popupWindow.setContentView(layout);
+		popupWindow.showAsDropDown(position, 0, 0);
+		popupWindow.setOnDismissListener(new OnDismissListener() {
+			public void onDismiss() {
+				// position.setBackgroundResource(R.drawable.preference_single_item);
+			}
+		});
+		listView.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				((TextView) position).setText(Opption_str[arg2]);
+				popupWindow.dismiss();
+				popupWindow = null;
+				if (!Opption_str[arg2].equals("")) {
+					user_select.put(arg2, Opption_str[arg2]);
+				}
+			}
+		});
+
 	}
 
 	public void onClick(View v) {
@@ -346,6 +354,15 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+			}
+			break;
+		case R.id.base_propTrue:
+			Log.i("aaa", "使用道具");
+			if (propItem < tv_list.size()) {
+				tv_list.get(propItem).setText(
+						cloze.getList().get(propItem).getAnswer());
+//				tv_list.get(propItem).setTextColor(R.color.work_end);
+				propItem += 1;
 			}
 			break;
 		}

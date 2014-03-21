@@ -84,6 +84,7 @@ public class Ten_HistoryActivity extends AnswerBaseActivity implements
 		setTimePropEnd();// 禁用道具
 		setTruePropEnd();// 禁用道具
 		setCheck("下一个");
+		setType(1);
 		initialize();
 		branch_questions = new ArrayList<Time_LimitPojo>();
 		gson = new Gson();

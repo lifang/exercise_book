@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lint>
-<<<<<<< HEAD
-
-    <issue
+    <issue
         id="HandlerLeak"
         severity="ignore" />
 
@@ -12,17 +10,24 @@
 
     <issue id="ValidFragment" >
 
-=======
-    <issue id="HandlerLeak" severity="ignore" />
-    <issue id="ResourceAsColor" severity="ignore" />
-    <issue id="SdCardPath" severity="ignore" />
-    <issue id="ValidFragment">
->>>>>>> 4a10140cdbec816b35cca29a38ee39a568a86420
-        <ignore path="src/com/comdosoft/ExerciseBook/CardBagActivity.java" />
-        <ignore path="src/com/comdosoft/ExerciseBook/CardFrontFragment.java" />
-    </issue>
-<<<<<<< HEAD
+        <issue
+            id="HandlerLeak"
+            severity="ignore" />
 
-=======
->>>>>>> 4a10140cdbec816b35cca29a38ee39a568a86420
+        <issue
+            id="ResourceAsColor"
+            severity="ignore" />
+
+        <issue
+            id="SdCardPath"
+            severity="ignore" />
+
+        <issue id="ValidFragment" >
+
+            <ignore path="src/com/comdosoft/ExerciseBook/CardBagActivity.java" />
+
+            <ignore path="src/com/comdosoft/ExerciseBook/CardFrontFragment.java" />
+        </issue>
+    </issue>
+
 </lint>

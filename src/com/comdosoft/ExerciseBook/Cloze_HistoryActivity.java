@@ -9,16 +9,20 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.PopupWindow.OnDismissListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +32,7 @@ import com.comdosoft.ExerciseBook.pojo.Branch_AnswerPoJo;
 import com.comdosoft.ExerciseBook.pojo.Branch_PoJo;
 import com.comdosoft.ExerciseBook.pojo.ClozePojo;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
+import com.comdosoft.ExerciseBook.tools.MyspinnerAdapter;
 import com.comdosoft.ExerciseBook.tools.PredicateLayout;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 import com.google.gson.Gson;
@@ -65,6 +70,7 @@ public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 			}
 		};
 	};
+	private TextView spinner;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -103,42 +109,18 @@ public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 			View view1 = View.inflate(this, R.layout.cloze_view, null);
 			TextView text = (TextView) view1.findViewById(R.id.tv);
 			text.setText(str[i].toString());
-			Spinner spinner = (Spinner) view1.findViewById(R.id.spinner);
+			spinner = (TextView) view1.findViewById(R.id.spinner);
 
 			if (i != str.length - 1) {
 				String Opption = cloze.getList().get(i).getOpption();
-				String[] Opption_str = Opption.split(";\\|\\|;");
-				final List<String> str_list = getlist(Opption_str);// 设置默认显示为空
-				ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-						R.layout.spinnerview, str_list) {
-					public View getDropDownView(int position, View convertView,
-							ViewGroup parent) {
-						View view = getLayoutInflater().inflate(
-								R.layout.my_spinner, parent, false);
-						TextView label = (TextView) view
-								.findViewById(R.id.label);
-						label.setText(str_list.get(position));
-						// ImageView iv = (ImageView)
-						// view.findViewById(R.id.iv);
-						if (position == 0) {
-							label.setVisibility(View.GONE);
-						} else {
-							label.setBackgroundColor(getResources().getColor(
-									R.color.spinner_color));
-							// iv.setVisibility(View.GONE);
-						}
-						// 这里ViewGroup parent就是设置整个下拉列表框的
-						parent.setFadingEdgeLength(0); // 设置模糊边界
-						// parent.setOverScrollMode(View.OVER_SCROLL_NEVER);//
-						// 滚动的
-						// parent.setBackgroundResource(R.drawable.sprin);// 背景
-						return view;
+				final String[] Opption_str = Opption.split(";\\|\\|;");
+				spinner.setOnClickListener(new OnClickListener() {
+					public void onClick(View v) {
+						Log.i("aaa", "---");
+						showWindow(spinner, Opption_str);
 					}
-				};
-				// adapter.setDropDownViewResource(R.layout.my_spinner);
-				spinner.setAdapter(adapter);
-				int item = getItem(str_list, cloze.getList().get(i).getAnswer());
-				spinner.setSelection(item);
+				});
+				spinner.setText(cloze.getList().get(i).getAnswer());
 			}
 			if (i == str.length - 1) {
 				spinner.setVisibility(View.GONE);
@@ -147,14 +129,26 @@ public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 		}
 	}
 
-	public int getItem(List<String> list, String value) {
-		int item = 0;
-		for (int i = 0; i < list.size(); i++) {
-			if (list.get(i).equals(value)) {
-				item = i;
+	public void showWindow(final View position, final String[] Opption_str) {
+
+		LinearLayout layout = (LinearLayout) LayoutInflater.from(this).inflate(
+				R.layout.mypinner_dropdown, null);
+		ListView listView = (ListView) layout.findViewById(R.id.listView);
+		MyspinnerAdapter adapter = new MyspinnerAdapter(Cloze_HistoryActivity.this, Opption_str);
+		listView.setAdapter(adapter);
+		PopupWindow popupWindow = new PopupWindow(position);
+		popupWindow.setWidth(position.getWidth());
+		popupWindow.setHeight(LayoutParams.WRAP_CONTENT);
+		popupWindow.setBackgroundDrawable(new BitmapDrawable());
+		popupWindow.setOutsideTouchable(true);
+		popupWindow.setFocusable(true);
+		popupWindow.setContentView(layout);
+		popupWindow.showAsDropDown(position, 0, 0);
+		popupWindow.setOnDismissListener(new OnDismissListener() {
+			public void onDismiss() {
+				// position.setBackgroundResource(R.drawable.preference_single_item);
 			}
-		}
-		return item;
+		});
 	}
 
 	private void SetJson(String json) {

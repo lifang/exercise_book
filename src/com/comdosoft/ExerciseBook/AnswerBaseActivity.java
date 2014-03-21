@@ -81,7 +81,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener {
 		}
 	};
 
-	@Override
+
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		super.setContentView(R.layout.answer_base);
@@ -180,13 +180,19 @@ public class AnswerBaseActivity extends Activity implements OnClickListener {
 
 	// 设置答题记录 正确率和使用时间
 	public void setAccuracyAndUseTime(int accuracy, int useTime) {
+		accuracy = accuracy > 0 ? accuracy : 0;
+		useTime = useTime > 0 ? useTime : 0;
 		accuracyText.setText(accuracy + "%");
 		useTimeText.setText(timeSecondToString(useTime));
 	}
 
 	// 设置自己的答案
-	public void setMyAnswer(String s, int i) {
-		base_answer_text.setText(answerArr[i] + s);
+	public void setMyAnswer(String s) {
+		if (s == null || s.equals("")) {
+			base_answer_text.setText("没有答题记录!");
+		} else {
+			base_answer_text.setText(answerArr[mQuestionType] + s);
+		}
 	}
 
 	// 时间道具使用完
@@ -262,7 +268,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.base_back_linearlayout:
-			MyDialog("确认退出吗？", mQuestionType);
+			MyDialog("确认退出吗？", 0);
 			break;
 		}
 	}
@@ -271,7 +277,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener {
 	public void nextRecord() {
 		setAccuracyAndUseTime(mRecoirdRatio.get(mRecordIndex),
 				amp.getUse_time());
-		setMyAnswer(mRecoirdAnswer.get(mRecordIndex), 1);
+		setMyAnswer(mRecoirdAnswer.get(mRecordIndex));
 		if (mRecordIndex < mRecoirdAnswer.size() - 1) {
 			mRecordIndex++;
 		}

@@ -53,6 +53,7 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 	private Gson gson;
 	private int branch_item;
 	private int status;
+	private boolean Check = false;
 	private boolean jz = true;// 精准成就判断
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -87,8 +88,9 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 		super.setContentView(R.layout.ten_speed);
 		findViewById(R.id.base_back_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
+		findViewById(R.id.base_propTrue).setOnClickListener(this);
 		setTimePropEnd();// 禁用道具
-		setTruePropEnd();// 禁用道具
+		// setTruePropEnd();// 禁用道具
 		eb = (ExerciseBook) getApplication();
 		initialize();
 		branch_questions = new ArrayList<Time_LimitPojo>();
@@ -251,43 +253,66 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 			super.onClick(v);
 			break;
 		case R.id.base_check_linearlayout:
-			if (user_select.equals(branch_questions.get(index).getAnwser())) {
-				user_boolean = 100;
-			} else {
-				user_boolean = 0;
-			}
-			img_index -= 1;
-			String answer_history = ExerciseBookTool
-					.getAnswer_Json_history(path);
-			int type = 0;
-			try {
-				JSONObject obj = new JSONObject(answer_history);
-				if (obj.getJSONObject("time_limit").getString("status")
-						.equals("0")) {
-					type = setAnswerJson(answer_history, user_select,
-							user_boolean, branch_questions.get(index).getId());
+			if (Check) {
+				Check = false;
+				setCheck("检查");
+				if (user_select.equals(branch_questions.get(index).getAnwser())) {
+					user_boolean = 100;
 				} else {
-					type = Again();
+					user_boolean = 0;
 				}
-			} catch (Exception e) {
-				Toast.makeText(TenSpeedActivity.this, "json写入发生错误",
-						Toast.LENGTH_SHORT).show();
-			}
-			index += 1;
+				img_index -= 1;
+				String answer_history = ExerciseBookTool
+						.getAnswer_Json_history(path);
+				int type = 0;
+				try {
+					JSONObject obj = new JSONObject(answer_history);
+					if (obj.getJSONObject("time_limit").getString("status")
+							.equals("0")) {
+						type = setAnswerJson(answer_history, user_select,
+								user_boolean, branch_questions.get(index)
+										.getId());
+					} else {
+						type = Again();
+					}
+				} catch (Exception e) {
+					Toast.makeText(TenSpeedActivity.this, "json写入发生错误",
+							Toast.LENGTH_SHORT).show();
+				}
+				index += 1;
 
-			switch (type) {
-			case 0:
-				handler.sendEmptyMessage(1);
-				break;
-			case 1:
-				intent.putExtra("precision",
-						ExerciseBookTool.getRatio(path, "time_limit"));// 正确率100时获取精准成就
-				intent.putExtra("use_time", getUseTime());// 用户使用的时间
-				intent.putExtra("specified_time", specified_time);// 任务基础时间
-				intent.setClass(TenSpeedActivity.this, WorkEndActivity.class);
-				TenSpeedActivity.this.startActivityForResult(intent, 0);
-				break;
+				switch (type) {
+				case 0:
+					handler.sendEmptyMessage(1);
+					break;
+				case 1:
+					intent.putExtra("precision",
+							ExerciseBookTool.getRatio(path, "time_limit"));// 正确率100时获取精准成就
+					intent.putExtra("use_time", getUseTime());// 用户使用的时间
+					intent.putExtra("specified_time", specified_time);// 任务基础时间
+					intent.setClass(TenSpeedActivity.this,
+							WorkEndActivity.class);
+					TenSpeedActivity.this.startActivityForResult(intent, 0);
+					break;
+				}
+			} else {
+				Check = true;
+				setCheck("下一个");
 			}
+			break;
+		case R.id.base_propTrue:
+			if (branch_questions.get(index).getOpption()[0]
+					.equals(branch_questions.get(index).getAnwser())) {
+				one_btn.setBackgroundResource(R.drawable.loginbtn_lv);
+				two_btn.setBackgroundResource(R.drawable.loginbtn_hui);
+			} else {
+				one_btn.setBackgroundResource(R.drawable.loginbtn_hui);
+				two_btn.setBackgroundResource(R.drawable.loginbtn_lv);
+			}
+			Check = true;
+			setCheck("下一个");
+			Toast.makeText(TenSpeedActivity.this, "使用成功!", Toast.LENGTH_SHORT)
+					.show();
 			break;
 		}
 	}

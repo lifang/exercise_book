@@ -10,6 +10,7 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -38,11 +39,12 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 import com.comdosoft.ExerciseBook.tools.WorkJson;
 import com.google.gson.Gson;
+import com.google.gson.JsonNull;
 
 public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	private String id;
 	private String school_class_id;
-	private String json = "{\"status\":\"success\",\"notice\":\"\u83b7\u53d6\u6210\u529f\uff01\",\"tasks\":[{\"id\":130,\"name\":\"\",\"start_time\":\"2014-03-12T14:44:45+08:00\",\"question_types\":[0,1,2,3,4,5,6],\"finish_types\":[1,2,5],\"end_time\":\"2014-03-13T18:00:00+08:00\",\"question_packages_url\":\"/que_ps/question_p_264/resourse.zip\"}],\"knowledges_cards_count\":null}";
+	private String json = "{\"status\":\"success\",\"notice\":\"\u83b7\u53d6\u6210\u529f\uff01\",\"tasks\":[{\"id\":130,\"name\":\"\",\"start_time\":\"2014-03-12T14:44:45+08:00\",\"question_types\":[0,1,2,3,4,5,6],\"finish_types\":[2,5],\"end_time\":\"2014-03-13T18:00:00+08:00\",\"question_packages_url\":\"/que_ps/question_p_264/resourse.zip\"}],\"knowledges_cards_count\":10}";
 	private ExerciseBook eb;
 	private LinearLayout mylayout;
 	private int linear_item = 0;
@@ -59,6 +61,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	private String path;
 	private List<String> json_list;
 	private List<Boolean> typeList;
+	private boolean cardType = false;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -208,7 +211,6 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 		});
 		top.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View arg0) {
-				Log.i("aaa", "====================");
 				Intent intent = new Intent(HomeWorkIngActivity.this,
 						RankingOfPointsActivity.class);
 				intent.putExtra("types", questiontype_list.get(i));
@@ -265,6 +267,13 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 				JSONObject obj = new JSONObject(json);
 				if (obj.getString("status").equals("success")) {
 					work_list = WorkJson.json(json);
+					if (obj.get("knowledges_cards_count").equals(
+							JSONObject.NULL)) {
+						cardType = true;
+					} else {
+						cardType = obj.getInt("knowledges_cards_count") < 20 ? true
+								: false;
+					}
 					Log.i("linshi", work_list.size() + "-size");
 					if (work_list.size() != 0) {
 						eb.setWork_id(work_list.get(0).getId() + "");
@@ -289,11 +298,20 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	 * 
 	 * @param i
 	 */
+
 	public void startDekaron(int i) {
 		if (typeList.get(i)) {// 已完成
 			MyDialog(i);
 		} else {
-			Start_Acvivity(i);
+			if (cardType) {
+				Start_Acvivity(i);
+			} else {
+				Builder builder = new Builder(HomeWorkIngActivity.this);
+				builder.setTitle("提示");
+				builder.setMessage("您的卡包已满,先清除几张再回来答题吧");
+				builder.setNegativeButton("确定", null);
+				builder.show();
+			}
 		}
 	}
 
@@ -390,13 +408,13 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 		history.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				dialog.dismiss();
-				Start_History_Acvivity(type);				
+				Start_History_Acvivity(type);
 			}
 		});
 		working.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				dialog.dismiss();
-				Start_Acvivity(type);		
+				Start_Acvivity(type);
 			}
 		});
 		dialog.show();
