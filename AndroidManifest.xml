@@ -205,11 +205,11 @@
         <activity
             android:name=".HomeWorkIngActivity"
             android:screenOrientation="portrait" >
-<<<<<<< HEAD
         </activity>
-        <activity android:name=".MCardBagActivity" >
-=======
->>>>>>> 7752aef7bb02c69773d3158a847e615e989bb97b
+        <activity
+            android:name=".MCardBagActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

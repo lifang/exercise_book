@@ -1,5 +1,6 @@
 package com.comdosoft.ExerciseBook;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,16 +10,23 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
+import android.provider.DocumentsContract.Root;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -32,6 +40,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,24 +50,25 @@ import com.comdosoft.ExerciseBook.pojo.tags;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
-public class MCardBagActivity extends Table_TabHost implements Urlinterface
-{
+public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 	List<tags> tagsList;
-	public Map<Integer, List> Allmap;
-	public Map<Integer,List<View>> clickmap;
+	public Map<Integer, List<knowledges_card>> Allmap;
+	public Map<Integer, List<View>> FontCard;
+	public Map<Integer, List<View>> BackCard;
 	private List<knowledges_card> cardList;
 	private int allsize;
 	private ViewPager viewPager;
 	private ImageView imageView;
 	private ImageView[] imageViews;
 	private ViewGroup group;
-	private View ViewGroup;
+	// private View ViewGroup;
 	private List<View> viewList;
-	private int page=0;
+	private int page = 0;
 	private int mindex;
 	Boolean[][] ListBool;
 	Boolean[][] PageBool;
-	LayoutInflater inflater ;
+	LayoutInflater inflater;
+	LayoutInflater inflater2;
 	private String student_id;
 	private String school_class_id;
 	private EditText cardbagEt;
@@ -67,66 +77,51 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface
 	private Button button2;
 	private Button button3;
 	private Button button4;
-	List<Button>  btnList;
+	private ProgressDialog progressDialog;
+	List<Button> btnList;
 	GuidePageAdapter pageAdapter;
+	MediaPlayer mediaplay;
+	ViewGroup viewgroup;
+	List<View> visList;
+
+	@SuppressWarnings("rawtypes")
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.cardbag);
-		SharedPreferences preferences	= getSharedPreferences(SHARED,
+		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
-		btnList=new ArrayList<Button>();
-		cardbagEt=(EditText) findViewById(R.id.cardbagEt);
-		cardbatFind=(ImageView) findViewById(R.id.cardbatFind);
-		button1=(Button) findViewById(R.id.button1);
-		btnList.add(button1);
-		button2=(Button) findViewById(R.id.button2);
-		btnList.add(button2);
-		button3=(Button) findViewById(R.id.button3);
-		btnList.add(button3);
-		button4=(Button) findViewById(R.id.button4);
-		btnList.add(button4);
-		Allmap = new HashMap<Integer, List>();
-		cardList = new ArrayList<knowledges_card>();
-		tagsList = new ArrayList<tags>();
+		mediaplay = new MediaPlayer();
+		initbtn();
 		getKonwledges();
+		btnlistClick();
 		student_id = preferences.getString("id", "1");
 		school_class_id = preferences.getString("school_class_id", "1");
-		for(int i=0;i<btnList.size();i++)
-		{
-			final String mistype=String.valueOf(i);
-			btnList.get(i).setOnClickListener(new OnClickListener(){
-				public void onClick(View v) {
-					Thread thread = new Thread() {
-						String json;
-						public void run() {
-							try {
-								viewPager = (ViewPager) findViewById(R.id.guidePages);
-								Map<String, String> map = new HashMap<String, String>();
-								map.put("student_id", "1");
-								map.put("school_class_id", "1");
-								map.put("mistake_types", mistype);
-								json = ExerciseBookTool.sendGETRequest(
-										get_knowledges_card, map);
-								parsejson(json,false);
-								handler.sendEmptyMessage(1);
-							} catch (Exception e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						}
-					};
-					thread.start();
-					
-					
-//					viewPager.getAdapter().notifyDataSetChanged();
-				}
-			});
-		}
 
-		cardbatFind.setOnClickListener(new OnClickListener()
-		{
+	}
+
+	public void initbtn() {
+		btnList = new ArrayList<Button>();
+		cardbagEt = (EditText) findViewById(R.id.cardbagEt);
+		cardbatFind = (ImageView) findViewById(R.id.cardbatFind);
+		button1 = (Button) findViewById(R.id.button1);
+		button2 = (Button) findViewById(R.id.button2);
+		button3 = (Button) findViewById(R.id.button3);
+		button4 = (Button) findViewById(R.id.button4);
+		btnList.add(button4);
+		btnList.add(button1);
+		btnList.add(button2);
+		btnList.add(button3);
+		Allmap = new HashMap<Integer, List<knowledges_card>>();
+		cardList = new ArrayList<knowledges_card>();
+		tagsList = new ArrayList<tags>();
+	}
+
+	public void btnlistClick() {
+		cardbatFind.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
+				progressDialog = ProgressDialog.show(MCardBagActivity.this,
+						"Loading...", "正在请求数据。。。。", true, false);
 				Thread thread = new Thread() {
 					public void run() {
 						try {
@@ -134,11 +129,11 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface
 							Map<String, String> map = new HashMap<String, String>();
 							map.put("student_id", "1");
 							map.put("school_class_id", "1");
-							map.put("name",String.valueOf(cardbagEt.getText()));
+							map.put("name", String.valueOf(cardbagEt.getText()));
 							String json = ExerciseBookTool.sendGETRequest(
 									get_knowledges_card, map);
-							pageAdapter=new GuidePageAdapter();
-							parsejson(json,false);
+							pageAdapter = new GuidePageAdapter();
+							parsejson(json, false);
 							handler.sendEmptyMessage(1);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -148,8 +143,45 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface
 				thread.start();
 			}
 		});
+		btnList.get(0).setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				getKonwledges();
+			}
+		});
+		for (int i = 1; i < btnList.size(); i++) {
+			final String mistype = String.valueOf(i);
+			btnList.get(i).setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					progressDialog = ProgressDialog.show(MCardBagActivity.this,
+							"Loading...", "正在请求数据。。。。", true, false);
+					Thread thread = new Thread() {
+						String json;
+
+						public void run() {
+							try {
+								viewPager = (ViewPager) findViewById(R.id.guidePages);
+								Map<String, String> map = new HashMap<String, String>();
+								map.put("student_id", "1");
+								map.put("school_class_id", "1");
+								map.put("mistake_types", mistype);
+								json = ExerciseBookTool.sendGETRequest(
+										get_knowledges_card, map);
+								parsejson(json, false);
+								handler.sendEmptyMessage(1);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					};
+					thread.start();
+				}
+			});
+		}
 	}
+
 	public void getKonwledges() {
+		progressDialog = ProgressDialog.show(MCardBagActivity.this,
+				"Loading...", "正在请求数据。。。。", true, false);
 		Thread thread = new Thread() {
 			public void run() {
 				try {
@@ -159,8 +191,8 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface
 					map.put("school_class_id", "1");
 					String json = ExerciseBookTool.sendGETRequest(
 							get_knowledges_card, map);
-					pageAdapter=new GuidePageAdapter();
-					parsejson(json,true);
+					pageAdapter = new GuidePageAdapter();
+					parsejson(json, true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -168,8 +200,8 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface
 		};
 		thread.start();
 	}
-	private void parsejson(String json,Boolean flag) {
-		// cardList.clear();
+
+	private void parsejson(String json, Boolean flag) {
 		int count1 = 0;
 		Allmap.clear();
 		cardList.clear();
@@ -248,8 +280,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface
 					tagsList.add(new tags(card_bag_id, created_at, id, name,
 							update_at));
 				}
-				if(flag)
-				{
+				if (flag) {
 					handler.sendEmptyMessage(1);
 				}
 			} else {
@@ -274,11 +305,19 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface
 				break;
 			case 1:
 				setViewPager();
+				progressDialog.dismiss();
+				// viewPager.setOffscreenPageLimit(Allmap.size());
 				viewPager.setAdapter(new GuidePageAdapter());
-				viewPager.setOnPageChangeListener(new GuidePageChangeListener());
+				viewPager
+				.setOnPageChangeListener(new GuidePageChangeListener());
 				break;
 			case 2:
-				getKonwledges();
+				setViewPager();
+				// viewPager.setOffscreenPageLimit(Allmap.size());
+				viewPager.setCurrentItem(viewPager.getCurrentItem());
+				viewPager.setAdapter(new GuidePageAdapter());
+				viewPager
+				.setOnPageChangeListener(new GuidePageChangeListener());
 				break;
 			case 3:
 				break;
@@ -287,160 +326,390 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface
 			}
 		}
 	};
-	public void setViewPager()
-	{
-		Log.i("2", " setAllmap:"+Allmap.size());
+	@SuppressWarnings("unused")
+	public void setViewPager() {
+
 		group = (ViewGroup) findViewById(R.id.viewGroup);
 		viewPager = (ViewPager) findViewById(R.id.guidePages);
-		clickmap=new HashMap<Integer, List<View>>();
+		FontCard = new HashMap<Integer, List<View>>();
+		// BackCard = new HashMap<Integer, List<View>>();
 		viewList = new ArrayList<View>();
-		int pageCount=Allmap.size();
-		ListBool=new Boolean[pageCount][4];
-		PageBool=new Boolean[pageCount][4];
-		inflater= getLayoutInflater();
+		int pageCount = Allmap.size();
+		ListBool = new Boolean[pageCount][4];
+		PageBool = new Boolean[pageCount][4];
+		inflater2 = LayoutInflater.from(this);
 		imageViews = new ImageView[Allmap.size()];
 		LinearLayout imageL;
-		//		page = 1;
+		FontCard.clear();
 		viewList.clear();
 		group.removeAllViews();
-		for(int i=0;i<imageViews.length;i++)
-		{
-			imageViews[i]=null;
+		for (int i = 0; i < imageViews.length; i++) {
+			imageViews[i] = null;
 		}
-		for(int i=0;i<Allmap.size();i++)
-		{
-			
-			List<View> listv=new ArrayList<View>();
-			//增加下面的小图标
-			imageL = new LinearLayout(MCardBagActivity.this);
-			imageL.setLayoutParams(new LayoutParams(40, 40));
-			imageView = new ImageView(MCardBagActivity.this);
-			imageView.setLayoutParams(new LayoutParams(20, 20));
-			imageView.setPadding(10, 0, 10, 0);
-			imageViews[i] = imageView;
-			Log.i("1", "i:"+i);
-			if (i == 0) {
-				imageView.setBackgroundResource(R.drawable.page_indicator);
-			} else {
-				imageView
-				.setBackgroundResource(R.drawable.page_inicator_focused);
+		for (int i = 0; i < Allmap.size(); i++) {
+			List<View> fontlist = new ArrayList<View>();
+			List<View> backlist = new ArrayList<View>();
+			if (Allmap.size() > 1) {
+				// 增加下面的小图标
+				imageL = new LinearLayout(MCardBagActivity.this);
+				imageL.setLayoutParams(new LayoutParams(40, 40));
+				imageView = new ImageView(MCardBagActivity.this);
+				imageView.setLayoutParams(new LayoutParams(20, 20));
+				imageView.setPadding(10, 0, 10, 0);
+				imageViews[i] = imageView;
+				if (i == 0) {
+					imageView.setBackgroundResource(R.drawable.page_indicator);
+				} else {
+					imageView
+					.setBackgroundResource(R.drawable.page_inicator_focused);
+				}
+				imageL.addView(imageView);
+				group.addView(imageL);
 			}
-			imageL.addView(imageView);
-			group.addView(imageL);
-			//图标结束
-			ViewGroup view = (android.view.ViewGroup) inflater.inflate(R.layout.cardbag_gridview, null);			//增加viewpager试图
+			// 图标结束
+			ViewGroup view = (android.view.ViewGroup) inflater2.inflate(
+					R.layout.cardbag_gridview, null); // 增加viewpager试图
 			LinearLayout linear = null;
-			List<knowledges_card> list1=Allmap.get(i+1);
-			for(int j=0;j<Allmap.get(i+1).size();j++)
-			{
-				Log.i("1", "j:"+j);
-				ListBool[i][j]=true;	//卡片集合
-				PageBool[i][j]=true;    //所有卡片的T/F
-				if((j+1)%2!=0)
-				{
-					linear=new LinearLayout(MCardBagActivity.this);
-					linear.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT));
+			List<knowledges_card> list1 = Allmap.get(i + 1);
+			for (int j = 0; j < Allmap.get(i + 1).size(); j++) {
+				ListBool[i][j] = true; // 卡片集合
+				PageBool[i][j] = true; // 所有卡片的T/F
+				ViewGroup cardview = (android.view.ViewGroup) inflater2
+						.inflate(R.layout.cardbag_gridview, null);
+				ViewGroup fontview = (ViewGroup) inflater2.inflate(
+						R.layout.cardbag_grdiview_iteam, null);
+				if ((j + 1) % 2 != 0) {
+					linear = new LinearLayout(MCardBagActivity.this);
+					linear.setLayoutParams(new LayoutParams(
+							LayoutParams.MATCH_PARENT,
+							LayoutParams.WRAP_CONTENT));
 					linear.setOrientation(LinearLayout.HORIZONTAL);
 				}
-				ViewGroup v=(android.view.ViewGroup) inflater.inflate(R.layout.cardbag_grdiview_iteam, null);
-				v.setPadding(53, 23, 23, 23);
-				linear.addView(v);
-				listv.add(v);
-				if((j+1)%2!=0)
-				{
+				fontview.setPadding(53, 23, 23, 23);
+				((ViewGroup) cardview).addView(fontview);
+				linear.addView(cardview);
+				fontlist.add(cardview);
+				if ((j + 1) % 2 != 0) {
 					view.addView(linear);
 				}
-				setFontCard((android.view.ViewGroup) v,list1.get(j), j,i);
+				setFontCard(fontview, list1.get(j), j, i);
 			}
-			clickmap.put(i, listv);
+			FontCard.put(i, fontlist);
 			viewList.add(view);
-		}	
-		Log.i("asd", "ViewList.size:"+viewList.size());
-		
+			oneClick();
+		}
+		if (Allmap.size() == 0) {
+			TextView textview = new TextView(MCardBagActivity.this);
+			textview.setText("没有找到符合条件的数据");
+			textview.setTextSize(33);
+			viewList.add(textview);
+		}
+
 	}
-	public void NoClick(int page,int index)
-	{
-		List<View> list=clickmap.get(page);
-		for(int i=0;i<list.size();i++)
-		{
-			if(i!=index)
-			{
-				list.get(i).setClickable(false);
+
+	public void NoClick(int page, int index) {
+		List<View> fontlist = FontCard.get(page);
+		List<View> backlist = FontCard.get(page);
+		for (int i = 0; i < fontlist.size(); i++) {
+			if (i != index) {
+				backlist.get(i).setClickable(false);
+				fontlist.get(i).setClickable(false);
 			}
 		}
 	}
-	public void setFontCard(ViewGroup v,knowledges_card card,final int index,final int page)
-	{
-		TextView reson;
+
+	public List<tags> findbiaoqian(String et) {
+		List<tags> findlist = new ArrayList<tags>();
+		for (int i = 0; i < tagsList.size(); i++) {
+			if (tagsList.get(i).getName().indexOf(et) != -1) {
+				findlist.add(tagsList.get(i));
+			}
+		}
+		return findlist;
+	}
+
+	public void addCard(String json) {
+		JSONObject jsonobject2;
+		try {
+			jsonobject2 = new JSONObject(json);
+			if (jsonobject2.getString("status").equals("success")) {
+				JSONObject jsonobject3 = jsonobject2.getJSONObject("cardtag");
+				String card_bag_id = jsonobject3.getString("card_bag_id");
+				String created_at = jsonobject3.getString("created_at");
+				String id = jsonobject3.getString("id");
+				String name = jsonobject3.getString("name");
+				String update_at = jsonobject3.getString("updated_at");
+				tagsList.add(new tags(card_bag_id, created_at, id, name,
+						update_at));
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public void oneClick() {
+		Log.i("bbb", "onclick!!");
+		for (int i = 0; i < FontCard.size(); i++) {
+			for (int j = 0; j < FontCard.get(i).size(); j++) {
+				final int j1 = j;
+				final View view = FontCard.get(i).get(j);
+				view.setOnClickListener(new OnClickListener() {
+					public void onClick(View v1) {
+						mindex = j1;
+						Log.i("1", "FontClick:" + j1 + "!!!" + mindex);
+						NoClick(page, j1);
+						applyRotation(0, 90, view);
+					}
+				});
+			}
+		}
+	}
+
+	public void setFontCard(final ViewGroup v, final knowledges_card card,
+			final int index, final int page) {
+		TextView reson = null;
 		TextView wronganswer;
 		ImageView fontIv;
 		TextView rightanswer;
 		TextView youranswer;
 		TextView rightanswers;
-		ListView biaoqianlv;
+		final EditText biaoqianet;
+		final ListView biaoqianlv;
 		final LinearLayout biaoqian;
-		v.setOnClickListener(new OnClickListener()
-		{
-			public void onClick(View v) {
-				mindex=index;
-				NoClick(page,index);
-				applyRotation(0, 90, v);
-			}
-		});
-		reson = (TextView) v.findViewById(R.id.reson);
-		wronganswer = (TextView) v.findViewById(R.id.youranswer);
-		fontIv = (ImageView) v.findViewById(R.id.fontIv);
-		rightanswer = (TextView) v.findViewById(R.id.rightanswer);
-		youranswer = (TextView) v.findViewById(R.id.answer);
-		fontIv=(ImageView) v.findViewById(R.id.fontIv);
-		biaoqian=(LinearLayout) v.findViewById(R.id.biaoqian);
-		biaoqianlv=(ListView) v.findViewById(R.id.biaoqianlv);
-		biaoqianlv.setDividerHeight(0);
-		LabelAdapter adapter=new LabelAdapter(getApplicationContext(),page,index,tagsList,Allmap,student_id,school_class_id,card.getId());
-		biaoqianlv.setAdapter(adapter);
-		reson.setText(card.getMistake_types());
-		wronganswer.setText(card.getYour_answer());
-		rightanswer.setText("正确答案");
-		youranswer.setText(card.getAnswer()+"/."+index);
-		fontIv.setOnClickListener(new OnClickListener()
-		{
-			public void onClick(View arg0) {
-				Log.i("3", "page:"+page+"/index:"+index+"!!!"+ListBool[page][index]);
-				if(ListBool[page][index])
-				{
-					biaoqian.setVisibility(View.VISIBLE);
-					ListBool[page][index]=false;
+		final TextView newTv;
+		TextView bqtv;
+		v.setTag(index);
+
+		if (PageBool[page][mindex]) {
+			bqtv = (TextView) v.findViewById(R.id.bqtv);
+			Ok: for (int i = 0; i < tagsList.size(); i++) {
+				for (int j = 0; j < card.getTagsarr().size(); j++) {
+					if (card.getTagsarr().get(j) == Integer.valueOf(tagsList
+							.get(i).getId())) {
+						bqtv.setVisibility(View.VISIBLE);
+						bqtv.setText(tagsList.get(i).getName() + "...");
+						break Ok;
+					}
 				}
-				else
-				{
-					biaoqian.setVisibility(View.GONE);
-					ListBool[page][index]=true;
+			}
+			reson = (TextView) v.findViewById(R.id.reson);
+			wronganswer = (TextView) v.findViewById(R.id.youranswer);
+			fontIv = (ImageView) v.findViewById(R.id.fontIv);
+			rightanswer = (TextView) v.findViewById(R.id.rightanswer);
+			youranswer = (TextView) v.findViewById(R.id.answer);
+			fontIv = (ImageView) v.findViewById(R.id.fontIv);
+			biaoqian = (LinearLayout) v.findViewById(R.id.biaoqian);
+			biaoqianlv = (ListView) v.findViewById(R.id.biaoqianlv);
+			biaoqianet = (EditText) v.findViewById(R.id.biaoqianet);
+			newTv = (TextView) v.findViewById(R.id.newTv);
+			final Handler handler1 = new Handler() {
+				public void handleMessage(Message msg) {
+					super.handleMessage(msg);
+					switch (msg.what) {
+					case 0:
+						Log.i("2", " handler1.case0");
+						biaoqianet.setText("");
+						LabelAdapter adapter = new LabelAdapter(
+								getApplicationContext(), page, index, tagsList,
+								Allmap, student_id, school_class_id,
+								card.getId());
+						biaoqianlv.setAdapter(adapter);
+						break;
+					default:
+						break;
+					}
+				}
+			};
+			biaoqianet.addTextChangedListener(new TextWatcher() {
+				public void onTextChanged(CharSequence s, int start,
+						int before, int count) {
+					if (findbiaoqian(biaoqianet.getText().toString()).size() <= 2) {
+						newTv.setVisibility(View.VISIBLE);
+						newTv.setText("新建'" + biaoqianet.getText().toString()
+								+ "'");
+						newTv.setOnClickListener(new OnClickListener() {
+							public void onClick(View v) {
+								Thread thread = new Thread() {
+									String json;
+
+									public void run() {
+										try {
+											viewPager = (ViewPager) findViewById(R.id.guidePages);
+											Map<String, String> map = new HashMap<String, String>();
+											map.put("student_id", "1");
+											map.put("school_class_id", "1");
+											map.put("knowledge_card_id",
+													card.getId());
+											map.put("name", String
+													.valueOf(biaoqianet
+															.getText()));
+											json = ExerciseBookTool
+													.sendGETRequest(
+															create_card_tag,
+															map);
+											JSONObject jsonobject2 = new JSONObject(
+													json);
+											if (jsonobject2.getString("status")
+													.equals("success")) {
+												JSONObject jsonobject3 = jsonobject2
+														.getJSONObject("cardtag");
+												String card_bag_id = jsonobject3
+														.getString("card_bag_id");
+												String created_at = jsonobject3
+														.getString("created_at");
+												String id = jsonobject3
+														.getString("id");
+												String name = jsonobject3
+														.getString("name");
+												String update_at = jsonobject3
+														.getString("updated_at");
+												tagsList.add(new tags(
+														card_bag_id,
+														created_at, id, name,
+														update_at));
+												card.getTagsarr().add(
+														Integer.valueOf(id));
+											}
+											handler1.sendEmptyMessage(0);
+										} catch (Exception e) {
+											e.printStackTrace();
+										}
+									}
+								};
+								thread.start();
+							}
+						});
+					}
+					LabelAdapter adapter = new LabelAdapter(
+							getApplicationContext(), page, index,
+							findbiaoqian(biaoqianet.getText().toString()),
+							Allmap, student_id, school_class_id, card.getId());
+					biaoqianlv.setAdapter(adapter);
 				}
 
-			}
-		});
+				public void beforeTextChanged(CharSequence s, int start,
+						int count, int after) {
+				}
+
+				public void afterTextChanged(Editable s) {
+				}
+			});
+			biaoqianlv.setDividerHeight(0);
+			reson.setText(card.getMistake_types());
+			wronganswer.setText(card.getYour_answer());
+			rightanswer.setText("正确答案");
+			youranswer.setText(card.getAnswer() + "/." );
+			fontIv.setOnClickListener(new OnClickListener() {
+				public void onClick(View arg0) {
+					Log.i("3", "page:" + page + "/index:" + index + "!!!"
+							+ ListBool[page][index]);
+					if (ListBool[page][index]) {
+						LabelAdapter adapter = new LabelAdapter(
+								getApplicationContext(), page, index, tagsList,
+								Allmap, student_id, school_class_id, card
+								.getId());
+						biaoqianlv.setAdapter(adapter);
+						biaoqian.setVisibility(View.VISIBLE);
+						ListBool[page][index] = false;
+					} else {
+						biaoqianet.setText("");
+						biaoqian.setVisibility(View.GONE);
+						ListBool[page][index] = true;
+					}
+
+				}
+			});
+		} else {
+			ImageView cardbatread;
+			ImageView cardbatdel;
+			reson = (TextView) findViewById(R.id.backreson);
+			rightanswers = (TextView) findViewById(R.id.rightanswerb);
+			cardbatread = (ImageView) findViewById(R.id.cardbatread);
+			cardbatdel = (ImageView) findViewById(R.id.cardbatdel);
+			if (card.getResource_url().equals(""))
+				cardbatread.setVisibility(View.GONE);
+			Log.i("3", card.getContent() + "content" + (rightanswers == null));
+			reson.setText("原题:");
+			rightanswers.setText(card.getContent());
+			cardbatread.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					try {
+						mediaplay.setDataSource(IP + card.getResource_url());
+						Log.i("1", IP + card.getResource_url());
+						mediaplay.prepare();
+						mediaplay.start();
+						mediaplay
+						.setOnCompletionListener(new OnCompletionListener() {
+							public void onCompletion(MediaPlayer mp) {
+								mediaplay.release();
+							}
+						});
+					} catch (IllegalArgumentException e) {
+						e.printStackTrace();
+					} catch (SecurityException e) {
+						e.printStackTrace();
+					} catch (IllegalStateException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			});
+			cardbatdel.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					Thread thread = new Thread() {
+						public void run() {
+							try {
+								Map<String, String> map = new HashMap<String, String>();
+								map.put("knowledges_card_id", card.getId());
+								String json = ExerciseBookTool.sendGETRequest(
+										delete_knowledges_card, map);
+								Log.i("homework", json);
+								JSONObject jsonobj = new JSONObject(json);
+								String notice = jsonobj.getString("notice");
+								Message msg = new Message();
+								if (jsonobj.getString("status").equals(
+										"success")) {
+									Allmap.get(page + 1).remove(index);
+									if (Allmap.get(page + 1).size() == 0) {
+										Allmap.remove(page + 1);
+									}
+									handler.sendEmptyMessage(2);
+								} else {
+									msg.what = 0;
+									msg.obj = notice;
+									handler.sendMessage(msg);
+								}
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					};
+					thread.start();
+				}
+			});
+		}
 	}
-	public void setBackCard(View v,final int index,final int page)
-	{
 
-		List<knowledges_card> cardl=Allmap.get(page+1);
-		final knowledges_card	card=cardl.get(index);
+	public void setBackCard(ViewGroup v, final knowledges_card card,
+			final int index, final int page) {
+
 		TextView reson;
 		TextView rightanswers;
 		ImageView cardbatread;
 		ImageView cardbatdel;
-		reson=(TextView) findViewById(R.id.reson);
-		rightanswers=(TextView) findViewById(R.id.rightanswerb);
-		cardbatread=(ImageView) findViewById(R.id.cardbatread);
-		cardbatdel=(ImageView) findViewById(R.id.cardbatdel);
-		if(card.getResource_url().equals(""))
+		reson = (TextView) findViewById(R.id.reson);
+		rightanswers = (TextView) findViewById(R.id.rightanswerb);
+		cardbatread = (ImageView) findViewById(R.id.cardbatread);
+		cardbatdel = (ImageView) findViewById(R.id.cardbatdel);
+		if (card.getResource_url().equals(""))
 			cardbatread.setVisibility(View.GONE);
 
+		Log.i("3", card.getContent() + "content" + (rightanswers == null));
 		reson.setText("原题:");
-		Log.i("asd", card.getContent()+"---Content");
 		rightanswers.setText(card.getContent());
-		cardbatdel.setOnClickListener(new OnClickListener()
-		{
+		cardbatdel.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				getKonwledges();
 				Thread thread = new Thread() {
@@ -454,17 +723,14 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface
 							JSONObject jsonobj = new JSONObject(json);
 							String notice = jsonobj.getString("notice");
 							Message msg = new Message();
-							if (jsonobj.getString("status").equals(
-									"success")) {
-
+							if (jsonobj.getString("status").equals("success")) {
 								handler.sendEmptyMessage(2);
 							} else {
 								msg.what = 0;
-								msg.obj = jsonobj.getString("notice");
+								msg.obj = notice;
 								handler.sendMessage(msg);
 							}
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					}
@@ -472,53 +738,48 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface
 				thread.start();
 			}
 		});
-
-
-
 	}
-	private class GuidePageAdapter extends PagerAdapter {
 
-		@Override
+	private class GuidePageAdapter extends PagerAdapter {
 		public int getCount() {
+			// Log.i("bbb", viewList.size()+":bbb");
 			return viewList.size();
 		}
 
-		@Override
 		public boolean isViewFromObject(View arg0, Object arg1) {
 			return arg0 == arg1;
 		}
 
-		@Override
 		public int getItemPosition(Object object) {
-			return POSITION_NONE;  
+			return POSITION_NONE;
 		}
 
-		@Override
 		public void destroyItem(View arg0, int arg1, Object arg2) {
-			Log.i("asd", viewList.size()+"!!!"+arg1);
-//			((ViewPager) arg0).removeView(viewList.get(arg1));
+			Log.i("bbb", viewList.size() + "!!" + arg1);
+			if (arg1 < viewList.size()) {
+				((ViewPager) arg0).removeView(viewList.get(arg1));
+			}
 		}
 
-		@Override
 		public Object instantiateItem(View arg0, int arg1) {
 			((ViewPager) arg0).addView(viewList.get(arg1), arg1);
 			return viewList.get(arg1);
 		}
-		@Override
+
 		public void restoreState(Parcelable arg0, ClassLoader arg1) {
 		}
 
-		@Override
 		public Parcelable saveState() {
 			return null;
 		}
-		@Override
+
 		public void startUpdate(View arg0) {
 		}
-		@Override
+
 		public void finishUpdate(View arg0) {
 		}
 	}
+
 	private class GuidePageChangeListener implements OnPageChangeListener {
 
 		@Override
@@ -531,7 +792,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface
 
 		@Override
 		public void onPageSelected(int arg0) {
-			page = arg0 + 1;
+			page = arg0;
 			for (int i = 0; i < imageViews.length; i++) {
 				imageViews[arg0]
 						.setBackgroundResource(R.drawable.page_indicator);
@@ -542,8 +803,9 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface
 			}
 		}
 	}
-	private void applyRotation(float start, float end,View selectview) {
-		//		// 计算中心点
+
+	private void applyRotation(float start, float end, View selectview) {
+		// // 计算中心点
 		final float centerX = selectview.getWidth() / 2.0f;
 		final float centerY = selectview.getHeight() / 2.0f;
 		final Rotate3dAnimation rotation = new Rotate3dAnimation(start, end,
@@ -561,61 +823,67 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface
 		public void onAnimationStart(Animation animation) {
 		}
 
-		//		// 动画结束
+		// // 动画结束
 		public void onAnimationEnd(Animation animation) {
-
-			Log.i("3","page:"+page+"mindex:"+mindex+"clickmap:"+clickmap.size());
-			List<View> list=clickmap.get(page);
-			List<knowledges_card> cardl=Allmap.get(page+1);
-			ViewGroup v1=(android.view.ViewGroup) list.get(mindex);
-			LayoutInflater inflater2 = getLayoutInflater();;
-			View v = null;
-
-			v1.removeAllViews();
-			if(PageBool[page][mindex])
-			{
-				v= inflater2.inflate(R.layout.cardbag_gridview_back, null);
-				Log.i("asd","反面操作"+v.findViewById(R.id.reson).getContext());
-				v1.addView(v);
-				setBackCard(v1, mindex, page);
-				PageBool[page][mindex]=false;
+			List<View> fontlist = FontCard.get(page);
+			mediaplay.stop();
+			List<knowledges_card> cardl = Allmap.get(page + 1);
+			Log.i("3", "page:" + page + "mindex:" + mindex + "FontCard:"
+					+ FontCard.get(page).size());
+			View view;
+			ViewGroup viewgroup = (ViewGroup) fontlist.get(mindex);
+			if (PageBool[page][mindex]) {
+				PageBool[page][mindex] = false;
+				view = (ViewGroup) inflater2.inflate(
+						R.layout.cardbag_gridview_back, null);
+			} else {
+				PageBool[page][mindex] = true;
+				view = (ViewGroup) inflater2.inflate(
+						R.layout.cardbag_grdiview_iteam, null);
 			}
-			else
-			{
-				v=inflater2.inflate(R.layout.cardbag_grdiview_iteam, null);
-				v1.addView(v);
-				setFontCard(v1,cardl.get(mindex), mindex, page);
-				PageBool[page][mindex]=true;
+			view.setPadding(53, 23, 23, 23);
+			viewgroup.removeAllViews();
+			viewgroup.addView(view);
+			setFontCard((ViewGroup) view, cardl.get(mindex), mindex, page);
+			for (int i = 0; i < fontlist.size(); i++) {
+				fontlist.get(i).setClickable(true);
+				//				if(mindex!=i)
+				//				{
+				//					ViewGroup viewgroup2 = (ViewGroup) fontlist.get(i);
+				//					PageBool[page][mindex] = true;
+				//					view = (ViewGroup) inflater2.inflate(
+				//							R.layout.cardbag_grdiview_iteam, null);
+				//					view.setPadding(53, 23, 23, 23);
+				//					viewgroup2.removeAllViews();
+				//					viewgroup2.addView(view);
+				//					setFontCard((ViewGroup) view, cardl.get(i), mindex, page);
+				//				}
+				//				PageBool[page][mindex] =false;
 			}
 
-			for(int i=0;i<list.size();i++)
-			{
-				list.get(i).setClickable(true);
-			}
-			//			selectLinearlayout.post(new SwapViews());
-			final float centerX = v1.getWidth() / 2.0f;
-			final float centerY = v1.getHeight() / 2.0f;
+			//			if (PageBool[page][mindex]) {
+			//				PageBool[page][mindex] = false;
+			//			}
+			//			else
+			//			{
+			//				PageBool[page][mindex] = true;
+			//			}
+			final float centerX = viewgroup.getWidth() / 2.0f;
+			final float centerY = viewgroup.getHeight() / 2.0f;
 			Rotate3dAnimation rotation = null;
-			v1.requestFocus();
+			viewgroup.requestFocus();
 			rotation = new Rotate3dAnimation(-90, 0, centerX, centerY, 310.0f,
 					false);
 			rotation.setDuration(500);
 			rotation.setFillAfter(true);
 			rotation.setInterpolator(new DecelerateInterpolator());
 			// 开始动画
-			v1.startAnimation(rotation);
+			viewgroup.startAnimation(rotation);
 		}
 
-		@Override
 		public void onAnimationRepeat(Animation animation) {
 			// TODO Auto-generated method stub
 
 		}
 	}
-
-	//	private final class SwapViews implements Runnable {
-	//		public void run() {
-	//
-	//		}
-	//	}
 }

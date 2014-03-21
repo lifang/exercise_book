@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -28,11 +29,9 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.comdosoft.ExerciseBook.pojo.ClassStu;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
-import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
@@ -45,8 +44,9 @@ public class LeftMenu extends Activity implements Urlinterface
 	private View ll3;
 	private View ll4;
 	private View ll5;
-	private View ll6;  //  退出
+	private View ll6;  //  退出teachll
 	private LinearLayout allLL;
+	private LinearLayout teachll;
 	private ImageView hwImg;
 	private ImageView rImg;
 	private ImageView classImg;			//左侧班级按钮
@@ -67,6 +67,7 @@ public class LeftMenu extends Activity implements Urlinterface
 		super.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.left_menu);
 		userInfo= getSharedPreferences("replyMenu", 0);  
+
 		LeftMenu.this.setFinishOnTouchOutside(true);
 		Invit();
 		linear =  (LinearLayout) findViewById(R.id.linear);
@@ -138,7 +139,12 @@ public class LeftMenu extends Activity implements Urlinterface
 
 			}
 		});
+		teachll.setOnClickListener(new OnClickListener()
+		{
+			public void onClick(View v) {
 
+			}
+		});
 		ll1.setOnClickListener(new OnClickListener()
 		{
 			public void onClick(View v) {
@@ -193,7 +199,7 @@ public class LeftMenu extends Activity implements Urlinterface
 				eb.setMenu_num(3);
 				eb.setMneu(true);
 				clearActivity();
-				Intent intent=new Intent(LeftMenu.this,HomePageMainActivity.class);
+				Intent intent=new Intent(LeftMenu.this,MCardBagActivity.class);
 				startActivity(intent);
 			}
 		});
@@ -212,7 +218,6 @@ public class LeftMenu extends Activity implements Urlinterface
 				editor.putString("school_class_id", "");
 				editor.putString("id", "");
 				editor.commit();
-				
 				Intent intent=new Intent(LeftMenu.this,LoginActivity.class);
 				startActivity(intent);
 			}
@@ -319,7 +324,7 @@ public class LeftMenu extends Activity implements Urlinterface
 			}
 		}
 	};
-	
+
 	//关闭上个主界面
 	public void clearActivity()
 	{
@@ -329,7 +334,7 @@ public class LeftMenu extends Activity implements Urlinterface
 		}
 		eb.setActivityList();
 	}
-	
+
 	//初始化参数
 	public void Invit()
 	{
@@ -339,6 +344,9 @@ public class LeftMenu extends Activity implements Urlinterface
 		ll3=findViewById(R.id.ll3);
 		ll4=findViewById(R.id.ll4);
 		allLL=(LinearLayout) findViewById(R.id.allLinear);
+		teachll=(LinearLayout) findViewById(R.id.teachll);
+//		allLL.setFocusable(false);
+//		allLL.setClickable(false);
 		ll5=findViewById(R.id.menuclassll);
 		hwImg=(ImageView) findViewById(R.id.leftmenu_12red);
 		rImg=(ImageView) findViewById(R.id.leftmenu_13red);
@@ -348,7 +356,6 @@ public class LeftMenu extends Activity implements Urlinterface
 		teachIV=(ImageView) findViewById(R.id.teacherIm);
 		teachname=(TextView) findViewById(R.id.teachname);
 		ClassStuGv=(GridView) findViewById(R.id.classstugv);
-		
 		boolean homeWork = true;
 		if(userInfo.getBoolean("HomeWorkMenu", true))
 		{

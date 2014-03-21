@@ -24,6 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="15.41px"
             android:layout_marginTop="48px"
+            android:textColor="@color/white"
             android:text="李达达" />
     </LinearLayout>
 
