@@ -31,9 +31,9 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 		OnItemClickListener, OnClickListener {
 
 	private String[] letterArr = new String[] { "A", "B", "C", "D", "E", "F" };
-	private int specified_time = 0;
 	private StringBuffer mAnswer = new StringBuffer();
-	private String json = "{  \"selecting\": {\"specified_time\": \"100\", \"question_types\": \"6\", \"questions\": [{\"id\": \"284\",\"branch_questions\": [ {\"id\": \"181\", \"content\": \"This is ___ apple!\", \"option\": \"a;||;an\", \"answer\": \"an;||;a\" },{\"id\": \"181\", \"content\": \"<file>apple.jpg</file>Why he is ___ Google!\", \"option\": \"apple;||;banana;||;orange;||;pear\", \"answer\": \"apple;||;banana\"},{\"id\": \"181\", \"content\": \"<file>apple.mp3</file>\", \"option\": \"one;||;two;||;three\", \"answer\": \"two\"}, {\"id\": \"181\", \"content\": \"<file>apple.jpg</file>Pears have white flesh and thin green or yellow skin.\", \"option\": \"iPhone;||;S5;||;Xperia\", \"answer\": \"iPhone\"},{\"id\": \"181\", \"content\": \"Dad.come set here!\", \"option\": \"ZhangDaCa;||;ChenLong\", \"answer\": \"ZhangDaCa\"}]}]}}";
+	// private String json =
+	// "{  \"selecting\": {\"specified_time\": \"100\", \"question_types\": \"6\", \"questions\": [{\"id\": \"284\",\"branch_questions\": [ {\"id\": \"181\", \"content\": \"This is ___ apple!\", \"option\": \"a;||;an\", \"answer\": \"an;||;a\" },{\"id\": \"181\", \"content\": \"<file>apple.jpg</file>Why he is ___ Google!\", \"option\": \"apple;||;banana;||;orange;||;pear\", \"answer\": \"apple;||;banana\"},{\"id\": \"181\", \"content\": \"<file>apple.mp3</file>\", \"option\": \"one;||;two;||;three\", \"answer\": \"two\"}, {\"id\": \"181\", \"content\": \"<file>apple.jpg</file>Pears have white flesh and thin green or yellow skin.\", \"option\": \"iPhone;||;S5;||;Xperia\", \"answer\": \"iPhone\"},{\"id\": \"181\", \"content\": \"Dad.come set here!\", \"option\": \"ZhangDaCa;||;ChenLong\", \"answer\": \"ZhangDaCa\"}]}]}}";
 	private List<String> answerOption = new ArrayList<String>();
 	private Map<Integer, String> checkMap = new HashMap<Integer, String>();
 	private ListView listView;
@@ -49,16 +49,14 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 		super.setContentView(R.layout.answer_select);
 		findViewById(R.id.base_back_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
+		findViewById(R.id.base_propTrue).setOnClickListener(this);
 		listView = (ListView) findViewById(R.id.answer_select_listview);
 		answerImg = (ImageView) findViewById(R.id.answer_select_img);
 		answerLaba = (ImageView) findViewById(R.id.answer_select_laba);
 		answerText = (TextView) findViewById(R.id.answer_select_text);
 		answer_select_answerLinearLayout = (LinearLayout) findViewById(R.id.answer_select_answerLinearLayout);
 
-		// Intent intent = getIntent();
-		// json = intent.getStringExtra("json");
-
-		setQuestionType(0);
+		setQuestionType(2);
 
 		Log.i("aaa", json);
 
@@ -66,7 +64,7 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 
 		answerOption = mQuestList.get(mQindex).get(mBindex).getOption();
 		selectAdapter = new AnswerSelectAdapter(this, answerOption);
-		if (amp.getStatus() == 1) {
+		if (amp.getStatus() == 1 && status > 1) {
 			selectAdapter.setOptionAndAnswerList(1, answerOption, mQuestList
 					.get(mQindex).get(mBindex).getAnswer());
 		} else {
@@ -134,6 +132,34 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 		return 2;
 	}
 
+	public void rightAnswer() {
+		if (amp.getStatus() == 0) {
+			AnswerBasePojo sp = mQuestList.get(mQindex).get(mBindex);
+			List<String> option = sp.getOption();
+			List<String> answer = sp.getAnswer();
+			for (int i = 0; i < option.size(); i++) {
+				boolean flag = false;
+				AnswerSelectItemPojo asip = asipList.get(i);
+				for (int j = 0; j < answer.size(); j++) {
+					if (option.get(i).equals(answer.get(j))) {
+						flag = true;
+					}
+				}
+				if (flag) {
+					asip.getLinearLayout().setBackgroundResource(
+							R.drawable.answer_select_item_check_style);
+					asip.setStatus(1);
+					checkMap.put(i, answerOption.get(i));
+				} else {
+					asip.getLinearLayout().setBackgroundResource(
+							R.drawable.answer_select_item_style);
+					asip.setStatus(0);
+					checkMap.remove(i);
+				}
+			}
+		}
+	}
+
 	@Override
 	public void updateView() {
 		super.updateView();
@@ -143,7 +169,7 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 		AnswerBasePojo sp = mQuestList.get(mQindex).get(mBindex);
 		answerOption = sp.getOption();
 
-		if (amp.getStatus() == 1) {
+		if (amp.getStatus() == 1 && status > 1) {
 			selectAdapter.setOptionAndAnswerList(1, sp.getOption(),
 					sp.getAnswer());
 		} else {
@@ -189,9 +215,15 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 								.show();
 						break;
 					}
-					AnswerBasePojo aop = mQuestList.get(mQindex).get(mBindex);
-					saveAnswerJson(mAnswer.toString(), ratio,
-							aop.getQuestions_id(), aop.getBranch_questions_id());
+					if (status == 0) {
+						AnswerBasePojo aop = mQuestList.get(mQindex).get(
+								mBindex);
+						saveAnswerJson(mAnswer.toString(), ratio,
+								aop.getQuestions_id(),
+								aop.getBranch_questions_id());
+					} else {
+						calculateIndexAndUpdateView();
+					}
 				}
 			} else {
 				nextRecord();
@@ -200,6 +232,9 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 			break;
 		case R.id.base_back_linearlayout:
 			super.onClick(v);
+			break;
+		case R.id.base_propTrue:
+			rightAnswer();
 			break;
 		}
 	}

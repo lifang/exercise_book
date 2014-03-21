@@ -255,7 +255,7 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 		case R.id.base_check_linearlayout:
 			if (Check) {
 				Check = false;
-				setCheck("检查");
+				setCheckText("检查");
 				if (user_select.equals(branch_questions.get(index).getAnwser())) {
 					user_boolean = 100;
 				} else {
@@ -297,7 +297,7 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 				}
 			} else {
 				Check = true;
-				setCheck("下一个");
+				setCheckText("下一个");
 			}
 			break;
 		case R.id.base_propTrue:
@@ -308,9 +308,10 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 			} else {
 				one_btn.setBackgroundResource(R.drawable.loginbtn_hui);
 				two_btn.setBackgroundResource(R.drawable.loginbtn_lv);
+
 			}
 			Check = true;
-			setCheck("下一个");
+			setCheckText("下一个");
 			Toast.makeText(TenSpeedActivity.this, "使用成功!", Toast.LENGTH_SHORT)
 					.show();
 			break;

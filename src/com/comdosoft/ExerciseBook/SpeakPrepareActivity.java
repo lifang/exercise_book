@@ -151,7 +151,7 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
 		setTimePropEnd();// 禁用道具
 		setTruePropEnd();// 禁用道具
-		setCheck("开始");
+		setCheckText("开始");
 		initialize();
 		tvlist = new ArrayList<TextView>();
 

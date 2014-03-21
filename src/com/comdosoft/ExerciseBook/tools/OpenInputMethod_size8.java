@@ -3,7 +3,6 @@ package com.comdosoft.ExerciseBook.tools;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MotionEvent;
@@ -14,9 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.comdosoft.ExerciseBook.HomePageMainActivity;
 import com.comdosoft.ExerciseBook.R;
-import com.comdosoft.ExerciseBook.SettingPhoto;
 
 public class OpenInputMethod_size8 extends Activity {
 	// private MyDialog dialog;

@@ -102,6 +102,7 @@ public class SpeakHistoryActivity extends AnswerBaseActivity implements
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
 		setTimePropEnd();// 禁用道具
 		setTruePropEnd();// 禁用道具
+		setCheckText("下一个");
 		eb = (ExerciseBook) getApplication();
 
 		ratio_list = new ArrayList<Integer>();

@@ -77,9 +77,10 @@ public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 		setContentView(R.layout.cloze_history);
 		setTimePropEnd();// 禁用道具
 		setTruePropEnd();// 禁用道具
-		setType(1);
 		findViewById(R.id.base_back_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
+//		setType(1);
+		setCheckText("下一个");
 		gson = new Gson();
 		initialize();
 		Intent intent = getIntent();

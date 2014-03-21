@@ -25,8 +25,8 @@ import android.widget.TextView;
 
 public class AnswerWireActivity extends AnswerBaseActivity {
 
+	private int coordinateIndex = 0;
 	private int last = -1;
-	private int specified_time = 0;
 	private String JSON = "{    \"lining\":{\"specified_time\": \"100\",  \"questions\":[ {\"id\": \"284\",  \"branch_questions\": [{\"id\": \"181\", \"content\": \"This is<=>an apple;||;A<=>B;||;ZhangDaCa<=>Dog\"}]},{\"id\": \"285\", \"branch_questions\": [{\"id\": \"182\", \"content\": \"C<=>D;||;Chen<=>Long;||;Gao<=>Shi\"}]}, {\"id\": \"285\", \"branch_questions\": [ {\"id\": \"182\", \"content\": \"Ma<=>Long;||;123<=>456;||;1111<=>2222\"} ]},  {\"id\": \"291\",\"branch_questions\": [ {\"id\": \"182\", \"content\": \"ZhangDaCa<=>ZXN;||;ChenLong<=>CL;||;MaLong<=>ML\"}]}] }}";
 	private StringBuffer sb = new StringBuffer();
 
@@ -62,14 +62,10 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 		imgCanvas = (ImageView) findViewById(R.id.answer_wire_canvas);
 		lp.topMargin = 50;
 
-		// Intent intent = getIntent();
-		// JSON = intent.getStringExtra("json");
-
-		setQuestionType(2);
+		setQuestionType(4);
 
 		analysisJSON(JSON);
 
-		// mAOPList.get(mIndex++).getAnswer()
 		updateView();
 	}
 
@@ -89,7 +85,7 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 			initRightView(i + 1);
 		}
 
-		if (amp.getStatus() == 1) {
+		if (amp.getStatus() == 1 && status > 1) {
 			coordinate = trueList;
 			for (int j = 0; j < answerList.size(); j++) {
 				setCheckStatusForIndex(j);
@@ -235,26 +231,27 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 		List<Integer[]> intList = new ArrayList<Integer[]>();
 		intList = trueList;
 		int count = 0;
-		for (int i = 0; i < coordinate.size(); i++) {
-			int left = coordinate.get(i)[0];
-			int right = coordinate.get(i)[1];
-			boolean flag = false;
-			String answer = orderAnswerList.get(left)
-					+ orderAnswerList.get(right);
+		if (type == 0) {
+			for (int i = 0; i < coordinate.size(); i++) {
+				int left = coordinate.get(i)[0];
+				int right = coordinate.get(i)[1];
+				String answer = orderAnswerList.get(left)
+						+ orderAnswerList.get(right);
 
-			for (int j = 0; j < answerList.size(); j += 2) {
-				if ((answerList.get(j) + answerList.get(j + 1)).equals(answer)) {
-					flag = true;
-					count++;
+				for (int j = 0; j < answerList.size(); j += 2) {
+					if ((answerList.get(j) + answerList.get(j + 1))
+							.equals(answer)) {
+						count++;
+					}
 				}
-			}
 
-			sb.append(orderAnswerList.get(left)).append(" ")
-					.append(orderAnswerList.get(right)).append("    ");
+				sb.append(orderAnswerList.get(left)).append(" ")
+						.append(orderAnswerList.get(right)).append("    ");
 
-			for (int j = 0; j < intList.size(); j++) {
-				if (left == intList.get(j)[0] && right == intList.get(j)[1]) {
-					intList.remove(j);
+				for (int j = 0; j < intList.size(); j++) {
+					if (left == intList.get(j)[0] && right == intList.get(j)[1]) {
+						intList.remove(j);
+					}
 				}
 			}
 		}
@@ -263,21 +260,33 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 			ratio = 100;
 		}
 
-		sb.delete(sb.length() - 4, sb.length());
+		if (sb.length() > 0) {
+			sb.delete(sb.length() - 4, sb.length());
+		}
 
 		if (type == 1) {
 			// 使用道具
-			if (intList.size() > 0) {
-				Random r = new Random(System.currentTimeMillis());
-				int index = r.nextInt(intList.size());
-				coordinate.add(intList.get(index));
-				intList.remove(index);
+			Toast.makeText(getApplicationContext(),
+					coordinateIndex + "--" + intList.size(), 0).show();
+			if (coordinateIndex < answerList.size() / 2) {
+				Integer[] arr = intList.get(coordinateIndex++);
+				calculateCoordinate(arr);
+				coordinate.add(arr);
 				imgCanvas.setImageBitmap(drawView());
 				count++;
 			}
 		}
-
 		// Toast.makeText(getApplicationContext(), "正确个数:" + count, 0).show();
+	}
+
+	public void calculateCoordinate(Integer[] arr) {
+		for (int i = 0; i < coordinate.size(); i++) {
+			if (coordinate.get(i)[0] == arr[0]
+					|| coordinate.get(i)[1] == arr[1]) {
+				coordinate.remove(i);
+				i++;
+			}
+		}
 	}
 
 	public void setCancelStatusForIndex(int index) {
@@ -381,6 +390,7 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 			case R.id.base_check_linearlayout:
 				if (amp.getStatus() == 0) {
 					if (coordinate.size() == answerList.size() / 2) {
+						coordinateIndex = 0;
 						check(0);
 						AnswerBasePojo aop = mQuestList.get(mQindex).get(
 								mBindex);

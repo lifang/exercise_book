@@ -641,18 +641,42 @@ public final class R {
         public static final int AnimTop2=0x7f0a0003;
         /** 
         Base application theme, dependent on API level. This theme is replaced
+<<<<<<< HEAD
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
 
 
 
+
+
+
+
+
+=======
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+
+
+
+>>>>>>> ddc5236e966eff9e2c10ff6cce0c7f7f8c724b30
     
 
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
+<<<<<<< HEAD
             backward-compatibility can go here.
 
 
 
+
+
+
+
+
+=======
+            backward-compatibility can go here.
+
+
+
+>>>>>>> ddc5236e966eff9e2c10ff6cce0c7f7f8c724b30
         
          */
         public static final int AppBaseTheme=0x7f0a0000;
