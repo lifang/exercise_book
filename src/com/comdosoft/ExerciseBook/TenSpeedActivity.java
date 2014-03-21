@@ -297,7 +297,7 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 				handler.sendEmptyMessage(1);
 				break;
 			case 1:
-				intent.putExtra("precision", ExerciseBookTool.getRatio(ratio));// 正确率100时获取精准成就
+//				intent.putExtra("precision", ExerciseBookTool.getRatio(ratio));// 正确率100时获取精准成就
 				intent.putExtra("use_time", getUseTime());// 用户使用的时间
 				intent.putExtra("specified_time", specified_time);// 任务基础时间
 				intent.setClass(TenSpeedActivity.this, WorkEndActivity.class);

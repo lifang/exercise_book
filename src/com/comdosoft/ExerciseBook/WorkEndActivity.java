@@ -84,10 +84,11 @@ public class WorkEndActivity extends Activity implements Urlinterface {
 		// a比c小,返回-1,
 		// a与c相同,返回0
 		// a比c大,返回1
-		int zhi = Window_day.compareTo(ExerciseBookTool
-				.getCalender_time(end_time));
-		Log.i("aaa", zhi + "/" + Window_day.getTime() + "/"
-				+ ExerciseBookTool.getCalender_time(end_time).getTime());
+		// int zhi = Window_day.compareTo(ExerciseBookTool
+		// .getCalender_time(end_time));
+		int zhi = 0;
+		// Log.i("aaa", zhi + "/" + Window_day.getTime() + "/"
+		// + ExerciseBookTool.getCalender_time(end_time).getTime());
 		if (zhi == 1) {
 			work_jiezu.setText(R.string.work_end_str8);
 		} else {

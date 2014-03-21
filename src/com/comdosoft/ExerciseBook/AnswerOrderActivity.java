@@ -25,8 +25,6 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 	private int mAnswerIndex = 0;
 	private int mSubjectIndex = 0;
 	private int mOptionIndex = 0;
-	@SuppressWarnings("unused")
-	private int specified_time = 0;
 	private String[] answerArr = new String[] {};
 	private String mAnswerStr;
 	private StringBuffer mAnswer = new StringBuffer();
@@ -38,6 +36,8 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 	private List<TextView> mOptionTextList = new ArrayList<TextView>();
 	private List<TextView> mOptionOrderTextList = new ArrayList<TextView>();
 
+	private TextView answer_order_back;
+	private TextView answer_order_again;
 	private LayoutParams etlp;
 	private LayoutParams layoutlp;
 	private LinearLayout mSubjectLinearLayout;
@@ -50,14 +50,15 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 		super.setContentView(R.layout.answer_order);
 		mSubjectLinearLayout = (LinearLayout) findViewById(R.id.answer_order_subject_linearLayout);
 		mOptionLinearLayout = (LinearLayout) findViewById(R.id.answer_order_option_linearLayout);
-		findViewById(R.id.answer_order_back)
-				.setOnClickListener(new MyOnClick());
-		findViewById(R.id.answer_order_again).setOnClickListener(
-				new MyOnClick());
+		answer_order_back = (TextView) findViewById(R.id.answer_order_back);
+		answer_order_again = (TextView) findViewById(R.id.answer_order_again);
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(
 				new MyOnClick());
+		findViewById(R.id.base_propTrue).setOnClickListener(new MyOnClick());
+		answer_order_again.setOnClickListener(new MyOnClick());
+		answer_order_again.setOnClickListener(new MyOnClick());
 
-		setQuestionType(1);
+		setQuestionType(6);
 
 		etlp = new LayoutParams(LayoutParams.WRAP_CONTENT,
 				LayoutParams.WRAP_CONTENT);
@@ -65,10 +66,6 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 		layoutlp = new LayoutParams(LayoutParams.FILL_PARENT,
 				LayoutParams.WRAP_CONTENT);
 		layoutlp.topMargin = 20;
-
-		// Intent intent = getIntent();
-		// json = intent.getStringExtra("json");
-		// Log.i("Ax", "intent--JSON:" + json);
 
 		analysisJSON(json);
 
@@ -82,8 +79,14 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 			et.setBackgroundResource(R.drawable.answer_wire_item_check_style);
 
 			TextView tv = mOptionTextList.get(i);
-			tv.setClickable(false);
 			tv.setBackgroundResource(R.drawable.answer_order_item_check_style);
+
+			if (amp.getStatus() == 0) {
+				mOptionOrderTextList.add(tv);
+				mAnswerList.add(answerArr[i]);
+			} else {
+				tv.setClickable(false);
+			}
 		}
 	}
 
@@ -175,6 +178,11 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 		mSubjectIndex = 0;
 		mOptionIndex = 0;
 
+		if (amp.getStatus() == 1 && status > 1) {
+			answer_order_back.setVisibility(View.GONE);
+			answer_order_again.setVisibility(View.GONE);
+		}
+
 		answerArr = mQuestList.get(mQindex).get(mBindex).getContent()
 				.split(" ");
 
@@ -202,7 +210,7 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 			mOptionLinearLayout.addView(mOptionList.get(i));
 		}
 
-		if (amp.getStatus() == 1) {
+		if (amp.getStatus() == 1 && status > 1) {
 			rightAnswer();
 		}
 	}
@@ -292,6 +300,8 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 							saveAnswerJson(mAnswerStr, ratio,
 									aop.getQuestions_id(),
 									aop.getBranch_questions_id());
+						} else {
+							calculateIndexAndUpdateView();
 						}
 					} else {
 						Toast.makeText(getApplicationContext(), "请完成未选择的题!", 0)
@@ -301,6 +311,9 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 					nextRecord();
 					calculateIndexAndUpdateView();
 				}
+				break;
+			case R.id.base_propTrue:
+				rightAnswer();
 				break;
 			}
 		}

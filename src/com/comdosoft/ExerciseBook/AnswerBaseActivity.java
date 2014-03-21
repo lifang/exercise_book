@@ -3,9 +3,26 @@ package com.comdosoft.ExerciseBook;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
+import android.widget.TextView;
+
 import com.comdosoft.ExerciseBook.pojo.AnswerBasePojo;
 import com.comdosoft.ExerciseBook.pojo.AnswerJson;
 import com.comdosoft.ExerciseBook.pojo.AnswerMyPojo;
@@ -14,17 +31,6 @@ import com.comdosoft.ExerciseBook.pojo.Answer_QuestionsPojo;
 import com.comdosoft.ExerciseBook.pojo.Branch_AnswerPoJo;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.google.gson.Gson;
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
-import android.widget.TextView;
 
 // 答题父类
 public class AnswerBaseActivity extends Activity implements OnClickListener {
@@ -32,17 +38,23 @@ public class AnswerBaseActivity extends Activity implements OnClickListener {
 	public int mQindex = 0;
 	public int mBindex = 0;
 	public int mRecordIndex = 0;
-	private int mQuestionType = 0;
-	private int second;
-	private int type = 0;
 	public int ratio = 0;
 	public int status = 0;
+	public int specified_time = 0;
+	private int mQuestionType = 0;
+	private int mRatio = 0;
+	private int second;
+	private int type = 0;
 	private boolean flag = true;
 	private String recordMes;
-	private String[] answerArr = new String[] { "你的选择: ", "你的排序: ", "你的搭配: ",
-			"你的作答: " };
-	private String[] questionArr = new String[] { "selecting", "sort",
-			"lining", "listening" };
+	public String json;
+	private String path;
+
+	private String[] answerArr = new String[] { "你的作答: ", " ", "你的选择: ",
+			"你的选择: ", "你的搭配: ", "你的选择: ", "你的排序: " };
+
+	private String[] questionArr = new String[] { "listening", "reading",
+			"time_limit", "selecting", "lining", "cloze", "sort" };
 
 	public List<String> mRecoirdAnswer = new ArrayList<String>();
 	private List<Integer> mRecoirdRatio = new ArrayList<Integer>();
@@ -94,6 +106,11 @@ public class AnswerBaseActivity extends Activity implements OnClickListener {
 		accuracyText = (TextView) findViewById(R.id.base_accuracyText);
 		useTimeText = (TextView) findViewById(R.id.base_useTimeText);
 		base_answer_text = (TextView) findViewById(R.id.base_answer_text);
+
+		Intent intent = getIntent();
+		json = intent.getStringExtra("json");
+		path = intent.getStringExtra("path");
+		status = intent.getIntExtra("status", 2);
 	}
 
 	// 设置子布局View
@@ -109,8 +126,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener {
 	// 设置题目类型
 	public void setQuestionType(int type) {
 		this.mQuestionType = type;
-		amp = getAnswerItem(ExerciseBookTool
-				.getAnswer_Json_history("/sdcard/Exercisebook_app/73/85/130/answer.js"));
+		amp = getAnswerItem(ExerciseBookTool.getAnswer_Json_history(path));
 
 		mQindex = amp.getQuestions_item();
 		mBindex = amp.getBranch_item();
@@ -133,7 +149,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener {
 			base_time_linearlayout.setVisibility(View.VISIBLE);
 			base_history_linearlayout.setVisibility(View.GONE);
 			base_answer_linearlayout.setVisibility(View.GONE);
-		} else {
+		} else if (type == 1 && status > 1) {
 			setCheckText("下一个");
 			propTrue.setImageResource(R.drawable.base_prop3);
 			propTime.setImageResource(R.drawable.base_prop4);
@@ -177,7 +193,11 @@ public class AnswerBaseActivity extends Activity implements OnClickListener {
 
 	// 设置自己的答案
 	public void setMyAnswer(String s) {
-		base_answer_text.setText(answerArr[mQuestionType] + s);
+		if (s == null || s.equals("")) {
+			base_answer_text.setText("没有答题记录!");
+		} else {
+			base_answer_text.setText(answerArr[mQuestionType] + s);
+		}
 	}
 
 	// 时间道具使用完
@@ -257,32 +277,31 @@ public class AnswerBaseActivity extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.base_back_linearlayout:
-			Intent inent = new Intent();
-			if (type == 0) {
-				inent.setClass(this, HomeWorkIngActivity.class);
-			} else {
-				inent.setClass(this, HomeWorkIngActivity.class);
-			}
-			startActivity(inent);
-			finish();
+			MyDialog("确认退出吗？", 0);
 			break;
 		}
 	}
 
 	// 切换下一记录
 	public void nextRecord() {
-		setAccuracyAndUseTime(mRecoirdRatio.get(mRecordIndex),
-				amp.getUse_time());
-		if (mQuestionType == 3) {
-			recordMes = null;
-			String s[] = mRecoirdAnswer.get(mRecordIndex).split(";&&;");
-			if (s.length > 1) {
-				recordMes = s[1];
+		if (mRecoirdRatio.size() > 0 && mRecoirdAnswer.size() > 0) {
+			setAccuracyAndUseTime(mRecoirdRatio.get(mRecordIndex),
+					amp.getUse_time());
+			if (mQuestionType == 3) {
+				recordMes = null;
+				String s[] = mRecoirdAnswer.get(mRecordIndex).split(";&&;");
+				if (s.length > 1) {
+					recordMes = s[1];
+				}
+				setMyAnswer(s[0].replaceAll(";\\|\\|;", " "));
+			} else {
+				setMyAnswer(mRecoirdAnswer.get(mRecordIndex));
 			}
-			setMyAnswer(s[0].replaceAll(";\\|\\|;", " "));
 		} else {
-			setMyAnswer(mRecoirdAnswer.get(mRecordIndex));
+			setAccuracyAndUseTime(0, 0);
+			setMyAnswer("");
 		}
+
 		if (mRecordIndex < mRecoirdAnswer.size() - 1) {
 			mRecordIndex++;
 		}
@@ -293,7 +312,11 @@ public class AnswerBaseActivity extends Activity implements OnClickListener {
 		if (mQindex == mQuestList.size() - 1
 				&& mBindex == mQuestList.get(mQindex).size() - 1) {
 			// 最后一题
-
+			if (amp.getStatus() == 1 && status > 1) {
+				MyDialog("没有更多历史记录了,点击确定退出!", 1);
+			} else {
+				roundOver();
+			}
 		} else if (mQindex < mQuestList.size()
 				&& mBindex < mQuestList.get(mQindex).size()) {
 			if (++mBindex >= mQuestList.get(mQindex).size()
@@ -312,32 +335,37 @@ public class AnswerBaseActivity extends Activity implements OnClickListener {
 
 	public void roundOver() {
 		Intent intent = new Intent();
-		intent.putExtra("precision", ExerciseBookTool.getRatio(
-				"/sdcard/Exercisebook_app/73/85/130/answer.js",
-				questionArr[mQuestionType]));// 正确率100时获取精准成就
+		intent.putExtra("precision", ExerciseBookTool.getRatio(path,
+				questionArr[mQuestionType], mRatio));// 正确率100时
 		intent.putExtra("use_time", getUseTime());// 用户使用的时间
-		intent.putExtra("specified_time", 100);// 任务基础时间
+		intent.putExtra("specified_time", specified_time);// 任务基础时间
 		intent.setClass(this, WorkEndActivity.class);
+		startActivityForResult(intent, 1);
 	}
 
 	public AnswerPojo getAnswerPojo() {
 		switch (mQuestionType) {
 		case 0:
-			return answerJson.selecting;
-		case 1:
-			return answerJson.sort;
-		case 2:
-			return answerJson.lining;
-		case 3:
 			return answerJson.listening;
+		case 1:
+			return answerJson.reading;
+		case 2:
+			return answerJson.time_limit;
+		case 3:
+			return answerJson.selecting;
+		case 4:
+			return answerJson.lining;
+		case 5:
+			return answerJson.cloze;
+		case 6:
+			return answerJson.sort;
 		}
 		return null;
 	}
 
-	// 保存答题记录
+	// 保存答题记录 /sdcard/Exercisebook_app/73/85/130/answer.js
 	public void saveAnswerJson(String answer, int ratio, int qid, int bid) {
-		String answer_history = ExerciseBookTool
-				.getAnswer_Json_history("/sdcard/Exercisebook_app/73/85/130/answer.js");
+		String answer_history = ExerciseBookTool.getAnswer_Json_history(path);
 		answerJson = gson.fromJson(answer_history, AnswerJson.class);
 		AnswerPojo ap = getAnswerPojo();
 		ap.setUpdate_time("2014-03-17 08:00:00");
@@ -364,6 +392,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener {
 			ap.getQuestions().add(aq);
 		}
 
+		mRatio = ratio;
 		calculateIndexAndUpdateView();
 
 		ap.setQuestions_item(mQindex + "");
@@ -372,8 +401,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener {
 		String str = gson.toJson(answerJson);
 		this.ratio = 0;
 		try {
-			ExerciseBookTool.writeFile(
-					"/sdcard/Exercisebook_app/73/85/130/answer.js", str);
+			ExerciseBookTool.writeFile(path, str);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -414,6 +442,73 @@ public class AnswerBaseActivity extends Activity implements OnClickListener {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		Log.i("Ax", "resultCode-" + resultCode);
+		if (requestCode == 1) {
+			switch (resultCode) {
+			case 0:
+				Intent intent = new Intent();
+				intent.setClass(this, HomeWorkIngActivity.class);
+				startActivity(intent);
+				finish();
+				break;
+			case 1:
+				status = 1;
+				mQindex = 0;
+				mBindex = 0;
+				setUseTime(0);
+				updateView();
+				break;
+			}
+		}
+	}
+
+	// 自定义dialog设置
+	public void MyDialog(String title, final int dialog_type) {
+		// type :0表示退出 1表示结束
+		final Dialog dialog = new Dialog(this, R.style.Transparent);
+		dialog.setContentView(R.layout.my_dialog);
+		dialog.setCancelable(true);
+
+		ImageView dialog_img = (ImageView) dialog.findViewById(R.id.dialog_img);
+
+		TextView title_tv = (TextView) dialog.findViewById(R.id.dialog_title);
+		title_tv.setText(title);
+		Button dialog_ok = (Button) dialog.findViewById(R.id.dialog_ok);
+		dialog_ok.setText("确定");
+		Button dialog_no = (Button) dialog.findViewById(R.id.dialog_no);
+		dialog_no.setText("取消");
+		dialog_ok.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				dialog.dismiss();
+				Intent inent = new Intent();
+				if (type == 0) {
+					inent.setClass(AnswerBaseActivity.this,
+							HomeWorkIngActivity.class);
+				} else {
+					inent.setClass(AnswerBaseActivity.this,
+							RecordMainActivity.class);
+				}
+				startActivity(inent);
+				AnswerBaseActivity.this.finish();
+			}
+		});
+		dialog_no.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				dialog.dismiss();
+			}
+		});
+		if (dialog_type == 1) {
+			dialog_no.setVisibility(View.GONE);
+			dialog_ok.setBackgroundColor(getResources().getColor(R.color.lvse));
+		} else {
+			dialog_img.setVisibility(View.GONE);
+		}
+		dialog.show();
 	}
 
 }

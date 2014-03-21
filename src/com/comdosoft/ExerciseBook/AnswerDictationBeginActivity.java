@@ -44,8 +44,6 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		OnCompletionListener, Urlinterface {
 
 	private int rightCount = 0;
-	@SuppressWarnings("unused")
-	private int specified_time = 0;
 	private int linearLayoutIndex = 0;
 	private int mesLinearLayoutIndex = 0;
 	private boolean mesFlag = false;
@@ -103,7 +101,7 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		mPlayImg = (ImageView) findViewById(R.id.question_dictation_play);
 		mPlayImg.setOnClickListener(this);
 
-		setQuestionType(3);
+		setQuestionType(0);
 
 		etlp = new LayoutParams(LayoutParams.WRAP_CONTENT,
 				LayoutParams.WRAP_CONTENT);
@@ -168,7 +166,7 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		}
 
 		setPage(mBindex + 1, mQuestList.get(mQindex).size());
-		if (amp.getStatus() == 1) {
+		if (amp.getStatus() == 1 && status > 1) {
 			setRecordMes();
 		}
 	}
@@ -177,7 +175,7 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 	public void initView(final int i) {
 		String value = dictationList.get(i).getValue();
 		EditText et = new EditText(this);
-		if (amp.getStatus() == 1) {
+		if (amp.getStatus() == 1 && status>1) {
 			et.setFocusable(false);
 			et.setFocusableInTouchMode(false);
 			et.setText(filterString(value));
@@ -418,10 +416,14 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		} else {
 			// Next
 			setCheckText("检查");
-			AnswerBasePojo aop = mQuestList.get(mQindex).get(mBindex);
-			saveAnswerJson(getAnswer(), ratio, aop.getQuestions_id(),
-					aop.getBranch_questions_id());
 			errorMap.clear();
+			if (status == 0) {
+				AnswerBasePojo aop = mQuestList.get(mQindex).get(mBindex);
+				saveAnswerJson(getAnswer(), ratio, aop.getQuestions_id(),
+						aop.getBranch_questions_id());
+			} else {
+				calculateIndexAndUpdateView();
+			}
 		}
 	}
 

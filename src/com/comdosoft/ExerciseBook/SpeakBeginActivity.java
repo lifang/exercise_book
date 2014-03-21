@@ -616,8 +616,8 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 					handler.sendEmptyMessage(0);
 					break;
 				case 1:
-					intent.putExtra("precision",
-							ExerciseBookTool.getRatio(ratio_list));// 正确率100时获取精准成就
+//					intent.putExtra("precision",
+//							ExerciseBookTool.getRatio(ratio_list));// 正确率100时获取精准成就
 					intent.putExtra("use_time", getUseTime());// 用户使用的时间
 					intent.putExtra("specified_time", specified_time);// 任务基础时间
 					intent.setClass(SpeakBeginActivity.this,

@@ -31,6 +31,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -51,14 +52,55 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-import com.comdosoft.ExerciseBook.pojo.AnswerJson;
-import com.google.gson.Gson;
+import com.comdosoft.ExerciseBook.pojo.AnswerPojo;
+import com.comdosoft.ExerciseBook.pojo.Answer_QuestionsPojo;
+import com.comdosoft.ExerciseBook.pojo.Branch_AnswerPoJo;
+import com.comdosoft.ExerciseBook.pojo.HistoryPojo;
+import com.comdosoft.ExerciseBook.pojo.ListHistoryPojo;
 
 public class ExerciseBookTool implements Urlinterface {
 
 	private static int connectTimeOut = 5000;
 	private static int readTimeOut = 10000;
 	private static String requestEncoding = "UTF-8";
+
+	// 获取历史记录
+	public static AnswerPojo getAnswer(String json, String key) {
+		AnswerPojo answer = new AnswerPojo();
+		try {
+			List<Answer_QuestionsPojo> list_history = new ArrayList<Answer_QuestionsPojo>();
+			JSONObject obj = new JSONObject(json);
+			JSONObject keyJson = obj.getJSONObject(key);
+			int questions_item = keyJson.getInt("questions_item");
+			int branch_item = keyJson.getInt("branch_item");
+			int status = keyJson.getInt("status");
+			int use_time = keyJson.getInt("use_time");
+			JSONArray questions = keyJson.getJSONArray("questions");
+			if (questions.length() > 0) {
+				for (int i = 0; i < questions.length(); i++) {
+					JSONObject jo = questions.getJSONObject(i);
+					JSONArray jsonarr = jo.getJSONArray("branch_questions");
+					Branch_AnswerPoJo tl;
+					List<Branch_AnswerPoJo> question_history = new ArrayList<Branch_AnswerPoJo>();
+					for (int j = 0; j < jsonarr.length(); j++) {
+						JSONObject item = jsonarr.getJSONObject(j);
+						tl = new Branch_AnswerPoJo(item.getInt("id") + "",
+								item.getString("answer"), item.getInt("ratio")
+										+ "");
+						question_history.add(tl);
+					}
+					Answer_QuestionsPojo lp = new Answer_QuestionsPojo(
+							jo.getInt("id") + "", question_history);
+					list_history.add(lp);
+				}
+				answer = new AnswerPojo(status + "", "", questions_item + "",
+						branch_item + "", use_time + "", list_history);
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return answer;
+	}
 
 	// 获取历史索引
 	private int[] getAnswer_Item(String json) {
@@ -97,8 +139,58 @@ public class ExerciseBookTool implements Urlinterface {
 	}
 
 	// 计算正确率
-	public static int getRatio(List<Integer> ratio) {
+	public static int getRatio(String path, String key) {
+		List<Integer> ratio = new ArrayList<Integer>();
+		String answer_history = getJson(path);
+		try {
+			JSONObject obj = new JSONObject(answer_history);
+			JSONObject js = obj.getJSONObject(key);
+			Log.i("aaa", js.toString());
+			JSONArray arr = js.getJSONArray("questions");
+			for (int i = 0; i < arr.length(); i++) {
+				JSONObject item = arr.getJSONObject(i);
+				JSONArray ar = item.getJSONArray("branch_questions");
+				Log.i("aaa", ar.length() + "-ar");
+				for (int j = 0; j < ar.length(); j++) {
+					JSONObject o = ar.getJSONObject(j);
+					ratio.add(o.getInt("ratio"));
+				}
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 		int size = 0;
+		Log.i("aaa", ratio.size() + "-ratio");
+		for (int i = 0; i < ratio.size(); i++) {
+			size += ratio.get(i);
+		}
+		return size / ratio.size();
+	}
+
+	// 计算正确率
+	public static int getRatio(String path, String key, int mRatio) {
+		List<Integer> ratio = new ArrayList<Integer>();
+		String answer_history = getJson(path);
+		try {
+			JSONObject obj = new JSONObject(answer_history);
+			JSONObject js = obj.getJSONObject(key);
+			Log.i("aaa", js.toString());
+			JSONArray arr = js.getJSONArray("questions");
+			for (int i = 0; i < arr.length(); i++) {
+				JSONObject item = arr.getJSONObject(i);
+				JSONArray ar = item.getJSONArray("branch_questions");
+				Log.i("aaa", ar.length() + "-ar");
+				for (int j = 0; j < ar.length(); j++) {
+					JSONObject o = ar.getJSONObject(j);
+					ratio.add(o.getInt("ratio"));
+				}
+			}
+			ratio.add(mRatio);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		int size = 0;
+		Log.i("aaa", ratio.size() + "-ratio");
 		for (int i = 0; i < ratio.size(); i++) {
 			size += ratio.get(i);
 		}
