@@ -6,13 +6,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import com.comdosoft.ExerciseBook.pojo.AnswerBasePojo;
-import com.comdosoft.ExerciseBook.pojo.AnswerSelectItemPojo;
-import com.comdosoft.ExerciseBook.tools.AnswerTools;
+
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -22,6 +22,10 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.comdosoft.ExerciseBook.pojo.AnswerBasePojo;
+import com.comdosoft.ExerciseBook.pojo.AnswerSelectItemPojo;
+import com.comdosoft.ExerciseBook.tools.AnswerTools;
 
 public class AnswerSelectActivity extends AnswerBaseActivity implements
 		OnItemClickListener, OnClickListener {
@@ -40,7 +44,6 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 	private TextView answerText;
 	private LinearLayout answer_select_answerLinearLayout;
 
-	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		super.setContentView(R.layout.answer_select);
@@ -55,6 +58,8 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 
 		setQuestionType(2);
 
+		Log.i("aaa", json);
+
 		analysisJson(json);
 
 		answerOption = mQuestList.get(mQindex).get(mBindex).getOption();
@@ -68,7 +73,6 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 		listView.setAdapter(selectAdapter);
 		listView.setDividerHeight(10);
 
-		updateView();
 	}
 
 	// 设置选择类型

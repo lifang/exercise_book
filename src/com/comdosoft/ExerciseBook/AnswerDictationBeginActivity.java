@@ -78,10 +78,10 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 				mPd.dismiss();
 				break;
 			case 2:
-				mPlayImg.setImageResource(R.drawable.dictation_laba4);
+				mPlayImg.setImageResource(R.drawable.xiao2);
 				break;
 			case 3:
-				mPlayImg.setImageResource(R.drawable.dictation_laba3);
+				mPlayImg.setImageResource(R.drawable.xiao1);
 				break;
 			case 4:
 				mPd.setMessage("正在缓冲...");
@@ -175,7 +175,7 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 	public void initView(final int i) {
 		String value = dictationList.get(i).getValue();
 		EditText et = new EditText(this);
-		if (amp.getStatus() == 1 && status>1) {
+		if (amp.getStatus() == 1 && status > 1) {
 			et.setFocusable(false);
 			et.setFocusableInTouchMode(false);
 			et.setText(filterString(value));

@@ -52,7 +52,6 @@ public class AnswerBaseActivity extends Activity implements OnClickListener {
 
 	private String[] answerArr = new String[] { "你的作答: ", " ", "你的选择: ",
 			"你的选择: ", "你的搭配: ", "你的选择: ", "你的排序: " };
-
 	private String[] questionArr = new String[] { "listening", "reading",
 			"time_limit", "selecting", "lining", "cloze", "sort" };
 
@@ -407,6 +406,50 @@ public class AnswerBaseActivity extends Activity implements OnClickListener {
 		}
 	}
 
+	// 自定义dialog设置
+	public void MyDialog(String title, final int dialog_type) {
+		// type :0表示退出 1表示结束
+		final Dialog dialog = new Dialog(this, R.style.Transparent);
+		dialog.setContentView(R.layout.my_dialog);
+		dialog.setCancelable(true);
+
+		ImageView dialog_img = (ImageView) dialog.findViewById(R.id.dialog_img);
+
+		TextView title_tv = (TextView) dialog.findViewById(R.id.dialog_title);
+		title_tv.setText(title);
+		Button dialog_ok = (Button) dialog.findViewById(R.id.dialog_ok);
+		dialog_ok.setText("确定");
+		Button dialog_no = (Button) dialog.findViewById(R.id.dialog_no);
+		dialog_no.setText("取消");
+		dialog_ok.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				dialog.dismiss();
+				Intent inent = new Intent();
+				if (type == 0) {
+					inent.setClass(AnswerBaseActivity.this,
+							HomeWorkIngActivity.class);
+				} else {
+					inent.setClass(AnswerBaseActivity.this,
+							RecordMainActivity.class);
+				}
+				startActivity(inent);
+				AnswerBaseActivity.this.finish();
+			}
+		});
+		dialog_no.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				dialog.dismiss();
+			}
+		});
+		if (dialog_type == 1) {
+			dialog_no.setVisibility(View.GONE);
+			dialog_ok.setBackgroundColor(getResources().getColor(R.color.lvse));
+		} else {
+			dialog_img.setVisibility(View.GONE);
+		}
+		dialog.show();
+	}
+
 	// 获取答题记录对象
 	public AnswerMyPojo getAnswerItem(String json) {
 		try {
@@ -466,49 +509,4 @@ public class AnswerBaseActivity extends Activity implements OnClickListener {
 			}
 		}
 	}
-
-	// 自定义dialog设置
-	public void MyDialog(String title, final int dialog_type) {
-		// type :0表示退出 1表示结束
-		final Dialog dialog = new Dialog(this, R.style.Transparent);
-		dialog.setContentView(R.layout.my_dialog);
-		dialog.setCancelable(true);
-
-		ImageView dialog_img = (ImageView) dialog.findViewById(R.id.dialog_img);
-
-		TextView title_tv = (TextView) dialog.findViewById(R.id.dialog_title);
-		title_tv.setText(title);
-		Button dialog_ok = (Button) dialog.findViewById(R.id.dialog_ok);
-		dialog_ok.setText("确定");
-		Button dialog_no = (Button) dialog.findViewById(R.id.dialog_no);
-		dialog_no.setText("取消");
-		dialog_ok.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				dialog.dismiss();
-				Intent inent = new Intent();
-				if (type == 0) {
-					inent.setClass(AnswerBaseActivity.this,
-							HomeWorkIngActivity.class);
-				} else {
-					inent.setClass(AnswerBaseActivity.this,
-							RecordMainActivity.class);
-				}
-				startActivity(inent);
-				AnswerBaseActivity.this.finish();
-			}
-		});
-		dialog_no.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				dialog.dismiss();
-			}
-		});
-		if (dialog_type == 1) {
-			dialog_no.setVisibility(View.GONE);
-			dialog_ok.setBackgroundColor(getResources().getColor(R.color.lvse));
-		} else {
-			dialog_img.setVisibility(View.GONE);
-		}
-		dialog.show();
-	}
-
 }

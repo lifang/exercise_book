@@ -97,8 +97,7 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 
 	public void analysisJSON(String json) {
 		try {
-			JSONObject jsonObject = new JSONObject(json)
-					.getJSONObject("lining");
+			JSONObject jsonObject = new JSONObject(json);
 			specified_time = jsonObject.getInt("specified_time");
 			JSONArray jArr = new JSONArray(jsonObject.getString("questions"));
 			for (int i = 0; i < jArr.length(); i++) {

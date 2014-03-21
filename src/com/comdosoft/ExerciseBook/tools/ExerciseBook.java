@@ -28,6 +28,7 @@ public class ExerciseBook extends Application {
 	private int question_id;
 	private int branch_number;
 	private int question_item;
+	private boolean history_type;
 
 	public ExerciseBook() {
 		this.setMneu(true);
@@ -36,6 +37,7 @@ public class ExerciseBook extends Application {
 		this.setMenu_num(0);
 		this.setQuestion_item(0);
 		this.setMneu(true);
+		this.setHistory_type(false);
 	}
 
 	public List<Activity> getActivityList() {
@@ -60,6 +62,14 @@ public class ExerciseBook extends Application {
 
 	public void setRefresh(int refresh) {
 		this.refresh = refresh;
+	}
+
+	public boolean isHistory_type() {
+		return history_type;
+	}
+
+	public void setHistory_type(boolean history_type) {
+		this.history_type = history_type;
 	}
 
 	public int getMainItem() {

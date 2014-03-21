@@ -190,6 +190,7 @@ public class SwitchClassActivity extends Activity {
 							editor.putString("school_class_name", String
 									.valueOf(classlist.get(position).getName()));
 							editor.commit();
+							exerciseBook.setMenu_num(0);
 							clearActivity();
 							UserInfoActivity.instance.finish();
 							startActivity(intent);
@@ -244,6 +245,7 @@ public class SwitchClassActivity extends Activity {
 							exerciseBook.setMainItem(0);
 							exerciseBook.setRefresh(1);
 							clearActivity();
+							exerciseBook.setMenu_num(0);
 							UserInfoActivity.instance.finish();
 							Intent intent = new Intent(
 									SwitchClassActivity.this,
@@ -271,15 +273,13 @@ public class SwitchClassActivity extends Activity {
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
-	
-	//关闭上个主界面
-	public void clearActivity()
-	{
-		List<Activity> activityList=exerciseBook.getActivityList();
+	// 关闭上个主界面
+	public void clearActivity() {
+		List<Activity> activityList = exerciseBook.getActivityList();
 		for (int i = 0; i < activityList.size(); i++) {
 			activityList.get(i).finish();
 		}
 		exerciseBook.setActivityList();
 	}
-	
+
 }

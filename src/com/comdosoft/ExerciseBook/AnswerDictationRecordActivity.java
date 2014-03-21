@@ -51,10 +51,10 @@ public class AnswerDictationRecordActivity extends AnswerBaseActivity implements
 				mPd.dismiss();
 				break;
 			case 2:
-				mPlayImg.setImageResource(R.drawable.dictation_laba4);
+				mPlayImg.setImageResource(R.drawable.xiao2);
 				break;
 			case 3:
-				mPlayImg.setImageResource(R.drawable.dictation_laba3);
+				mPlayImg.setImageResource(R.drawable.xiao1);
 				break;
 			case 4:
 				mPd.show();
