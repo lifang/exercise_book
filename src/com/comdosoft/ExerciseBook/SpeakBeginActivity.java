@@ -65,14 +65,10 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 	private ExerciseBook eb;
 	private List<QuestionPojo> branch_questions;
 	private int index = 0;
-	private String message;
 	public String error_str = "";// 记录错误的词
 	private ProgressDialog prodialog;
-	private int over_static;
 	private ImageView question_speak_img;
 	private String path;
-	private boolean playFlag = false;
-	private int width;
 	private Gson gson;
 	private int ratio = 0;
 	private List<Integer> ratio_list;
@@ -93,43 +89,6 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 				content = branch_questions.get(index).getContent();
 				SetTextView();
 				break;
-			// case 1:
-			// prodialog.dismiss();
-			// MyDialog("你已经答完本题确认继续下一题吗?", "确认", "取消", 1);
-			// break;
-			// case 2:
-			// prodialog.dismiss();
-			// eb.setQuestion_index(eb.getQuestion_index() + 1);
-			// eb.setHistory_item(eb.getHistory_item() + 1);
-			// SpeakBeginActivity.this.finish();
-			// intent.setClass(SpeakBeginActivity.this,
-			// SpeakPrepareActivity.class);
-			// startActivity(intent);
-			// break;
-			// case 3:
-			// prodialog.dismiss();
-			// builder.setMessage(message);
-			// builder.setPositiveButton("确定", null);
-			// builder.show();
-			// break;
-			// case 4:
-			// prodialog.dismiss();
-			// SpeakBeginActivity.this.finish();
-			// intent.setClass(SpeakBeginActivity.this,
-			// ebMainActivity.class);
-			// startActivity(intent);
-			// break;
-			// case 5:
-			// // MyDialog("恭喜完成今天的朗读作业!", "确认", "取消", 2);
-			// prodialog.dismiss();
-			// builder.setMessage("提交作业失败");
-			// builder.setPositiveButton("确定", null);
-			// builder.show();
-			// break;
-			// case 6:
-			// prodialog.dismiss();
-			// MyDialog("恭喜完成今天的朗读作业!", "确认", "取消", 2);
-			// break;
 			case 7:
 				question_speak_img.setImageDrawable(getResources().getDrawable(
 						R.drawable.xiao1));
@@ -151,6 +110,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 		setContentView(R.layout.question_speak_begin);
 		findViewById(R.id.base_back_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
+		setTimePropEnd();// 禁用道具
 		setTruePropEnd();// 禁用道具
 		eb = (ExerciseBook) getApplication();
 
@@ -164,7 +124,6 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 		initialize();
 		SetTextView();
 		Display display = this.getWindowManager().getDefaultDisplay();
-		width = display.getWidth();
 	}
 
 	// 初始化
@@ -213,8 +172,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 			} else {
 				handler.sendEmptyMessage(7);
 				Intent checkIntent = new Intent();
-				checkIntent
-						.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
+				checkIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
 				startActivityForResult(checkIntent, REQ_TTS_STATUS_CHECK);
 			}
 			break;
@@ -308,10 +266,8 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 						if (code_list.get(i)[1] >= 7) {
 							ok_speak.put(code_list.get(i)[0],
 									ok_arr[code_list.get(i)[0]]);
-							text_list.get(code_list.get(i)[0])
-									.setBackgroundColor(
-											getResources().getColor(
-													R.color.work_end));
+							text_list.get(code_list.get(i)[0]).setTextColor(
+									getResources().getColor(R.color.work_end));
 						} else {
 							if (!error_str
 									.contains(ok_arr[code_list.get(i)[0]])) {
@@ -320,16 +276,14 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 										+ "-!-";
 							}
 							Log.i("aaa", "1");
-							text_list.get(code_list.get(i)[0])
-									.setBackgroundColor(
-											getResources().getColor(
-													R.color.juhuang));
+							text_list.get(code_list.get(i)[0]).setTextColor(
+									getResources().getColor(R.color.juhuang));
 						}
 					}
 
 				} else {
 					for (int i = 0; i < str_list.size(); i++) {
-						text_list.get(i).setBackgroundColor(
+						text_list.get(i).setTextColor(
 								getResources().getColor(R.color.juhuang));
 					}
 				}
@@ -550,7 +504,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 
 		b_item += 1;
 		answerJson.reading.setBranch_item(b_item + "");
-		answerJson.reading.setUse_time(getSecond() + "");
+		answerJson.reading.setUse_time(getUseTime() + "");
 		if (answerJson.reading.getQuestions().size() == 0) {
 			Answer_QuestionsPojo aq = new Answer_QuestionsPojo(qid + "",
 					new ArrayList<Branch_AnswerPoJo>());
@@ -591,50 +545,53 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 		switch (v.getId()) {
 		case R.id.base_back_linearlayout:
 			eb.setQuestion_item(0);
-			SpeakBeginActivity.this.finish();
-			intent.setClass(SpeakBeginActivity.this, HomeWorkIngActivity.class);
-			startActivity(intent);
+			super.onClick(v);
 			break;
 		case R.id.base_check_linearlayout:
 			int type;
-			// if (Speak_type == true || number >= 4) {
-			String answer_history = ExerciseBookTool
-					.getAnswer_Json_history(path);
-			try {
-				JSONObject obj = new JSONObject(answer_history);
-				if (obj.getJSONObject("reading").getString("status")
-						.equals("0")) {
-					ratio_list.add(ratio);
-					type = setAnswerJson(answer_history, error_str, ratio,
-							branch_questions.get(index).getId());
-				} else {
-					type = Again();
-				}
-				Log.i("aaa", type + "-type");
-				switch (type) {// 0为下一小题 1为全部做完 2为本小题做完
-				case 0:
-					handler.sendEmptyMessage(0);
-					break;
-				case 1:
-					intent.putExtra("precision",
-							ExerciseBookTool.getRatio(ratio_list));// 正确率100时获取精准成就
-					intent.putExtra("use_time", getSecond());// 用户使用的时间
-					intent.putExtra("specified_time", specified_time);// 任务基础时间
-					intent.setClass(SpeakBeginActivity.this,
-							WorkEndActivity.class);
-					SpeakBeginActivity.this.startActivityForResult(intent, 1);
-					break;
-				case 2:
-					intent.putExtra("path", path);
-					intent.putExtra("json", json);
-					intent.setClass(SpeakBeginActivity.this,
-							SpeakPrepareActivity.class);
-					startActivity(intent);
-					SpeakBeginActivity.this.finish();
-					break;
-				}
+	
+			if (Speak_type == true || number >= 4) {
+				String answer_history = ExerciseBookTool
+						.getAnswer_Json_history(path);
+				try {
+					JSONObject obj = new JSONObject(answer_history);
+					if (obj.getJSONObject("reading").getString("status")
+							.equals("0")) {
+						type = setAnswerJson(answer_history, error_str, ratio,
+								branch_questions.get(index).getId());
+					} else {
+						type = Again();
+					}
+					Log.i("aaa", type + "-type");
+					switch (type) {// 0为下一小题 1为全部做完 2为本小题做完
+					case 0:
+						handler.sendEmptyMessage(0);
+						break;
+					case 1:
+						intent.putExtra("precision",
+								ExerciseBookTool.getRatio(path, "reading"));// 正确率100时获取精准成就
+						intent.putExtra("use_time", getUseTime());// 用户使用的时间
+						intent.putExtra("specified_time", specified_time);// 任务基础时间
+						intent.setClass(SpeakBeginActivity.this,
+								WorkEndActivity.class);
+						SpeakBeginActivity.this.startActivityForResult(intent,
+								1);
+						break;
+					case 2:
+						intent.putExtra("path", path);
+						intent.putExtra("json", json);
+						intent.setClass(SpeakBeginActivity.this,
+								SpeakPrepareActivity.class);
+						startActivity(intent);
+						SpeakBeginActivity.this.finish();
+						break;
+					}
 
-			} catch (Exception e) {
+				} catch (Exception e) {
+				}
+			} else {
+				Toast.makeText(SpeakBeginActivity.this, "请先打完本题",
+						Toast.LENGTH_SHORT).show();
 			}
 			break;
 		}

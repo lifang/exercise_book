@@ -11,7 +11,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -33,13 +32,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.comdosoft.ExerciseBook.pojo.AnswerJson;
 import com.comdosoft.ExerciseBook.pojo.HistoryPojo;
 import com.comdosoft.ExerciseBook.pojo.ListHistoryPojo;
 import com.comdosoft.ExerciseBook.pojo.ListeningPojo;
 import com.comdosoft.ExerciseBook.pojo.QuestionPojo;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
-import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
@@ -96,12 +93,12 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 			case 4:
 				Log.i("linshi", "kai");
 				question_speak_img.setImageDrawable(getResources().getDrawable(
-						R.drawable.dictation_laba2));
+						R.drawable.yuting1));
 				break;
 			case 5:
 				Log.i("linshi", "guan");
 				question_speak_img.setImageDrawable(getResources().getDrawable(
-						R.drawable.dictation_laba1));
+						R.drawable.yuting2));
 				break;
 			case 6:
 				prodialog.dismiss();
@@ -154,7 +151,7 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
 		setTimePropEnd();// 禁用道具
 		setTruePropEnd();// 禁用道具
-
+		setCheckText("开始");
 		initialize();
 		tvlist = new ArrayList<TextView>();
 
@@ -261,6 +258,9 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 				JSONObject time_limit = obj.getJSONObject("reading");
 				questions_item = time_limit.getInt("questions_item");
 				branch_item = time_limit.getInt("branch_item");
+				int use_time = time_limit.getInt("use_time");
+				setUseTime(use_time);
+				setStart();
 				status = time_limit.getInt("status");
 				Log.i("aaa", specified_time + "--" + branch_item);
 				JSONArray questions = time_limit.getJSONArray("questions");
@@ -562,10 +562,7 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 		Intent intent = new Intent();
 		switch (v.getId()) {
 		case R.id.base_back_linearlayout:
-			SpeakPrepareActivity.this.finish();
-			intent.setClass(SpeakPrepareActivity.this,
-					HomeWorkIngActivity.class);
-			startActivity(intent);
+			super.onClick(v);
 			break;
 		case R.id.base_check_linearlayout:
 			// 0没做过----1做过了但没做完----2表示做完了
@@ -591,7 +588,13 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 			intent.putExtra("specified_time", specified_time);
 			intent.putExtra("path", path);
 			intent.putExtra("json", json);
-			intent.setClass(SpeakPrepareActivity.this, SpeakBeginActivity.class);
+			if (eb.isHistory_type()) {
+				intent.setClass(SpeakPrepareActivity.this,
+						SpeakHistoryActivity.class);
+			} else {
+				intent.setClass(SpeakPrepareActivity.this,
+						SpeakBeginActivity.class);
+			}
 			startActivity(intent);
 			SpeakPrepareActivity.this.finish();
 			break;

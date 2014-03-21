@@ -1,18 +1,13 @@
 package com.comdosoft.ExerciseBook;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -22,25 +17,17 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.comdosoft.ExerciseBook.pojo.AnswerJson;
-import com.comdosoft.ExerciseBook.pojo.AnswerOrderPojo;
-import com.comdosoft.ExerciseBook.pojo.Answer_QuestionsPojo;
-import com.comdosoft.ExerciseBook.pojo.Branch_AnswerPoJo;
-import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
-import com.google.gson.Gson;
+import com.comdosoft.ExerciseBook.pojo.AnswerBasePojo;
 
 public class AnswerOrderActivity extends AnswerBaseActivity {
 
-	private String json = "{ \"sort\": {\"specified_time\" :\"100\", \"questions\": [{\"id\": \"284\", \"branch_questions\": [ {\"id\": \"181\", \"content\": \"This is an apple\"},{\"id\": \"185\", \"content\": \"2 3 4 5\"},{\"id\": \"182\", \"content\": \"This is apple\"}]  }, {\"id\": \"285\", \"branch_questions\": [ {\"id\": \"183\", \"content\": \"why is Google\"},{\"id\": \"186\", \"content\": \"1 2 3\"},{\"id\": \"184\", \"content\": \"How are you\"} ] }]}}";
+	private String json = "{ \"sort\": {\"specified_time\" :\"100\", \"questions\": [{\"id\": \"284\", \"branch_questions\": [ {\"id\": \"181\", \"content\": \"This is an apple\"},{\"id\": \"182\", \"content\": \"2 3 4 5\"},{\"id\": \"183\", \"content\": \"This is orange\"}]  }, {\"id\": \"285\", \"branch_questions\": [ {\"id\": \"184\", \"content\": \"why is Google\"},{\"id\": \"185\", \"content\": \"1 2 3\"},{\"id\": \"186\", \"content\": \"How are you\"} ] }]}}";
 	private int mAnswerIndex = 0;
 	private int mSubjectIndex = 0;
 	private int mOptionIndex = 0;
-	private int specified_time = 0;
-	private int mQindex = 0;
-	private int mBindex = 0;
+	private String[] answerArr = new String[] {};
 	private String mAnswerStr;
 	private StringBuffer mAnswer = new StringBuffer();
-	private List<List<AnswerOrderPojo>> mQuestList = new ArrayList<List<AnswerOrderPojo>>();
 	private List<String> mAnswerList = new ArrayList<String>();
 	private List<String> answerList = new ArrayList<String>();
 	private List<LinearLayout> mSubjectList = new ArrayList<LinearLayout>();
@@ -49,10 +36,8 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 	private List<TextView> mOptionTextList = new ArrayList<TextView>();
 	private List<TextView> mOptionOrderTextList = new ArrayList<TextView>();
 
-	private Gson gson;
-	private int ratio = 0;
-	private AnswerJson answerJson;
-
+	private TextView answer_order_back;
+	private TextView answer_order_again;
 	private LayoutParams etlp;
 	private LayoutParams layoutlp;
 	private LinearLayout mSubjectLinearLayout;
@@ -65,13 +50,15 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 		super.setContentView(R.layout.answer_order);
 		mSubjectLinearLayout = (LinearLayout) findViewById(R.id.answer_order_subject_linearLayout);
 		mOptionLinearLayout = (LinearLayout) findViewById(R.id.answer_order_option_linearLayout);
-
-		findViewById(R.id.answer_order_back)
-				.setOnClickListener(new MyOnClick());
-		findViewById(R.id.answer_order_again).setOnClickListener(
-				new MyOnClick());
+		answer_order_back = (TextView) findViewById(R.id.answer_order_back);
+		answer_order_again = (TextView) findViewById(R.id.answer_order_again);
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(
 				new MyOnClick());
+		findViewById(R.id.base_propTrue).setOnClickListener(new MyOnClick());
+		answer_order_again.setOnClickListener(new MyOnClick());
+		answer_order_again.setOnClickListener(new MyOnClick());
+
+		setQuestionType(6);
 
 		etlp = new LayoutParams(LayoutParams.WRAP_CONTENT,
 				LayoutParams.WRAP_CONTENT);
@@ -80,14 +67,27 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 				LayoutParams.WRAP_CONTENT);
 		layoutlp.topMargin = 20;
 
-		gson = new Gson();
-
-		Intent intent = getIntent();
-		json = intent.getStringExtra("json");
-
 		analysisJSON(json);
 
-		initData();
+		updateView();
+	}
+
+	public void rightAnswer() {
+		for (int i = 0; i < mSubjectEditList.size(); i++) {
+			EditText et = mSubjectEditList.get(i);
+			et.setText(answerArr[i]);
+			et.setBackgroundResource(R.drawable.answer_wire_item_check_style);
+
+			TextView tv = mOptionTextList.get(i);
+			tv.setBackgroundResource(R.drawable.answer_order_item_check_style);
+
+			if (amp.getStatus() == 0) {
+				mOptionOrderTextList.add(tv);
+				mAnswerList.add(answerArr[i]);
+			} else {
+				tv.setClickable(false);
+			}
+		}
 	}
 
 	public void initView(int i) {
@@ -140,11 +140,11 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 
 	public void analysisJSON(String json) {
 		try {
-			JSONObject jsonObject = new JSONObject(json).getJSONObject("sort");
+			JSONObject jsonObject = new JSONObject(json);
 			specified_time = jsonObject.getInt("specified_time");
 			JSONArray jArr = new JSONArray(jsonObject.getString("questions"));
 			for (int i = 0; i < jArr.length(); i++) {
-				List<AnswerOrderPojo> mBranchList = new ArrayList<AnswerOrderPojo>();
+				List<AnswerBasePojo> mBranchList = new ArrayList<AnswerBasePojo>();
 				JSONObject jo = jArr.getJSONObject(i);
 				int question_id = jo.getInt("id");
 				JSONArray jsonArr = new JSONArray(
@@ -153,7 +153,7 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 					JSONObject jb = jsonArr.getJSONObject(j);
 					int branch_question_id = jb.getInt("id");
 					String answer = jb.getString("content");
-					mBranchList.add(new AnswerOrderPojo(question_id,
+					mBranchList.add(new AnswerBasePojo(question_id,
 							branch_question_id, answer));
 				}
 				mQuestList.add(mBranchList);
@@ -163,7 +163,7 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 		}
 	}
 
-	public void initData() {
+	public void updateView() {
 		mAnswerList.clear();
 		answerList.clear();
 		mSubjectList.clear();
@@ -178,11 +178,17 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 		mSubjectIndex = 0;
 		mOptionIndex = 0;
 
-		String[] arr = mQuestList.get(mQindex).get(mBindex).getAnswer()
+		if (amp.getStatus() == 1 && status > 1) {
+			answer_order_back.setVisibility(View.GONE);
+			answer_order_again.setVisibility(View.GONE);
+		}
+
+		answerArr = mQuestList.get(mQindex).get(mBindex).getContent()
 				.split(" ");
-		for (int i = 0; i < arr.length; i++) {
-			mAnswer.append(arr[i]);
-			answerList.add(arr[i]);
+
+		for (int i = 0; i < answerArr.length; i++) {
+			mAnswer.append(answerArr[i]);
+			answerList.add(answerArr[i]);
 		}
 
 		List<String> list = new ArrayList<String>();
@@ -203,19 +209,34 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 			mSubjectLinearLayout.addView(mSubjectList.get(i));
 			mOptionLinearLayout.addView(mOptionList.get(i));
 		}
+
+		if (amp.getStatus() == 1 && status > 1) {
+			rightAnswer();
+		}
 	}
 
 	public void check() {
 		StringBuffer sb = new StringBuffer();
+		StringBuffer mSb = new StringBuffer();
 		for (int i = 0; i < mAnswerList.size(); i++) {
-			sb.append(mAnswerList.get(i));
+			sb.append(mAnswerList.get(i)).append(" ");
+			mSb.append(mAnswerList.get(i));
 		}
 		mAnswerStr = sb.toString();
-		if (mAnswer.toString().equals(mAnswerStr)) {
-			Toast.makeText(getApplicationContext(), "true", 0).show();
+		mAnswerStr = mAnswerStr.substring(0, mAnswerStr.length() - 1);
+		if (mAnswer.toString().equals(mSb.toString())) {
+			ratio = 100;
+			// Toast.makeText(getApplicationContext(), "true", 0).show();
 		} else {
-			Toast.makeText(getApplicationContext(), "false", 0).show();
+			// Toast.makeText(getApplicationContext(), "false", 0).show();
 		}
+	}
+
+	// 后退一步
+	public void backAnswer(int i) {
+		EditText edit = mSubjectEditList.get(i);
+		edit.setBackgroundResource(R.drawable.answer_order_item_style);
+		edit.setText("");
 	}
 
 	class MyOnClick implements OnClickListener {
@@ -270,84 +291,32 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 				}
 				break;
 			case R.id.base_check_linearlayout:
-				check();
-				if (mQindex == mQuestList.size() - 1
-						&& mBindex == mQuestList.get(mQindex).size() - 1) {
-					Log.i("Ax", "last");
-				}
-				if (mQindex < mQuestList.size()
-						&& mBindex < mQuestList.get(mQindex).size()) {
-					if (++mBindex >= mQuestList.get(mQindex).size()
-							&& mQindex < mQuestList.size() - 1) {
-						mBindex = 0;
-						mQindex++;
+				if (amp.getStatus() == 0) {
+					if (mAnswerList.size() == answerList.size()) {
+						check();
+						if (status == 0) {
+							AnswerBasePojo aop = mQuestList.get(mQindex).get(
+									mBindex);
+							saveAnswerJson(mAnswerStr, ratio,
+									aop.getQuestions_id(),
+									aop.getBranch_questions_id());
+						} else {
+							calculateIndexAndUpdateView();
+						}
+					} else {
+						Toast.makeText(getApplicationContext(), "请完成未选择的题!", 0)
+								.show();
 					}
-					if (mBindex < mQuestList.get(mQindex).size()) {
-						// AnswerOrderPojo aop = mQuestList.get(mQindex).get(
-						// mBindex);
-						// setAnswerJson(mAnswerStr, 80, aop.getQuestion_id(),
-						// aop.getBranch_questionid());
-						initData();
-						Log.i("Ax", mQindex + "--" + mBindex);
-					}
+				} else {
+					nextRecord();
+					calculateIndexAndUpdateView();
 				}
+				break;
+			case R.id.base_propTrue:
+				rightAnswer();
 				break;
 			}
 		}
-	}
-
-	public void backAnswer(int i) {
-		EditText edit = mSubjectEditList.get(i);
-		edit.setBackgroundResource(R.drawable.answer_order_item_style);
-		edit.setText("");
-	}
-
-	// 0为继续 1为全部做完 2为本小题做完
-	public int setAnswerJson(String answer, int ratio, int qid, int bid) {
-		int type = 0;
-		String answer_history = ExerciseBookTool
-				.getAnswer_Json_history("/sdcard/Exercisebook_app/73/85/130/answer.js");
-		Log.i("Ax", "json--" + answer_history);
-		answerJson = gson.fromJson(answer_history, AnswerJson.class);
-		answerJson.reading.setUpdate_time("2014-03-12 08:00:00");
-		// int q_item = Integer.valueOf(answerJson.reading.getQuestions_item());
-		// int b_item = Integer.valueOf(answerJson.reading.getBranch_item());
-
-		answerJson.reading.setQuestions_item(mQindex + "");
-		answerJson.reading.setBranch_item(mBindex + "");
-		answerJson.reading.setUse_time(getSecond() + "");
-
-		if (answerJson.reading.getQuestions().size() == 0) {
-			Answer_QuestionsPojo aq = new Answer_QuestionsPojo(qid + "",
-					new ArrayList<Branch_AnswerPoJo>());
-			answerJson.reading.getQuestions().add(aq);
-		}
-
-		answerJson.reading.getQuestions().get(mQindex).getBranch_questions()
-				.add(new Branch_AnswerPoJo(bid + "", answer, ratio + ""));
-
-		if (mQindex == mQuestList.size() - 1
-				&& mBindex == mQuestList.get(mQindex).size() - 1) {// 结束
-			answerJson.reading.setStatus("1");
-			type = 1;
-		} else if (mBindex == mQuestList.get(mQindex).size() - 1) {// 本小题做完
-			answerJson.reading.setQuestions_item(mQindex + 1 + "");
-			answerJson.reading.setBranch_item("0");
-			Answer_QuestionsPojo aq = new Answer_QuestionsPojo(mQuestList
-					.get(mQindex + 1).get(0).getQuestion_id()
-					+ "", new ArrayList<Branch_AnswerPoJo>());
-			answerJson.reading.getQuestions().add(aq);
-			type = 2;
-		}
-
-		String str = gson.toJson(answerJson);
-		try {
-			ExerciseBookTool.writeFile(
-					"/sdcard/Exercisebook_app/73/85/130/answer.js", str);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return type;
 	}
 
 }

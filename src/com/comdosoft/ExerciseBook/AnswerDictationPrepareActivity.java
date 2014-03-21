@@ -19,16 +19,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.comdosoft.ExerciseBook.pojo.ListeningPojo;
 import com.comdosoft.ExerciseBook.pojo.QuestionPojo;
-import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ListeningQuestionList;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
-// 拼写准备    马龙    2014年2月12日
 public class AnswerDictationPrepareActivity extends AnswerBaseActivity
 		implements OnClickListener, OnPreparedListener, OnCompletionListener,
 		Urlinterface {
 
-	private ExerciseBook eb;
 	private int mp3Index = 0;
 	private List<String> mp3List = new ArrayList<String>();
 	private MediaPlayer mediaPlayer = new MediaPlayer();
@@ -69,7 +66,6 @@ public class AnswerDictationPrepareActivity extends AnswerBaseActivity
 		mPd.setCanceledOnTouchOutside(false);
 		mPd.setMessage("正在缓冲...");
 		setMp3Url();
-		eb = (ExerciseBook) getApplication();
 		if (ListeningQuestionList.Record_Count == ListeningQuestionList.listeningList
 				.size()) {
 			TextView t = (TextView) findViewById(R.id.question_prepare_mes);

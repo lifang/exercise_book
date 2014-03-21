@@ -12,7 +12,7 @@ public class AnswerTools {
 		if (index != -1) {
 			if (s.substring(index - 3, index).equals("jpg")) {
 				return 2;
-			} else if (s.substring(index - 3, index).equals("mp3")) {
+			} else if (s.substring(index - 3, index).equals("wav")) {
 				return 0;
 			}
 		} else {

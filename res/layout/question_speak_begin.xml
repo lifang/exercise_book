@@ -37,7 +37,7 @@
         android:layout_marginTop="50dp"
         android:contentDescription="@string/app_name"
         android:onClick="onclicks"
-        android:src="@drawable/dictation_laba1" />
+        android:src="@drawable/dictation_laba2" />
 
     <TextView
         android:id="@+id/question_speak_tishi"

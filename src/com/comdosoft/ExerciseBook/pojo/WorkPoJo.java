@@ -11,7 +11,6 @@ public class WorkPoJo {
 	private String question_packages_url;
 	private List<Integer> question_types;
 	private List<Integer> finish_types;
-
 	public WorkPoJo() {
 	}
 
@@ -84,7 +83,6 @@ public class WorkPoJo {
 		this.finish_types = finish_types;
 	}
 
-	@Override
 	public String toString() {
 		return "WorkPoJo [id=" + id + ", name=" + name + ", start_time="
 				+ start_time + ", end_time=" + end_time

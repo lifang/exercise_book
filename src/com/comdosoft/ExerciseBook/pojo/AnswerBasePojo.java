@@ -2,7 +2,7 @@ package com.comdosoft.ExerciseBook.pojo;
 
 import java.util.List;
 
-public class SelectPojo {
+public class AnswerBasePojo {
 	private int questions_id;
 	private int branch_questions_id;
 	private int type;
@@ -11,10 +11,27 @@ public class SelectPojo {
 	private List<String> option;
 	private List<String> answer;
 
-	public SelectPojo() {
+	public AnswerBasePojo() {
 	}
 
-	public SelectPojo(int questions_id, int branch_questions_id, int type,
+	public AnswerBasePojo(int questions_id, int branch_questions_id,
+			String content) {
+		super();
+		this.questions_id = questions_id;
+		this.branch_questions_id = branch_questions_id;
+		this.content = content;
+	}
+	
+	public AnswerBasePojo(int questions_id, int branch_questions_id,
+			String content, String path) {
+		super();
+		this.questions_id = questions_id;
+		this.branch_questions_id = branch_questions_id;
+		this.content = content;
+		this.path = path;
+	}
+
+	public AnswerBasePojo(int questions_id, int branch_questions_id, int type,
 			String content, List<String> option, List<String> answer) {
 		super();
 		this.questions_id = questions_id;
@@ -25,8 +42,9 @@ public class SelectPojo {
 		this.answer = answer;
 	}
 
-	public SelectPojo(int questions_id, int branch_questions_id, int type,
-			String content, String path, List<String> option, List<String> answer) {
+	public AnswerBasePojo(int questions_id, int branch_questions_id, int type,
+			String content, String path, List<String> option,
+			List<String> answer) {
 		super();
 		this.questions_id = questions_id;
 		this.branch_questions_id = branch_questions_id;

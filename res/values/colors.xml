@@ -31,5 +31,11 @@
     <color name="dialog_text">#FCE3CE</color>
     <color name="lvse">#92B81B</color>
     <color name="question_bg">#EEECEC</color>
+<<<<<<< HEAD
+=======
+    <color name="history">#273039</color>
+    <color name="transparent2">#e0000000</color>
+    <color name="black">#000000</color>
+>>>>>>> 97c363f69678b2a3220bd23fd5982603da50b399
 
 </resources>
