@@ -183,7 +183,6 @@ public class ExerciseBook extends Application {
 
 	public void onCreate() {
 		super.onCreate();
-		JPushInterface.onResume(this);
 		// initImageLoader(getApplicationContext());
 	}
 
