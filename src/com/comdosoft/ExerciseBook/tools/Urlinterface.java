@@ -53,19 +53,12 @@ public interface Urlinterface {
 	String QQ_LOGIN = IP + "/api/students/login"; // qq登录
 	String add_concern = IP + "/api/students/add_concern"; // 关注消息
 	String get_my_achievements = IP + "/api/students/get_my_archivements"; // 获得成就
-<<<<<<< HEAD
 	String get_knowledges_card=IP+"/api/students/get_knowledges_card";			//获取卡包信息
 	String delete_knowledges_card=IP+"/api/students/delete_knowledges_card";		//删除卡片
 	String search_tag_card=IP+"/api/students/search_tag_card";
 	String knoledge_tag_relation=IP+"/api/students/knoledge_tag_relation";
 	String create_card_tag=IP+"/api/students/create_card_tag";
-=======
-	String get_knowledges_card = IP + "/api/students/get_knowledges_card"; // 获取卡包信息
-	String delete_knowledges_card = IP + "/api/students/delete_knowledges_card"; // 删除卡片
-	String search_tag_card = IP + "/api/students/search_tag_card";
-	String knoledge_tag_relation = IP + "/api/students/knoledge_tag_relation";
 
->>>>>>> 97c363f69678b2a3220bd23fd5982603da50b399
 	// 获取当天作业
 	static final String get_newer_task = IP + "/api/students/get_newer_task";
 	// 过往记录列表
@@ -74,10 +67,6 @@ public interface Urlinterface {
 	static final String search_tasks = IP + "/api/students/search_tasks";
 	String get_follow_microposts = IP + "/api/students/get_follow_microposts"; // 关注的信息
 	String get_rankings = IP + "/api/students/get_rankings"; // 获得排名
-<<<<<<< HEAD
-
-=======
 	// 提交json
 	String finish_question_packge = IP + "/api/students/finish_question_packge";
->>>>>>> 97c363f69678b2a3220bd23fd5982603da50b399
 }

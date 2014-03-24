@@ -19,14 +19,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
-import android.provider.DocumentsContract.Root;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -40,9 +38,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import cn.jpush.android.api.JPushInterface;
 
 import com.comdosoft.ExerciseBook.Adapter.LabelAdapter;
 import com.comdosoft.ExerciseBook.pojo.knowledges_card;
@@ -83,6 +82,8 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 	MediaPlayer mediaplay;
 	ViewGroup viewgroup;
 	List<View> visList;
+
+	@Override
 
 	@SuppressWarnings("rawtypes")
 	protected void onCreate(Bundle savedInstanceState) {
@@ -127,8 +128,8 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 						try {
 							viewPager = (ViewPager) findViewById(R.id.guidePages);
 							Map<String, String> map = new HashMap<String, String>();
-							map.put("student_id", "1");
-							map.put("school_class_id", "1");
+							map.put("student_id",student_id);
+							map.put("school_class_id", school_class_id);
 							map.put("name", String.valueOf(cardbagEt.getText()));
 							String json = ExerciseBookTool.sendGETRequest(
 									get_knowledges_card, map);
@@ -161,8 +162,8 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 							try {
 								viewPager = (ViewPager) findViewById(R.id.guidePages);
 								Map<String, String> map = new HashMap<String, String>();
-								map.put("student_id", "1");
-								map.put("school_class_id", "1");
+								map.put("student_id", student_id);
+								map.put("school_class_id", school_class_id);
 								map.put("mistake_types", mistype);
 								json = ExerciseBookTool.sendGETRequest(
 										get_knowledges_card, map);
@@ -178,6 +179,15 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 			});
 		}
 	}
+	protected void onResume() {
+		super.onResume();
+		JPushInterface.onResume(this);
+	}
+	@Override
+	protected void onPause() {
+		super.onPause();
+		JPushInterface.onPause(this);
+	}
 
 	public void getKonwledges() {
 		progressDialog = ProgressDialog.show(MCardBagActivity.this,
@@ -187,8 +197,8 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 				try {
 					viewPager = (ViewPager) findViewById(R.id.guidePages);
 					Map<String, String> map = new HashMap<String, String>();
-					map.put("student_id", "1");
-					map.put("school_class_id", "1");
+					map.put("student_id", student_id);
+					map.put("school_class_id", school_class_id);
 					String json = ExerciseBookTool.sendGETRequest(
 							get_knowledges_card, map);
 					pageAdapter = new GuidePageAdapter();
@@ -262,13 +272,13 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 					if ((i + 1) % 4 == 0) {
 						count1++;
 						Allmap.put(count1, cardList);
-						Log.i("asd", "CardListsize--" + cardList.size());
 						cardList = new ArrayList<knowledges_card>();
 					}
 				}
-				count1++;
-				Allmap.put(count1, cardList);
-				Log.i("asd", "CardListsize--" + cardList.size());
+				if (cardList.size() != 0) {
+					count1++;
+					Allmap.put(count1, cardList);
+				}
 				JSONArray tags = jsonobject.getJSONArray("tags");
 				for (int i = 0; i < tags.length(); i++) {
 					JSONObject jsonobject2 = tags.getJSONObject(i);
@@ -290,7 +300,6 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 				handler.sendMessage(msg);
 			}
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -306,29 +315,31 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 			case 1:
 				setViewPager();
 				progressDialog.dismiss();
-				// viewPager.setOffscreenPageLimit(Allmap.size());
 				viewPager.setAdapter(new GuidePageAdapter());
 				viewPager
 				.setOnPageChangeListener(new GuidePageChangeListener());
 				break;
 			case 2:
 				setViewPager();
-				// viewPager.setOffscreenPageLimit(Allmap.size());
 				viewPager.setCurrentItem(viewPager.getCurrentItem());
 				viewPager.setAdapter(new GuidePageAdapter());
 				viewPager
 				.setOnPageChangeListener(new GuidePageChangeListener());
 				break;
 			case 3:
+				setViewPager();
+				viewPager.setAdapter(new GuidePageAdapter());
+				viewPager
+				.setOnPageChangeListener(new GuidePageChangeListener());
 				break;
 			default:
 				break;
 			}
 		}
 	};
+
 	@SuppressWarnings("unused")
 	public void setViewPager() {
-
 		group = (ViewGroup) findViewById(R.id.viewGroup);
 		viewPager = (ViewPager) findViewById(R.id.guidePages);
 		FontCard = new HashMap<Integer, List<View>>();
@@ -372,12 +383,14 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 			LinearLayout linear = null;
 			List<knowledges_card> list1 = Allmap.get(i + 1);
 			for (int j = 0; j < Allmap.get(i + 1).size(); j++) {
-				ListBool[i][j] = true; // 卡片集合
+				ListBool[i][j] = true; // 标签集合
 				PageBool[i][j] = true; // 所有卡片的T/F
 				ViewGroup cardview = (android.view.ViewGroup) inflater2
 						.inflate(R.layout.cardbag_gridview, null);
 				ViewGroup fontview = (ViewGroup) inflater2.inflate(
 						R.layout.cardbag_grdiview_iteam, null);
+				ViewGroup backview = (ViewGroup) inflater2.inflate(
+						R.layout.cardbag_gridview_back, null);
 				if ((j + 1) % 2 != 0) {
 					linear = new LinearLayout(MCardBagActivity.this);
 					linear.setLayoutParams(new LayoutParams(
@@ -449,7 +462,6 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 	}
 
 	public void oneClick() {
-		Log.i("bbb", "onclick!!");
 		for (int i = 0; i < FontCard.size(); i++) {
 			for (int j = 0; j < FontCard.get(i).size(); j++) {
 				final int j1 = j;
@@ -457,7 +469,6 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 				view.setOnClickListener(new OnClickListener() {
 					public void onClick(View v1) {
 						mindex = j1;
-						Log.i("1", "FontClick:" + j1 + "!!!" + mindex);
 						NoClick(page, j1);
 						applyRotation(0, 90, view);
 					}
@@ -466,7 +477,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 		}
 	}
 
-	public void setFontCard(final ViewGroup v, final knowledges_card card,
+	public void setFontCard(ViewGroup v1, final knowledges_card card,
 			final int index, final int page) {
 		TextView reson = null;
 		TextView wronganswer;
@@ -477,9 +488,9 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 		final EditText biaoqianet;
 		final ListView biaoqianlv;
 		final LinearLayout biaoqian;
+		ViewGroup v = v1;
 		final TextView newTv;
 		TextView bqtv;
-		v.setTag(index);
 
 		if (PageBool[page][mindex]) {
 			bqtv = (TextView) v.findViewById(R.id.bqtv);
@@ -508,7 +519,6 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 					super.handleMessage(msg);
 					switch (msg.what) {
 					case 0:
-						Log.i("2", " handler1.case0");
 						biaoqianet.setText("");
 						LabelAdapter adapter = new LabelAdapter(
 								getApplicationContext(), page, index, tagsList,
@@ -537,8 +547,8 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 										try {
 											viewPager = (ViewPager) findViewById(R.id.guidePages);
 											Map<String, String> map = new HashMap<String, String>();
-											map.put("student_id", "1");
-											map.put("school_class_id", "1");
+											map.put("student_id", student_id);
+											map.put("school_class_id", school_class_id);
 											map.put("knowledge_card_id",
 													card.getId());
 											map.put("name", String
@@ -599,11 +609,9 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 			reson.setText(card.getMistake_types());
 			wronganswer.setText(card.getYour_answer());
 			rightanswer.setText("正确答案");
-			youranswer.setText(card.getAnswer() + "/." );
+			youranswer.setText(card.getAnswer() + "/.");
 			fontIv.setOnClickListener(new OnClickListener() {
 				public void onClick(View arg0) {
-					Log.i("3", "page:" + page + "/index:" + index + "!!!"
-							+ ListBool[page][index]);
 					if (ListBool[page][index]) {
 						LabelAdapter adapter = new LabelAdapter(
 								getApplicationContext(), page, index, tagsList,
@@ -623,13 +631,12 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 		} else {
 			ImageView cardbatread;
 			ImageView cardbatdel;
-			reson = (TextView) findViewById(R.id.backreson);
-			rightanswers = (TextView) findViewById(R.id.rightanswerb);
-			cardbatread = (ImageView) findViewById(R.id.cardbatread);
-			cardbatdel = (ImageView) findViewById(R.id.cardbatdel);
+			reson = (TextView) v.findViewById(R.id.backreson);
+			rightanswers = (TextView) v.findViewById(R.id.rightanswerb);
+			cardbatread = (ImageView) v.findViewById(R.id.cardbatread);
+			cardbatdel = (ImageView) v.findViewById(R.id.cardbatdel);
 			if (card.getResource_url().equals(""))
 				cardbatread.setVisibility(View.GONE);
-			Log.i("3", card.getContent() + "content" + (rightanswers == null));
 			reson.setText("原题:");
 			rightanswers.setText(card.getContent());
 			cardbatread.setOnClickListener(new OnClickListener() {
@@ -665,7 +672,6 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 								map.put("knowledges_card_id", card.getId());
 								String json = ExerciseBookTool.sendGETRequest(
 										delete_knowledges_card, map);
-								Log.i("homework", json);
 								JSONObject jsonobj = new JSONObject(json);
 								String notice = jsonobj.getString("notice");
 								Message msg = new Message();
@@ -675,7 +681,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 									if (Allmap.get(page + 1).size() == 0) {
 										Allmap.remove(page + 1);
 									}
-									handler.sendEmptyMessage(2);
+									handler.sendEmptyMessage(3);
 								} else {
 									msg.what = 0;
 									msg.obj = notice;
@@ -690,54 +696,6 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 				}
 			});
 		}
-	}
-
-	public void setBackCard(ViewGroup v, final knowledges_card card,
-			final int index, final int page) {
-
-		TextView reson;
-		TextView rightanswers;
-		ImageView cardbatread;
-		ImageView cardbatdel;
-		reson = (TextView) findViewById(R.id.reson);
-		rightanswers = (TextView) findViewById(R.id.rightanswerb);
-		cardbatread = (ImageView) findViewById(R.id.cardbatread);
-		cardbatdel = (ImageView) findViewById(R.id.cardbatdel);
-		if (card.getResource_url().equals(""))
-			cardbatread.setVisibility(View.GONE);
-
-		Log.i("3", card.getContent() + "content" + (rightanswers == null));
-		reson.setText("原题:");
-		rightanswers.setText(card.getContent());
-		cardbatdel.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				getKonwledges();
-				Thread thread = new Thread() {
-					public void run() {
-						try {
-							Map<String, String> map = new HashMap<String, String>();
-							map.put("knowledges_card_id", card.getId());
-							String json = ExerciseBookTool.sendGETRequest(
-									delete_knowledges_card, map);
-							Log.i("homework", json);
-							JSONObject jsonobj = new JSONObject(json);
-							String notice = jsonobj.getString("notice");
-							Message msg = new Message();
-							if (jsonobj.getString("status").equals("success")) {
-								handler.sendEmptyMessage(2);
-							} else {
-								msg.what = 0;
-								msg.obj = notice;
-								handler.sendMessage(msg);
-							}
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				};
-				thread.start();
-			}
-		});
 	}
 
 	private class GuidePageAdapter extends PagerAdapter {
@@ -823,13 +781,14 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 		public void onAnimationStart(Animation animation) {
 		}
 
-		// // 动画结束
+		// 动画结束
 		public void onAnimationEnd(Animation animation) {
 			List<View> fontlist = FontCard.get(page);
 			mediaplay.stop();
 			List<knowledges_card> cardl = Allmap.get(page + 1);
 			Log.i("3", "page:" + page + "mindex:" + mindex + "FontCard:"
 					+ FontCard.get(page).size());
+
 			View view;
 			ViewGroup viewgroup = (ViewGroup) fontlist.get(mindex);
 			if (PageBool[page][mindex]) {
@@ -845,29 +804,10 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 			viewgroup.removeAllViews();
 			viewgroup.addView(view);
 			setFontCard((ViewGroup) view, cardl.get(mindex), mindex, page);
+
 			for (int i = 0; i < fontlist.size(); i++) {
 				fontlist.get(i).setClickable(true);
-				//				if(mindex!=i)
-				//				{
-				//					ViewGroup viewgroup2 = (ViewGroup) fontlist.get(i);
-				//					PageBool[page][mindex] = true;
-				//					view = (ViewGroup) inflater2.inflate(
-				//							R.layout.cardbag_grdiview_iteam, null);
-				//					view.setPadding(53, 23, 23, 23);
-				//					viewgroup2.removeAllViews();
-				//					viewgroup2.addView(view);
-				//					setFontCard((ViewGroup) view, cardl.get(i), mindex, page);
-				//				}
-				//				PageBool[page][mindex] =false;
 			}
-
-			//			if (PageBool[page][mindex]) {
-			//				PageBool[page][mindex] = false;
-			//			}
-			//			else
-			//			{
-			//				PageBool[page][mindex] = true;
-			//			}
 			final float centerX = viewgroup.getWidth() / 2.0f;
 			final float centerY = viewgroup.getHeight() / 2.0f;
 			Rotate3dAnimation rotation = null;

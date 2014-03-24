@@ -42,11 +42,7 @@ public class LeftMenu extends Activity implements Urlinterface {
 	private View ll3;
 	private View ll4;
 	private View ll5;
-<<<<<<< HEAD
 	private View ll6;  //  退出teachll
-=======
-	private View ll6; // 退出
->>>>>>> 97c363f69678b2a3220bd23fd5982603da50b399
 	private LinearLayout allLL;
 	private LinearLayout teachll;
 	private ImageView hwImg;
@@ -69,12 +65,7 @@ public class LeftMenu extends Activity implements Urlinterface {
 		super.onCreate(savedInstanceState);
 		super.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.left_menu);
-<<<<<<< HEAD
-		userInfo= getSharedPreferences("replyMenu", 0);  
-
-=======
 		userInfo = getSharedPreferences("replyMenu", 0);
->>>>>>> 97c363f69678b2a3220bd23fd5982603da50b399
 		LeftMenu.this.setFinishOnTouchOutside(true);
 		Invit();
 		linear = (LinearLayout) findViewById(R.id.linear);
@@ -146,14 +137,9 @@ public class LeftMenu extends Activity implements Urlinterface {
 		{
 			public void onClick(View v) {
 
-<<<<<<< HEAD
 			}
 		});
-		ll1.setOnClickListener(new OnClickListener()
-		{
-=======
 		ll1.setOnClickListener(new OnClickListener() {
->>>>>>> 97c363f69678b2a3220bd23fd5982603da50b399
 			public void onClick(View v) {
 				LeftMenu.this.finish();
 				overridePendingTransition(R.anim.slide_in_left,
@@ -229,12 +215,8 @@ public class LeftMenu extends Activity implements Urlinterface {
 				editor.putString("school_class_id", "");
 				editor.putString("id", "");
 				editor.commit();
-<<<<<<< HEAD
-				Intent intent=new Intent(LeftMenu.this,LoginActivity.class);
-=======
 
 				Intent intent = new Intent(LeftMenu.this, LoginActivity.class);
->>>>>>> 97c363f69678b2a3220bd23fd5982603da50b399
 				startActivity(intent);
 			}
 		});
@@ -335,45 +317,15 @@ public class LeftMenu extends Activity implements Urlinterface {
 		}
 	};
 
-<<<<<<< HEAD
-	//关闭上个主界面
-	public void clearActivity()
-	{
-		List<Activity> activityList=eb.getActivityList();
-=======
 	// 关闭上个主界面
 	public void clearActivity() {
 		List<Activity> activityList = eb.getActivityList();
->>>>>>> 97c363f69678b2a3220bd23fd5982603da50b399
 		for (int i = 0; i < activityList.size(); i++) {
 			activityList.get(i).finish();
 		}
 		eb.setActivityList();
 	}
 
-<<<<<<< HEAD
-	//初始化参数
-	public void Invit()
-	{
-		eb=(ExerciseBook) getApplication();
-		ll1= findViewById(R.id.ll1);
-		ll2= findViewById(R.id.ll2);
-		ll3=findViewById(R.id.ll3);
-		ll4=findViewById(R.id.ll4);
-		allLL=(LinearLayout) findViewById(R.id.allLinear);
-		teachll=(LinearLayout) findViewById(R.id.teachll);
-//		allLL.setFocusable(false);
-//		allLL.setClickable(false);
-		ll5=findViewById(R.id.menuclassll);
-		hwImg=(ImageView) findViewById(R.id.leftmenu_12red);
-		rImg=(ImageView) findViewById(R.id.leftmenu_13red);
-		ll6=findViewById(R.id.ll6);
-		classback=(ImageView) findViewById(R.id.classback);
-		classImg=(ImageView) findViewById(R.id.classMenu);
-		teachIV=(ImageView) findViewById(R.id.teacherIm);
-		teachname=(TextView) findViewById(R.id.teachname);
-		ClassStuGv=(GridView) findViewById(R.id.classstugv);
-=======
 	// 初始化参数
 	public void Invit() {
 		eb = (ExerciseBook) getApplication();
@@ -392,7 +344,6 @@ public class LeftMenu extends Activity implements Urlinterface {
 		teachname = (TextView) findViewById(R.id.teachname);
 		ClassStuGv = (GridView) findViewById(R.id.classstugv);
 
->>>>>>> 97c363f69678b2a3220bd23fd5982603da50b399
 		boolean homeWork = true;
 		if (userInfo.getBoolean("HomeWorkMenu", true)) {
 			homeWork = true;
@@ -400,7 +351,6 @@ public class LeftMenu extends Activity implements Urlinterface {
 			homeWork = false;
 		}
 		boolean reply = userInfo.getBoolean("ReplyMenu", true);
-		Log.i("asd", homeWork + "/" + reply);
 		if (!homeWork) {
 			hwImg.setVisibility(View.VISIBLE);
 		}
@@ -425,9 +375,7 @@ public class LeftMenu extends Activity implements Urlinterface {
 		public TextView tv5;
 		public ImageView Ib;
 		public View iteam_stu;
-
 	}
-
 	class StuGvAdapter extends BaseAdapter {
 
 		public int getCount() {

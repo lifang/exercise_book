@@ -205,7 +205,6 @@
         </activity>
         <activity
             android:name=".MCardBagActivity"
-<<<<<<< HEAD
             android:configChanges="orientation|keyboardHidden"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
             <intent-filter>
@@ -213,9 +212,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-=======
-            android:screenOrientation="portrait" >
->>>>>>> 97c363f69678b2a3220bd23fd5982603da50b399
         </activity>
         <activity
             android:name=".TenSpeedActivity"
