@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -41,8 +42,9 @@ public class LeftMenu extends Activity implements Urlinterface {
 	private View ll3;
 	private View ll4;
 	private View ll5;
-	private View ll6; // 退出
+	private View ll6;  //  退出teachll
 	private LinearLayout allLL;
+	private LinearLayout teachll;
 	private ImageView hwImg;
 	private ImageView rImg;
 	private ImageView classImg; // 左侧班级按钮
@@ -131,7 +133,12 @@ public class LeftMenu extends Activity implements Urlinterface {
 
 			}
 		});
+		teachll.setOnClickListener(new OnClickListener()
+		{
+			public void onClick(View v) {
 
+			}
+		});
 		ll1.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				LeftMenu.this.finish();
@@ -344,7 +351,6 @@ public class LeftMenu extends Activity implements Urlinterface {
 			homeWork = false;
 		}
 		boolean reply = userInfo.getBoolean("ReplyMenu", true);
-		Log.i("asd", homeWork + "/" + reply);
 		if (!homeWork) {
 			hwImg.setVisibility(View.VISIBLE);
 		}
@@ -369,9 +375,7 @@ public class LeftMenu extends Activity implements Urlinterface {
 		public TextView tv5;
 		public ImageView Ib;
 		public View iteam_stu;
-
 	}
-
 	class StuGvAdapter extends BaseAdapter {
 
 		public int getCount() {

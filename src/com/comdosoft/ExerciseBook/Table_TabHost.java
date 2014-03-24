@@ -131,7 +131,6 @@ public class Table_TabHost extends Activity
 		img_tab_now=(ImageView) findViewById(R.id.img_tab_now);
 		img_tab_now.setOnClickListener(new OnClickListener(){
 			public void onClick(View v) {
-				Log.i("asd", "点击"+eb.isMneu()+"");
 				if(eb.isMneu())
 				{
 					
@@ -142,10 +141,6 @@ public class Table_TabHost extends Activity
 				}
 			}});
 		middleLayout = (LinearLayout)findViewById(R.id.middle_layout);
-		JPushInterface.setDebugMode(true); 	// 设置开启日志,发布时请关闭日志
-		JPushInterface.init(getApplicationContext());     
-		JPushInterface.setAlias(getApplicationContext(), "a123", null);
-		
 		userName = (TextView) findViewById(R.id.user_name);
 		userName.setText(nickName);
 

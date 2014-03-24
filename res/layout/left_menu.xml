@@ -66,8 +66,8 @@
                         android:layout_marginLeft="20px"
                         android:layout_marginTop="95px"
                         android:layout_toRightOf="@id/leftmenu_12"
-                        android:visibility="gone"
-                        android:src="@drawable/smallred" />
+                        android:src="@drawable/smallred"
+                        android:visibility="gone" />
                 </RelativeLayout>
 
                 <TextView
@@ -104,8 +104,8 @@
                         android:layout_marginLeft="20px"
                         android:layout_marginTop="95px"
                         android:layout_toRightOf="@id/leftmenu_13"
-                        android:visibility="gone"
-                        android:src="@drawable/smallred" />
+                        android:src="@drawable/smallred"
+                        android:visibility="gone" />
                 </RelativeLayout>
 
                 <TextView
@@ -148,14 +148,13 @@
                 android:adjustViewBounds="false"
                 android:scaleType="fitStart"
                 android:src="@drawable/menuclass" />
-            
-            
+
             <LinearLayout
                 android:id="@+id/ll6"
                 android:layout_width="206.09px"
                 android:layout_height="204px"
-                android:background="#3f4853"
                 android:layout_marginTop="295px"
+                android:background="#3f4853"
                 android:orientation="vertical" >
 
                 <ImageView
@@ -165,7 +164,6 @@
                     android:layout_marginLeft="68px"
                     android:layout_marginTop="95px"
                     android:src="@drawable/leftmenu_quit" />
-
             </LinearLayout>
         </LinearLayout>
 
@@ -192,7 +190,9 @@
                 android:layout_below="@id/classback"
                 android:layout_marginLeft="32.94px"
                 android:layout_marginTop="44.48px"
-                android:text="我的班主任" />
+                android:textColor="@color/selecttextview"
+                android:text="我的班主任"
+                />
 
             <LinearLayout
                 android:id="@+id/teachll"
@@ -216,6 +216,7 @@
                     android:layout_marginLeft="15.41px"
                     android:layout_marginTop="48px"
                     android:layout_toRightOf="@id/teacherIm"
+                    android:textColor="@color/white"
                     android:text="李达达" />
             </LinearLayout>
 
@@ -226,6 +227,7 @@
                 android:layout_below="@id/teachll"
                 android:layout_marginLeft="32.94px"
                 android:layout_marginTop="40px"
+                android:textColor="@color/selecttextview"
                 android:text="我的同学" />
 
             <GridView

@@ -1,5 +1,6 @@
 package com.comdosoft.ExerciseBook.Adapter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +31,7 @@ public class LabelAdapter extends BaseAdapter implements Urlinterface {
 	private int page;
 	private int index;
 	public List<tags> tagsList;
-	public Map<Integer, List> Allmap;
+	public Map<Integer, List<knowledges_card>> Allmap;
 	Context content;
 	knowledges_card myList;
 	List<Integer> mytags;
@@ -40,7 +41,7 @@ public class LabelAdapter extends BaseAdapter implements Urlinterface {
 	private String card_id;
 
 	public LabelAdapter(Context content, int page, int index,
-			List<tags> tagsList, Map<Integer, List> map, String student_id,
+			List<tags> tagsList, Map<Integer, List<knowledges_card>> map, String student_id,
 			String school_class_id, String card_id) {
 		this.content = content;
 		this.page = page;
@@ -50,10 +51,13 @@ public class LabelAdapter extends BaseAdapter implements Urlinterface {
 		this.student_id = student_id;
 		this.school_class_id = school_class_id;
 		this.card_id = card_id;
-		kcList = Allmap.get(page + 1);
-		Log.i("2", "getCount" + page + "/" + index + "//" + kcList.size());
-		myList = kcList.get(index);
-		mytags = myList.getTagsarr();
+		myList = (knowledges_card) Allmap.get(page + 1).get(index);
+		//		myList = kcList;
+		mytags = new ArrayList<Integer>();
+		for(int i=0;i<myList.getTagsarr().size();i++)
+		{
+			mytags.add(myList.getTagsarr().get(i));
+		}
 	}
 
 	public int getCount() {
@@ -79,9 +83,11 @@ public class LabelAdapter extends BaseAdapter implements Urlinterface {
 		Holder holder = null;
 		convertView = inflater.inflate(R.layout.biaoqian_iteam, null);
 		holder = new Holder();
+
 		holder.img = (ImageView) convertView.findViewById(R.id.bq_iteam_iv);
 		holder.tv = (TextView) convertView.findViewById(R.id.bq_iteam_tv);
 		convertView.setPadding(0, 10, 0, 10);
+
 		for (int i = 0; i < mytags.size(); i++) {
 			if (mytags.get(i) == Integer
 					.valueOf(tagsList.get(position).getId())) {
@@ -115,13 +121,13 @@ public class LabelAdapter extends BaseAdapter implements Urlinterface {
 									break;
 								case 1:
 									msg.obj = "删除成功";
-									mytags.remove(position);
-									Log.i("bbb", "删除成功");
+									mytags.remove(setList(tagsList.get(position).getId()));
+									Log.i("bbb", "mytags.size:"+mytags.size());
 									break;
 								case 2:
 									msg.obj = "添加成功";
-									Log.i("bbb", "添加成功");
-									mytags.add(position);
+									mytags.add(Integer.valueOf(tagsList.get(position).getId()));
+									Log.i("bbb", "mytags.size:"+mytags.size());
 									break;
 								}
 								msg.what = 0;
@@ -139,7 +145,16 @@ public class LabelAdapter extends BaseAdapter implements Urlinterface {
 		return convertView;
 
 	}
-
+	public int setList(String id)
+	{
+		for (int i = 0; i < mytags.size(); i++) {
+			if (mytags.get(i) == Integer
+					.valueOf(id)) {
+				return i;
+			}
+		}
+		return 0;
+	}
 	Handler handler1 = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {

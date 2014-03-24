@@ -2,13 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-     >
+    android:orientation="vertical" >
 
    <!--  <LinearLayout
         android:id="@+id/inll1"
         android:layout_width="513px"
         android:layout_height="512px"
+        android:visibility="gone"
         android:layout_marginLeft="47px" >
 
         <include
@@ -23,6 +23,8 @@
         android:layout_width="513px"
         android:layout_height="512px"
         android:layout_marginLeft="47px"
+        android:layout_alignParentRight="true"
+        android:visibility="gone"
         android:layout_toRightOf="@id/inll1" >
 
         <include
@@ -38,6 +40,7 @@
         android:layout_height="512px"
         android:layout_marginTop="47px"
         android:layout_below="@id/inll1"
+        android:visibility="gone"
         android:layout_marginLeft="47px" >
 
         <include
@@ -54,6 +57,7 @@
         android:layout_marginTop="47px"
         android:layout_below="@id/inll2"
         android:layout_marginLeft="47px"
+        android:visibility="gone"
         android:layout_toRightOf="@id/inll3" >
 
         <include
@@ -61,6 +65,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             layout="@layout/cardbag_grdiview_iteam" />
-    </LinearLayout> -->
+    </LinearLayout>  -->
 
 </LinearLayout>
