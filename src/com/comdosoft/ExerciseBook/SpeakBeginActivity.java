@@ -28,6 +28,7 @@ import android.speech.tts.TextToSpeech.OnInitListener;
 import android.speech.tts.TextToSpeech.OnUtteranceCompletedListener;
 import android.util.Log;
 import android.view.Display;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -172,7 +173,8 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 			} else {
 				handler.sendEmptyMessage(7);
 				Intent checkIntent = new Intent();
-				checkIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
+				checkIntent
+						.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
 				startActivityForResult(checkIntent, REQ_TTS_STATUS_CHECK);
 			}
 			break;
@@ -549,7 +551,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 			break;
 		case R.id.base_check_linearlayout:
 			int type;
-	
+
 			if (Speak_type == true || number >= 4) {
 				String answer_history = ExerciseBookTool
 						.getAnswer_Json_history(path);
@@ -568,14 +570,17 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 						handler.sendEmptyMessage(0);
 						break;
 					case 1:
-						intent.putExtra("precision",
-								ExerciseBookTool.getRatio(path, "reading"));// 正确率100时获取精准成就
-						intent.putExtra("use_time", getUseTime());// 用户使用的时间
-						intent.putExtra("specified_time", specified_time);// 任务基础时间
-						intent.setClass(SpeakBeginActivity.this,
-								WorkEndActivity.class);
-						SpeakBeginActivity.this.startActivityForResult(intent,
-								1);
+						prodialog.show();
+						if (Finish_Json()) {
+							intent.putExtra("precision",
+									ExerciseBookTool.getRatio(path, "reading"));// 正确率100时获取精准成就
+							intent.putExtra("use_time", getUseTime());// 用户使用的时间
+							intent.putExtra("specified_time", specified_time);// 任务基础时间
+							intent.setClass(SpeakBeginActivity.this,
+									WorkEndActivity.class);
+							SpeakBeginActivity.this.startActivityForResult(
+									intent, 1);
+						}
 						break;
 					case 2:
 						intent.putExtra("path", path);
@@ -608,5 +613,13 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 			type = 2;
 		}
 		return type;
+	}
+
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			super.close();
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 }

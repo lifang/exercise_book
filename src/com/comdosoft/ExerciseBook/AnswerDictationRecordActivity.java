@@ -226,7 +226,7 @@ public class AnswerDictationRecordActivity extends AnswerBaseActivity implements
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			//
+			MyDialog("确认退出吗？", 0);
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);

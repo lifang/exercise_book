@@ -49,7 +49,8 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 	private boolean mesFlag = false;
 	private boolean playFlag = false;
 
-	private String JSON = "{ \"specified_time\": \"100\", \"questions\": [ { \"id\": \"284\", \"branch_questions\": [ { \"id\": \"181\", \"content\": \"This is an apple!\", \"resource_url\": \"/question_packages/201402/questions_package_222/media_181.mp3\" } ] }, { \"id\": \"285\", \"branch_questions\": [ { \"id\": \"182\", \"content\": \"Why is google\", \"resource_url\": \"/question_packages/201402/questions_package_222/media_181.mp3\" } ] } ] }";
+	// private String JSON =
+	// "{ \"specified_time\": \"100\", \"questions\": [ { \"id\": \"284\", \"branch_questions\": [ { \"id\": \"181\", \"content\": \"This is an apple!\", \"resource_url\": \"/question_packages/201402/questions_package_222/media_181.mp3\" } ] }, { \"id\": \"285\", \"branch_questions\": [ { \"id\": \"182\", \"content\": \"Why is google\", \"resource_url\": \"/question_packages/201402/questions_package_222/media_181.mp3\" } ] } ] }";
 	private String REG = "(?i)[^a-zA-Z0-9\u4E00-\u9FA5]";
 	private String regEx = "[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
 	private String vowelREG = "[aeiouAEIOU]";
@@ -107,7 +108,7 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 				LayoutParams.WRAP_CONTENT);
 		etlp.leftMargin = 10;
 
-		analysisJSON(JSON);
+		analysisJSON(json);
 
 		updateView();
 	}
@@ -545,4 +546,11 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		super.onStop();
 	}
 
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			super.close();
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
 }

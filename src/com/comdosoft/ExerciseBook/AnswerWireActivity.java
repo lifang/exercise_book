@@ -27,7 +27,7 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 
 	private int coordinateIndex = 0;
 	private int last = -1;
-	private String JSON = "{    \"lining\":{\"specified_time\": \"100\",  \"questions\":[ {\"id\": \"284\",  \"branch_questions\": [{\"id\": \"181\", \"content\": \"This is<=>an apple;||;A<=>B;||;ZhangDaCa<=>Dog\"}]},{\"id\": \"285\", \"branch_questions\": [{\"id\": \"182\", \"content\": \"C<=>D;||;Chen<=>Long;||;Gao<=>Shi\"}]}, {\"id\": \"285\", \"branch_questions\": [ {\"id\": \"182\", \"content\": \"Ma<=>Long;||;123<=>456;||;1111<=>2222\"} ]},  {\"id\": \"291\",\"branch_questions\": [ {\"id\": \"182\", \"content\": \"ZhangDaCa<=>ZXN;||;ChenLong<=>CL;||;MaLong<=>ML\"}]}] }}";
+//	private String JSON = "{    \"lining\":{\"specified_time\": \"100\",  \"questions\":[ {\"id\": \"284\",  \"branch_questions\": [{\"id\": \"181\", \"content\": \"This is<=>an apple;||;A<=>B;||;ZhangDaCa<=>Dog\"}]},{\"id\": \"285\", \"branch_questions\": [{\"id\": \"182\", \"content\": \"C<=>D;||;Chen<=>Long;||;Gao<=>Shi\"}]}, {\"id\": \"285\", \"branch_questions\": [ {\"id\": \"182\", \"content\": \"Ma<=>Long;||;123<=>456;||;1111<=>2222\"} ]},  {\"id\": \"291\",\"branch_questions\": [ {\"id\": \"182\", \"content\": \"ZhangDaCa<=>ZXN;||;ChenLong<=>CL;||;MaLong<=>ML\"}]}] }}";
 	private StringBuffer sb = new StringBuffer();
 
 	private LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT,
@@ -64,7 +64,7 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 
 		setQuestionType(4);
 
-		analysisJSON(JSON);
+		analysisJSON(json);
 
 		updateView();
 	}

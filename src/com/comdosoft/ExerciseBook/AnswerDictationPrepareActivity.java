@@ -220,6 +220,7 @@ public class AnswerDictationPrepareActivity extends AnswerBaseActivity
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			super.close();
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);

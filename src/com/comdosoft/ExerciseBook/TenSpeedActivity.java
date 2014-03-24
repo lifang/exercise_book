@@ -98,13 +98,15 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 		Intent intent = getIntent();
 		path = intent.getStringExtra("path");
 		json = intent.getStringExtra("json");
+		status = intent.getIntExtra("status", 1);
+		Log.i("aaa", status + ":status");
 		SetJson(json);
 		File answer_file = new File(path);
 		if (answer_file.exists()) {
 			String json2 = ExerciseBookTool.getJson(path);
 			SetAnswer_Json(json2);
 		}
-		if (status == 0 && branch_item != -1) {
+		if (status == 0) {
 			img_index = branch_questions.size() - (branch_item + 1);
 			index = branch_item + 1;
 		}
@@ -117,7 +119,6 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 		question_number = (ImageView) findViewById(R.id.question_number);// 數量
 		one_btn = (Button) findViewById(R.id.one_btn);
 		two_btn = (Button) findViewById(R.id.two_btn);
-		handler.sendEmptyMessage(1);
 
 	}
 
@@ -164,7 +165,6 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 				setUseTime(use_time);
 				setStart();
 				Log.i("aaa", branch_item + "/" + branch_questions.size());
-				status = time_limit.getInt("status");
 			} catch (JSONException e) {
 				Toast.makeText(TenSpeedActivity.this, "解析anwserjson发生错误",
 						Toast.LENGTH_SHORT).show();
@@ -267,8 +267,7 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 				int type = 0;
 				try {
 					JSONObject obj = new JSONObject(answer_history);
-					if (obj.getJSONObject("time_limit").getString("status")
-							.equals("0")) {
+					if (status == 0) {
 						type = setAnswerJson(answer_history, user_select,
 								user_boolean, branch_questions.get(index)
 										.getId());
@@ -286,13 +285,16 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 					handler.sendEmptyMessage(1);
 					break;
 				case 1:
-					intent.putExtra("precision",
-							ExerciseBookTool.getRatio(path, "time_limit"));// 正确率100时获取精准成就
-					intent.putExtra("use_time", getUseTime());// 用户使用的时间
-					intent.putExtra("specified_time", specified_time);// 任务基础时间
-					intent.setClass(TenSpeedActivity.this,
-							WorkEndActivity.class);
-					TenSpeedActivity.this.startActivityForResult(intent, 0);
+					prodialog.show();
+					if (Finish_Json()) {
+						intent.putExtra("precision",
+								ExerciseBookTool.getRatio(path, "time_limit"));// 正确率100时获取精准成就
+						intent.putExtra("use_time", getUseTime());// 用户使用的时间
+						intent.putExtra("specified_time", specified_time);// 任务基础时间
+						intent.setClass(TenSpeedActivity.this,
+								WorkEndActivity.class);
+						TenSpeedActivity.this.startActivityForResult(intent, 0);
+					}
 					break;
 				}
 			} else {
@@ -344,10 +346,7 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			TenSpeedActivity.this.finish();
-			Intent intent = new Intent();
-			intent.setClass(TenSpeedActivity.this, HomeWorkIngActivity.class);
-			startActivity(intent);
+			super.close();
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);

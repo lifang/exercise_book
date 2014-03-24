@@ -6,6 +6,7 @@ import java.util.List;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import cn.jpush.android.api.JPushInterface;
 
 import com.comdosoft.ExerciseBook.pojo.ListeningPojo;
 import com.comdosoft.ExerciseBook.pojo.QuestionPojo;
@@ -182,6 +183,7 @@ public class ExerciseBook extends Application {
 
 	public void onCreate() {
 		super.onCreate();
+		JPushInterface.onResume(this);
 		// initImageLoader(getApplicationContext());
 	}
 

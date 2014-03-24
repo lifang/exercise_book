@@ -1,31 +1,44 @@
 package com.comdosoft.ExerciseBook;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,7 +52,6 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 import com.comdosoft.ExerciseBook.tools.WorkJson;
 import com.google.gson.Gson;
-import com.google.gson.JsonNull;
 
 public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	private String id;
@@ -59,9 +71,15 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	private TextView end_time;
 	static HomeWorkIngActivity instance = null;
 	private String path;
+	private String downPath;
 	private List<String> json_list;
 	private List<Boolean> typeList;
 	private boolean cardType = false;
+	private int status;
+	private boolean cancelUpdate;
+	private Dialog mDownloadDialog;
+	private int progress;
+	private ProgressBar mProgress;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -84,6 +102,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 				} else {
 					mylayout.setVisibility(View.GONE);
 				}
+
 				break;
 			case 1:
 				prodialog.dismiss();
@@ -95,6 +114,22 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 				Toast.makeText(getApplicationContext(), "网络连接异常!",
 						Toast.LENGTH_SHORT).show();
 				mylayout.setVisibility(View.GONE);
+				break;
+			case 3:
+				Builder builder = new Builder(HomeWorkIngActivity.this);
+				builder.setTitle("提示");
+				builder.setMessage("需要下载数据包才可以完成任务,确认下载吗?");
+				builder.setPositiveButton("确定",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int which) {
+								showDownloadDialog();
+							}
+						});
+				builder.setNegativeButton("下次再说", null).show();
+				break;
+			case 5:
+				mProgress.setProgress(progress);
 				break;
 			}
 		};
@@ -122,7 +157,6 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 		prodialog.show();
 		Thread thread = new Thread(new get_newer_task());
 		thread.start();
-
 	}
 
 	// 初始化
@@ -133,9 +167,6 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	}
 
 	private void getJsonPath() {
-		path = Environment.getExternalStorageDirectory() + "/"
-				+ "Exercisebook_app/" + eb.getUid() + "/" + eb.getClass_id()
-				+ "/" + eb.getWork_id();
 		File file = new File(path + "/questions.js");
 		if (file.exists()) {
 			Log.i("linshi", "获取json");
@@ -257,6 +288,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	}
 
 	class get_newer_task implements Runnable {
+
 		public void run() {
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("student_id", id);
@@ -277,6 +309,11 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 					Log.i("linshi", work_list.size() + "-size");
 					if (work_list.size() != 0) {
 						eb.setWork_id(work_list.get(0).getId() + "");
+						path = Environment.getExternalStorageDirectory() + "/"
+								+ "Exercisebook_app/" + eb.getUid() + "/"
+								+ eb.getClass_id() + "/" + eb.getWork_id();
+						downPath = IP
+								+ work_list.get(0).getQuestion_packages_url();
 						getJsonPath();
 						initAnswer();// 初始化answer
 					}
@@ -300,25 +337,30 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	 */
 
 	public void startDekaron(int i) {
-		if (typeList.get(i)) {// 已完成
-			MyDialog(i);
-		} else {
-			if (cardType) {
-				Start_Acvivity(i);
+		if (ExerciseBookTool.FileExist(path)) {// 判断文件是否存在
+			if (typeList.get(i)) {// 已完成
+				Log.i("linshi", "---");
+				MyDialog(i);
 			} else {
-				Builder builder = new Builder(HomeWorkIngActivity.this);
-				builder.setTitle("提示");
-				builder.setMessage("您的卡包已满,先清除几张再回来答题吧");
-				builder.setNegativeButton("确定", null);
-				builder.show();
+				if (cardType) {
+					status = 0;
+					Start_Acvivity(i);
+				} else {
+					Builder builder = new Builder(HomeWorkIngActivity.this);
+					builder.setTitle("提示");
+					builder.setMessage("您的卡包已满,先清除几张再回来答题吧");
+					builder.setNegativeButton("确定", null);
+					builder.show();
+				}
 			}
+		} else {
+			handler.sendEmptyMessage(3);
 		}
 	}
 
 	public void Start_Acvivity(int i) {// 做题跳转
 		switch (questiontype_list.get(i)) {
 		case 0:
-
 			intent.setClass(this, AnswerDictationBeginActivity.class);
 			break;
 		case 1:
@@ -333,11 +375,12 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 			intent.setClass(this, TenSpeedActivity.class);
 			break;
 		case 3:
-			String json = "{  \"selecting\": {\"specified_time\": \"100\", \"question_types\": \"6\", \"questions\": [{\"id\": \"284\",\"branch_questions\": [ {\"id\": \"181\", \"content\": \"This is ___ apple!\", \"option\": \"a;||;an\", \"answer\": \"an;||;a\" },{\"id\": \"181\", \"content\": \"<file>apple.jpg</file>Why he is ___ Google!\", \"option\": \"apple;||;banana;||;orange;||;pear\", \"answer\": \"apple;||;banana\"},{\"id\": \"181\", \"content\": \"<file>apple.mp3</file>\", \"option\": \"one;||;two;||;three\", \"answer\": \"two\"}, {\"id\": \"181\", \"content\": \"<file>apple.jpg</file>Pears have white flesh and thin green or yellow skin.\", \"option\": \"iPhone;||;S5;||;Xperia\", \"answer\": \"iPhone\"},{\"id\": \"181\", \"content\": \"Dad.come set here!\", \"option\": \"ZhangDaCa;||;ChenLong\", \"answer\": \"ZhangDaCa\"}]}]}}";
-			String path = "/sdcard/Exercisebook_app/73/85/130/answer.js";
-			intent.putExtra("json", json);
-			intent.putExtra("path", path);
-			intent.putExtra("status", 0);
+			// String json =
+			// "{  \"selecting\": {\"specified_time\": \"100\", \"question_types\": \"6\", \"questions\": [{\"id\": \"284\",\"branch_questions\": [ {\"id\": \"181\", \"content\": \"This is ___ apple!\", \"option\": \"a;||;an\", \"answer\": \"an;||;a\" },{\"id\": \"181\", \"content\": \"<file>apple.jpg</file>Why he is ___ Google!\", \"option\": \"apple;||;banana;||;orange;||;pear\", \"answer\": \"apple;||;banana\"},{\"id\": \"181\", \"content\": \"<file>apple.mp3</file>\", \"option\": \"one;||;two;||;three\", \"answer\": \"two\"}, {\"id\": \"181\", \"content\": \"<file>apple.jpg</file>Pears have white flesh and thin green or yellow skin.\", \"option\": \"iPhone;||;S5;||;Xperia\", \"answer\": \"iPhone\"},{\"id\": \"181\", \"content\": \"Dad.come set here!\", \"option\": \"ZhangDaCa;||;ChenLong\", \"answer\": \"ZhangDaCa\"}]}]}}";
+			// String path = "/sdcard/Exercisebook_app/73/85/130/answer.js";
+			// intent.putExtra("json", json);
+			// intent.putExtra("path", path);
+			// intent.putExtra("status", 0);
 			intent.setClass(this, AnswerSelectActivity.class);
 			break;
 		case 4:
@@ -352,6 +395,8 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 		}
 		intent.putExtra("json", json_list.get(i));
 		intent.putExtra("path", path + "/answer.js");
+		intent.putExtra("type", 0);// 0 今日任务列表跳转 1历史记录列表跳转
+		intent.putExtra("status", status);// 0表示第一次做 1表示重做 2历史
 		Log.i("aaa", json_list.get(i));
 		eb.setWork_end_dath(work_list.get(0).getEnd_time());
 		startActivity(intent);
@@ -389,6 +434,8 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 		}
 		intent.putExtra("json", json_list.get(i));
 		intent.putExtra("path", path + "/answer.js");
+		intent.putExtra("type", 0);// 0 今日任务列表跳转 1历史记录列表跳转
+		intent.putExtra("status", status);// 0表示第一次做 1表示重做 2历史
 		Log.i("aaa", json_list.get(i));
 		eb.setWork_end_dath(work_list.get(0).getEnd_time());
 		startActivity(intent);
@@ -413,16 +460,107 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 		history.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				dialog.dismiss();
+				status = 2;
 				Start_History_Acvivity(type);
 			}
 		});
 		working.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				dialog.dismiss();
+				status = 1;// 0表示第一次做 1表示重做 2历史
 				Start_Acvivity(type);
 			}
 		});
 		dialog.show();
+	}
+
+	public void showDownloadDialog() {
+		// 构造软件下载对话框
+		AlertDialog.Builder builder = new Builder(HomeWorkIngActivity.this);
+		builder.setTitle("正在下载");
+		// 给下载对话框增加进度条
+		final LayoutInflater inflater = LayoutInflater
+				.from(HomeWorkIngActivity.this);
+		View v = inflater.inflate(R.layout.softupdate_progress, null);
+		mProgress = (ProgressBar) v.findViewById(R.id.update_progress);
+		builder.setView(v);
+		// 取消更新
+		builder.setNegativeButton("取消", new OnClickListener() {
+
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+				// 设置取消状态
+				cancelUpdate = true;
+			}
+		});
+		mDownloadDialog = builder.create();
+		mDownloadDialog.show();
+		// 下载文件
+		downloadApk();
+	}
+
+	public class downloadApkThread extends Thread {
+
+		public void run() {
+			try {
+				// 判断SD卡是否存在，并且是否具有读写权限
+				if (Environment.getExternalStorageState().equals(
+						Environment.MEDIA_MOUNTED)) {
+					URL url = new URL(downPath);
+					// 创建连接
+					HttpURLConnection conn = (HttpURLConnection) url
+							.openConnection();
+					conn.connect();
+					// 获取文件大小
+					int length = conn.getContentLength();
+					// 创建输入流
+					InputStream is = conn.getInputStream();
+
+					File file = new File(path);
+					// 判断文件目录是否存在
+					if (!file.exists()) {
+						file.mkdir();
+					}
+					File apkFile = new File(path, "questions.js");
+					FileOutputStream fos = new FileOutputStream(apkFile);
+					int count = 0;
+					// 缓存
+					byte buf[] = new byte[1024];
+					// 写入到文件中
+					do {
+						int numread = is.read(buf);
+						count += numread;
+						// 计算进度条位置
+						progress = (int) (((float) count / length) * 100);
+						// 更新进度
+						handler.sendEmptyMessage(5);
+						if (numread <= 0) {
+							// 下载完成
+							// handler.sendEmptyMessage(5);
+							break;
+						}
+						// 写入文件
+						fos.write(buf, 0, numread);
+					} while (!cancelUpdate);// 点击取消就停止下载.
+					fos.close();
+					is.close();
+				}
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			// 取消下载对话框显示
+			mDownloadDialog.dismiss();
+		}
+	};
+
+	/**
+	 * 下载文件
+	 */
+	public void downloadApk() {
+		// 启动新线程下载文件
+		new downloadApkThread().start();
 	}
 
 	public void onclick(View v) {

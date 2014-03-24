@@ -79,7 +79,7 @@ public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 		setTruePropEnd();// 禁用道具
 		findViewById(R.id.base_back_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
-//		setType(1);
+		setType(1);
 		setCheckText("下一个");
 		gson = new Gson();
 		initialize();
@@ -135,7 +135,8 @@ public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 		LinearLayout layout = (LinearLayout) LayoutInflater.from(this).inflate(
 				R.layout.mypinner_dropdown, null);
 		ListView listView = (ListView) layout.findViewById(R.id.listView);
-		MyspinnerAdapter adapter = new MyspinnerAdapter(Cloze_HistoryActivity.this, Opption_str);
+		MyspinnerAdapter adapter = new MyspinnerAdapter(
+				Cloze_HistoryActivity.this, Opption_str);
 		listView.setAdapter(adapter);
 		PopupWindow popupWindow = new PopupWindow(position);
 		popupWindow.setWidth(position.getWidth());
@@ -214,11 +215,7 @@ public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			Cloze_HistoryActivity.this.finish();
-			Intent intent = new Intent();
-			intent.setClass(Cloze_HistoryActivity.this,
-					HomeWorkIngActivity.class);
-			startActivity(intent);
+			MyDialog("确认退出吗？", 0);
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);

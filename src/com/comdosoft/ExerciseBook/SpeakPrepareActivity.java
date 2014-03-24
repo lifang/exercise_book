@@ -159,6 +159,7 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 
 		path = intent.getStringExtra("path");
 		json = intent.getStringExtra("json");
+		status = intent.getIntExtra("status", 1);
 		Log.i("suanfa", json);
 		SetQuestionsJson(json);
 
@@ -185,6 +186,15 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 				}
 				break;
 			case 1:
+				type = 2;
+				questionlist = list.get(eb.getQuestion_item())
+						.getQuesttionList();
+				eb.setQuestion_id(list.get(eb.getQuestion_item()).getId());
+				eb.setBranch_number(list.get(eb.getQuestion_item())
+						.getQuesttionList().size());
+				break;
+			case 2:
+				setType(1);
 				type = 2;
 				questionlist = list.get(eb.getQuestion_item())
 						.getQuesttionList();
@@ -261,7 +271,6 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 				int use_time = time_limit.getInt("use_time");
 				setUseTime(use_time);
 				setStart();
-				status = time_limit.getInt("status");
 				Log.i("aaa", specified_time + "--" + branch_item);
 				JSONArray questions = time_limit.getJSONArray("questions");
 				if (questions.length() > 0) {
@@ -534,14 +543,6 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 		}
 	}
 
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			// MyDialog("确认不在继续答题吗？", "确定", "取消");
-			return true;
-		}
-		return super.onKeyDown(keyCode, event);
-	}
-
 	public void onUtteranceCompleted(String arg0) {
 		Log.i("linshi", arg0 + "=<");
 		int size = Integer.valueOf(arg0);
@@ -599,5 +600,13 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 			SpeakPrepareActivity.this.finish();
 			break;
 		}
+	}
+
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			super.close();
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 }

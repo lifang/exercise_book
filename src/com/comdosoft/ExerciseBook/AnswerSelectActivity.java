@@ -58,7 +58,7 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 
 		setQuestionType(2);
 
-		Log.i("aaa", json);
+		Log.i("aaa", "jsonselect--" + json);
 
 		analysisJson(json);
 
@@ -260,8 +260,7 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 	// 解析选择题JSON
 	public void analysisJson(String json) {
 		try {
-			JSONObject jsonObject = new JSONObject(json)
-					.getJSONObject("selecting");
+			JSONObject jsonObject = new JSONObject(json);
 			specified_time = jsonObject.getInt("specified_time");
 			JSONArray jArr = new JSONArray(jsonObject.getString("questions"));
 			for (int i = 0; i < jArr.length(); i++) {
@@ -277,7 +276,7 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 					int type = AnswerTools.getSelectType(s);
 					String content = AnswerTools.getSelectContent(s);
 					List<String> arr = AnswerTools.getSelectOption(jb
-							.getString("option"));
+							.getString("opption"));
 					List<String> answer = AnswerTools.getSelectAnswer(jb
 							.getString("answer"));
 

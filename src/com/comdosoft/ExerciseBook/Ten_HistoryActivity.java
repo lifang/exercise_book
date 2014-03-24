@@ -83,6 +83,7 @@ public class Ten_HistoryActivity extends AnswerBaseActivity implements
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
 		setTimePropEnd();// 禁用道具
 		setTruePropEnd();// 禁用道具
+		setType(1);
 		setCheckText("下一个");
 		initialize();
 		branch_questions = new ArrayList<Time_LimitPojo>();
@@ -182,10 +183,7 @@ public class Ten_HistoryActivity extends AnswerBaseActivity implements
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			Ten_HistoryActivity.this.finish();
-			Intent intent = new Intent();
-			intent.setClass(Ten_HistoryActivity.this, HomeWorkIngActivity.class);
-			startActivity(intent);
+			MyDialog("确认退出吗？", 0);
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);

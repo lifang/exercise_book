@@ -11,6 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -65,6 +66,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 	private Gson gson;
 	private int propItem = 0;
 	private List<TextView> tv_list;
+	private boolean Check = false;
 	private PopupWindow popupWindow;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -97,8 +99,10 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		Intent intent = getIntent();
 		path = intent.getStringExtra("path");
 		String json = intent.getStringExtra("json");
+		status = intent.getIntExtra("status", 1);
 		SetJson(json);
 		SetAnswer();
+		Finish_Json();
 	}
 
 	private void SetAnswer() {
@@ -169,7 +173,6 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 				int use_time = cloze.getInt("use_time");
 				setUseTime(use_time);
 				setStart();
-				status = cloze.getInt("status");
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -280,7 +283,8 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		LinearLayout layout = (LinearLayout) LayoutInflater.from(this).inflate(
 				R.layout.mypinner_dropdown, null);
 		ListView listView = (ListView) layout.findViewById(R.id.listView);
-		MyspinnerAdapter adapter = new MyspinnerAdapter(ClozeActivity.this, Opption_str);
+		MyspinnerAdapter adapter = new MyspinnerAdapter(ClozeActivity.this,
+				Opption_str);
 		listView.setAdapter(adapter);
 		popupWindow = new PopupWindow(position);
 		popupWindow.setWidth(position.getWidth());
@@ -316,53 +320,72 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 			super.onClick(v);
 			break;
 		case R.id.base_check_linearlayout:
+			Log.i("linshi", user_select.size() + "/" + cloze.getList().size());
 			if (user_select.size() != cloze.getList().size()) {
 				Toast.makeText(ClozeActivity.this, "请先完成本题!",
 						Toast.LENGTH_SHORT).show();
 			} else {
-				int type = 0;
-				String answer_history = ExerciseBookTool
-						.getAnswer_Json_history(path);
-				try {
-					JSONObject obj = new JSONObject(answer_history);
-					if (obj.getJSONObject("cloze").getString("status")
-							.equals("0")) {
-						Log.i("aaa", question_id + "");
-						type = setAnswerJson(answer_history, user_select,
-								question_id);
-					} else {
-						Log.i("aaa", "2");
-						type = Again();
-					}
-					Log.i("aaa", type + "-type");
-					switch (type) {// 0为下一小题 1为全部做完 2为本小题做完
-					case 0:
-						index += 1;
-						SetAnswer();
-						break;
-					case 1:
-						intent.putExtra("precision",
-								ExerciseBookTool.getRatio(path, "cloze"));// 正确率100时获取精准成就
-						intent.putExtra("use_time", getUseTime());// 用户使用的时间
-						intent.putExtra("specified_time", specified_time);// 任务基础时间
-						intent.setClass(ClozeActivity.this,
-								WorkEndActivity.class);
-						ClozeActivity.this.startActivityForResult(intent, 1);
-						break;
-					}
+				if (Check) {
+					Check = false;
+					setCheckText("检查");
+					propItem = 0;
+					int type = 0;
+					String answer_history = ExerciseBookTool
+							.getAnswer_Json_history(path);
+					try {
+						if (status == 0) {
+							Log.i("aaa", question_id + "");
+							type = setAnswerJson(answer_history, user_select,
+									question_id);
+						} else {
+							type = Again();
+						}
+						Log.i("aaa", type + "-type");
+						switch (type) {// 0为下一小题 1为全部做完 2为本小题做完
+						case 0:
+							index += 1;
+							SetAnswer();
+							break;
+						case 1:
+							prodialog.show();
+							if (Finish_Json()) {
+								intent.putExtra("precision", ExerciseBookTool
+										.getRatio(path, "cloze"));// 正确率100时获取精准成就
+								intent.putExtra("use_time", getUseTime());// 用户使用的时间
+								intent.putExtra("specified_time",
+										specified_time);// 任务基础时间
+								intent.setClass(ClozeActivity.this,
+										WorkEndActivity.class);
+								ClozeActivity.this.startActivityForResult(
+										intent, 1);
+							}
+							break;
+						}
 
-				} catch (Exception e) {
-					e.printStackTrace();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				} else {
+					Check = true;
+					setCheckText("下一个");
 				}
 			}
 			break;
 		case R.id.base_propTrue:
-			Log.i("aaa", "使用道具");
+			Log.i("linshi", propItem + "----" + tv_list.size());
 			if (propItem < tv_list.size()) {
 				tv_list.get(propItem).setText(
 						cloze.getList().get(propItem).getAnswer());
-//				tv_list.get(propItem).setTextColor(R.color.work_end);
-				propItem += 1;
+				tv_list.get(propItem).setTextColor(
+						getResources().getColor(R.color.work_end));
+				user_select.put(propItem, cloze.getList().get(propItem)
+						.getAnswer());
+				if (propItem + 1 == tv_list.size()) {
+					Check = true;
+					setCheckText("下一个");
+				} else {
+					propItem += 1;
+				}
 			}
 			break;
 		}
@@ -371,7 +394,6 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == 1) {
-			Log.i("aaa", "resultCode:" + resultCode);
 			Intent intent = new Intent();
 			switch (resultCode) {
 			case 0:
@@ -389,10 +411,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			ClozeActivity.this.finish();
-			Intent intent = new Intent();
-			intent.setClass(ClozeActivity.this, HomeWorkIngActivity.class);
-			startActivity(intent);
+			super.close();
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);

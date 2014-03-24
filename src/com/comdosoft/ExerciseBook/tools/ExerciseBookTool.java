@@ -147,6 +147,9 @@ public class ExerciseBookTool implements Urlinterface {
 			JSONObject js = obj.getJSONObject(key);
 			Log.i("aaa", js.toString());
 			JSONArray arr = js.getJSONArray("questions");
+			if (arr.length() == 0) {
+				return 0;
+			}
 			for (int i = 0; i < arr.length(); i++) {
 				JSONObject item = arr.getJSONObject(i);
 				JSONArray ar = item.getJSONArray("branch_questions");
@@ -157,7 +160,7 @@ public class ExerciseBookTool implements Urlinterface {
 				}
 			}
 		} catch (JSONException e) {
-			e.printStackTrace();
+			return 0;
 		}
 		int size = 0;
 		Log.i("aaa", ratio.size() + "-ratio");
@@ -195,6 +198,19 @@ public class ExerciseBookTool implements Urlinterface {
 			size += ratio.get(i);
 		}
 		return size / ratio.size();
+	}
+
+	// 下载路径判断
+	public static boolean FileExist(String path) {
+		File file = new File(path);
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+		File file2 = new File(path + "/questions.js");
+		if (!file2.exists()) {
+			return false;
+		}
+		return true;
 	}
 
 	/**

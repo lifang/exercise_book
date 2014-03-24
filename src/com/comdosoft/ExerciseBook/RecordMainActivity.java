@@ -1,5 +1,12 @@
 package com.comdosoft.ExerciseBook;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,25 +17,29 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.GestureDetector.OnGestureListener;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.GestureDetector.OnGestureListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -38,6 +49,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -84,6 +96,11 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 	public boolean date_type = false;
 	public ImagePagerAdapter ipa;
 	private TextView tishi;
+	private String downPath;
+	private ProgressBar mProgress;
+	private boolean cancelUpdate;
+	private AlertDialog mDownloadDialog;
+	private int progress;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -108,6 +125,26 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 				tishi.setVisibility(View.VISIBLE);
 				Toast.makeText(RecordMainActivity.this, "解析数据出现问题",
 						Toast.LENGTH_SHORT).show();
+				break;
+			case 3:
+				Toast.makeText(RecordMainActivity.this, "检测到本地json格式有问题！",
+						Toast.LENGTH_SHORT).show();
+				break;
+			case 4:
+				Builder builder = new Builder(RecordMainActivity.this);
+				builder.setTitle("提示");
+				builder.setMessage("需要下载数据包才可以完成任务,确认下载吗?");
+				builder.setPositiveButton("确定",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int which) {
+								showDownloadDialog();
+							}
+						});
+				builder.setNegativeButton("下次再说", null).show();
+				break;
+			case 5:
+				mProgress.setProgress(progress);
 				break;
 			}
 		};
@@ -244,9 +281,21 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 			}
 		});
 		layout.setOnClickListener(new View.OnClickListener() {
+
 			public void onClick(View arg0) {
-				startDekaron(pojo.getQuestion_types().get(i));// 跳转到答题页面
+				// startDekaron(pojo.getQuestion_types().get(i));// 跳转到答题页面
+				path = Environment.getExternalStorageDirectory() + "/"
+						+ "Exercisebook_app/" + eb.getUid() + "/"
+						+ eb.getClass_id() + "/" + pojo.getId();
+				downPath = IP + pojo.getQuestion_packages_url();
+				if (ExerciseBookTool.FileExist(path)) {// 判断文件是否存在
+					handler.sendEmptyMessage(3);
+				} else {
+					handler.sendEmptyMessage(4);
+				}
+				Log.i("linshi", IP + pojo.getQuestion_packages_url());
 			}
+
 		});
 
 		if (ExerciseBookTool.getExist(pojo.getQuestion_types().get(i),
@@ -284,6 +333,95 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 			}
 		}
 		linearList.get(linear_item).addView(view);
+	}
+
+	public void showDownloadDialog() {
+		// 构造软件下载对话框
+		AlertDialog.Builder builder = new Builder(RecordMainActivity.this);
+		builder.setTitle("正在下载");
+		// 给下载对话框增加进度条
+		final LayoutInflater inflater = LayoutInflater
+				.from(RecordMainActivity.this);
+		View v = inflater.inflate(R.layout.softupdate_progress, null);
+		mProgress = (ProgressBar) v.findViewById(R.id.update_progress);
+		builder.setView(v);
+		// 取消更新
+		builder.setNegativeButton("取消", new OnClickListener() {
+
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+				// 设置取消状态
+				cancelUpdate = true;
+			}
+		});
+		mDownloadDialog = builder.create();
+		mDownloadDialog.show();
+		// 下载文件
+		downloadApk();
+	}
+
+	public class downloadApkThread extends Thread {
+
+		public void run() {
+			try {
+				// 判断SD卡是否存在，并且是否具有读写权限
+				if (Environment.getExternalStorageState().equals(
+						Environment.MEDIA_MOUNTED)) {
+					URL url = new URL(downPath);
+					// 创建连接
+					HttpURLConnection conn = (HttpURLConnection) url
+							.openConnection();
+					conn.connect();
+					// 获取文件大小
+					int length = conn.getContentLength();
+					// 创建输入流
+					InputStream is = conn.getInputStream();
+
+					File file = new File(path);
+					// 判断文件目录是否存在
+					if (!file.exists()) {
+						file.mkdir();
+					}
+					File apkFile = new File(path, "questions.js");
+					FileOutputStream fos = new FileOutputStream(apkFile);
+					int count = 0;
+					// 缓存
+					byte buf[] = new byte[1024];
+					// 写入到文件中
+					do {
+						int numread = is.read(buf);
+						count += numread;
+						// 计算进度条位置
+						progress = (int) (((float) count / length) * 100);
+						// 更新进度
+						handler.sendEmptyMessage(5);
+						if (numread <= 0) {
+							// 下载完成
+							// handler.sendEmptyMessage(5);
+							break;
+						}
+						// 写入文件
+						fos.write(buf, 0, numread);
+					} while (!cancelUpdate);// 点击取消就停止下载.
+					fos.close();
+					is.close();
+				}
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			// 取消下载对话框显示
+			mDownloadDialog.dismiss();
+		}
+	};
+
+	/**
+	 * 下载文件
+	 */
+	public void downloadApk() {
+		// 启动新线程下载文件
+		new downloadApkThread().start();
 	}
 
 	// 获取过往记录

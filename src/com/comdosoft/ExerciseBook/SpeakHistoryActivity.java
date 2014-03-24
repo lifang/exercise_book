@@ -20,6 +20,7 @@ import android.speech.tts.TextToSpeech.OnInitListener;
 import android.speech.tts.TextToSpeech.OnUtteranceCompletedListener;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -102,6 +103,7 @@ public class SpeakHistoryActivity extends AnswerBaseActivity implements
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
 		setTimePropEnd();// 禁用道具
 		setTruePropEnd();// 禁用道具
+		setType(1);
 		setCheckText("下一个");
 		eb = (ExerciseBook) getApplication();
 
@@ -400,5 +402,13 @@ public class SpeakHistoryActivity extends AnswerBaseActivity implements
 			}
 			break;
 		}
+	}
+
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			MyDialog("确认退出吗？", 0);
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 }
