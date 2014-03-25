@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="158px"
             android:layout_marginTop="21px"
-            android:text="发布时间为   未知"
+            android:text="发布时间为   --"
             android:textSize="25px" />
 
         <LinearLayout
@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="4px"
                 android:layout_marginTop="10px"
-                android:text="未知"
+                android:text="--"
                 android:textColor="@color/red"
                 android:textSize="35px" />
         </LinearLayout>

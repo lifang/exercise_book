@@ -52,17 +52,57 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import cn.jpush.android.api.JPushInterface;
+
+import com.comdosoft.ExerciseBook.pojo.AnswerJson;
 import com.comdosoft.ExerciseBook.pojo.AnswerPojo;
 import com.comdosoft.ExerciseBook.pojo.Answer_QuestionsPojo;
 import com.comdosoft.ExerciseBook.pojo.Branch_AnswerPoJo;
 import com.comdosoft.ExerciseBook.pojo.HistoryPojo;
 import com.comdosoft.ExerciseBook.pojo.ListHistoryPojo;
+import com.google.gson.Gson;
 
 public class ExerciseBookTool implements Urlinterface {
 
 	private static int connectTimeOut = 5000;
 	private static int readTimeOut = 10000;
 	private static String requestEncoding = "UTF-8";
+
+	public static void initAnswer(String path, String id) {
+		try {
+			File file = new File(path);
+			if (!file.exists()) {
+				file.mkdirs();
+			}
+			file = new File(path + "/answer.js");
+			if (!file.exists()) {
+				file.createNewFile();
+				Log.i("linshi", path + "/answer.js");
+				AnswerJson answer = new AnswerJson(id, "0", new String[] {},
+						new AnswerPojo("0", "", "-1", "-1", "0",
+								new ArrayList<Answer_QuestionsPojo>()),
+						new AnswerPojo("0", "", "-1", "-1", "0",
+								new ArrayList<Answer_QuestionsPojo>()),
+						new AnswerPojo("0", "", "-1", "-1", "0",
+								new ArrayList<Answer_QuestionsPojo>()),
+						new AnswerPojo("0", "", "-1", "-1", "0",
+								new ArrayList<Answer_QuestionsPojo>()),
+						new AnswerPojo("0", "", "-1", "-1", "0",
+								new ArrayList<Answer_QuestionsPojo>()),
+						new AnswerPojo("0", "", "-1", "-1", "0",
+								new ArrayList<Answer_QuestionsPojo>()),
+						new AnswerPojo("0", "", "-1", "-1", "0",
+								new ArrayList<Answer_QuestionsPojo>()));
+				// String json=JSONArray.fromObject(answer);
+				Gson gson = new Gson();
+				String result = gson.toJson(answer);
+				Log.i("linshi", result);
+				ExerciseBookTool.writeFile(path + "/answer.js", result);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	// 获取历史记录
 	public static AnswerPojo getAnswer(String json, String key) {

@@ -14,7 +14,6 @@ public class WorkJson {
 
 	public static List<WorkPoJo> json(String json) throws Exception {
 		List<WorkPoJo> work_list = new ArrayList<WorkPoJo>();
-
 		JSONObject obj = new JSONObject(json);
 		JSONArray arr = obj.getJSONArray("tasks");
 		if (arr.length() != 0) {
@@ -38,10 +37,18 @@ public class WorkJson {
 				startstr = ExerciseBookTool.divisionTime(startstr);
 				String endstr = item.getString("end_time");
 				endstr = ExerciseBookTool.divisionTime(endstr);
+				int number;
+				if (obj.get("knowledges_cards_count").equals(JSONObject.NULL)) {
+					Log.i("aaa", 1 + "");
+					number = 0;
+				} else {
+					Log.i("aaa", 2 + "");
+					number = obj.getInt("knowledges_cards_count");
+				}
 				WorkPoJo work = new WorkPoJo(item.getInt("id"),
 						item.getString("name"), startstr, endstr,
 						item.getString("question_packages_url"),
-						questiontype_list, finish_list);
+						questiontype_list, finish_list, number);
 				work_list.add(work);
 				Log.i("linshi", questiontype_list.size() + "<-");
 			}

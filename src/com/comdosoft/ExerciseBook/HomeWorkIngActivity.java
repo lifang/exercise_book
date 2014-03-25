@@ -12,9 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,6 +28,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
@@ -56,7 +54,8 @@ import com.google.gson.Gson;
 public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	private String id;
 	private String school_class_id;
-	private String json = "{\"status\":\"success\",\"notice\":\"\u83b7\u53d6\u6210\u529f\uff01\",\"tasks\":[{\"id\":130,\"name\":\"\",\"start_time\":\"2014-03-12T14:44:45+08:00\",\"question_types\":[0,1,2,3,4,5,6],\"finish_types\":[2,5],\"end_time\":\"2014-03-13T18:00:00+08:00\",\"question_packages_url\":\"/que_ps/question_p_264/resourse.zip\"}],\"knowledges_cards_count\":10}";
+	// private String json =
+	// "{\"status\":\"success\",\"notice\":\"\u83b7\u53d6\u6210\u529f\uff01\",\"tasks\":[{\"id\":130,\"name\":\"\",\"start_time\":\"2014-03-12T14:44:45+08:00\",\"question_types\":[0,1,2,3,4,5,6],\"finish_types\":[2,5],\"end_time\":\"2014-03-13T18:00:00+08:00\",\"question_packages_url\":\"/que_ps/question_p_264/resourse.zip\"}],\"knowledges_cards_count\":10}";
 	private ExerciseBook eb;
 	private LinearLayout mylayout;
 	private int linear_item = 0;
@@ -151,6 +150,11 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 		initialize();// 初始化
 		instance = this;
 
+		Display display = this.getWindowManager().getDefaultDisplay();
+		int width = display.getWidth();
+		int height = display.getHeight();
+		Log.i(id, width + "/" + height);
+
 		prodialog = new ProgressDialog(HomeWorkIngActivity.this);
 		prodialog.setMessage("正在获取最新作业");
 		prodialog.setCanceledOnTouchOutside(false);
@@ -187,42 +191,6 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 			json_list.add(obj.getString("cloze"));
 			json_list.add(obj.getString("sort"));
 		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void initAnswer() {
-		try {
-			File file = new File(path);
-			if (!file.exists()) {
-				file.mkdirs();
-			}
-			file = new File(path + "/answer.js");
-			if (!file.exists()) {
-				file.createNewFile();
-				Log.i("linshi", path + "/answer.js");
-				AnswerJson answer = new AnswerJson(eb.getWork_id(), "0",
-						new String[] {}, new AnswerPojo("0", "", "-1", "-1",
-								"0", new ArrayList<Answer_QuestionsPojo>()),
-						new AnswerPojo("0", "", "-1", "-1", "0",
-								new ArrayList<Answer_QuestionsPojo>()),
-						new AnswerPojo("0", "", "-1", "-1", "0",
-								new ArrayList<Answer_QuestionsPojo>()),
-						new AnswerPojo("0", "", "-1", "-1", "0",
-								new ArrayList<Answer_QuestionsPojo>()),
-						new AnswerPojo("0", "", "-1", "-1", "0",
-								new ArrayList<Answer_QuestionsPojo>()),
-						new AnswerPojo("0", "", "-1", "-1", "0",
-								new ArrayList<Answer_QuestionsPojo>()),
-						new AnswerPojo("0", "", "-1", "-1", "0",
-								new ArrayList<Answer_QuestionsPojo>()));
-				// String json=JSONArray.fromObject(answer);
-				Gson gson = new Gson();
-				String result = gson.toJson(answer);
-				Log.i("linshi", result);
-				ExerciseBookTool.writeFile(path + "/answer.js", result);
-			}
-		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -293,21 +261,15 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("student_id", id);
 			map.put("school_class_id", school_class_id);
-			// String json;
+			String json;
 			try {
-				// json = ExerciseBookTool.sendGETRequest(get_newer_task, map);
+				json = ExerciseBookTool.sendGETRequest(get_newer_task, map);
 				JSONObject obj = new JSONObject(json);
 				if (obj.getString("status").equals("success")) {
 					work_list = WorkJson.json(json);
-					if (obj.get("knowledges_cards_count").equals(
-							JSONObject.NULL)) {
-						cardType = true;
-					} else {
-						cardType = obj.getInt("knowledges_cards_count") < 20 ? true
-								: false;
-					}
-					Log.i("linshi", work_list.size() + "-size");
 					if (work_list.size() != 0) {
+						cardType = work_list.get(0).getNumber() < 20 ? true
+								: false;
 						eb.setWork_id(work_list.get(0).getId() + "");
 						path = Environment.getExternalStorageDirectory() + "/"
 								+ "Exercisebook_app/" + eb.getUid() + "/"
@@ -315,7 +277,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 						downPath = IP
 								+ work_list.get(0).getQuestion_packages_url();
 						getJsonPath();
-						initAnswer();// 初始化answer
+						ExerciseBookTool.initAnswer(path, eb.getWork_id());// 初始化answer
 					}
 					handler.sendEmptyMessage(0);
 				} else {

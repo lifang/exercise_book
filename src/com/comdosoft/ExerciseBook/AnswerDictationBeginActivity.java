@@ -20,6 +20,7 @@ import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -182,6 +183,9 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 			et.setText(filterString(value));
 			et.setTextColor(Color.rgb(53, 207, 143));
 		}
+		et.setInputType(InputType.TYPE_TEXT_VARIATION_URI
+				| InputType.TYPE_TEXT_FLAG_MULTI_LINE
+				| InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
 		et.setImeOptions(EditorInfo.IME_ACTION_NEXT);
 		et.setOnEditorActionListener(new OnEditorActionListener() {
 			public boolean onEditorAction(TextView v, int actionId,
