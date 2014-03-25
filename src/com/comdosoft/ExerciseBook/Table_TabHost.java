@@ -81,19 +81,14 @@ public class Table_TabHost extends Activity
 									.show();
 							BitmapFactory.Options options = new BitmapFactory.Options();
 							options.inSampleSize = 7;// 7就代表容量变为以前容量的1/7
-							String uri = Environment
-									.getExternalStorageDirectory()
-									+ "/1"
-									+ IMAGE_FILE_NAME;
 							Bitmap bm = BitmapFactory.decodeFile(uri, options);
 							faceImage.setImageDrawable(new BitmapDrawable(bm));
-							eb.setRefresh(1);
+							
 							File file = new File(uri);
-
 							if (file.exists()) {
 								file.delete();
 							}
-							//
+							eb.setRefresh(1);
 						} else {
 							Toast.makeText(getApplicationContext(), notice, 0)
 									.show();
