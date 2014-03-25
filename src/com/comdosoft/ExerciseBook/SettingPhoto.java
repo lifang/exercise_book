@@ -91,18 +91,23 @@ public class SettingPhoto extends Activity implements Urlinterface {
 	 */
 	public void set_congxiangce(View v) {
 
-		Intent intentFromGallery = new Intent(Intent.ACTION_PICK, null);
-
-		/**
-		 * 下面这句话，与其它方式写是一样的效果，如果：
-		 * intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-		 * intent.setType(""image/*");设置数据类型
-		 * 如果朋友们要限制上传到服务器的图片类型时可以直接写如："image/jpeg 、 image/png等的类型"
-		 * 这个地方小马有个疑问，希望高手解答下：就是这个数据URI与类型为什么要分两种形式来写呀？有什么区别？
-		 */
-		intentFromGallery.setDataAndType(
-				MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-		startActivityForResult(intentFromGallery, 1);
+//		Intent intentFromGallery = new Intent(Intent.ACTION_PICK, null);
+//
+//		/**
+//		 * 下面这句话，与其它方式写是一样的效果，如果：
+//		 * intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//		 * intent.setType(""image/*");设置数据类型
+//		 * 如果朋友们要限制上传到服务器的图片类型时可以直接写如："image/jpeg 、 image/png等的类型"
+//		 * 这个地方小马有个疑问，希望高手解答下：就是这个数据URI与类型为什么要分两种形式来写呀？有什么区别？
+//		 */
+//		intentFromGallery.setDataAndType(
+//				MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+//		startActivityForResult(intentFromGallery, 1);
+		Intent intentFromGallery = new Intent();
+		intentFromGallery.setType("image/*"); // 设置文件类型
+		intentFromGallery
+				.setAction(Intent.ACTION_GET_CONTENT);
+		startActivityForResult(intentFromGallery,1);
 
 	}
 
