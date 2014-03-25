@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@color/white"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="141.44px"
+        android:background="#d2d3d4"
+        android:orientation="horizontal" >
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/topTv1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="346px"
+                android:layout_marginTop="57.94px"
+                android:textColor="@color/white"
+                android:text="回复通知"
+                android:textSize="33px" />
+
+            <ImageView
+                android:id="@+id/topImv1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="395px"
+                android:src="@drawable/homepage_bot" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/topTv2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="348px"
+                android:layout_marginTop="57.94px"
+                android:textColor="#3f4853"
+                android:text="系统通知"
+                android:textSize="33px" />
+
+            <ImageView
+                android:id="@+id/topImv2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="395px"
+                android:visibility="gone"
+                android:src="@drawable/homepage_bot" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <com.comdosoft.ExerciseBook.ReplyListView
+        android:id="@+id/xListView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="134.44px"
+        android:cacheColorHint="#00000000" >
+    </com.comdosoft.ExerciseBook.ReplyListView>
+
+</RelativeLayout>

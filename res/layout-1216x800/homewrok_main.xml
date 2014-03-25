@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainweixin"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#eee"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/main_top"
+        android:layout_width="fill_parent"
+        android:layout_height="106px"
+        android:layout_alignParentTop="true"
+        android:background="@color/top_qianlv"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/img_tab_now"
+            android:layout_width="54px"
+            android:layout_height="50px"
+            android:layout_marginLeft="68px"
+            android:layout_marginTop="35px"
+            android:background="#00000000"
+            android:src="@drawable/logo" />
+
+        <LinearLayout
+            android:layout_width="341.67px"
+            android:layout_height="fill_parent"
+            android:layout_alignParentRight="true"
+            android:background="@color/top_shenlv"
+            android:orientation="horizontal" >
+
+            <com.comdosoft.ExerciseBook.tools.CircularImage
+                android:id="@+id/user_face"
+                android:layout_width="60px"
+                android:layout_height="60px"
+                android:layout_marginLeft="16px"
+                android:layout_marginTop="30px"
+                android:src="@drawable/moren" />
+
+            <TextView
+                android:id="@+id/user_name"
+                android:layout_width="182px"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15px"
+                android:layout_marginTop="40.5px"
+                android:maxLines="1"
+                android:text="丁作强"
+                android:textColor="@color/white"
+                android:textSize="30px" />
+
+            <LinearLayout
+                android:id="@+id/user_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="13.5px"
+                android:layout_marginTop="47.5px"
+                android:padding="15px" >
+
+                <ImageView
+                    android:layout_width="26px"
+                    android:layout_height="15px"
+                    android:background="@drawable/userinfo_button" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <TabHost
+        android:id="@android:id/tabhost"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/main_top"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="#D2D3D4"
+            android:orientation="vertical" >
+
+            <com.comdosoft.ExerciseBook.tools.VerticalTabWigdet
+                android:id="@android:id/tabs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#D2D3D4" />
+
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" />
+        </LinearLayout>
+    </TabHost>
+
+    <RelativeLayout
+        android:id="@+id/main_mid"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/main_top"
+        android:layout_marginTop="123px"
+        android:background="#D2D3D4" >
+
+        <ImageView
+            android:id="@+id/all_bottom"
+            android:layout_width="50px"
+            android:layout_height="18px"
+            android:layout_marginLeft="202px"
+            android:clickable="true"
+            android:src="@drawable/homepage_bot" />
+
+        <ImageView
+            android:id="@+id/myself_bottom"
+            android:layout_width="50px"
+            android:layout_height="18px"
+            android:layout_marginLeft="453px"
+            android:clickable="true"
+            android:src="@drawable/homepage_bot" />
+
+        <ImageView
+            android:id="@+id/focus_bottom"
+            android:layout_width="50px"
+            android:layout_height="18px"
+            android:layout_marginLeft="710px"
+            android:clickable="true"
+            android:src="@drawable/homepage_bot" />
+                <ImageView
+            android:id="@+id/sender_bottom"
+            android:layout_width="50px"
+            android:layout_height="18px"
+            android:layout_marginLeft="959px"
+            android:clickable="true"
+            android:src="@drawable/homepage_bot" />
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -1,0 +1,55 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/question_bg"
+    android:gravity="center_horizontal"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:orientation="horizontal"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp" >
+
+        <ImageView
+            android:id="@+id/question_speak_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/app_name"
+            android:onClick="onclicks"
+            android:src="@drawable/xiao2" />
+
+        <com.comdosoft.ExerciseBook.tools.PredicateLayout
+            android:id="@+id/question_speak_content"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp" >
+        </com.comdosoft.ExerciseBook.tools.PredicateLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/speak"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="50dp"
+        android:contentDescription="@string/app_name"
+        android:onClick="onclicks"
+        android:src="@drawable/dictation_laba2" />
+
+    <TextView
+        android:id="@+id/question_speak_tishi"
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/textview_border"
+        android:gravity="center"
+        android:lineSpacingExtra="15dp"
+        android:padding="15dp"
+        android:text="@string/question_speak_tishi"
+        android:textColor="#6E6B6B"
+        android:textSize="18sp" />
+
+</LinearLayout>

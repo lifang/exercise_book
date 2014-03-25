@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="800px"
+        android:layout_height="490px"
+        android:background="#35CF8F"
+        android:orientation="vertical"
+        android:padding="20dp" >
+
+        <ImageView
+            android:id="@+id/close"
+            android:layout_width="40px"
+            android:layout_height="40px"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/close" />
+
+        <Button
+            android:id="@+id/history"
+            android:layout_width="600px"
+            android:layout_height="100px"
+            android:layout_below="@id/close"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:background="#1E7552"
+            android:gravity="center"
+            android:text="查看做题记录"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/working"
+            android:layout_width="600px"
+            android:layout_height="100px"
+            android:layout_below="@id/history"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
+            android:background="#1E7552"
+            android:gravity="center"
+            android:text="重新做题"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+</LinearLayout>
