@@ -15,6 +15,7 @@ import com.comdosoft.ExerciseBook.tools.CircularImage;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
+import com.comdosoft.ExerciseBook.tools.ImageMemoryCache;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
 import android.app.ActionBar.LayoutParams;
@@ -61,6 +62,7 @@ public class Table_TabHost extends Activity
 	private String uri;
 	private ProgressDialog prodialog;
 	static boolean active = false;
+	ImageMemoryCache memoryCache;
 	Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -76,24 +78,22 @@ public class Table_TabHost extends Activity
 						String notice = array.getString("notice");
 
 						if (status == true) {
-
+							memoryCache.removeBitmap(Urlinterface.IP
+									+ avatar_url);
 							Toast.makeText(getApplicationContext(), notice, 0)
 									.show();
 							BitmapFactory.Options options = new BitmapFactory.Options();
 							options.inSampleSize = 7;// 7就代表容量变为以前容量的1/7
-							String uri = Environment
-									.getExternalStorageDirectory()
-									+ "/1"
-									+ IMAGE_FILE_NAME;
 							Bitmap bm = BitmapFactory.decodeFile(uri, options);
+							memoryCache.addBitmapToCache(Urlinterface.IP
+									+ avatar_url, bm);
 							faceImage.setImageDrawable(new BitmapDrawable(bm));
-							eb.setRefresh(1);
+							
 							File file = new File(uri);
-
 							if (file.exists()) {
 								file.delete();
 							}
-							//
+							eb.setRefresh(1);
 						} else {
 							Toast.makeText(getApplicationContext(), notice, 0)
 									.show();
@@ -121,6 +121,7 @@ public class Table_TabHost extends Activity
 		super.onCreate(savedInstanceState);
 		super.setContentView(R.layout.table);
 		eb=(ExerciseBook) getApplication();
+		memoryCache = new ImageMemoryCache(this);
 		SharedPreferences preferences = getSharedPreferences(Urlinterface.SHARED,
 				Context.MODE_PRIVATE);
 		avatar_url = preferences.getString("avatar_url", "");
@@ -148,8 +149,15 @@ public class Table_TabHost extends Activity
 		faceImage = (CircularImage) findViewById(R.id.user_face);
 		if (ExerciseBookTool.isConnect(getApplicationContext())) {
 			if (avatar_url != null || avatar_url.length() != 0) { // 设置头像
-				ExerciseBookTool.set_background(Urlinterface.IP + avatar_url,
-						faceImage);
+//				ExerciseBookTool.set_background(Urlinterface.IP + avatar_url,
+//						faceImage);
+				String url = Urlinterface.IP + avatar_url;
+				Bitmap result = memoryCache.getBitmapFromCache(url);
+				if (result == null) {
+					ExerciseBookTool.set_bk(url, faceImage, memoryCache);
+				} else {
+					faceImage.setImageDrawable(new BitmapDrawable(result));
+				}
 			}
 		} else {
 			Toast.makeText(getApplicationContext(),

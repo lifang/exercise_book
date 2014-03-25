@@ -101,6 +101,8 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 							BitmapFactory.Options options = new BitmapFactory.Options();
 							options.inSampleSize = 7;// 7就代表容量变为以前容量的1/7
 							Bitmap bm = BitmapFactory.decodeFile(uri, options);
+							memoryCache.addBitmapToCache(Urlinterface.IP
+									+ avatar_url, bm);
 							faceImage.setImageDrawable(new BitmapDrawable(bm));
 
 							File file = new File(uri);
@@ -161,8 +163,15 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 		faceImage = (CircularImage) findViewById(R.id.user_face);
 		if (ExerciseBookTool.isConnect(getApplicationContext())) {
 			if (avatar_url != null || avatar_url.length() != 0) { // 设置头像
-				ExerciseBookTool.set_background(Urlinterface.IP + avatar_url,
-						faceImage);
+//				ExerciseBookTool.set_background(Urlinterface.IP + avatar_url,
+//						faceImage);
+				String url = Urlinterface.IP + avatar_url;
+				Bitmap result = memoryCache.getBitmapFromCache(url);
+				if (result == null) {
+					ExerciseBookTool.set_bk(url, faceImage, memoryCache);
+				} else {
+					faceImage.setImageDrawable(new BitmapDrawable(result));
+				}
 			}
 		} else {
 			Toast.makeText(getApplicationContext(),
