@@ -21,15 +21,15 @@
                 android:layout_height="match_parent"
                 android:background="#FEFEFE"
                 android:orientation="vertical"
-                android:paddingBottom="60px"
-                android:paddingLeft="84px"
-                android:paddingRight="132px"
-                android:paddingTop="77px" >
+                android:paddingBottom="40px"
+                android:paddingLeft="56.3px"
+                android:paddingRight="88.44px"
+                android:paddingTop="51.6px" >
 
                 <ImageView
                     android:id="@+id/user_face"
-                    android:layout_width="159px"
-                    android:layout_height="159px"
+                    android:layout_width="106.53px"
+                    android:layout_height="106.53px"
                     android:background="@drawable/moren"
                     android:scaleType="fitCenter" />
 
@@ -39,7 +39,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignRight="@+id/message_content"
                     android:layout_alignTop="@+id/user_face"
-                    android:layout_marginLeft="37px"
+                    android:layout_marginLeft="24.79px"
                     android:layout_toRightOf="@+id/user_face" >
 
                     <TextView
@@ -49,24 +49,24 @@
                         android:layout_alignRight="@+id/message_content"
                         android:text="叮叮叮"
                         android:textColor="#00B066"
-                        android:textSize="30px" />
+                        android:textSize="21px" />
 
                     <TextView
                         android:id="@+id/micropost_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20px"
+                        android:layout_marginLeft="14px"
                         android:layout_toRightOf="@+id/message_senderName"
                         android:text="2013/12/06  15:33"
                         android:textColor="#5D5E60"
-                        android:textSize="30px" />
+                        android:textSize="21px" />
 
                     <ImageView
                         android:id="@+id/guanzhu_item"
-                        android:layout_width="31px"
-                        android:layout_height="31px"
-                        android:layout_marginLeft="40px"
-                        android:layout_marginTop="5px"
+                        android:layout_width="20.77px"
+                        android:layout_height="20.77px"
+                        android:layout_marginLeft="26.8px"
+                        android:layout_marginTop="3.35px"
                         android:layout_toRightOf="@+id/micropost_date"
                         android:background="@drawable/care_care" />
 
@@ -74,18 +74,18 @@
                         android:id="@+id/guanzhu_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5px"
+                        android:layout_marginLeft="3.35px"
                         android:layout_toRightOf="@+id/guanzhu_item"
                         android:text="2"
                         android:textColor="#5D5E60"
-                        android:textSize="30px" />
+                        android:textSize="21px" />
 
                     <ImageView
                         android:id="@+id/huifu_item"
-                        android:layout_width="31px"
-                        android:layout_height="31px"
-                        android:layout_marginLeft="20px"
-                        android:layout_marginTop="5px"
+                        android:layout_width="20.77px"
+                        android:layout_height="20.77px"
+                        android:layout_marginLeft="13.4px"
+                        android:layout_marginTop="3.35px"
                         android:layout_toRightOf="@+id/guanzhu_count"
                         android:background="@drawable/item_reply" />
 
@@ -93,11 +93,11 @@
                         android:id="@+id/huifu_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5px"
+                        android:layout_marginLeft="3.35px"
                         android:layout_toRightOf="@+id/huifu_item"
                         android:text="2"
                         android:textColor="#5D5E60"
-                        android:textSize="30px" />
+                        android:textSize="21px" />
 
                     <TextView
                         android:id="@+id/micropost_content"
@@ -107,41 +107,41 @@
                         android:layout_below="@+id/message_senderName"
                         android:text="叮叮叮叮叮叮叮叮叮叮叮叮"
                         android:textColor="#5D5E60"
-                        android:textSize="33px" />
+                        android:textSize="23px" />
                 </RelativeLayout>
             </RelativeLayout>
 
             <LinearLayout
                 android:id="@+id/ll_action"
-                android:layout_width="160.5px"
+                android:layout_width="107.535px"
                 android:layout_height="match_parent"
                 android:background="#BEBFC0"
                 android:gravity="center_horizontal"
                 android:orientation="vertical" >
 
                 <RelativeLayout
-                    android:layout_width="55px"
-                    android:layout_height="55px"
-                    android:layout_marginTop="78px" >
+                    android:layout_width="36.85px"
+                    android:layout_height="36.85px"
+                    android:layout_marginTop="52.26px" >
 
                     <ImageView
                         android:id="@+id/guanzhu_button"
-                        android:layout_width="55px"
-                        android:layout_height="55px"
+                        android:layout_width="36.85px"
+                        android:layout_height="36.85px"
                         android:background="@drawable/homepage_guanzhu" />
 
                     <ImageView
                         android:id="@+id/shanchu_button"
-                        android:layout_width="55px"
-                        android:layout_height="55px"
+                        android:layout_width="36.85px"
+                        android:layout_height="36.85px"
                         android:background="@drawable/homepage_shanchu" />
                 </RelativeLayout>
 
                 <ImageView
                     android:id="@+id/huifu_button"
-                    android:layout_width="55px"
-                    android:layout_height="55px"
-                    android:layout_marginTop="51.5px"
+                    android:layout_width="36.85px"
+                    android:layout_height="36.85px"
+                    android:layout_marginTop="34.5px"
                     android:background="@drawable/homepage_huifu" />
             </LinearLayout>
         </LinearLayout>
@@ -162,7 +162,7 @@
         <ListView
             android:id="@+id/aa"
             android:layout_width="fill_parent"
-            android:layout_height="20px"
+            android:layout_height="14px"
             android:background="#ede9ea"
             android:cacheColorHint="#00000000"
             android:divider="@null"
@@ -176,10 +176,10 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/aa"
             android:background="#828181"
-            android:padding="20px"
+            android:padding="14px"
             android:text="@string/lookmore"
             android:textColor="#cacaca"
-            android:textSize="30px"
+            android:textSize="21px"
             android:visibility="gone" />
     </RelativeLayout>
 

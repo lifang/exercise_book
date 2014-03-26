@@ -9,25 +9,25 @@
 
         <Button
             android:id="@+id/paizhaoshangchuan"
-            android:layout_width="480px"
-            android:layout_height="71px"
-            android:layout_marginTop="885px"
+            android:layout_width="320px"
+            android:layout_height="50px"
+            android:layout_marginTop="531px"
             android:background="#f08629"
             android:onClick="set_paizhaoshangchuan"
             android:text="@string/takephoto"
             android:textColor="#FFFFFF"
-            android:layout_marginLeft="397px"
-            android:textSize="30px" />
+            android:layout_marginLeft="267px"
+            android:textSize="21px" />
 
         <Button
             android:id="@+id/congxiangce"
-            android:layout_width="480px"
-            android:layout_height="71px"
-            android:layout_marginTop="28px"
+             android:layout_width="320px"
+            android:layout_height="50px"
+            android:layout_marginTop="17px"
             android:background="#f08629"
             android:onClick="set_congxiangce"
             android:text="@string/fromphotostore"
             android:textColor="#FFFFFF"
-            android:layout_marginLeft="397px"
-            android:textSize="30px" />
+            android:layout_marginLeft="267px"
+            android:textSize="21px" />
     </LinearLayout>

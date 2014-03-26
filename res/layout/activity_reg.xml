@@ -4,64 +4,64 @@
     android:layout_height="match_parent"
     android:background="@drawable/reg_bg"
     android:gravity="center_horizontal"
-    android:paddingBottom="240px"
-    android:paddingTop="275px"
+    android:paddingBottom="160.8px"
+    android:paddingTop="184.25px"
     tools:context=".MainActivity" >
 
     <ImageView
         android:id="@+id/reg_logo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="372.52px"
+        android:layout_height="396.64px"
         android:src="@drawable/reg_bg2" />
  <EditText
         android:id="@+id/reg_nicheng"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="372.52px"
+        android:layout_height="71.7px"
         android:layout_below="@+id/reg_logo"
-        android:layout_marginTop="36.53px"
+        android:layout_marginTop="27.475px"
         android:background="@drawable/reg_bg3"
         android:gravity="center"
         android:hint="@string/nicheng"
         android:maxLines="1"
         android:singleLine="true"
         android:textColor="#217145"
-        android:textSize="30px" />
+        android:textSize="26px" />
   <EditText
         android:id="@+id/reg_xingming"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="372.52px"
+        android:layout_height="71.7px"
         android:layout_below="@+id/reg_nicheng"
-        android:layout_marginTop="16px"
+        android:layout_marginTop="10.72px"
         android:background="@drawable/reg_bg3"
         android:gravity="center"
         android:hint="@string/xingming"
         android:maxLines="1"
         android:singleLine="true"
         android:textColor="#217145"
-        android:textSize="30px" />
+        android:textSize="26px" />
 
     <EditText
         android:id="@+id/reg_banjiyanzhengma"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="372.52px"
+        android:layout_height="71.7px"
         android:layout_below="@+id/reg_xingming"
-        android:layout_marginTop="16px"
+        android:layout_marginTop="10.72px"
         android:background="@drawable/reg_bg3"
         android:gravity="center"
         android:hint="@string/banjiyanzhengma"
         android:maxLines="1"
         android:singleLine="true"
         android:textColor="#217145"
-        android:textSize="30px" />
+        android:textSize="26px" />
  <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="372.52px"
+        android:layout_height="71.7px"
          android:layout_alignParentBottom="true"
         android:background="@drawable/reg_bg4"
         android:gravity="center"
         android:onClick="reg_queren"
         android:text="@string/queren"
         android:textColor="@color/white"
-        android:textSize="30px" />
+        android:textSize="26px" />
 
 </RelativeLayout>
