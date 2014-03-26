@@ -89,7 +89,7 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 		findViewById(R.id.base_back_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_propTrue).setOnClickListener(this);
-		setTimePropEnd();// 禁用道具
+		// setTimePropEnd();// 禁用道具
 		// setTruePropEnd();// 禁用道具
 		eb = (ExerciseBook) getApplication();
 		initialize();
@@ -302,6 +302,7 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 				setCheckText("下一个");
 			}
 			break;
+		// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
 		case R.id.base_propTrue:
 			if (branch_questions.get(index).getOpption()[0]
 					.equals(branch_questions.get(index).getAnwser())) {
@@ -314,8 +315,13 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 			}
 			Check = true;
 			setCheckText("下一个");
+			PropJson(0, branch_questions.get(index).getId(), 2);
 			Toast.makeText(TenSpeedActivity.this, "使用成功!", Toast.LENGTH_SHORT)
 					.show();
+			break;
+		case R.id.base_propTime:
+			// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
+			PropJson(1, branch_questions.get(index).getId(), 2);
 			break;
 		}
 	}

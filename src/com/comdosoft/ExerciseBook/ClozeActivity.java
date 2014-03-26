@@ -11,7 +11,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -89,11 +88,12 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.cloze);
 		setTimePropEnd();// 禁用道具
-		// setTruePropEnd();// 禁用道具
+		setTruePropEnd();// 禁用道具
 		eb = (ExerciseBook) getApplication();
 		findViewById(R.id.base_back_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_propTrue).setOnClickListener(this);
+
 		gson = new Gson();
 		initialize();
 		Intent intent = getIntent();
@@ -211,15 +211,6 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 						Toast.LENGTH_SHORT).show();
 			}
 		}
-	}
-
-	private List<String> getlist(String[] str) {
-		List<String> strlist = new ArrayList<String>();
-		// strlist.add("");
-		for (int i = 0; i < str.length; i++) {
-			strlist.add(str[i]);
-		}
-		return strlist;
 	}
 
 	// 0为继续 1为全部做完 2为本小题做完
@@ -371,9 +362,11 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 				}
 			}
 			break;
+
 		case R.id.base_propTrue:
 			Log.i("linshi", propItem + "----" + tv_list.size());
 			if (propItem < tv_list.size()) {
+				PropJson(0, cloze.getList().get(propItem).getId(), 5);
 				tv_list.get(propItem).setText(
 						cloze.getList().get(propItem).getAnswer());
 				tv_list.get(propItem).setTextColor(
@@ -387,6 +380,10 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 					propItem += 1;
 				}
 			}
+			break;
+		case R.id.base_propTime:
+			// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
+			PropJson(1, cloze.getList().get(propItem).getId(), 5);
 			break;
 		}
 	}

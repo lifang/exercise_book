@@ -41,21 +41,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.comdosoft.ExerciseBook.pojo.AnswerJson;
-import com.comdosoft.ExerciseBook.pojo.AnswerPojo;
-import com.comdosoft.ExerciseBook.pojo.Answer_QuestionsPojo;
 import com.comdosoft.ExerciseBook.pojo.WorkPoJo;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 import com.comdosoft.ExerciseBook.tools.WorkJson;
-import com.google.gson.Gson;
 
 public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	private String id;
 	private String school_class_id;
-	// private String json =
-	// "{\"status\":\"success\",\"notice\":\"\u83b7\u53d6\u6210\u529f\uff01\",\"tasks\":[{\"id\":130,\"name\":\"\",\"start_time\":\"2014-03-12T14:44:45+08:00\",\"question_types\":[0,1,2,3,4,5,6],\"finish_types\":[2,5],\"end_time\":\"2014-03-13T18:00:00+08:00\",\"question_packages_url\":\"/que_ps/question_p_264/resourse.zip\"}],\"knowledges_cards_count\":10}";
+	private String json = "{\"status\":\"success\",\"notice\":\"\u83b7\u53d6\u6210\u529f\uff01\",\"tasks\":[{\"id\":130,\"name\":\"\",\"start_time\":\"2014-03-12T14:44:45+08:00\",\"question_types\":[0,1,2,3,4,5,6],\"finish_types\":[2],\"end_time\":\"2014-03-13T18:00:00+08:00\",\"question_packages_url\":\"/que_ps/question_p_264/resourse.zip\"}],\"knowledges_cards_count\":10}";
 	private ExerciseBook eb;
 	private LinearLayout mylayout;
 	private int linear_item = 0;
@@ -171,10 +166,10 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	}
 
 	private void getJsonPath() {
-		File file = new File(path + "/questions.js");
+		File file = new File(path + "/questions.json");
 		if (file.exists()) {
 			Log.i("linshi", "获取json");
-			String json = ExerciseBookTool.getJson(path + "/questions.js");
+			String json = ExerciseBookTool.getJson(path + "/questions.json");
 			SetJson(json);
 		}
 	}
@@ -261,9 +256,9 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("student_id", id);
 			map.put("school_class_id", school_class_id);
-			String json;
+//			String json;
 			try {
-				json = ExerciseBookTool.sendGETRequest(get_newer_task, map);
+				//				json = ExerciseBookTool.sendGETRequest(get_newer_task, map);
 				JSONObject obj = new JSONObject(json);
 				if (obj.getString("status").equals("success")) {
 					work_list = WorkJson.json(json);
@@ -356,7 +351,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 			break;
 		}
 		intent.putExtra("json", json_list.get(i));
-		intent.putExtra("path", path + "/answer.js");
+		intent.putExtra("path", path + "/answer.json");
 		intent.putExtra("type", 0);// 0 今日任务列表跳转 1历史记录列表跳转
 		intent.putExtra("status", status);// 0表示第一次做 1表示重做 2历史
 		Log.i("aaa", json_list.get(i));
@@ -395,7 +390,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 			break;
 		}
 		intent.putExtra("json", json_list.get(i));
-		intent.putExtra("path", path + "/answer.js");
+		intent.putExtra("path", path + "/answer.json");
 		intent.putExtra("type", 0);// 0 今日任务列表跳转 1历史记录列表跳转
 		intent.putExtra("status", status);// 0表示第一次做 1表示重做 2历史
 		Log.i("aaa", json_list.get(i));
@@ -483,7 +478,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 					if (!file.exists()) {
 						file.mkdir();
 					}
-					File apkFile = new File(path, "questions.js");
+					File apkFile = new File(path, "questions.json");
 					FileOutputStream fos = new FileOutputStream(apkFile);
 					int count = 0;
 					// 缓存

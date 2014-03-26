@@ -58,7 +58,6 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	private String recordMes;
 	public String json;
 	private String path;
-
 	private String[] answerArr = new String[] { "你的作答: ", " ", "你的选择: ",
 			"你的选择: ", "你的搭配: ", "你的选择: ", "你的排序: " };
 	private String[] questionArr = new String[] { "listening", "reading",
@@ -111,6 +110,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		super.setContentView(R.layout.answer_base);
 		eb = (ExerciseBook) getApplication();
 		findViewById(R.id.base_back_linearlayout).setOnClickListener(this);
+		findViewById(R.id.base_propTime).setOnClickListener(this);
 		middleLayout = (LinearLayout) findViewById(R.id.base_LinearLayout);
 		base_time_linearlayout = (LinearLayout) findViewById(R.id.base_time_linearlayout);
 		base_history_linearlayout = (LinearLayout) findViewById(R.id.base_history_linearlayout);
@@ -292,7 +292,6 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		}
 	}
 
-	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.base_back_linearlayout:
@@ -554,7 +553,28 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		return null;
 	}
 
-	@Override
+	// 编辑道具json文件
+	public void PropJson(int type, int branch_id, int question_type) {
+		String answer_history = ExerciseBookTool.getAnswer_Json_history(path);
+		answerJson = gson.fromJson(answer_history, AnswerJson.class);
+		if (type == 1) {// 减时卡
+			mQuestionType = question_type;
+			int utime = Integer.valueOf(getAnswerPojo().getUse_time()) - 5;
+			if (utime < 0) {
+				utime = 0;
+			}
+			setUseTime(utime);
+			getAnswerPojo().setUse_time(utime + "");
+		}
+		answerJson.props.get(type).getBranch_id().add(branch_id);
+		String str = gson.toJson(answerJson);
+		try {
+			ExerciseBookTool.writeFile(path, str);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		Log.i("Ax", "resultCode-" + resultCode);

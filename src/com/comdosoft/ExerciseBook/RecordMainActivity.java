@@ -400,7 +400,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 		}
 		intent.putExtra("json", json_list.get(i));
 		intent.putExtra("path", pathList.get(pager.getCurrentItem())
-				+ "/answer.js");
+				+ "/answer.json");
 		intent.putExtra("type", 0);// 0 今日任务列表跳转 1历史记录列表跳转
 		intent.putExtra("status", status);// 0表示第一次做 1表示重做 2历史
 		Log.i("aaa", json_list.get(i));
@@ -440,7 +440,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 		}
 		intent.putExtra("json", json_list.get(i));
 		intent.putExtra("path", pathList.get(pager.getCurrentItem())
-				+ "/answer.js");
+				+ "/answer.json");
 		intent.putExtra("type", 0);// 0 今日任务列表跳转 1历史记录列表跳转
 		intent.putExtra("status", status);// 0表示第一次做 1表示重做 2历史
 		Log.i("aaa", json_list.get(i));
@@ -530,7 +530,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 					}
 					File apkFile = new File(
 							pathList.get(pager.getCurrentItem()),
-							"questions.js");
+							"questions.json");
 					FileOutputStream fos = new FileOutputStream(apkFile);
 					int count = 0;
 					// 缓存
@@ -814,11 +814,11 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 
 	private void getJsonPath() {
 		File file = new File(pathList.get(pager.getCurrentItem())
-				+ "/questions.js");
+				+ "/questions.json");
 		if (file.exists()) {
 			Log.i("linshi", "获取json");
 			String json = ExerciseBookTool.getJson(pathList.get(pager
-					.getCurrentItem()) + "/questions.js");
+					.getCurrentItem()) + "/questions.json");
 			SetJson(json);
 		}
 	}
@@ -871,7 +871,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 		}
 		intent.putExtra("json", json_list.get(i));
 		intent.putExtra("path", pathList.get(pager.getCurrentItem())
-				+ "/answer.js");
+				+ "/answer.json");
 		Log.i("aaa", json_list.get(i));
 		eb.setWork_end_dath(work_list.get(0).getEnd_time());
 		startActivity(intent);
