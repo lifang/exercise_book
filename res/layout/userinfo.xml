@@ -1,29 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_width="wrap_content"
+    android:layout_height="445px"
+    android:gravity="center_vertical" >
 
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_marginTop="106px" >
+        android:layout_marginTop="71.02px" >
 
         <LinearLayout
             android:id="@+id/main_dialog_layout"
-            android:layout_width="420px"
+            android:layout_width="281.4px"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:background="@drawable/userinfo_bg1"
             android:orientation="vertical"
-            android:paddingLeft="31px"
-            android:paddingRight="31px" >
+            android:paddingLeft="20.77px"
+            android:paddingRight="20.77px" >
 
             <RelativeLayout
                 android:id="@+id/imageView1"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="37.98px" >
+                android:layout_marginTop="25.4466px" >
 
                 <TextView
                     android:id="@+id/userinfo_username"
@@ -31,14 +32,14 @@
                     android:layout_height="wrap_content"
                     android:text="丁作强"
                     android:textColor="#fff"
-                    android:textSize="26px" />
+                    android:textSize="18.2px" />
 
                 <LinearLayout
                     
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:paddingLeft="30px" >
+                    android:paddingLeft="20.1px" >
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -51,8 +52,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginBottom="19.23px"
-                android:layout_marginTop="19.23px"
+                android:layout_marginBottom="8px"
+                android:layout_marginTop="8px"
                 android:background="@drawable/userinfo_hengtiao" />
 
             <RelativeLayout
@@ -66,14 +67,14 @@
                     android:layout_height="wrap_content"
                     android:text="三年级2班"
                     android:textColor="#fff"
-                    android:textSize="26px" />
+                    android:textSize="18.2px" />
 
                 <LinearLayout
                     
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:paddingLeft="30px" >
+                    android:paddingLeft="20.1px" >
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -86,13 +87,13 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginTop="19.23px"
+                android:layout_marginTop="8px"
                 android:background="@drawable/userinfo_hengtiao" />
 
             <RelativeLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="25.18px"
+                android:layout_marginTop="14px"
                 android:gravity="center_horizontal" >
 
                 <TextView
@@ -100,218 +101,217 @@
                     android:layout_height="wrap_content"
                     android:text="我的成就"
                     android:textColor="#118e5a"
-                    android:textSize="26px" />
+                    android:textSize="18.2px" />
             </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="35.04px"
+                android:layout_marginTop="16px"
                 android:gravity="center_horizontal" >
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="32.83px"
+                    android:layout_height="30.15px"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="8px"
+                    android:layout_marginLeft="5.36px"
                     android:src="@drawable/us_chengjiu1" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10px"
-                    android:padding="8px"
+                    android:layout_marginLeft="6.7px"
+                    android:padding="5.36px"
                     android:text="优异"
                     android:textColor="#074f31"
-                    android:textSize="26px" />
+                    android:textSize="18.2px" />
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10px" >
+                    android:layout_marginLeft="6.7px" >
 
                     <ImageView
-                        android:layout_width="201px"
-                        android:layout_height="32px"
-                        android:layout_marginTop="8px"
+                        android:layout_width="135px"
+                        android:layout_height="21.44px"
+                        android:layout_marginTop="5.36px"
                         android:background="@drawable/chengjiu_danhuang" />
 
                     <ImageView
                         android:id="@+id/userinfo_youyi1"
-                        android:layout_width="1px"
-                        android:layout_height="30px"
-                        android:layout_marginTop="10px"
+                        android:layout_width="0.1px"
+                        android:layout_height="20.1px"
+                        android:layout_marginTop="6.7px"
                         android:background="@drawable/chengjiu_huang" />
 
                     <TextView
                         android:id="@+id/userinfo_youyi2"
                         android:layout_width="wrap_content"
-                        android:layout_height="40px"
+                        android:layout_height="26.8px"
                         android:layout_alignBottom="@+id/userinfo_youyi1"
                         android:layout_alignParentTop="true"
-                        android:layout_marginBottom="2px"
-                        android:layout_marginLeft="10px"
-                        android:layout_marginTop="7px"
+                        android:layout_marginBottom="1.34px"
+                        android:layout_marginLeft="6.7px"
+                        android:layout_marginTop="4.69px"
                         android:text="LV0"
                         android:textColor="#074f31"
-                        android:textSize="26px" />
+                        android:textSize="18.2px" />
                 </RelativeLayout>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32px"
+                android:layout_marginTop="16px"
                 android:gravity="center_horizontal" >
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="32.83px"
+                    android:layout_height="30.15px"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="8px"
+                    android:layout_marginLeft="5.36px"
                     android:src="@drawable/us_chengjiu2" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10px"
-                    android:padding="8px"
+                    android:layout_marginLeft="6.7px"
+                    android:padding="5.36px"
                     android:text="精准"
                     android:textColor="#074f31"
-                    android:textSize="26px" />
+                    android:textSize="18.2px" />
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10px" >
+                    android:layout_marginLeft="6.7px" >
 
-                    <ImageView
-                        android:layout_width="201px"
-                        android:layout_height="32px"
-                        android:layout_marginTop="8px"
+                     <ImageView
+                        android:layout_width="135px"
+                        android:layout_height="21.44px"
+                        android:layout_marginTop="5.36px"
                         android:background="@drawable/chengjiu_danhuang" />
 
                     <ImageView
                         android:id="@+id/userinfo_jingzhun1"
-                        android:layout_width="1px"
-                        android:layout_height="30px"
-                        android:layout_marginTop="10px"
+                        android:layout_width="0.1px"
+                        android:layout_height="20.1px"
+                        android:layout_marginTop="6.7px"
                         android:background="@drawable/chengjiu_huang" />
 
                     <TextView
                         android:id="@+id/userinfo_jingzhun2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10px"
-                        android:layout_marginTop="7px"
+                        android:layout_marginLeft="6.7px"
+                        android:layout_marginTop="4.69px"
                         android:text="LV0"
                         android:textColor="#074f31"
-                        android:textSize="26px" />
+                        android:textSize="18.2px" />
                 </RelativeLayout>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32px"
+                android:layout_marginTop="16px"
                 android:gravity="center_horizontal" >
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="32.83px"
+                    android:layout_height="30.15px"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="8px"
+                    android:layout_marginLeft="5.36px"
                     android:src="@drawable/us_chengjiu3" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10px"
-                    android:padding="8px"
+                    android:layout_marginLeft="6.7px"
+                    android:padding="5.36px"
                     android:text="迅速"
                     android:textColor="#074f31"
-                    android:textSize="26px" />
+                    android:textSize="18.2px" />
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10px" >
+                    android:layout_marginLeft="6.7px" >
 
-                    <ImageView
-                        android:layout_width="201px"
-                        android:layout_height="32px"
-                        android:layout_marginTop="8px"
+                     <ImageView
+                        android:layout_width="135px"
+                        android:layout_height="21.44px"
+                        android:layout_marginTop="5.36px"
                         android:background="@drawable/chengjiu_danhuang" />
 
                     <ImageView
                         android:id="@+id/userinfo_xunsu1"
-                        android:layout_width="1px"
-                        android:layout_height="30px"
-                        android:layout_marginTop="10px"
+                        android:layout_width="0.1px"
+                        android:layout_height="20.1px"
+                        android:layout_marginTop="6.7px"
                         android:background="@drawable/chengjiu_huang" />
 
                     <TextView
                         android:id="@+id/userinfo_xunsu2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10px"
-                        android:layout_marginTop="7px"
+                        android:layout_marginLeft="6.7px"
+                        android:layout_marginTop="4.69px"
                         android:text="LV0"
                         android:textColor="#074f31"
-                        android:textSize="26px" />
+                        android:textSize="18.2px" />
                 </RelativeLayout>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="32px"
-                android:layout_marginTop="32px"
+                android:layout_marginTop="16px"
                 android:gravity="center_horizontal" >
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="32.83px"
+                    android:layout_height="30.15px"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="8px"
+                    android:layout_marginLeft="5.36px"
                     android:src="@drawable/us_chengjiu4" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10px"
-                    android:padding="8px"
+                    android:layout_marginLeft="6.7px"
+                    android:padding="5.36px"
                     android:text="捷足"
                     android:textColor="#074f31"
-                    android:textSize="26px" />
+                    android:textSize="18.2px" />
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10px" >
+                    android:layout_marginLeft="6.7px" >
 
-                    <ImageView
-                        android:layout_width="201px"
-                        android:layout_height="32px"
-                        android:layout_marginTop="8px"
+                     <ImageView
+                        android:layout_width="135px"
+                        android:layout_height="21.44px"
+                        android:layout_marginTop="5.36px"
                         android:background="@drawable/chengjiu_danhuang" />
 
                     <ImageView
                         android:id="@+id/userinfo_jiezu1"
-                        android:layout_width="1px"
-                        android:layout_height="30px"
-                        android:layout_marginTop="10px"
+                        android:layout_width="0.1px"
+                        android:layout_height="20.1px"
+                        android:layout_marginTop="6.7px"
                         android:background="@drawable/chengjiu_huang" />
 
                     <TextView
                         android:id="@+id/userinfo_jiezu2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10px"
-                        android:layout_marginTop="7px"
+                        android:layout_marginLeft="6.7px"
+                        android:layout_marginTop="4.69px"
                         android:text="LV0"
                         android:textColor="#074f31"
-                        android:textSize="26px" />
+                        android:textSize="18.2px" />
                 </RelativeLayout>
             </LinearLayout>
         </LinearLayout>
