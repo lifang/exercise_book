@@ -311,7 +311,6 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 			} else {
 				one_btn.setBackgroundResource(R.drawable.loginbtn_hui);
 				two_btn.setBackgroundResource(R.drawable.loginbtn_lv);
-
 			}
 			Check = true;
 			setCheckText("下一个");
