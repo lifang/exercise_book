@@ -337,6 +337,7 @@ public class LeftMenu extends Activity implements Urlinterface {
 		ll5 = findViewById(R.id.menuclassll);
 		hwImg = (ImageView) findViewById(R.id.leftmenu_12red);
 		rImg = (ImageView) findViewById(R.id.leftmenu_13red);
+		teachll=(LinearLayout) findViewById(R.id.teachll);
 		ll6 = findViewById(R.id.ll6);
 		classback = (ImageView) findViewById(R.id.classback);
 		classImg = (ImageView) findViewById(R.id.classMenu);

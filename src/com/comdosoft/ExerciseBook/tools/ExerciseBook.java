@@ -43,12 +43,6 @@ public class ExerciseBook extends Application {
 		this.setHistory_type(false);
 	}
 
-	public void setJpush(String openid)
-	{
-		JPushInterface.setDebugMode(true);  // 设置开启日志,发布时请关闭日志
-		JPushInterface.init(getApplicationContext());     
-		JPushInterface.setAlias(getApplicationContext(), openid, null);
-	}
 	public List<Activity> getActivityList() {
 		return activityList;
 	}

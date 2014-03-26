@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="141.44px"
+        android:background="@color/white" >
+
+        <LinearLayout
+            android:id="@+id/cardbatll1"
+            android:layout_width="358px"
+            android:layout_height="71px"
+            android:layout_marginLeft="60.88px"
+            android:layout_marginTop="40.94px"
+            android:background="@drawable/cardet"
+            android:gravity="center_vertical"
+            android:orientation="horizontal" >
+
+            <EditText
+                android:id="@+id/cardbagEt"
+                android:windowSoftInputMode="stateHidden|adjustResize"  
+                android:layout_width="306px"
+                android:layout_height="71px"
+                android:background="@drawable/cardet"
+                android:maxLines="1" />
+
+            <ImageView
+                android:id="@+id/cardbatFind"
+                android:layout_width="47px"
+                android:layout_height="47px"
+                android:layout_marginRight="5px"
+                android:src="@drawable/cardfind" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="136px"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="114px"
+            android:layout_marginTop="49.91px"
+            android:layout_toRightOf="@id/cardbatll1"
+            android:background="@drawable/cardchoice"
+            android:text="读错"
+            android:textColor="@color/cardchoice"
+            android:textSize="33px" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="136px"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="27px"
+            android:layout_marginTop="49.91px"
+            android:layout_toRightOf="@id/button1"
+            android:background="@drawable/cardchoice"
+            android:text="拼错"
+            android:textColor="@color/cardchoice"
+            android:textSize="33px" />
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="136px"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="27px"
+            android:layout_marginTop="49.91px"
+            android:layout_toRightOf="@id/button2"
+            android:background="@drawable/cardchoice"
+            android:text="选错"
+            android:textColor="@color/cardchoice"
+            android:textSize="33px" />
+
+        <Button
+            android:id="@+id/button4"
+            android:layout_width="136px"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="27px"
+            android:layout_marginTop="49.91px"
+            android:layout_toRightOf="@id/button3"
+            android:background="@drawable/cardchoice"
+            android:text="默认"
+            android:textColor="@color/cardchoice"
+            android:textSize="33px" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#dcdbdb"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/ll2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical" >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="35.50px"
+                android:text="\t\t卡包中的卡包为作业时出现的错误，记录下来便于复习和巩固，若以后遇到同类问题，不再\n犯同样的错误，卡片自动消失"
+                android:textColor="#858c94"
+                android:textSize="22px	" />
+        </LinearLayout>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/guidePages"
+            android:layout_width="fill_parent"
+            android:layout_height="1200px"
+            android:layout_below="@id/ll2"
+            android:layout_marginTop="41.86px" />
+
+        <LinearLayout
+            android:id="@+id/viewGroup"
+            android:layout_width="fill_parent"
+            android:layout_height="50px"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@id/guidePages"
+            android:layout_marginBottom="40dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal" >
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

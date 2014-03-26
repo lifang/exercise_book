@@ -21,6 +21,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
 
+import cn.jpush.android.api.JPushInterface;
+
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
@@ -51,9 +53,9 @@ public class LoginActivity extends Activity implements OnClickListener,
 			Intent intent = new Intent();
 			switch (msg.what) {
 			case 1:
-				 intent.putExtra("open_id", openid);
-				 intent.setClass(getApplicationContext(),
-				 RegistrationActivity.class);
+				intent.putExtra("open_id", openid);
+				intent.setClass(getApplicationContext(),
+						RegistrationActivity.class);
 				break;
 			case 2:
 				LoginActivity.this.finish();
@@ -130,7 +132,7 @@ public class LoginActivity extends Activity implements OnClickListener,
 				editor.putString("avatar_url", avatar_url);
 				editor.putString("nickname", nick_name);
 				editor.putString("school_class_id", school_class_id);
-				editor.putString("school_class_name",school_class_name);
+				editor.putString("school_class_name", school_class_name);
 				editor.commit();
 				eb.setClass_id(school_class_id);
 				eb.setUser_id(Integer.parseInt(user_id));
@@ -162,6 +164,10 @@ public class LoginActivity extends Activity implements OnClickListener,
 			try {
 				mPd.show();
 				openid = values.getString("openid");
+				Log.i("linshi", openid);
+				JPushInterface.setDebugMode(true); // 设置开启日志,发布时请关闭日志
+				JPushInterface.init(getApplicationContext());
+				JPushInterface.setAlias(getApplicationContext(), openid, null);
 				new MyThread().start();
 			} catch (JSONException e) {
 				e.printStackTrace();

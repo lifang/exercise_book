@@ -11,12 +11,14 @@ public class WorkPoJo {
 	private String question_packages_url;
 	private List<Integer> question_types;
 	private List<Integer> finish_types;
+	private int number;
+
 	public WorkPoJo() {
 	}
 
 	public WorkPoJo(int id, String name, String start_time, String end_time,
 			String question_packages_url, List<Integer> question_types,
-			List<Integer> finish_types) {
+			List<Integer> finish_types, int number) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -25,6 +27,15 @@ public class WorkPoJo {
 		this.question_packages_url = question_packages_url;
 		this.question_types = question_types;
 		this.finish_types = finish_types;
+		this.number = number;
+	}
+
+	public int getNumber() {
+		return number;
+	}
+
+	public void setNumber(int number) {
+		this.number = number;
 	}
 
 	public int getId() {

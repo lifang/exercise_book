@@ -7,21 +7,21 @@
     android:orientation="vertical" >
     
 	<EditText
-	    android:layout_marginTop="44px"
+	    android:layout_marginTop="29.5px"
 	    android:id="@+id/sendmesset"
-	    android:layout_width="951px"
-	    android:layout_height="215px"
+	    android:layout_width="637.17px"
+	    android:layout_height="144.05px"
 	    android:gravity="top"
 	    android:maxLength="60"
 	     android:background="@drawable/sendmesset"
 	     android:hint="@null"
 	    />
 	<Button
-	    android:layout_marginTop="27px"
+	    android:layout_marginTop="18.1px"
 	    android:id="@+id/sendmess_btn"
-	    android:layout_width="287px"
-	    android:layout_height="83px"
-	    android:textSize="30px" 
+	    android:layout_width="192.3px"
+	    android:layout_height="55.6px"
+	    android:textSize="21px" 
 	    android:text="发布"
 	     android:background="@drawable/sendmessbtn"
 	    />

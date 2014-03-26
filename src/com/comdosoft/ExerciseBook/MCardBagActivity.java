@@ -25,6 +25,7 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -46,6 +47,7 @@ import cn.jpush.android.api.JPushInterface;
 import com.comdosoft.ExerciseBook.Adapter.LabelAdapter;
 import com.comdosoft.ExerciseBook.pojo.knowledges_card;
 import com.comdosoft.ExerciseBook.pojo.tags;
+import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
@@ -76,6 +78,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 	private Button button2;
 	private Button button3;
 	private Button button4;
+	private ExerciseBook eb;
 	private ProgressDialog progressDialog;
 	List<Button> btnList;
 	GuidePageAdapter pageAdapter;
@@ -84,21 +87,21 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 	List<View> visList;
 
 	@Override
-
 	@SuppressWarnings("rawtypes")
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.cardbag);
+		eb = (ExerciseBook) getApplication();
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
+		student_id = preferences.getString("id", "1");
+		school_class_id = preferences.getString("school_class_id", "1");
 		mediaplay = new MediaPlayer();
+		eb.getActivityList().add(this);
 		initbtn();
 		getKonwledges();
 		btnlistClick();
-		student_id = preferences.getString("id", "1");
-		school_class_id = preferences.getString("school_class_id", "1");
-
 	}
 
 	public void initbtn() {
@@ -118,17 +121,24 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 		tagsList = new ArrayList<tags>();
 	}
 
+	public void showdialog() {
+		progressDialog = new ProgressDialog(MCardBagActivity.this);
+		progressDialog.setMessage("正在请求数据...");
+		progressDialog.setCanceledOnTouchOutside(false);
+		progressDialog.show();
+	}
+
 	public void btnlistClick() {
 		cardbatFind.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				progressDialog = ProgressDialog.show(MCardBagActivity.this,
-						"Loading...", "正在请求数据。。。。", true, false);
+
+				showdialog();
 				Thread thread = new Thread() {
 					public void run() {
 						try {
 							viewPager = (ViewPager) findViewById(R.id.guidePages);
 							Map<String, String> map = new HashMap<String, String>();
-							map.put("student_id",student_id);
+							map.put("student_id", student_id);
 							map.put("school_class_id", school_class_id);
 							map.put("name", String.valueOf(cardbagEt.getText()));
 							String json = ExerciseBookTool.sendGETRequest(
@@ -153,8 +163,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 			final String mistype = String.valueOf(i);
 			btnList.get(i).setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
-					progressDialog = ProgressDialog.show(MCardBagActivity.this,
-							"Loading...", "正在请求数据。。。。", true, false);
+					showdialog();
 					Thread thread = new Thread() {
 						String json;
 
@@ -179,10 +188,12 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 			});
 		}
 	}
+
 	protected void onResume() {
 		super.onResume();
 		JPushInterface.onResume(this);
 	}
+
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -190,8 +201,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 	}
 
 	public void getKonwledges() {
-		progressDialog = ProgressDialog.show(MCardBagActivity.this,
-				"Loading...", "正在请求数据。。。。", true, false);
+		showdialog();
 		Thread thread = new Thread() {
 			public void run() {
 				try {
@@ -309,6 +319,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 			super.handleMessage(msg);
 			switch (msg.what) {
 			case 0:
+				progressDialog.dismiss();
 				Toast.makeText(MCardBagActivity.this, String.valueOf(msg.obj),
 						Toast.LENGTH_SHORT).show();
 				break;
@@ -317,20 +328,20 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 				progressDialog.dismiss();
 				viewPager.setAdapter(new GuidePageAdapter());
 				viewPager
-				.setOnPageChangeListener(new GuidePageChangeListener());
+						.setOnPageChangeListener(new GuidePageChangeListener());
 				break;
 			case 2:
 				setViewPager();
 				viewPager.setCurrentItem(viewPager.getCurrentItem());
 				viewPager.setAdapter(new GuidePageAdapter());
 				viewPager
-				.setOnPageChangeListener(new GuidePageChangeListener());
+						.setOnPageChangeListener(new GuidePageChangeListener());
 				break;
 			case 3:
 				setViewPager();
 				viewPager.setAdapter(new GuidePageAdapter());
 				viewPager
-				.setOnPageChangeListener(new GuidePageChangeListener());
+						.setOnPageChangeListener(new GuidePageChangeListener());
 				break;
 			default:
 				break;
@@ -372,7 +383,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 					imageView.setBackgroundResource(R.drawable.page_indicator);
 				} else {
 					imageView
-					.setBackgroundResource(R.drawable.page_inicator_focused);
+							.setBackgroundResource(R.drawable.page_inicator_focused);
 				}
 				imageL.addView(imageView);
 				group.addView(imageL);
@@ -414,6 +425,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 		if (Allmap.size() == 0) {
 			TextView textview = new TextView(MCardBagActivity.this);
 			textview.setText("没有找到符合条件的数据");
+			textview.setGravity(Gravity.CENTER);
 			textview.setTextSize(33);
 			viewList.add(textview);
 		}
@@ -548,7 +560,8 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 											viewPager = (ViewPager) findViewById(R.id.guidePages);
 											Map<String, String> map = new HashMap<String, String>();
 											map.put("student_id", student_id);
-											map.put("school_class_id", school_class_id);
+											map.put("school_class_id",
+													school_class_id);
 											map.put("knowledge_card_id",
 													card.getId());
 											map.put("name", String
@@ -616,7 +629,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 						LabelAdapter adapter = new LabelAdapter(
 								getApplicationContext(), page, index, tagsList,
 								Allmap, student_id, school_class_id, card
-								.getId());
+										.getId());
 						biaoqianlv.setAdapter(adapter);
 						biaoqian.setVisibility(View.VISIBLE);
 						ListBool[page][index] = false;
@@ -647,11 +660,11 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 						mediaplay.prepare();
 						mediaplay.start();
 						mediaplay
-						.setOnCompletionListener(new OnCompletionListener() {
-							public void onCompletion(MediaPlayer mp) {
-								mediaplay.release();
-							}
-						});
+								.setOnCompletionListener(new OnCompletionListener() {
+									public void onCompletion(MediaPlayer mp) {
+										mediaplay.release();
+									}
+								});
 					} catch (IllegalArgumentException e) {
 						e.printStackTrace();
 					} catch (SecurityException e) {

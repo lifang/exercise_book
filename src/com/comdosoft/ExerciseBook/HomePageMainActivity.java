@@ -3,9 +3,7 @@ package com.comdosoft.ExerciseBook;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
@@ -13,11 +11,6 @@ import org.apache.http.entity.mime.content.StringBody;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.comdosoft.ExerciseBook.HomepageAllActivity.get_class_info;
-import com.comdosoft.ExerciseBook.pojo.Micropost;
-import com.comdosoft.ExerciseBook.tools.ImageMemoryCache;
-
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.app.TabActivity;
 import android.content.Context;
@@ -29,7 +22,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -37,6 +29,7 @@ import android.view.Display;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -50,6 +43,7 @@ import com.comdosoft.ExerciseBook.tools.CircularImage;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
+import com.comdosoft.ExerciseBook.tools.ImageMemoryCache;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
 public class HomePageMainActivity extends TabActivity implements Urlinterface {
@@ -163,8 +157,8 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 		faceImage = (CircularImage) findViewById(R.id.user_face);
 		if (ExerciseBookTool.isConnect(getApplicationContext())) {
 			if (avatar_url != null || avatar_url.length() != 0) { // 设置头像
-//				ExerciseBookTool.set_background(Urlinterface.IP + avatar_url,
-//						faceImage);
+			// ExerciseBookTool.set_background(Urlinterface.IP + avatar_url,
+			// faceImage);
 				String url = Urlinterface.IP + avatar_url;
 				Bitmap result = memoryCache.getBitmapFromCache(url);
 				if (result == null) {
@@ -219,10 +213,10 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 		for (int i = 0; i < tabWidget.getChildCount(); i++) {
 			RelativeLayout tabView = (RelativeLayout) mTabHost.getTabWidget()
 					.getChildAt(i);
-			// if (width == 800) {
-			// LayoutParams lp = new LayoutParams(150, 90);
-			// tabView.setLayoutParams(lp);
-			// }
+			if (width == 800) {
+				LayoutParams lp = new LayoutParams(170, 90);
+				tabView.setLayoutParams(lp);
+			}
 			ImageView img = (ImageView) tabWidget.getChildAt(i).findViewById(
 					android.R.id.icon);
 
@@ -269,7 +263,11 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 
 				}
 			}
-			img.setPadding(200, 30, 0, 0);
+			if (width == 800) {
+				img.setPadding(134, 20, 0, 0);
+			} else {
+				img.setPadding(200, 30, 0, 0);
+			}
 			// img.setPadding(0, 0, 0, 0);
 			/**
 			 * 此方法是为了去掉系统默认的色白的底角
@@ -395,7 +393,12 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 								break;
 							}
 						}
-						img.setPadding(200, 30, 0, 0);
+						if (width == 800) {
+							img.setPadding(134, 20, 0, 0);
+						} else {
+							img.setPadding(200, 30, 0, 0);
+						}
+
 						// img.setPadding(0, 0, 0, 0);
 					}
 				}
