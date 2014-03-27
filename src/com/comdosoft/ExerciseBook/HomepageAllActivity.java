@@ -180,6 +180,12 @@ public class HomepageAllActivity extends Activity implements
 
 	protected void onResume() {
 		super.onResume();
+		SharedPreferences preferences = getSharedPreferences(SHARED,
+				Context.MODE_PRIVATE);
+
+		user_id = preferences.getString("user_id", "130");
+		id = preferences.getString("id", "73");
+		school_class_id = preferences.getString("school_class_id", "83");
 		int refresh = exerciseBook.getRefresh();
 		if (refresh == 1) {
 			// memoryCache.removeBitmap(Urlinterface.IP + avatar_url);

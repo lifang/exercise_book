@@ -6,17 +6,17 @@
 
         <LinearLayout
             android:id="@+id/switchclass"
-            android:layout_width="390px"
+            android:layout_width="216.3px"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:background="@drawable/userinfo_bg2"
             android:orientation="vertical"
-            android:paddingLeft="13.32px"
+            android:paddingLeft="8.9244px"
             android:gravity="center_horizontal" 
-            android:layout_marginRight="420px"
-        android:layout_marginTop="220px" 
-            android:paddingRight="31px" >
+            android:layout_marginRight="281.4px"
+        android:layout_marginTop="137.4px" 
+            android:paddingRight="20.77px" >
 
            
 
@@ -24,15 +24,15 @@
                     android:id="@+id/switchclassLv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="26px" >
+                    android:textSize="18.2px" >
                 </ListView>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/switchclassLv"
-                    android:layout_marginTop="32px"
-                    android:layout_marginBottom="32px"
+                    android:layout_marginTop="21.44px"
+                    android:layout_marginBottom="21.44px"
                     android:gravity="center_horizontal" >
 
                     <ImageView

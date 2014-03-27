@@ -68,15 +68,6 @@ public class RankingOfPointsActivity extends Activity {
 				finish();
 			}
 		});
-//		rankinglist.add(new Ranking("", "dingzuoqiang", "1234567890"));
-//		rankinglist.add(new Ranking("", "dingzuoqiang", "1234567890"));
-//		rankinglist.add(new Ranking("", "dingzuoqiang", "1234567890"));
-//		rankinglist.add(new Ranking("", "dingzuoqiang", "1234567890"));
-//		rankinglist.add(new Ranking("", "dingzuoqiang", "1234567890"));
-//		rankinglist.add(new Ranking("", "dingzuoqiang", "1234567890"));
-//		rankinglist.add(new Ranking("", "dingzuoqiang", "1234567890"));
-//		rankinglist.add(new Ranking("", "dingzuoqiang", "1234567890"));
-//		rankinglist.add(new Ranking("", "dingzuoqiang", "1234567890"));
 
 		if (ExerciseBookTool.isConnect(RankingOfPointsActivity.this)) {
 			Thread thread = new Thread(new get_rank());
