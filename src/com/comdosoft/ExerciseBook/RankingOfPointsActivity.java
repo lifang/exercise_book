@@ -50,9 +50,9 @@ public class RankingOfPointsActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);// 去掉标题栏
 		setContentView(R.layout.ranking_points);
 		memoryCache = HomePageMainActivity.instance.memoryCache;
-//		Intent intent = getIntent();//
-//		types = intent.getIntExtra("types", -1); // 获得上个页面传过来的
-//		pub_id = intent.getIntExtra("pub_id", -1);
+		Intent intent = getIntent();//
+		types = intent.getIntExtra("types", -1); // 获得上个页面传过来的
+		pub_id = intent.getIntExtra("pub_id", -1);
 		// 做题的
 		// 序号
 
