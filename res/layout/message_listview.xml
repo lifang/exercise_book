@@ -6,7 +6,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="141.44px"
+        android:layout_height="94.76px"
         android:background="#d2d3d4"
         android:orientation="horizontal" >
 
@@ -19,18 +19,18 @@
                 android:id="@+id/topTv1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="346px"
-                android:layout_marginTop="57.94px"
+                android:layout_marginLeft="231.82px"
+                android:layout_marginTop="38.81px"
                 android:textColor="#3f4853"
                 android:text="回复通知"
-                android:textSize="33px" />
+                android:textSize="21px" />
 
             <ImageView
                 android:id="@+id/topImv1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_marginLeft="395px"
+                android:layout_marginLeft="264.65px"
                 android:visibility="gone"
                 android:src="@drawable/homepage_bot" />
         </RelativeLayout>
@@ -46,11 +46,10 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:textColor="@color/white"
-                android:layout_marginRight="348px"
-                android:layout_marginTop="57.94px"
-                
+                android:layout_marginRight="233.16px"
+                android:layout_marginTop="38.67px"
                 android:text="系统通知"
-                android:textSize="33px" />
+                android:textSize="21px" />
 
             <ImageView
                 android:id="@+id/topImv2"
@@ -58,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="395px"
+                android:layout_marginRight="264.65px"
                 android:src="@drawable/homepage_bot" />
         </RelativeLayout>
     </LinearLayout>
@@ -67,7 +66,7 @@
         android:id="@+id/xListView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="134.44px"
+        android:layout_marginTop="90.07px"
         android:cacheColorHint="#00000000" >
     </com.comdosoft.ExerciseBook.ReplyListView>
 

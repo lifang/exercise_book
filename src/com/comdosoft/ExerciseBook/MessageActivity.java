@@ -9,8 +9,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.comdosoft.ExerciseBook.ReplyListView.IXListViewListener;
-import com.comdosoft.ExerciseBook.ReplyListViewActivity.ReplyAdapter;
-import com.comdosoft.ExerciseBook.pojo.Reply;
 import com.comdosoft.ExerciseBook.pojo.SysMessage;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
@@ -18,10 +16,10 @@ import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.LayoutInflater;
@@ -35,11 +33,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.comdosoft.ExerciseBook.ReplyListView.IXListViewListener;
-import com.comdosoft.ExerciseBook.pojo.SysMessage;
-import com.comdosoft.ExerciseBook.tools.ExerciseBook;
-import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
-import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
 public class MessageActivity extends Table_TabHost implements
 		IXListViewListener, Urlinterface, OnGestureListener {
@@ -49,8 +42,8 @@ public class MessageActivity extends Table_TabHost implements
 	private int start = 0;
 	private String page = "1";
 	private static int refreshCnt = 0;
-	private String user_id = "1";
-	private String school_class_id = "1";
+	private String user_id ;
+	private String school_class_id;
 	private int mShowPosition = -1;
 	private Boolean isShow = false;
 	ReplyAdapter madapter = new ReplyAdapter();
@@ -70,6 +63,10 @@ public class MessageActivity extends Table_TabHost implements
 		mListView = (ReplyListView) findViewById(R.id.xListView);
 		mListView.setPullLoadEnable(true);
 		topTv1=(TextView) findViewById(R.id.topTv1);
+		SharedPreferences preferences = getSharedPreferences(SHARED,
+				Context.MODE_PRIVATE);
+		user_id = preferences.getString("user_id", "1");
+		school_class_id = preferences.getString("school_class_id", "1");
 		topTv1.setOnClickListener(new OnClickListener()
 		{
 			public void onClick(View v) {
@@ -111,7 +108,6 @@ public class MessageActivity extends Table_TabHost implements
 				break;
 			case 2:
 				mListView.setAdapter(new ReplyAdapter());
-				Log.i("aa",  String.valueOf(msg.obj));
 				Toast.makeText(MessageActivity.this, String.valueOf(msg.obj), Toast.LENGTH_SHORT).show();
 				break;
 			}
@@ -121,7 +117,6 @@ public class MessageActivity extends Table_TabHost implements
 	// 解析获取到的Json
 	public int getNewsJson(String json) {
 		try {
-			Log.i("aa", "解析字符串");
 			JSONObject jsonobject = new JSONObject(json);
 			String status = (String) jsonobject.get("status");
 			if (status.equals("success")) {
@@ -137,7 +132,6 @@ public class MessageActivity extends Table_TabHost implements
 					replyList.add(new SysMessage(content, created_at, id,
 							class_id));
 				}
-				Log.i("aa", replyList.size() + "");
 				return replyList.size();
 			} else {
 				String notic = (String) jsonobject.get("notic");
@@ -408,7 +402,6 @@ public class MessageActivity extends Table_TabHost implements
 	 * 覆写此方法，以使用手势识别
 	 */
 	public boolean onTouchEvent(MotionEvent event) {
-		Log.v("MY_TAG", "onTouchEvent");
 		return this.gd.onTouchEvent(event);
 	}
 
@@ -427,10 +420,8 @@ public class MessageActivity extends Table_TabHost implements
 		if (Math.abs(x1 - x2) > minX && Math.abs(y1 - y2) < maxY
 				&& Math.abs(vX) > minV) {
 			if (x1 > x2) {
-				Log.v("MY_TAG", "Fling Left");
 				flingState = FLING_LEFT;
 			} else {
-				Log.v("MY_TAG", "Fling Right");
 				flingState = FLING_RIGHT;
 			}
 		}

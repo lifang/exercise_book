@@ -15,7 +15,6 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.LayoutInflater;
@@ -46,8 +45,8 @@ OnGestureListener
 	private int start = 0;
 	private String page="1";
 	private static int refreshCnt = 0;
-	private String user_id="9";
-	private String school_class_id="1";
+	private String user_id;
+	private String school_class_id;
 	private int mShowPosition  = -1;
 	private Boolean isShow=false;
 	ReplyAdapter madapter=new ReplyAdapter();
@@ -74,6 +73,10 @@ OnGestureListener
 		mListView = (ReplyListView) findViewById(R.id.xListView);
 		mListView.setPullLoadEnable(true);
 		topTv2=(TextView) findViewById(R.id.topTv2);
+		SharedPreferences preferences = getSharedPreferences(SHARED,
+				Context.MODE_PRIVATE);
+		user_id = preferences.getString("user_id", "1");
+		school_class_id = preferences.getString("school_class_id", "1");
 		topTv2.setOnClickListener(new OnClickListener(){
 			public void onClick(View v) {
 				ReplyListViewActivity.this.finish();
@@ -119,7 +122,6 @@ OnGestureListener
 				break;
 			case 2:
 				mListView.setAdapter(new ReplyAdapter());
-				Log.i("aa",  String.valueOf(msg.obj));
 				Toast.makeText(ReplyListViewActivity.this, String.valueOf(msg.obj), Toast.LENGTH_SHORT).show();
 				break;
 			}
@@ -232,7 +234,6 @@ OnGestureListener
 			@Override
 			public void run() {
 				start = ++refreshCnt;
-				Log.i("aa", "onRefresh");
 				SharedPreferences userInfo= getSharedPreferences("replyMenu", 0);  
 				Editor editor = userInfo.edit();//获取编辑器
 				editor.putBoolean("ReplyMenu", true);
@@ -252,7 +253,6 @@ OnGestureListener
 		mHandler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				Log.i("aa", "onLoadMore");
 				int num=Integer.valueOf(page);
 				num++;
 				page=String.valueOf(num);
@@ -445,13 +445,11 @@ OnGestureListener
 								mp.put("user_id", user_id);
 								mp.put("school_class_id", school_class_id);
 								mp.put("message_id",replyList.get(position).getId());
-								Log.i("aa", user_id+"/"+school_class_id+"/"+replyList.get(position).getId());
 								String json = ExerciseBookTool.sendGETRequest(delete_message, mp);
 								JSONObject jsonobject=new JSONObject(json);
 								String notice=jsonobject.getString("notice");
 								if(jsonobject.getString("status").equals("success"))
 								{
-									Log.i("aa", position+"删除的小标");
 									replyList.remove(position);
 								}
 								Message msg=new Message();
@@ -493,7 +491,6 @@ OnGestureListener
 	 * 覆写此方法，以使用手势识别
 	 */
 	public boolean onTouchEvent(MotionEvent event) {
-		Log.v("MY_TAG", "onTouchEvent");
 		return this.gd.onTouchEvent(event);
 	}
 
@@ -512,10 +509,8 @@ OnGestureListener
 		if (Math.abs(x1 - x2) > minX && Math.abs(y1 - y2) < maxY
 				&& Math.abs(vX) > minV) {
 			if (x1 > x2) {
-				Log.v("MY_TAG", "Fling Left");
 				flingState = FLING_LEFT;
 			} else {
-				Log.v("MY_TAG", "Fling Right");
 				flingState = FLING_RIGHT;
 			}
 		}

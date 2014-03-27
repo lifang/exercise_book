@@ -8,7 +8,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -42,7 +41,7 @@ public class LeftMenu extends Activity implements Urlinterface {
 	private View ll3;
 	private View ll4;
 	private View ll5;
-	private View ll6;  //  退出teachll
+	private View ll6; // 退出teachll
 	private LinearLayout allLL;
 	private LinearLayout teachll;
 	private ImageView hwImg;
@@ -60,6 +59,8 @@ public class LeftMenu extends Activity implements Urlinterface {
 	private boolean isStu_cj = true;
 	SharedPreferences userInfo;
 	ExerciseBook eb;
+	String student_id;
+	String school_class_id;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -67,6 +68,10 @@ public class LeftMenu extends Activity implements Urlinterface {
 		setContentView(R.layout.left_menu);
 		userInfo = getSharedPreferences("replyMenu", 0);
 		LeftMenu.this.setFinishOnTouchOutside(true);
+		SharedPreferences preferences = getSharedPreferences(SHARED,
+				Context.MODE_PRIVATE);
+		student_id = preferences.getString("id", "1");
+		school_class_id = preferences.getString("school_class_id", "1");
 		Invit();
 		linear = (LinearLayout) findViewById(R.id.linear);
 		ClickLis();
@@ -74,7 +79,6 @@ public class LeftMenu extends Activity implements Urlinterface {
 	}
 
 	public void setBackColor() {
-		Log.i("aa", eb.getMenu_num() + "下表");
 		switch (eb.getMenu_num()) {
 		case 0:
 			ll1.setBackgroundColor(getResources().getColor(R.color.select_menu));
@@ -133,8 +137,7 @@ public class LeftMenu extends Activity implements Urlinterface {
 
 			}
 		});
-		teachll.setOnClickListener(new OnClickListener()
-		{
+		teachll.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 
 			}
@@ -196,7 +199,8 @@ public class LeftMenu extends Activity implements Urlinterface {
 				eb.setMenu_num(3);
 				eb.setMneu(true);
 				clearActivity();
-				Intent intent=new Intent(LeftMenu.this,MCardBagActivity.class);
+				Intent intent = new Intent(LeftMenu.this,
+						MCardBagActivity.class);
 				startActivity(intent);
 			}
 		});
@@ -225,17 +229,15 @@ public class LeftMenu extends Activity implements Urlinterface {
 	// 请求服务器数据
 	Thread thread = new Thread() {
 		public void run() {
-
 			try {
 				HashMap<String, String> map = new HashMap<String, String>();
-				map.put("school_class_id", "49");
-				map.put("student_id", "70");
+				map.put("school_class_id", school_class_id);
+				map.put("student_id", student_id);
 				String json = ExerciseBookTool.sendGETRequest(getClass, map);
 				ChangeViewMessage(json);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-
 		};
 	};
 
@@ -243,7 +245,6 @@ public class LeftMenu extends Activity implements Urlinterface {
 		try {
 			JSONObject jsonobject = new JSONObject(str);
 			if (jsonobject.get("status").equals("success")) {
-
 				classStu = new ArrayList<ClassStu>();
 				teacher_name = jsonobject.getString("teacher_name");
 				teacher_avatar_url = jsonobject.getString("teacher_avatar_url");
@@ -337,14 +338,13 @@ public class LeftMenu extends Activity implements Urlinterface {
 		ll5 = findViewById(R.id.menuclassll);
 		hwImg = (ImageView) findViewById(R.id.leftmenu_12red);
 		rImg = (ImageView) findViewById(R.id.leftmenu_13red);
-		teachll=(LinearLayout) findViewById(R.id.teachll);
+		teachll = (LinearLayout) findViewById(R.id.teachll);
 		ll6 = findViewById(R.id.ll6);
 		classback = (ImageView) findViewById(R.id.classback);
 		classImg = (ImageView) findViewById(R.id.classMenu);
 		teachIV = (ImageView) findViewById(R.id.teacherIm);
 		teachname = (TextView) findViewById(R.id.teachname);
 		ClassStuGv = (GridView) findViewById(R.id.classstugv);
-
 		boolean homeWork = true;
 		if (userInfo.getBoolean("HomeWorkMenu", true)) {
 			homeWork = true;
@@ -377,6 +377,7 @@ public class LeftMenu extends Activity implements Urlinterface {
 		public ImageView Ib;
 		public View iteam_stu;
 	}
+
 	class StuGvAdapter extends BaseAdapter {
 
 		public int getCount() {
