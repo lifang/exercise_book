@@ -87,8 +87,8 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.cloze);
-		setTimePropEnd();// 禁用道具
-		setTruePropEnd();// 禁用道具
+		// setTimePropEnd();// 禁用道具
+		// setTruePropEnd();// 禁用道具
 		eb = (ExerciseBook) getApplication();
 		findViewById(R.id.base_back_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
@@ -188,21 +188,25 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 				Log.i("aaa", specified_time + "--");
 				JSONArray questions = time_limit.getJSONArray("questions");
 				if (questions.length() > 0) {
+					Log.i("aaa", questions.length() + "--");
 					for (int i = 0; i < questions.length(); i++) {
 						JSONObject jo = questions.getJSONObject(i);
 						JSONArray jsonarr = jo.getJSONArray("branch_questions");
+						Log.i("aaa", 1 + "--");
 						Branchlist = new ArrayList<Branch_PoJo>();
 						for (int j = 0; j < jsonarr.length(); j++) {
 							JSONObject item = jsonarr.getJSONObject(j);
+							Log.i("aaa", item.getInt("id") + "--");
+							Log.i("aaa", item.getString("answer") + "--");
+							Log.i("aaa", item.getString("option") + "--");
 							Branch_PoJo tl = new Branch_PoJo(item.getInt("id"),
-									item.getString("opption"),
+									item.getString("option"),
 									item.getString("answer"));
 							Branchlist.add(tl);
 						}
-
+						Log.i("suanfa", "id--" + jo.getInt("id"));
 						ClozePojo lp = new ClozePojo(jo.getInt("id"),
 								jo.getString("content"), Branchlist);
-						Log.i("suanfa", "id--" + jo.getInt("id"));
 						list.add(lp);
 					}
 				}

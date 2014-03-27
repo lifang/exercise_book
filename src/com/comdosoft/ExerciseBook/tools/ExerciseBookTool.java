@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -22,6 +23,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -65,7 +68,47 @@ public class ExerciseBookTool implements Urlinterface {
 	private static int readTimeOut = 10000;
 	private static String requestEncoding = "UTF-8";
 
-	//初始化answer文件
+	/**
+	 * 解压一个压缩文档 到指定位置
+	 * 
+	 * @param zipFileString
+	 *            压缩包的名字
+	 * @param outPathString
+	 *            指定的路径
+	 * @throws FileNotFoundException
+	 * @throws Exception
+	 */
+	public static void unZip(String unZipfileName, String mDestPath)
+			throws Exception {
+		FileOutputStream fileOut = null;
+		ZipInputStream zipIn = null;
+		ZipEntry zipEntry = null;
+		File file = null;
+		int readedBytes = 0;
+		byte buf[] = new byte[4096];
+		zipIn = new ZipInputStream(new BufferedInputStream(new FileInputStream(
+				unZipfileName)));
+		while ((zipEntry = zipIn.getNextEntry()) != null) {
+			file = new File(mDestPath + "/" + zipEntry.getName());
+			if (zipEntry.isDirectory()) {
+				file.mkdirs();
+			} else {
+				// 如果指定文件的目录不存在,则创建之.
+				File parent = file.getParentFile();
+				if (!parent.exists()) {
+					parent.mkdirs();
+				}
+				fileOut = new FileOutputStream(file);
+				while ((readedBytes = zipIn.read(buf)) > 0) {
+					fileOut.write(buf, 0, readedBytes);
+				}
+				fileOut.close();
+			}
+			zipIn.closeEntry();
+		}
+	}
+
+	// 初始化answer文件
 	public static void initAnswer(String path, String id) {
 		List<PropPojo> propList = new ArrayList<PropPojo>();
 		for (int i = 0; i < 2; i++) {

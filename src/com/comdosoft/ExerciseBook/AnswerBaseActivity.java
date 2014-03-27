@@ -353,6 +353,8 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 					entity.addPart("publish_question_package_id",
 							new StringBody(eb.getWork_id()));
 					entity.addPart("answer_file", new FileBody(new File(path)));
+					Log.i("linshi", eb.getUid() + "/" + eb.getClass_id() + "/"
+							+ eb.getWork_id() + "/" + path);
 					String answer_json = ExerciseBookTool.sendPhostimg(
 							finish_question_packge, entity);
 					if (!answer_json.equals("")) {
@@ -558,8 +560,10 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		String answer_history = ExerciseBookTool.getAnswer_Json_history(path);
 		answerJson = gson.fromJson(answer_history, AnswerJson.class);
 		if (type == 1) {// 减时卡
+			Toast.makeText(AnswerBaseActivity.this, "成功使用减时卡减去5秒时间！",
+					Toast.LENGTH_SHORT).show();
 			mQuestionType = question_type;
-			int utime = Integer.valueOf(getAnswerPojo().getUse_time()) - 5;
+			int utime = getUseTime() - 5;
 			if (utime < 0) {
 				utime = 0;
 			}

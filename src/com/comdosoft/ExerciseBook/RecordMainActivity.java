@@ -267,7 +267,6 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 				finish_list = work_list.get(arg1).getFinish_types();
 				cardType = work_list.get(arg1).getNumber() < 20 ? true : false;
 				eb.setWork_id(work_list.get(arg1).getId() + "");
-				getJsonPath();
 				ExerciseBookTool
 						.initAnswer(pathList.get(arg1), eb.getWork_id());// 初始化answer
 				for (int i = 0; i < work_list.get(arg1).getQuestion_types()
@@ -295,12 +294,12 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 			}
 		});
 		layout.setOnClickListener(new View.OnClickListener() {
-
 			public void onClick(View arg0) {
 				Log.i("aaa", pathList.get(pager.getCurrentItem()));
 				// startDekaron(pojo.getQuestion_types().get(i));// 跳转到答题页面
 				if (ExerciseBookTool.FileExist(pathList.get(pager
 						.getCurrentItem()))) {// 判断文件是否存在
+					getJsonPath();
 					if (typeList.get(i)) {// 已完成
 						MyDialog(i);
 					} else {
@@ -530,7 +529,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 					}
 					File apkFile = new File(
 							pathList.get(pager.getCurrentItem()),
-							"questions.json");
+							"resourse.zip");
 					FileOutputStream fos = new FileOutputStream(apkFile);
 					int count = 0;
 					// 缓存
@@ -553,11 +552,18 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 					} while (!cancelUpdate);// 点击取消就停止下载.
 					fos.close();
 					is.close();
+					ExerciseBookTool.unZip(pathList.get(pager.getCurrentItem())
+							+ "/resourse.zip",
+							pathList.get(pager.getCurrentItem()));
+					getJsonPath();
 				}
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
+			} catch (Exception e) {
+				Toast.makeText(RecordMainActivity.this, "解压文件发生异常",
+						Toast.LENGTH_SHORT).show();
 			}
 			// 取消下载对话框显示
 			mDownloadDialog.dismiss();
@@ -590,9 +596,6 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 				if (obj.getString("status").equals("success")) {
 					work_list = WorkJson.json(json);
 					for (int i = 0; i < work_list.size(); i++) {
-						Log.i("linshi", work_list.get(i).getId() + "<-");
-					}
-					for (int i = 0; i < work_list.size(); i++) {
 						String path = Environment.getExternalStorageDirectory()
 								+ "/" + "Exercisebook_app/" + eb.getUid() + "/"
 								+ eb.getClass_id() + "/"
@@ -615,8 +618,8 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 
 	// 根据日期获取过往记录
 	class search_tasks implements Runnable {
-
 		public void run() {
+			pathList = new ArrayList<String>();
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("date", date);
 			map.put("student_id", eb.getUid());
@@ -628,6 +631,16 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 				JSONObject obj = new JSONObject(json);
 				if (obj.getString("status").equals("success")) {
 					work_list = WorkJson.json(json);
+					for (int i = 0; i < work_list.size(); i++) {
+						String path = Environment.getExternalStorageDirectory()
+								+ "/" + "Exercisebook_app/" + eb.getUid() + "/"
+								+ eb.getClass_id() + "/"
+								+ work_list.get(i).getId();
+						String downPath = IP
+								+ work_list.get(i).getQuestion_packages_url();
+						pathList.add(path);
+						downloadList.add(downPath);
+					}
 					handler.sendEmptyMessage(0);
 				} else {
 					notice = obj.getString("notice");

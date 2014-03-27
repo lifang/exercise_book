@@ -119,26 +119,23 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 		question_number = (ImageView) findViewById(R.id.question_number);// 數量
 		one_btn = (Button) findViewById(R.id.one_btn);
 		two_btn = (Button) findViewById(R.id.two_btn);
-
 	}
 
 	private void SetJson(String json) {
-		Log.i("Ax", "--" + json);
+		Log.i("aaa", "--" + json);
 		if (json != "") {
 			try {
 				JSONObject time_limit = new JSONObject(json);
 				specified_time = time_limit.getInt("specified_time");
-				Log.i("aaa", specified_time + "--");
 				JSONArray questions = time_limit.getJSONArray("questions");
 				if (questions.length() > 0) {
 					JSONObject jo = questions.getJSONObject(0);
 					questions_id = jo.getInt("id");
-					Log.i("aaa", questions_id + "--");
 					JSONArray jsonarr = jo.getJSONArray("branch_questions");
 					img_index = jsonarr.length();
 					for (int i = 0; i < jsonarr.length(); i++) {
 						JSONObject item = jsonarr.getJSONObject(i);
-						String[] opption = item.getString("opption").split(
+						String[] opption = item.getString("option").split(
 								";\\|\\|;");
 						Time_LimitPojo tl = new Time_LimitPojo(
 								item.getInt("id"), item.getString("content"),
@@ -155,7 +152,6 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 
 	// 解析json
 	private void SetAnswer_Json(String json) {
-		Log.i("aaa", json);
 		if (json != "") {
 			try {
 				JSONObject obj = new JSONObject(json);
