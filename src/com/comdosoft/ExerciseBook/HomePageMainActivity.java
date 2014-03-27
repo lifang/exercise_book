@@ -113,7 +113,6 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 								.show();
 						e.printStackTrace();
 					}
-
 				}
 				break;
 			case 7:
@@ -123,7 +122,6 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 				break;
 			default:
 				break;
-
 			}
 		}
 	};

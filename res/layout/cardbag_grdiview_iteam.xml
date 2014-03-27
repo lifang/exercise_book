@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="513px"
-    android:layout_height="512px" >
+    android:layout_width="343.71px"
+    android:layout_height="343.04px"
+     >
 
     <RelativeLayout
-        android:layout_width="513px"
-        android:layout_height="512px"
+         android:layout_width="343.71px"
+    android:layout_height="343.04px"
         android:background="@drawable/cardfont"
         android:orientation="vertical" >
 
@@ -18,52 +19,52 @@
                 android:id="@+id/reson"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="38px"
-                android:layout_marginTop="40px"
+                android:layout_marginLeft="25.45px"
+                android:layout_marginTop="26.8px"
                 android:text="@string/reson1"
                 android:textColor="@color/quesreson"
-                android:textSize="33px" />
+                android:textSize="21px" />
 
             <TextView
                 android:id="@+id/youranswer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/reson"
-                android:layout_marginLeft="38px"
-                android:layout_marginTop="30px"
+                android:layout_marginLeft="25.46px"
+                android:layout_marginTop="20.1px"
                 android:text="tagether"
                 android:textColor="@color/quescontent"
-                android:textSize="45.93px" />
+                android:textSize="32.15px" />
 
             <ImageView
                 android:id="@+id/fontIv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="38px"
-                android:layout_marginTop="40px"
+                android:layout_marginRight="25.46px"
+                android:layout_marginTop="26.8px"
                 android:src="@drawable/ques_reson" />
 
             <LinearLayout
                 android:id="@+id/biaoqian"
-                android:layout_width="512px"
+                android:layout_width="343.04px"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginTop="120px"
+                android:layout_marginTop="80.4px"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
                 android:visibility="gone" >
 
                 <LinearLayout
-                    android:layout_width="512px"
-                    android:layout_height="184px"
+                    android:layout_width="343.04px"
+                    android:layout_height="123.25px"
                     android:background="@drawable/biaoqianback"
                     android:gravity="center_horizontal" >
 
                     <LinearLayout
-                        android:layout_width="467px"
-                        android:layout_height="75px"
-                        android:layout_marginTop="60px"
+                        android:layout_width="312.89px"
+                        android:layout_height="50.25px"
+                        android:layout_marginTop="40.2px"
                         android:background="@drawable/biaoqianwriteback"
                         android:orientation="horizontal" >
 
@@ -76,7 +77,7 @@
 
                         <EditText
                             android:id="@+id/biaoqianet"
-                            android:layout_width="306px"
+                            android:layout_width="205.02px"
                             android:layout_height="wrap_content"
                             android:background="@drawable/biaoqianwriteback"
                             android:hint="搜索知识点"
@@ -86,20 +87,20 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="513px"
+                    android:layout_width="343.71px"
                     android:layout_height="wrap_content"
                     android:background="@color/top_qianlv"
                     android:orientation="vertical" >
 
                     <ListView
                         android:id="@+id/biaoqianlv"
-                        android:layout_width="513px"
+                        android:layout_width="343.71px"
                         android:layout_height="wrap_content" >
                     </ListView>
 
                     <TextView
                         android:id="@+id/newTv"
-                        android:layout_width="513px"
+                        android:layout_width="343.71px"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:textColor="@color/white"
@@ -112,33 +113,33 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/top"
-            android:layout_marginTop="120px"
+            android:layout_marginTop="80.4px"
             android:orientation="vertical" >
 
             <TextView
                 android:id="@+id/rightanswer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="38px"
+                android:layout_marginLeft="25.46px"
                 android:text="正确拼写"
                 android:textColor="@color/quesreson"
-                android:textSize="33px" />
+                android:textSize="21px" />
 
             <TextView
                 android:id="@+id/answer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="38px"
-                android:layout_marginTop="30px"
+                android:layout_marginLeft="25.468px"
+                android:layout_marginTop="20.1px"
                 android:text="together"
                 android:textColor="@color/quesreson"
-                android:textSize="45.93px" />
+                android:textSize="30.77px" />
 
             <TextView
                 android:id="@+id/bqtv"
-                android:layout_width="449px"
-                android:layout_height="59px"
-                android:layout_marginLeft="32px"
+                android:layout_width="300.83px"
+                android:layout_height="39.53px"
+                android:layout_marginLeft="21.44px"
                 android:background="@drawable/bqtv"
                 android:gravity="center_vertical"
                 android:textColor="@color/white"

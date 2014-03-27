@@ -24,7 +24,7 @@
             android:src="@drawable/logo" />
 
         <LinearLayout
-            android:layout_width="228.9px"
+            android:layout_width="231px"
             android:layout_height="fill_parent"
             android:layout_alignParentRight="true"
             android:background="@color/top_shenlv"
@@ -40,7 +40,7 @@
 
             <TextView
                 android:id="@+id/user_name"
-                android:layout_width="121.94px"
+                android:layout_width="125.94px"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10.05px"
                 android:layout_marginTop="27.135px"

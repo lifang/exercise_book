@@ -370,7 +370,6 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 		}
 		for (int i = 0; i < Allmap.size(); i++) {
 			List<View> fontlist = new ArrayList<View>();
-			List<View> backlist = new ArrayList<View>();
 			if (Allmap.size() > 1) {
 				// 增加下面的小图标
 				imageL = new LinearLayout(MCardBagActivity.this);
@@ -400,8 +399,6 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 						.inflate(R.layout.cardbag_gridview, null);
 				ViewGroup fontview = (ViewGroup) inflater2.inflate(
 						R.layout.cardbag_grdiview_iteam, null);
-				ViewGroup backview = (ViewGroup) inflater2.inflate(
-						R.layout.cardbag_gridview_back, null);
 				if ((j + 1) % 2 != 0) {
 					linear = new LinearLayout(MCardBagActivity.this);
 					linear.setLayoutParams(new LayoutParams(

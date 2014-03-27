@@ -15,7 +15,7 @@
             android:paddingLeft="13.32px"
             android:gravity="center_horizontal" 
             android:layout_marginRight="420px"
-        android:layout_marginTop="220px" 
+        android:layout_marginTop="200px" 
             android:paddingRight="31px" >
 
            

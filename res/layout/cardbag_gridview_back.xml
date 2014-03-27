@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="513px"
-    android:layout_height="512px" >
+    android:layout_width="343.71px"
+    android:layout_height="343.04px" >
 
     <LinearLayout
         android:id="@+id/backll"
-        android:layout_width="513px"
-        android:layout_height="512px"
+        android:layout_width="343.71px"
+        android:layout_height="343.04px"
         android:background="@drawable/cardback"
         android:orientation="vertical" >
 
@@ -18,30 +18,30 @@
                 android:id="@+id/backreson"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="38px"
-                android:layout_marginTop="40px"
+                android:layout_marginLeft="25.46px"
+                android:layout_marginTop="26.8px"
                 android:text="@string/returntext"
                 android:textColor="@color/quesreson"
-                android:textSize="33px" />
+                android:textSize="21px" />
 
             <TextView
                 android:id="@+id/rightanswerb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/backreson"
-                android:layout_marginLeft="38px"
-                android:layout_marginTop="30px"
+                android:layout_marginLeft="25.64px"
+                android:layout_marginTop="20.1px"
                 android:text="We can watch it together!Good!"
                 android:textColor="@color/quescontent"
-                android:textSize="45.93px" />
+                android:textSize="32.15px" />
 
             <ImageView
                 android:id="@+id/cardbatread"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="38px"
-                android:layout_marginTop="40px"
+                android:layout_marginRight="25.46px"
+                android:layout_marginTop="26.8px"
                 android:src="@drawable/cardbatread" />
 
             <ImageView
@@ -50,8 +50,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
-                android:layout_marginBottom="38px"
-                android:layout_marginRight="38px"
+                android:layout_marginBottom="25.46px"
+                android:layout_marginRight="25.46px"
                 android:src="@drawable/cardbagdel" />
         </RelativeLayout>
     </LinearLayout>

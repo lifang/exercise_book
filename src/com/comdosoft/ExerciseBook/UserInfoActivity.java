@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -58,6 +59,7 @@ public class UserInfoActivity extends Activity {
 			userinfo_jiezu1;
 
 	ArrayList list;
+	private int width;
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -88,7 +90,8 @@ public class UserInfoActivity extends Activity {
 		nickName = preferences.getString("nickname", "");
 		 id = preferences.getString("id", null);
 		 school_class_id = preferences.getString("school_class_id", null);
-
+		 Display display = this.getWindowManager().getDefaultDisplay();
+			width = display.getWidth();
 		list = new ArrayList();
 
 		userinfo_youyi2 = (TextView) findViewById(R.id.userinfo_youyi2); // 优异
@@ -190,28 +193,44 @@ public class UserInfoActivity extends Activity {
 		userinfo_youyi2.setText("LV" + num0 / 100);
 		LayoutParams laParams0 = (LayoutParams) userinfo_youyi1
 				.getLayoutParams();
-		laParams0.width = (int) ((num0 % 100) * 2.01);
+		if (width==1200) {
+			laParams0.width = (int) ((num0 % 100) * 2.01);
+		}else {
+			laParams0.width = (int) ((num0 % 100) * 1.35);
+		}
 		userinfo_youyi1.setLayoutParams(laParams0);
 
 		int num1 = (Integer) list.get(1); // 精准
 		userinfo_jingzhun2.setText("LV" + num1 / 100);
 		LayoutParams laParams1 = (LayoutParams) userinfo_jingzhun1
 				.getLayoutParams();
-		laParams1.width = (int) ((num1 % 100) * 2.01);
+		if (width==1200) {
+			laParams1.width = (int) ((num1 % 100) * 2.01);
+		}else {
+			laParams1.width = (int) ((num1 % 100) * 1.35);
+		}
 		userinfo_jingzhun1.setLayoutParams(laParams1);
 
 		int num2 = (Integer) list.get(2); // 迅速
 		userinfo_xunsu2.setText("LV" + num2 / 100);
 		LayoutParams laParams2 = (LayoutParams) userinfo_xunsu1
 				.getLayoutParams();
-		laParams2.width = (int) ((num2 % 100) * 2.01);
+		if (width==1200) {
+			laParams2.width = (int) ((num2 % 100) * 2.01);
+		}else {
+			laParams2.width = (int) ((num2 % 100) * 1.35);
+		}
 		userinfo_xunsu1.setLayoutParams(laParams2);
 
 		int num3 = (Integer) list.get(3); // 捷足
 		userinfo_jiezu2.setText("LV" + num3 / 100);
 		LayoutParams laParams3 = (LayoutParams) userinfo_jiezu1
 				.getLayoutParams();
-		laParams3.width = (int) ((num3 % 100) * 2.01);
+		if (width==1200) {
+			laParams3.width = (int) ((num3 % 100) * 2.01);
+		}else {
+			laParams3.width = (int) ((num3 % 100) * 1.35);
+		}
 		userinfo_jiezu1.setLayoutParams(laParams3);
 
 	}

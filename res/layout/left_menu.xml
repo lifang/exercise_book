@@ -2,25 +2,25 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:layout_marginTop="106px" >
+    android:layout_marginTop="71.02px" >
 
     <LinearLayout
         android:id="@+id/allLinear"
-        android:layout_width="206.09px"
+        android:layout_width="138.08px"
         android:layout_height="fill_parent"
         android:orientation="horizontal" >
 
         <LinearLayout
             android:id="@+id/linear"
-            android:layout_width="206.09px"
-            android:layout_height="1718px"
+            android:layout_width="138.08px"
+            android:layout_height="1151.06px"
             android:background="#3f4853"
             android:orientation="vertical" >
 
             <LinearLayout
                 android:id="@+id/ll1"
-                android:layout_width="206.09px"
-                android:layout_height="141px"
+                android:layout_width="138.08px"
+                android:layout_height="94.47px"
                 android:background="#3f4853"
                 android:orientation="vertical" >
 
@@ -28,8 +28,8 @@
                     android:id="@+id/leftmenu_11"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="68px"
-                    android:layout_marginTop="33.94px"
+                    android:layout_marginLeft="45.56px"
+                    android:layout_marginTop="22.73px"
                     android:src="@drawable/leftmenu_11" />
 
                 <TextView
@@ -37,13 +37,13 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="问答"
-                    android:textSize="21.38px" />
+                    android:textSize="14.96px" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/ll2"
-                android:layout_width="206.09px"
-                android:layout_height="204px"
+                android:layout_width="138.08px"
+                android:layout_height="136.68px"
                 android:background="#3f4853"
                 android:orientation="vertical" >
 
@@ -55,16 +55,16 @@
                         android:id="@+id/leftmenu_12"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="68px"
-                        android:layout_marginTop="95px"
+                        android:layout_marginLeft="45.56px"
+                        android:layout_marginTop="63.65px"
                         android:src="@drawable/leftmenu_12" />
 
                     <ImageView
                         android:id="@+id/leftmenu_12red"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20px"
-                        android:layout_marginTop="95px"
+                        android:layout_marginLeft="13.4px"
+                        android:layout_marginTop="63.65px"
                         android:layout_toRightOf="@id/leftmenu_12"
                         android:src="@drawable/smallred"
                         android:visibility="gone" />
@@ -75,13 +75,13 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="作业"
-                    android:textSize="21.38px" />
+                    android:textSize="14.96px" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/ll3"
-                android:layout_width="206.09px"
-                android:layout_height="204px"
+                android:layout_width="138.08px"
+                android:layout_height="136.68px"
                 android:background="#3f4853"
                 android:orientation="vertical" >
 
@@ -93,16 +93,16 @@
                         android:id="@+id/leftmenu_13"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="68px"
-                        android:layout_marginTop="95px"
+                        android:layout_marginLeft="45.56px"
+                        android:layout_marginTop="63.65px"
                         android:src="@drawable/leftmenu_13" />
 
                     <ImageView
                         android:id="@+id/leftmenu_13red"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20px"
-                        android:layout_marginTop="95px"
+                        android:layout_marginLeft="13.4px"
+                        android:layout_marginTop="63.65px"
                         android:layout_toRightOf="@id/leftmenu_13"
                         android:src="@drawable/smallred"
                         android:visibility="gone" />
@@ -113,13 +113,13 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="通知"
-                    android:textSize="21.38px" />
+                    android:textSize="14.32px" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/ll4"
-                android:layout_width="206.09px"
-                android:layout_height="204px"
+                android:layout_width="138.08px"
+                android:layout_height="136.68px"
                 android:background="#3f4853"
                 android:orientation="vertical" >
 
@@ -127,8 +127,8 @@
                     android:id="@+id/leftmenu_11"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="68px"
-                    android:layout_marginTop="95px"
+                    android:layout_marginLeft="45.56px"
+                    android:layout_marginTop="63.65px"
                     android:src="@drawable/leftmenu_14" />
 
                 <TextView
@@ -136,24 +136,24 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="卡包"
-                    android:textSize="21.38px" />
+                    android:textSize="14.32px" />
             </LinearLayout>
 
             <ImageView
                 android:id="@+id/classMenu"
-                android:layout_width="155px"
-                android:layout_height="79px"
-                android:layout_marginLeft="60px"
-                android:layout_marginTop="223px"
+                android:layout_width="103.85px"
+                android:layout_height="52.93px"
+                android:layout_marginLeft="40.2px"
+                android:layout_marginTop="156.11px"
                 android:adjustViewBounds="false"
                 android:scaleType="fitStart"
                 android:src="@drawable/menuclass" />
 
             <LinearLayout
                 android:id="@+id/ll6"
-                android:layout_width="206.09px"
-                android:layout_height="204px"
-                android:layout_marginTop="295px"
+                android:layout_width="138.08px"
+                android:layout_height="136.68px"
+                android:layout_marginTop="197.65px"
                 android:background="#3f4853"
                 android:orientation="vertical" >
 
@@ -161,15 +161,15 @@
                     android:id="@+id/leftmenu_11"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="68px"
-                    android:layout_marginTop="95px"
+                    android:layout_marginLeft="45.56px"
+                    android:layout_marginTop="63.65px"
                     android:src="@drawable/leftmenu_quit" />
             </LinearLayout>
         </LinearLayout>
 
         <RelativeLayout
             android:id="@+id/menuclassll"
-            android:layout_width="339.94px"
+            android:layout_width="227.75px"
             android:layout_height="fill_parent"
             android:background="#363e47"
             android:visibility="gone" >
@@ -179,8 +179,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="19px"
-                android:layout_marginTop="21.06px"
+                android:layout_marginRight="12.73px"
+                android:layout_marginTop="14.11px"
                 android:src="@drawable/menuclassback" />
 
             <TextView
@@ -188,8 +188,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/classback"
-                android:layout_marginLeft="32.94px"
-                android:layout_marginTop="44.48px"
+                android:layout_marginLeft="22.39px"
+                android:layout_marginTop="29.80px"
                 android:textColor="@color/selecttextview"
                 android:text="我的班主任"
                 />
@@ -203,18 +203,18 @@
 
                 <com.comdosoft.ExerciseBook.tools.CircularImage
                     android:id="@+id/teacherIm"
-                    android:layout_width="60px"
-                    android:layout_height="60px"
-                    android:layout_marginLeft="32px"
-                    android:layout_marginTop="39.39px"
+                    android:layout_width="40.2px"
+                    android:layout_height="40.2px"
+                    android:layout_marginLeft="21.44px"
+                    android:layout_marginTop="26.399px"
                     android:src="@drawable/moren" />
 
                 <TextView
                     android:id="@+id/teachname"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="15.41px"
-                    android:layout_marginTop="48px"
+                    android:layout_marginLeft="10.32px"
+                    android:layout_marginTop="32.16px"
                     android:layout_toRightOf="@id/teacherIm"
                     android:textColor="@color/white"
                     android:text="李达达" />
@@ -225,14 +225,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/teachll"
-                android:layout_marginLeft="32.94px"
-                android:layout_marginTop="40px"
+                android:layout_marginLeft="22.06px"
+                android:layout_marginTop="26.8px"
                 android:textColor="@color/selecttextview"
                 android:text="我的同学" />
 
             <GridView
                 android:id="@+id/classstugv"
-                android:layout_width="339.94px"
+                android:layout_width="227.75px"
                 android:layout_height="match_parent"
                 android:layout_below="@id/classstu"
                 android:layout_marginTop="0px"
