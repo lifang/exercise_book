@@ -48,7 +48,7 @@ import android.widget.Toast;
 public class Table_TabHost extends Activity
 {
 	private LinearLayout middleLayout;
-	private ImageView img_tab_now;
+	private LinearLayout img_tab_now;
 	private ExerciseBook eb;
 	private String nickName = "丁作"; // 用户昵称
 	TextView userName;//
@@ -129,7 +129,7 @@ public class Table_TabHost extends Activity
 		id = preferences.getString("id", null);
 		
 		active=true;
-		img_tab_now=(ImageView) findViewById(R.id.img_tab_now);
+		img_tab_now=(LinearLayout) findViewById(R.id.img_tab_now);
 		img_tab_now.setOnClickListener(new OnClickListener(){
 			public void onClick(View v) {
 				if(eb.isMneu())
