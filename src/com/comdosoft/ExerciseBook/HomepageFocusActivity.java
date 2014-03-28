@@ -103,10 +103,10 @@ public class HomepageFocusActivity extends Activity implements
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
-			case 0:
+			case 0: 
 				prodialog.dismiss();
 				final String json_1 = (String) msg.obj;
-				parseJson_Myself(json_1);
+				parseJson_MyFocus(json_1);
 				init();
 				break;
 			case 2:
@@ -114,7 +114,7 @@ public class HomepageFocusActivity extends Activity implements
 				list.clear();
 				click_list();
 				final String json_all = (String) msg.obj;
-				parseJson_Myself(json_all);
+				parseJson_MyFocus(json_all);
 				for (int i = 0; i < list.size(); i++) {
 					setlayout(i);
 				}
@@ -123,7 +123,7 @@ public class HomepageFocusActivity extends Activity implements
 			case 3:
 				final String json_all2 = (String) msg.obj;
 
-				parseJson_Myself(json_all2);
+				parseJson_MyFocus(json_all2);
 
 				for (int i = list_item; i < list.size(); i++) {
 					setlayout(i);
@@ -161,6 +161,7 @@ public class HomepageFocusActivity extends Activity implements
 
 	protected void onResume() {
 		super.onResume();
+		page = 1;
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
 
@@ -628,9 +629,9 @@ public class HomepageFocusActivity extends Activity implements
 	}
 
 	/*
-	 * 解析 我的 模块中的 主消息
+	 * 解析 我的关注 模块中的 主消息
 	 */
-	void parseJson_Myself(String json3) {
+	void parseJson_MyFocus(String json3) {
 
 		if ("error".equals(json3)) {
 		} else {

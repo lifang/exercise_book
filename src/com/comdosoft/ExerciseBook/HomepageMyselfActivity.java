@@ -161,6 +161,7 @@ public class HomepageMyselfActivity extends Activity implements
 
 	protected void onResume() {
 		super.onResume();
+		page = 1;
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
 
