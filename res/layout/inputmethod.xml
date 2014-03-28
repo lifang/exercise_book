@@ -10,7 +10,7 @@
         android:layout_alignParentBottom="true"
         android:background="@drawable/input_bg"
         android:orientation="horizontal"
-        android:padding="25px" >
+        android:padding="17px" >
 
 
 
@@ -22,12 +22,12 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/edittext"
             android:layout_alignParentRight="true"
-            android:layout_marginLeft="10px"
+            android:layout_marginLeft="7px"
             
             android:textColor="#BEBFC0"
             android:background="@drawable/shape"
             android:text="@string/queren"
-            android:textSize="30px" />
+            android:textSize="21px" />
                 <TextView
             android:id="@+id/tv_num"
             android:layout_width="wrap_content"
@@ -43,7 +43,7 @@
             android:maxLength="60"
             android:background="@drawable/shape"
             android:layout_marginRight="260px"
-            android:textSize="30px" >
+            android:textSize="21px" >
             
         </EditText>
     </RelativeLayout>
