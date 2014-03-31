@@ -89,6 +89,10 @@ public class UserInfoActivity extends Activity {
 		 Display display = this.getWindowManager().getDefaultDisplay();
 			width = display.getWidth();
 		list = new ArrayList();
+		list.add(0);
+		list.add(0);
+		list.add(0);
+		list.add(0);
 
 		userinfo_youyi2 = (TextView) findViewById(R.id.userinfo_youyi2); // 优异
 		userinfo_jingzhun2 = (TextView) findViewById(R.id.userinfo_jingzhun2); // 精准
@@ -181,7 +185,7 @@ public class UserInfoActivity extends Activity {
 					JSONObject o = (JSONObject) archivements.get(i);
 					int archivement_types = o.getInt("archivement_types");
 					int archivement_score = o.getInt("archivement_score");
-
+					list.remove(archivement_types);
 					list.add(archivement_types, archivement_score);
 				}
 
