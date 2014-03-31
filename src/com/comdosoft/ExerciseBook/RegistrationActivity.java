@@ -1,13 +1,10 @@
 package com.comdosoft.ExerciseBook;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 
 import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,21 +15,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.Window;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
+import cn.jpush.android.api.JPushInterface;
 
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
@@ -69,7 +60,14 @@ public class RegistrationActivity extends Activity implements Urlinterface {
 		reg_banjiyanzhengma = (EditText) findViewById(R.id.reg_banjiyanzhengma);
 
 	}
-
+	protected void onResume() {
+		super.onResume();
+		JPushInterface.onResume(this);
+	}
+	protected void onPause() {
+		super.onPause();
+		JPushInterface.onPause(this);
+	}
 
 
 

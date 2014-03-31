@@ -32,7 +32,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -43,8 +42,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import cn.jpush.android.api.JPushInterface;
 
-import com.comdosoft.ExerciseBook.HomepageAllActivity.ZiAdapter;
 import com.comdosoft.ExerciseBook.pojo.Child_Micropost;
 import com.comdosoft.ExerciseBook.pojo.Micropost;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
@@ -161,6 +160,7 @@ public class HomepageMyselfActivity extends Activity implements
 
 	protected void onResume() {
 		super.onResume();
+		JPushInterface.onResume(this);
 		page = 1;
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
@@ -183,6 +183,10 @@ public class HomepageMyselfActivity extends Activity implements
 		}
 	}
 
+	protected void onPause() {
+		super.onPause();
+		JPushInterface.onPause(this);
+	}
 	public void init() {
 		item_huifu = new ArrayList<RelativeLayout>();
 
