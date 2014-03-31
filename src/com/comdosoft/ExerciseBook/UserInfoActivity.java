@@ -153,6 +153,8 @@ public class UserInfoActivity extends Activity {
 
 				String json = ExerciseBookTool.sendGETRequest(
 						Urlinterface.get_my_achievements, map);
+				Toast.makeText(getApplicationContext(), json,
+						 Toast.LENGTH_SHORT).show();
 				setJson(json);
 				handler.sendEmptyMessage(0);
 
