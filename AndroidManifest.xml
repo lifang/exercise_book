@@ -139,6 +139,7 @@
             android:name=".HomePageMainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
+            
         </activity>
         <activity
             android:name=".SettingPhoto"

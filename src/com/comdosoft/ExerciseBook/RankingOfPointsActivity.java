@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import cn.jpush.android.api.JPushInterface;
 
 import com.comdosoft.ExerciseBook.pojo.Ranking;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
@@ -79,6 +80,14 @@ public class RankingOfPointsActivity extends Activity {
 		}
 	}
 
+	protected void onResume() {
+		super.onResume();
+		JPushInterface.onResume(this);
+	}
+	protected void onPause() {
+		super.onPause();
+		JPushInterface.onPause(this);
+	}
 	Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {

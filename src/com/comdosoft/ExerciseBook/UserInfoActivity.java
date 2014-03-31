@@ -1,13 +1,11 @@
 package com.comdosoft.ExerciseBook;
 
-import java.io.File;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,7 +20,6 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
@@ -34,11 +31,10 @@ import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
+import cn.jpush.android.api.JPushInterface;
 
-import com.comdosoft.ExerciseBook.HomePageMainActivity.mod_avatar;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
-import com.comdosoft.ExerciseBook.tools.PullToRefreshView;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
 public class UserInfoActivity extends Activity {
@@ -133,6 +129,15 @@ public class UserInfoActivity extends Activity {
 
 	}
 
+	
+	protected void onResume() {
+		super.onResume();
+		JPushInterface.onResume(this);
+	}
+	protected void onPause() {
+		super.onPause();
+		JPushInterface.onPause(this);
+	}
 	/*
 	 * 获得当前成就
 	 */

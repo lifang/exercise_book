@@ -43,6 +43,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import cn.jpush.android.api.JPushInterface;
 
 import com.comdosoft.ExerciseBook.pojo.Child_Micropost;
 import com.comdosoft.ExerciseBook.pojo.Micropost;
@@ -54,7 +55,6 @@ import com.comdosoft.ExerciseBook.tools.PullToRefreshView;
 import com.comdosoft.ExerciseBook.tools.PullToRefreshView.OnFooterRefreshListener;
 import com.comdosoft.ExerciseBook.tools.PullToRefreshView.OnHeaderRefreshListener;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 public class HomepageAllActivity extends Activity implements
 		OnHeaderRefreshListener, OnFooterRefreshListener, Urlinterface,
@@ -166,6 +166,7 @@ public class HomepageAllActivity extends Activity implements
 
 	protected void onResume() {
 		super.onResume();
+		JPushInterface.onResume(this);
 		page = 1;
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
@@ -187,6 +188,12 @@ public class HomepageAllActivity extends Activity implements
 				handler.sendEmptyMessage(7);
 			}
 		}
+	}
+
+
+	protected void onPause() {
+		super.onPause();
+		JPushInterface.onPause(this);
 	}
 
 	public void init() {

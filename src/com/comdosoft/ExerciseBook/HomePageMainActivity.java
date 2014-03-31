@@ -29,15 +29,16 @@ import android.view.Display;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabWidget;
 import android.widget.TextView;
 import android.widget.Toast;
+import cn.jpush.android.api.JPushInterface;
 
 import com.comdosoft.ExerciseBook.tools.CircularImage;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
@@ -202,6 +203,15 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 		tabhost.setCurrentTab(exerciseBook.getMainItem());
 		updateTabStyle(tabhost);
 
+	}
+
+	protected void onResume() {
+		super.onResume();
+		JPushInterface.onResume(this);
+	}
+	protected void onPause() {
+		super.onPause();
+		JPushInterface.onPause(this);
 	}
 
 	private void updateTabStyle(final TabHost mTabHost) {

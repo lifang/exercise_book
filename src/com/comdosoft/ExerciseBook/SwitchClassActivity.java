@@ -8,7 +8,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -29,8 +28,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import cn.jpush.android.api.JPushInterface;
 
-import com.comdosoft.ExerciseBook.HomepageAllActivity.get_class_info;
 import com.comdosoft.ExerciseBook.pojo.ClassPojo;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
@@ -110,6 +109,15 @@ public class SwitchClassActivity extends Activity {
 					ExerciseBookParams.INTERNET, 0).show();
 		}
 
+	}
+	
+	protected void onResume() {
+		super.onResume();
+		JPushInterface.onResume(this);
+	}
+	protected void onPause() {
+		super.onPause();
+		JPushInterface.onPause(this);
 	}
 
 	// 点击空白处 本界面消失
