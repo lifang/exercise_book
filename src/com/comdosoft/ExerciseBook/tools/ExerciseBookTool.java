@@ -628,7 +628,8 @@ public class ExerciseBookTool implements Urlinterface {
 			rd.close();
 			in.close();
 		} catch (IOException e) {
-			Log.i("linshi", "发生异常");
+//			Log.i("linshi", "发生异常");
+			e.printStackTrace();
 		}
 		Log.i("linshi", tempLine);
 		return tempLine;

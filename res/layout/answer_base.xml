@@ -8,7 +8,7 @@
     <RelativeLayout
         android:id="@+id/base_title"
         android:layout_width="fill_parent"
-        android:layout_height="110px"
+        android:layout_height="80px"
         android:background="#35d090"
         android:orientation="horizontal" >
 
@@ -129,7 +129,7 @@
     <RelativeLayout
         android:id="@+id/base_prop_relativeLayout"
         android:layout_width="fill_parent"
-        android:layout_height="110px"
+        android:layout_height="80px"
         android:layout_below="@id/base_title"
         android:background="#e1dfdf" >
 
@@ -171,7 +171,7 @@
     <LinearLayout
         android:id="@+id/base_answer_Linearlayout"
         android:layout_width="fill_parent"
-        android:layout_height="410px"
+        android:layout_height="260px"
         android:layout_alignParentBottom="true"
         android:background="#273039"
         android:gravity="center_vertical"

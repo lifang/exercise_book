@@ -3,6 +3,11 @@ package com.comdosoft.ExerciseBook;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -17,9 +22,9 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.comdosoft.ExerciseBook.pojo.ListeningPojo;
-import com.comdosoft.ExerciseBook.pojo.QuestionPojo;
-import com.comdosoft.ExerciseBook.tools.ListeningQuestionList;
+
+import com.comdosoft.ExerciseBook.pojo.AnswerBasePojo;
+import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
 public class AnswerDictationPrepareActivity extends AnswerBaseActivity
@@ -27,25 +32,22 @@ public class AnswerDictationPrepareActivity extends AnswerBaseActivity
 		Urlinterface {
 
 	private int mp3Index = 0;
+	private boolean playFlag = false;
 	private List<String> mp3List = new ArrayList<String>();
 	private MediaPlayer mediaPlayer = new MediaPlayer();
 	private ImageView dictationImg;
-	private boolean playFlag = false;
-	private ProgressDialog mPd;
+	private ExerciseBook eb;
 	private Handler mHandler = new Handler() {
-		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
 			switch (msg.what) {
 			case 1:
-				mPd.dismiss();
-				dictationImg.setImageResource(R.drawable.dictation_laba2);
+				dictationImg.setImageResource(R.drawable.yuting1);
 				break;
 			case 2:
-				dictationImg.setImageResource(R.drawable.dictation_laba1);
+				dictationImg.setImageResource(R.drawable.yuting2);
 				break;
 			case 3:
-				mPd.show();
 				break;
 			case 4:
 				dictationImg.setImageResource(R.drawable.dictation_laba2);
@@ -62,14 +64,33 @@ public class AnswerDictationPrepareActivity extends AnswerBaseActivity
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
 		dictationImg = (ImageView) findViewById(R.id.question_dictation_img);
 		dictationImg.setOnClickListener(this);
-		mPd = new ProgressDialog(this);
-		mPd.setCanceledOnTouchOutside(false);
-		mPd.setMessage("正在缓冲...");
-		setMp3Url();
-		if (ListeningQuestionList.Record_Count == ListeningQuestionList.listeningList
-				.size()) {
+		eb = (ExerciseBook) getApplication();
+
+		setQuestionType(6);
+
+		analysisJSON(json);
+
+		if (amp.getStatus() == 1) {
 			TextView t = (TextView) findViewById(R.id.question_prepare_mes);
 			t.setText("重听");
+		}
+	}
+
+	public void analysisJSON(String json) {
+		try {
+			JSONObject jsonObject = new JSONObject(json);
+			specified_time = jsonObject.getInt("specified_time");
+			JSONArray jArr = new JSONArray(jsonObject.getString("questions"));
+			List<AnswerBasePojo> mBranchList = new ArrayList<AnswerBasePojo>();
+			JSONObject jo = jArr.getJSONObject(mQindex);
+			JSONArray jsonArr = new JSONArray(jo.getString("branch_questions"));
+			for (int j = mBindex; j < jsonArr.length(); j++) {
+				JSONObject jb = jsonArr.getJSONObject(j);
+				mp3List.add(eb.getPath() + "/" + jb.getString("resource_url"));
+			}
+			mQuestList.add(mBranchList);
+		} catch (JSONException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -82,21 +103,23 @@ public class AnswerDictationPrepareActivity extends AnswerBaseActivity
 	@Override
 	protected void onRestart() {
 		super.onRestart();
-		setMp3Url();
+		mp3Index = 0;
+		// setMp3Url();
 	}
 
 	// 设置音频路径
-	public void setMp3Url() {
-		mp3List.clear();
-		mp3Index = 0;
-		int index = ListeningQuestionList.Record_Count == ListeningQuestionList.listeningList
-				.size() ? 0 : ListeningQuestionList.Record_Count;
-		ListeningPojo lp = ListeningQuestionList.getListeningPojo(index);
-		List<QuestionPojo> qpList = lp.getQuesttionList();
-		for (int i = 0; i < qpList.size(); i++) {
-			mp3List.add(IP + qpList.get(i).getUrl());
-		}
-	}
+	// public void setMp3Url() {
+	// mp3List.clear();
+	// mp3Index = 0;
+	// int index = ListeningQuestionList.Record_Count ==
+	// ListeningQuestionList.listeningList
+	// .size() ? 0 : ListeningQuestionList.Record_Count;
+	// ListeningPojo lp = ListeningQuestionList.getListeningPojo(index);
+	// List<QuestionPojo> qpList = lp.getQuesttionList();
+	// for (int i = 0; i < qpList.size(); i++) {
+	// mp3List.add(IP + qpList.get(i).getUrl());
+	// }
+	// }
 
 	// 播放音频
 	public void playerAmr() {
@@ -154,14 +177,11 @@ public class AnswerDictationPrepareActivity extends AnswerBaseActivity
 		case R.id.base_check_linearlayout:
 			finish();
 			Intent intent = new Intent();
-			intent.setClass(this, AnswerDictationRecordActivity.class);
-			// || eb.isWork_history() 判断答题历史
-			if (ListeningQuestionList.Record_Count == ListeningQuestionList.listeningList
-					.size()) {
-				intent.setClass(this, AnswerDictationRecordActivity.class);
-			} else {
-				intent.setClass(this, AnswerDictationBeginActivity.class);
-			}
+			intent.putExtra("json", json);
+			intent.putExtra("path", path);
+			intent.putExtra("status", status);
+			intent.putExtra("type", type);
+			intent.setClass(this, AnswerDictationBeginActivity.class);
 			startActivity(intent);
 			break;
 		case R.id.base_back_linearlayout:
@@ -220,7 +240,6 @@ public class AnswerDictationPrepareActivity extends AnswerBaseActivity
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			super.close();
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);

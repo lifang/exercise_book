@@ -198,15 +198,15 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 							JSONObject item = jsonarr.getJSONObject(j);
 							Log.i("aaa", item.getInt("id") + "--");
 							Log.i("aaa", item.getString("answer") + "--");
-							Log.i("aaa", item.getString("option") + "--");
+							Log.i("aaa", item.getString("options") + "--");
 							Branch_PoJo tl = new Branch_PoJo(item.getInt("id"),
-									item.getString("option"),
+									item.getString("options"),
 									item.getString("answer"));
 							Branchlist.add(tl);
 						}
 						Log.i("suanfa", "id--" + jo.getInt("id"));
 						ClozePojo lp = new ClozePojo(jo.getInt("id"),
-								jo.getString("content"), Branchlist);
+								jo.getString("full_text"), Branchlist);
 						list.add(lp);
 					}
 				}
@@ -370,7 +370,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		case R.id.base_propTrue:
 			Log.i("linshi", propItem + "----" + tv_list.size());
 			if (propItem < tv_list.size()) {
-				PropJson(0, cloze.getList().get(propItem).getId(), 5);
+				PropJson(0, cloze.getList().get(propItem).getId(), 5);//1道具类型 --0显示答案 1时间  , 2--小题id ,3--任务类型
 				tv_list.get(propItem).setText(
 						cloze.getList().get(propItem).getAnswer());
 				tv_list.get(propItem).setTextColor(
@@ -387,7 +387,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 			break;
 		case R.id.base_propTime:
 			// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
-			PropJson(1, cloze.getList().get(propItem).getId(), 5);
+			PropJson(1, cloze.getList().get(propItem).getId(), 5);//1道具类型 --0显示答案 1时间  , 2--小题id ,3--任务类型
 			break;
 		}
 	}

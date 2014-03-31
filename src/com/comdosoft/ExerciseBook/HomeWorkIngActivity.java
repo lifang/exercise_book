@@ -270,6 +270,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 						path = Environment.getExternalStorageDirectory() + "/"
 								+ "Exercisebook_app/" + eb.getUid() + "/"
 								+ eb.getClass_id() + "/" + eb.getWork_id();
+						eb.setPath(path);
 						downPath = IP
 								+ work_list.get(0).getQuestion_packages_url();
 						getJsonPath();
@@ -319,7 +320,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	public void Start_Acvivity(int i) {// 做题跳转
 		switch (questiontype_list.get(i)) {
 		case 0:
-			intent.setClass(this, AnswerDictationBeginActivity.class);
+			intent.setClass(this, AnswerDictationPrepareActivity.class);
 			break;
 		case 1:
 			intent.setClass(this, SpeakPrepareActivity.class);
@@ -358,7 +359,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	public void Start_History_Acvivity(int i) {// 历史记录跳转
 		switch (questiontype_list.get(i)) {
 		case 0:
-			intent.setClass(this, SpeakPrepareActivity.class);
+			intent.setClass(this, AnswerDictationPrepareActivity.class);
 			break;
 		case 1:
 			intent.setClass(this, SpeakPrepareActivity.class);

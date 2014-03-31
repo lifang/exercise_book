@@ -53,11 +53,11 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	private int mQuestionType = 0;
 	private int mRatio = 0;
 	private int second;
-	private int type = 0;
+	public int type = 0;
 	private boolean flag = true;
 	private String recordMes;
 	public String json;
-	private String path;
+	public String path;
 	private String[] answerArr = new String[] { "你的作答: ", " ", "你的选择: ",
 			"你的选择: ", "你的搭配: ", "你的选择: ", "你的排序: " };
 	private String[] questionArr = new String[] { "listening", "reading",
@@ -148,13 +148,15 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		mQindex = amp.getQuestions_item();
 		mBindex = amp.getBranch_item();
 
-		setUseTime(amp.getUse_time());
-		setType(amp.getStatus());
+		if (type != 6) {
+			setUseTime(amp.getUse_time());
+			setType(amp.getStatus());
 
-		if (amp.getStatus() == 1) {
-			mRecoirdAnswer = amp.getAnswer();
-			mRecoirdRatio = amp.getRatio();
-			nextRecord();
+			if (amp.getStatus() == 1) {
+				mRecoirdAnswer = amp.getAnswer();
+				mRecoirdRatio = amp.getRatio();
+				nextRecord();
+			}
 		}
 	}
 
@@ -162,7 +164,9 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	public void setType(int type) {
 		this.type = type;
 		if (type == 0) {
-			mTimer.start();
+			if (mQuestionType != 6) {
+				mTimer.start();
+			}
 			base_time_linearlayout.setVisibility(View.VISIBLE);
 			base_history_linearlayout.setVisibility(View.GONE);
 			base_answer_linearlayout.setVisibility(View.GONE);

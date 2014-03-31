@@ -34,6 +34,7 @@ public class ExerciseBook extends Application {
 	private int question_item;
 	private boolean history_type;
 	private int propTime_Number;
+	private String path;
 
 	public ExerciseBook() {
 		this.setMneu(true);
@@ -44,6 +45,14 @@ public class ExerciseBook extends Application {
 		this.setMneu(true);
 		this.setHistory_type(false);
 		this.setPropTime_Number(0);
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 
 	public List<Activity> getActivityList() {

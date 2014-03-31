@@ -282,9 +282,10 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 
 					if (type != 0) {
 						String path = AnswerTools.getSelectPath(s);
+						String fileName = AnswerTools.getSelectPath(path);
 						list.add(new AnswerBasePojo(questions_id,
-								branch_questions_id, type, content, path, arr,
-								answer));
+								branch_questions_id, type, content, fileName,
+								arr, answer));
 					} else {
 						list.add(new AnswerBasePojo(questions_id,
 								branch_questions_id, type, content, arr, answer));

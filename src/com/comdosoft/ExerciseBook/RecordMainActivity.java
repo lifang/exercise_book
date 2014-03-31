@@ -344,7 +344,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 		}
 		imageView.setBackgroundResource(imgid);
 
-		AbsListView.LayoutParams param = new AbsListView.LayoutParams(300, 320);
+		AbsListView.LayoutParams param = new AbsListView.LayoutParams(210, 220);
 		layout.setLayoutParams(param);
 		if (i == 0 || i % 3 == 0) {
 			LinearLayout linear = new LinearLayout(RecordMainActivity.this);
@@ -600,6 +600,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 								+ "/" + "Exercisebook_app/" + eb.getUid() + "/"
 								+ eb.getClass_id() + "/"
 								+ work_list.get(i).getId();
+						eb.setPath(path);
 						String downPath = IP
 								+ work_list.get(i).getQuestion_packages_url();
 						pathList.add(path);

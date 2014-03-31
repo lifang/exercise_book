@@ -251,8 +251,6 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 					}
 				}
 			} catch (JSONException e) {
-				// Toast.makeText(SpeakPrepareActivity.this, "解析json发生错误",
-				// Toast.LENGTH_SHORT).show();
 				e.printStackTrace();
 			}
 		}
