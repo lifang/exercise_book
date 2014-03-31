@@ -99,7 +99,7 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 		path = intent.getStringExtra("path");
 		json = intent.getStringExtra("json");
 		status = intent.getIntExtra("status", 1);
-		Log.i("aaa", status + ":status");
+		Log.i("aaa", eb.getWork_id() + ":");
 		SetJson(json);
 		File answer_file = new File(path);
 		if (answer_file.exists()) {
@@ -139,11 +139,12 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 								";\\|\\|;");
 						Time_LimitPojo tl = new Time_LimitPojo(
 								item.getInt("id"), item.getString("content"),
-								opption, item.getString("anwser"));
+								opption, item.getString("answer"));
 						branch_questions.add(tl);
 					}
 				}
 			} catch (JSONException e) {
+				e.printStackTrace();
 				Toast.makeText(TenSpeedActivity.this, "解析json发生错误",
 						Toast.LENGTH_SHORT).show();
 			}
@@ -157,6 +158,7 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 				JSONObject obj = new JSONObject(json);
 				JSONObject time_limit = obj.getJSONObject("time_limit");
 				branch_item = time_limit.getInt("branch_item");
+				status = time_limit.getInt("status");
 				int use_time = time_limit.getInt("use_time");
 				setUseTime(use_time);
 				setStart();
@@ -281,7 +283,6 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 					handler.sendEmptyMessage(1);
 					break;
 				case 1:
-					prodialog.show();
 					if (Finish_Json()) {
 						intent.putExtra("precision",
 								ExerciseBookTool.getRatio(path, "time_limit"));// 正确率100时获取精准成就

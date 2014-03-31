@@ -105,7 +105,7 @@ public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 	}
 
 	private void setTextView() {
-		str = content.split("\\[\\[tag\\]\\]");
+		str = content.split("\\[\\[sign\\]\\]");
 		for (int i = 0; i < str.length; i++) {
 			View view1 = View.inflate(this, R.layout.cloze_view, null);
 			TextView text = (TextView) view1.findViewById(R.id.tv);
