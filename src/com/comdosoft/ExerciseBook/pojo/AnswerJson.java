@@ -1,10 +1,12 @@
 package com.comdosoft.ExerciseBook.pojo;
 
+import java.util.List;
+
 public class AnswerJson {
 
 	public String pub_id;
 	public String status;
-	public String[] props;
+	public List<PropPojo> props;
 	public AnswerPojo reading;
 	public AnswerPojo listening;
 	public AnswerPojo time_limit;
@@ -13,7 +15,7 @@ public class AnswerJson {
 	public AnswerPojo cloze;
 	public AnswerPojo sort;
 
-	public AnswerJson(String pub_id, String status, String[] props,
+	public AnswerJson(String pub_id, String status, List<PropPojo> props,
 			AnswerPojo reading, AnswerPojo listening, AnswerPojo time_limit,
 			AnswerPojo selecting, AnswerPojo lining, AnswerPojo cloze,
 			AnswerPojo sort) {

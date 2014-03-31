@@ -175,7 +175,7 @@ public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 						}
 
 						ClozePojo lp = new ClozePojo(jo.getInt("id"),
-								jo.getString("content"), Branchlist);
+								jo.getString("full_text"), Branchlist);
 						Log.i("suanfa", "id--" + jo.getInt("id"));
 						list.add(lp);
 					}

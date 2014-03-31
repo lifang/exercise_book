@@ -267,7 +267,6 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 				finish_list = work_list.get(arg1).getFinish_types();
 				cardType = work_list.get(arg1).getNumber() < 20 ? true : false;
 				eb.setWork_id(work_list.get(arg1).getId() + "");
-				getJsonPath();
 				ExerciseBookTool
 						.initAnswer(pathList.get(arg1), eb.getWork_id());// 初始化answer
 				for (int i = 0; i < work_list.get(arg1).getQuestion_types()
@@ -295,12 +294,12 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 			}
 		});
 		layout.setOnClickListener(new View.OnClickListener() {
-
 			public void onClick(View arg0) {
 				Log.i("aaa", pathList.get(pager.getCurrentItem()));
 				// startDekaron(pojo.getQuestion_types().get(i));// 跳转到答题页面
 				if (ExerciseBookTool.FileExist(pathList.get(pager
 						.getCurrentItem()))) {// 判断文件是否存在
+					getJsonPath();
 					if (typeList.get(i)) {// 已完成
 						MyDialog(i);
 					} else {
@@ -345,7 +344,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 		}
 		imageView.setBackgroundResource(imgid);
 
-		AbsListView.LayoutParams param = new AbsListView.LayoutParams(300, 320);
+		AbsListView.LayoutParams param = new AbsListView.LayoutParams(210, 220);
 		layout.setLayoutParams(param);
 		if (i == 0 || i % 3 == 0) {
 			LinearLayout linear = new LinearLayout(RecordMainActivity.this);
@@ -400,7 +399,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 		}
 		intent.putExtra("json", json_list.get(i));
 		intent.putExtra("path", pathList.get(pager.getCurrentItem())
-				+ "/answer.js");
+				+ "/answer.json");
 		intent.putExtra("type", 0);// 0 今日任务列表跳转 1历史记录列表跳转
 		intent.putExtra("status", status);// 0表示第一次做 1表示重做 2历史
 		Log.i("aaa", json_list.get(i));
@@ -440,7 +439,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 		}
 		intent.putExtra("json", json_list.get(i));
 		intent.putExtra("path", pathList.get(pager.getCurrentItem())
-				+ "/answer.js");
+				+ "/answer.json");
 		intent.putExtra("type", 0);// 0 今日任务列表跳转 1历史记录列表跳转
 		intent.putExtra("status", status);// 0表示第一次做 1表示重做 2历史
 		Log.i("aaa", json_list.get(i));
@@ -530,7 +529,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 					}
 					File apkFile = new File(
 							pathList.get(pager.getCurrentItem()),
-							"questions.js");
+							"resourse.zip");
 					FileOutputStream fos = new FileOutputStream(apkFile);
 					int count = 0;
 					// 缓存
@@ -553,11 +552,18 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 					} while (!cancelUpdate);// 点击取消就停止下载.
 					fos.close();
 					is.close();
+					ExerciseBookTool.unZip(pathList.get(pager.getCurrentItem())
+							+ "/resourse.zip",
+							pathList.get(pager.getCurrentItem()));
+					getJsonPath();
 				}
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
+			} catch (Exception e) {
+				Toast.makeText(RecordMainActivity.this, "解压文件发生异常",
+						Toast.LENGTH_SHORT).show();
 			}
 			// 取消下载对话框显示
 			mDownloadDialog.dismiss();
@@ -590,13 +596,11 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 				if (obj.getString("status").equals("success")) {
 					work_list = WorkJson.json(json);
 					for (int i = 0; i < work_list.size(); i++) {
-						Log.i("linshi", work_list.get(i).getId() + "<-");
-					}
-					for (int i = 0; i < work_list.size(); i++) {
 						String path = Environment.getExternalStorageDirectory()
 								+ "/" + "Exercisebook_app/" + eb.getUid() + "/"
 								+ eb.getClass_id() + "/"
 								+ work_list.get(i).getId();
+						eb.setPath(path);
 						String downPath = IP
 								+ work_list.get(i).getQuestion_packages_url();
 						pathList.add(path);
@@ -615,8 +619,8 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 
 	// 根据日期获取过往记录
 	class search_tasks implements Runnable {
-
 		public void run() {
+			pathList = new ArrayList<String>();
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("date", date);
 			map.put("student_id", eb.getUid());
@@ -628,6 +632,16 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 				JSONObject obj = new JSONObject(json);
 				if (obj.getString("status").equals("success")) {
 					work_list = WorkJson.json(json);
+					for (int i = 0; i < work_list.size(); i++) {
+						String path = Environment.getExternalStorageDirectory()
+								+ "/" + "Exercisebook_app/" + eb.getUid() + "/"
+								+ eb.getClass_id() + "/"
+								+ work_list.get(i).getId();
+						String downPath = IP
+								+ work_list.get(i).getQuestion_packages_url();
+						pathList.add(path);
+						downloadList.add(downPath);
+					}
 					handler.sendEmptyMessage(0);
 				} else {
 					notice = obj.getString("notice");
@@ -814,11 +828,11 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 
 	private void getJsonPath() {
 		File file = new File(pathList.get(pager.getCurrentItem())
-				+ "/questions.js");
+				+ "/questions.json");
 		if (file.exists()) {
 			Log.i("linshi", "获取json");
 			String json = ExerciseBookTool.getJson(pathList.get(pager
-					.getCurrentItem()) + "/questions.js");
+					.getCurrentItem()) + "/questions.json");
 			SetJson(json);
 		}
 	}
@@ -871,7 +885,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 		}
 		intent.putExtra("json", json_list.get(i));
 		intent.putExtra("path", pathList.get(pager.getCurrentItem())
-				+ "/answer.js");
+				+ "/answer.json");
 		Log.i("aaa", json_list.get(i));
 		eb.setWork_end_dath(work_list.get(0).getEnd_time());
 		startActivity(intent);

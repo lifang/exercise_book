@@ -89,7 +89,7 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 		findViewById(R.id.base_back_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_propTrue).setOnClickListener(this);
-		setTimePropEnd();// 禁用道具
+		// setTimePropEnd();// 禁用道具
 		// setTruePropEnd();// 禁用道具
 		eb = (ExerciseBook) getApplication();
 		initialize();
@@ -119,26 +119,23 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 		question_number = (ImageView) findViewById(R.id.question_number);// 數量
 		one_btn = (Button) findViewById(R.id.one_btn);
 		two_btn = (Button) findViewById(R.id.two_btn);
-
 	}
 
 	private void SetJson(String json) {
-		Log.i("Ax", "--" + json);
+		Log.i("aaa", "--" + json);
 		if (json != "") {
 			try {
 				JSONObject time_limit = new JSONObject(json);
 				specified_time = time_limit.getInt("specified_time");
-				Log.i("aaa", specified_time + "--");
 				JSONArray questions = time_limit.getJSONArray("questions");
 				if (questions.length() > 0) {
 					JSONObject jo = questions.getJSONObject(0);
 					questions_id = jo.getInt("id");
-					Log.i("aaa", questions_id + "--");
 					JSONArray jsonarr = jo.getJSONArray("branch_questions");
 					img_index = jsonarr.length();
 					for (int i = 0; i < jsonarr.length(); i++) {
 						JSONObject item = jsonarr.getJSONObject(i);
-						String[] opption = item.getString("opption").split(
+						String[] opption = item.getString("options").split(
 								";\\|\\|;");
 						Time_LimitPojo tl = new Time_LimitPojo(
 								item.getInt("id"), item.getString("content"),
@@ -155,7 +152,6 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 
 	// 解析json
 	private void SetAnswer_Json(String json) {
-		Log.i("aaa", json);
 		if (json != "") {
 			try {
 				JSONObject obj = new JSONObject(json);
@@ -302,6 +298,7 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 				setCheckText("下一个");
 			}
 			break;
+		// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
 		case R.id.base_propTrue:
 			if (branch_questions.get(index).getOpption()[0]
 					.equals(branch_questions.get(index).getAnwser())) {
@@ -310,12 +307,16 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 			} else {
 				one_btn.setBackgroundResource(R.drawable.loginbtn_hui);
 				two_btn.setBackgroundResource(R.drawable.loginbtn_lv);
-
 			}
 			Check = true;
 			setCheckText("下一个");
+			PropJson(0, branch_questions.get(index).getId(), 2);
 			Toast.makeText(TenSpeedActivity.this, "使用成功!", Toast.LENGTH_SHORT)
 					.show();
+			break;
+		case R.id.base_propTime:
+			// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
+			PropJson(1, branch_questions.get(index).getId(), 2);
 			break;
 		}
 	}

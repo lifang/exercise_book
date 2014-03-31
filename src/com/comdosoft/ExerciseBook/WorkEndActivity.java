@@ -11,9 +11,11 @@ import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 
+import com.comdosoft.ExerciseBook.pojo.AnswerJson;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
+import com.google.gson.Gson;
 
 public class WorkEndActivity extends Activity implements Urlinterface {
 
@@ -45,7 +47,6 @@ public class WorkEndActivity extends Activity implements Urlinterface {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.work_end);
 		eb = (ExerciseBook) getApplication();
-
 		android.view.WindowManager.LayoutParams p = getWindow().getAttributes(); // 获取对话框当前的参数值
 		p.height = 850; // 高度设置为屏幕的
 		p.width = 740; // 宽度设置为屏幕的

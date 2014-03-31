@@ -41,21 +41,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.comdosoft.ExerciseBook.pojo.AnswerJson;
-import com.comdosoft.ExerciseBook.pojo.AnswerPojo;
-import com.comdosoft.ExerciseBook.pojo.Answer_QuestionsPojo;
 import com.comdosoft.ExerciseBook.pojo.WorkPoJo;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 import com.comdosoft.ExerciseBook.tools.WorkJson;
-import com.google.gson.Gson;
 
 public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	private String id;
 	private String school_class_id;
 	// private String json =
-	// "{\"status\":\"success\",\"notice\":\"\u83b7\u53d6\u6210\u529f\uff01\",\"tasks\":[{\"id\":130,\"name\":\"\",\"start_time\":\"2014-03-12T14:44:45+08:00\",\"question_types\":[0,1,2,3,4,5,6],\"finish_types\":[2,5],\"end_time\":\"2014-03-13T18:00:00+08:00\",\"question_packages_url\":\"/que_ps/question_p_264/resourse.zip\"}],\"knowledges_cards_count\":10}";
+	// "{\"status\":\"success\",\"notice\":\"\u83b7\u53d6\u6210\u529f\uff01\",\"tasks\":[{\"id\":130,\"name\":\"\",\"start_time\":\"2014-03-12T14:44:45+08:00\",\"question_types\":[0,1,2,3,4,5,6],\"finish_types\":[2],\"end_time\":\"2014-03-13T18:00:00+08:00\",\"question_packages_url\":\"/que_ps/question_p_264/resourse.zip\"}],\"knowledges_cards_count\":10}";
 	private ExerciseBook eb;
 	private LinearLayout mylayout;
 	private int linear_item = 0;
@@ -171,11 +167,11 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	}
 
 	private void getJsonPath() {
-		File file = new File(path + "/questions.js");
+		File file = new File(path + "/questions.json");
 		if (file.exists()) {
 			Log.i("linshi", "获取json");
-			String json = ExerciseBookTool.getJson(path + "/questions.js");
-			SetJson(json);
+			String jsons = ExerciseBookTool.getJson(path + "/questions.json");
+			SetJson(jsons);
 		}
 	}
 
@@ -237,7 +233,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 		}
 		imageView.setBackgroundResource(imgid);
 
-		AbsListView.LayoutParams param = new AbsListView.LayoutParams(300, 320);
+		AbsListView.LayoutParams param = new AbsListView.LayoutParams(210, 220);
 		layout.setLayoutParams(param);
 		if (i == 0 || i % 3 == 0) {
 			LinearLayout linear = new LinearLayout(getApplicationContext());
@@ -274,6 +270,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 						path = Environment.getExternalStorageDirectory() + "/"
 								+ "Exercisebook_app/" + eb.getUid() + "/"
 								+ eb.getClass_id() + "/" + eb.getWork_id();
+						eb.setPath(path);
 						downPath = IP
 								+ work_list.get(0).getQuestion_packages_url();
 						getJsonPath();
@@ -323,7 +320,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	public void Start_Acvivity(int i) {// 做题跳转
 		switch (questiontype_list.get(i)) {
 		case 0:
-			intent.setClass(this, AnswerDictationBeginActivity.class);
+			intent.setClass(this, AnswerDictationPrepareActivity.class);
 			break;
 		case 1:
 			intent.setClass(this, SpeakPrepareActivity.class);
@@ -337,12 +334,6 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 			intent.setClass(this, TenSpeedActivity.class);
 			break;
 		case 3:
-			// String json =
-			// "{  \"selecting\": {\"specified_time\": \"100\", \"question_types\": \"6\", \"questions\": [{\"id\": \"284\",\"branch_questions\": [ {\"id\": \"181\", \"content\": \"This is ___ apple!\", \"option\": \"a;||;an\", \"answer\": \"an;||;a\" },{\"id\": \"181\", \"content\": \"<file>apple.jpg</file>Why he is ___ Google!\", \"option\": \"apple;||;banana;||;orange;||;pear\", \"answer\": \"apple;||;banana\"},{\"id\": \"181\", \"content\": \"<file>apple.mp3</file>\", \"option\": \"one;||;two;||;three\", \"answer\": \"two\"}, {\"id\": \"181\", \"content\": \"<file>apple.jpg</file>Pears have white flesh and thin green or yellow skin.\", \"option\": \"iPhone;||;S5;||;Xperia\", \"answer\": \"iPhone\"},{\"id\": \"181\", \"content\": \"Dad.come set here!\", \"option\": \"ZhangDaCa;||;ChenLong\", \"answer\": \"ZhangDaCa\"}]}]}}";
-			// String path = "/sdcard/Exercisebook_app/73/85/130/answer.js";
-			// intent.putExtra("json", json);
-			// intent.putExtra("path", path);
-			// intent.putExtra("status", 0);
 			intent.setClass(this, AnswerSelectActivity.class);
 			break;
 		case 4:
@@ -355,11 +346,11 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 			intent.setClass(this, AnswerOrderActivity.class);
 			break;
 		}
-		intent.putExtra("json", json_list.get(i));
-		intent.putExtra("path", path + "/answer.js");
+		intent.putExtra("json", json_list.get(questiontype_list.get(i)));
+		intent.putExtra("path", path + "/answer.json");
 		intent.putExtra("type", 0);// 0 今日任务列表跳转 1历史记录列表跳转
 		intent.putExtra("status", status);// 0表示第一次做 1表示重做 2历史
-		Log.i("aaa", json_list.get(i));
+		Log.i("aaa", json_list.get(questiontype_list.get(i)));
 		eb.setWork_end_dath(work_list.get(0).getEnd_time());
 		startActivity(intent);
 		this.finish();
@@ -368,7 +359,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	public void Start_History_Acvivity(int i) {// 历史记录跳转
 		switch (questiontype_list.get(i)) {
 		case 0:
-			intent.setClass(this, SpeakPrepareActivity.class);
+			intent.setClass(this, AnswerDictationPrepareActivity.class);
 			break;
 		case 1:
 			intent.setClass(this, SpeakPrepareActivity.class);
@@ -394,11 +385,11 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 			intent.setClass(this, AnswerOrderActivity.class);
 			break;
 		}
-		intent.putExtra("json", json_list.get(i));
-		intent.putExtra("path", path + "/answer.js");
+		intent.putExtra("json", json_list.get(questiontype_list.get(i)));
+		intent.putExtra("path", path + "/answer.json");
 		intent.putExtra("type", 0);// 0 今日任务列表跳转 1历史记录列表跳转
 		intent.putExtra("status", status);// 0表示第一次做 1表示重做 2历史
-		Log.i("aaa", json_list.get(i));
+		Log.i("aaa", json_list.get(questiontype_list.get(i)));
 		eb.setWork_end_dath(work_list.get(0).getEnd_time());
 		startActivity(intent);
 		this.finish();
@@ -483,7 +474,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 					if (!file.exists()) {
 						file.mkdir();
 					}
-					File apkFile = new File(path, "questions.js");
+					File apkFile = new File(path, "resourse.zip");
 					FileOutputStream fos = new FileOutputStream(apkFile);
 					int count = 0;
 					// 缓存
@@ -506,12 +497,18 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 					} while (!cancelUpdate);// 点击取消就停止下载.
 					fos.close();
 					is.close();
+					ExerciseBookTool.unZip(path + "/resourse.zip", path);
+					getJsonPath();
 				}
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
+			} catch (Exception e) {
+				Toast.makeText(HomeWorkIngActivity.this, "解压文件发生异常",
+						Toast.LENGTH_SHORT).show();
 			}
+
 			// 取消下载对话框显示
 			mDownloadDialog.dismiss();
 		}

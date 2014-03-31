@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -22,6 +23,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -52,14 +55,11 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-import cn.jpush.android.api.JPushInterface;
-
 import com.comdosoft.ExerciseBook.pojo.AnswerJson;
 import com.comdosoft.ExerciseBook.pojo.AnswerPojo;
 import com.comdosoft.ExerciseBook.pojo.Answer_QuestionsPojo;
 import com.comdosoft.ExerciseBook.pojo.Branch_AnswerPoJo;
-import com.comdosoft.ExerciseBook.pojo.HistoryPojo;
-import com.comdosoft.ExerciseBook.pojo.ListHistoryPojo;
+import com.comdosoft.ExerciseBook.pojo.PropPojo;
 import com.google.gson.Gson;
 
 public class ExerciseBookTool implements Urlinterface {
@@ -68,17 +68,62 @@ public class ExerciseBookTool implements Urlinterface {
 	private static int readTimeOut = 10000;
 	private static String requestEncoding = "UTF-8";
 
+	/**
+	 * 解压一个压缩文档 到指定位置
+	 * 
+	 * @param zipFileString
+	 *            压缩包的名字
+	 * @param outPathString
+	 *            指定的路径
+	 * @throws FileNotFoundException
+	 * @throws Exception
+	 */
+	public static void unZip(String unZipfileName, String mDestPath)
+			throws Exception {
+		FileOutputStream fileOut = null;
+		ZipInputStream zipIn = null;
+		ZipEntry zipEntry = null;
+		File file = null;
+		int readedBytes = 0;
+		byte buf[] = new byte[4096];
+		zipIn = new ZipInputStream(new BufferedInputStream(new FileInputStream(
+				unZipfileName)));
+		while ((zipEntry = zipIn.getNextEntry()) != null) {
+			file = new File(mDestPath + "/" + zipEntry.getName());
+			if (zipEntry.isDirectory()) {
+				file.mkdirs();
+			} else {
+				// 如果指定文件的目录不存在,则创建之.
+				File parent = file.getParentFile();
+				if (!parent.exists()) {
+					parent.mkdirs();
+				}
+				fileOut = new FileOutputStream(file);
+				while ((readedBytes = zipIn.read(buf)) > 0) {
+					fileOut.write(buf, 0, readedBytes);
+				}
+				fileOut.close();
+			}
+			zipIn.closeEntry();
+		}
+	}
+
+	// 初始化answer文件
 	public static void initAnswer(String path, String id) {
+		List<PropPojo> propList = new ArrayList<PropPojo>();
+		for (int i = 0; i < 2; i++) {
+			propList.add(new PropPojo(i + "", new ArrayList<Integer>()));
+		}
 		try {
 			File file = new File(path);
 			if (!file.exists()) {
 				file.mkdirs();
 			}
-			file = new File(path + "/answer.js");
+			file = new File(path + "/answer.json");
 			if (!file.exists()) {
 				file.createNewFile();
-				Log.i("linshi", path + "/answer.js");
-				AnswerJson answer = new AnswerJson(id, "0", new String[] {},
+				Log.i("linshi", path + "/answer.json");
+				AnswerJson answer = new AnswerJson(id, "0", propList,
 						new AnswerPojo("0", "", "-1", "-1", "0",
 								new ArrayList<Answer_QuestionsPojo>()),
 						new AnswerPojo("0", "", "-1", "-1", "0",
@@ -97,7 +142,7 @@ public class ExerciseBookTool implements Urlinterface {
 				Gson gson = new Gson();
 				String result = gson.toJson(answer);
 				Log.i("linshi", result);
-				ExerciseBookTool.writeFile(path + "/answer.js", result);
+				ExerciseBookTool.writeFile(path + "/answer.json", result);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -143,7 +188,7 @@ public class ExerciseBookTool implements Urlinterface {
 	}
 
 	// 获取历史索引
-	private int[] getAnswer_Item(String json) {
+	private static int[] getAnswer_Item(String json) {
 		int[] arr = new int[3];
 		if (json != "") {
 			try {
@@ -246,7 +291,7 @@ public class ExerciseBookTool implements Urlinterface {
 		if (!file.exists()) {
 			file.mkdirs();
 		}
-		File file2 = new File(path + "/questions.js");
+		File file2 = new File(path + "/questions.json");
 		if (!file2.exists()) {
 			return false;
 		}
@@ -583,7 +628,8 @@ public class ExerciseBookTool implements Urlinterface {
 			rd.close();
 			in.close();
 		} catch (IOException e) {
-			Log.i("linshi", "发生异常");
+//			Log.i("linshi", "发生异常");
+			e.printStackTrace();
 		}
 		Log.i("linshi", tempLine);
 		return tempLine;

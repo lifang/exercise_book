@@ -3,8 +3,6 @@ package com.comdosoft.ExerciseBook.tools;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.util.Log;
-
 public class AnswerTools {
 	// 获取题目类型
 	public static int getSelectType(String s) {
@@ -37,6 +35,15 @@ public class AnswerTools {
 		if (index != -1) {
 			int startIndex = s.indexOf("<file>");
 			return s.subSequence(startIndex + 6, index).toString();
+		}
+		return null;
+	}
+
+	// 获取文件名称
+	public static String getSelectFileName(String s) {
+		if (s != null && !s.equals("")) {
+			String[] arr = s.split("/");
+			return arr[arr.length - 1];
 		}
 		return null;
 	}

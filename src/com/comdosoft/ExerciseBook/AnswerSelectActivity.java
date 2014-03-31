@@ -276,15 +276,16 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 					int type = AnswerTools.getSelectType(s);
 					String content = AnswerTools.getSelectContent(s);
 					List<String> arr = AnswerTools.getSelectOption(jb
-							.getString("opption"));
+							.getString("option"));
 					List<String> answer = AnswerTools.getSelectAnswer(jb
 							.getString("answer"));
 
 					if (type != 0) {
 						String path = AnswerTools.getSelectPath(s);
+						String fileName = AnswerTools.getSelectPath(path);
 						list.add(new AnswerBasePojo(questions_id,
-								branch_questions_id, type, content, path, arr,
-								answer));
+								branch_questions_id, type, content, fileName,
+								arr, answer));
 					} else {
 						list.add(new AnswerBasePojo(questions_id,
 								branch_questions_id, type, content, arr, answer));

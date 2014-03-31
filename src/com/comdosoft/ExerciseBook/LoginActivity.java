@@ -45,7 +45,6 @@ public class LoginActivity extends Activity implements OnClickListener,
 	private ExerciseBook eb;
 	private Handler mHandler = new Handler() {
 
-		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
 			mPd.dismiss();
@@ -69,7 +68,6 @@ public class LoginActivity extends Activity implements OnClickListener,
 
 	};
 
-	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
@@ -88,7 +86,6 @@ public class LoginActivity extends Activity implements OnClickListener,
 		}
 	}
 
-	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		mTencent.onActivityResult(requestCode, resultCode, data);
 	}
@@ -144,18 +141,17 @@ public class LoginActivity extends Activity implements OnClickListener,
 	}
 
 	class MyThread extends Thread {
-		@Override
 		public void run() {
 			super.run();
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("open_id", openid);
 			json = ExerciseBookTool.doPost(QQ_LOGIN, map);
+			Log.i("linshi", json);
 			analyzeJson(json);
 		}
 	}
 
 	private class BaseUiListener implements IUiListener {
-		@Override
 		public void onComplete(JSONObject response) {
 			doComplete(response);
 		}
@@ -174,17 +170,14 @@ public class LoginActivity extends Activity implements OnClickListener,
 			}
 		}
 
-		@Override
 		public void onError(UiError e) {
 		}
 
-		@Override
 		public void onCancel() {
 		}
 
 	}
 
-	@Override
 	public void onClick(View v) {
 		onClickLogin();
 	}

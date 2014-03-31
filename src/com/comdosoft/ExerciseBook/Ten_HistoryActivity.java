@@ -125,7 +125,7 @@ public class Ten_HistoryActivity extends AnswerBaseActivity implements
 					img_index = jsonarr.length();
 					for (int i = 0; i < jsonarr.length(); i++) {
 						JSONObject item = jsonarr.getJSONObject(i);
-						String[] opption = item.getString("opption").split(
+						String[] opption = item.getString("options").split(
 								";\\|\\|;");
 						Time_LimitPojo tl = new Time_LimitPojo(
 								item.getInt("id"), item.getString("content"),

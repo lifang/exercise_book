@@ -11,7 +11,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -88,12 +87,13 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.cloze);
-		setTimePropEnd();// 禁用道具
+		// setTimePropEnd();// 禁用道具
 		// setTruePropEnd();// 禁用道具
 		eb = (ExerciseBook) getApplication();
 		findViewById(R.id.base_back_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_propTrue).setOnClickListener(this);
+
 		gson = new Gson();
 		initialize();
 		Intent intent = getIntent();
@@ -188,21 +188,25 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 				Log.i("aaa", specified_time + "--");
 				JSONArray questions = time_limit.getJSONArray("questions");
 				if (questions.length() > 0) {
+					Log.i("aaa", questions.length() + "--");
 					for (int i = 0; i < questions.length(); i++) {
 						JSONObject jo = questions.getJSONObject(i);
 						JSONArray jsonarr = jo.getJSONArray("branch_questions");
+						Log.i("aaa", 1 + "--");
 						Branchlist = new ArrayList<Branch_PoJo>();
 						for (int j = 0; j < jsonarr.length(); j++) {
 							JSONObject item = jsonarr.getJSONObject(j);
+							Log.i("aaa", item.getInt("id") + "--");
+							Log.i("aaa", item.getString("answer") + "--");
+							Log.i("aaa", item.getString("options") + "--");
 							Branch_PoJo tl = new Branch_PoJo(item.getInt("id"),
-									item.getString("opption"),
+									item.getString("options"),
 									item.getString("answer"));
 							Branchlist.add(tl);
 						}
-
-						ClozePojo lp = new ClozePojo(jo.getInt("id"),
-								jo.getString("content"), Branchlist);
 						Log.i("suanfa", "id--" + jo.getInt("id"));
+						ClozePojo lp = new ClozePojo(jo.getInt("id"),
+								jo.getString("full_text"), Branchlist);
 						list.add(lp);
 					}
 				}
@@ -211,15 +215,6 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 						Toast.LENGTH_SHORT).show();
 			}
 		}
-	}
-
-	private List<String> getlist(String[] str) {
-		List<String> strlist = new ArrayList<String>();
-		// strlist.add("");
-		for (int i = 0; i < str.length; i++) {
-			strlist.add(str[i]);
-		}
-		return strlist;
 	}
 
 	// 0为继续 1为全部做完 2为本小题做完
@@ -371,9 +366,11 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 				}
 			}
 			break;
+
 		case R.id.base_propTrue:
 			Log.i("linshi", propItem + "----" + tv_list.size());
 			if (propItem < tv_list.size()) {
+				PropJson(0, cloze.getList().get(propItem).getId(), 5);//1道具类型 --0显示答案 1时间  , 2--小题id ,3--任务类型
 				tv_list.get(propItem).setText(
 						cloze.getList().get(propItem).getAnswer());
 				tv_list.get(propItem).setTextColor(
@@ -387,6 +384,10 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 					propItem += 1;
 				}
 			}
+			break;
+		case R.id.base_propTime:
+			// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
+			PropJson(1, cloze.getList().get(propItem).getId(), 5);//1道具类型 --0显示答案 1时间  , 2--小题id ,3--任务类型
 			break;
 		}
 	}

@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<<<<<<< HEAD
 <lint>
   
     <issue
+=======
+<lint>    <issue
+>>>>>>> da15e3b88bb664edbd6874f70302432d43fb547b
         id="UseSparseArrays"
         severity="ignore" />
 

@@ -6,12 +6,13 @@ import java.util.List;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import cn.jpush.android.api.JPushInterface;
-
-import cn.jpush.android.api.JPushInterface;
 
 import com.comdosoft.ExerciseBook.pojo.ListeningPojo;
 import com.comdosoft.ExerciseBook.pojo.QuestionPojo;
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
 public class ExerciseBook extends Application {
 
@@ -32,6 +33,8 @@ public class ExerciseBook extends Application {
 	private int branch_number;
 	private int question_item;
 	private boolean history_type;
+	private int propTime_Number;
+	private String path;
 
 	public ExerciseBook() {
 		this.setMneu(true);
@@ -41,6 +44,15 @@ public class ExerciseBook extends Application {
 		this.setQuestion_item(0);
 		this.setMneu(true);
 		this.setHistory_type(false);
+		this.setPropTime_Number(0);
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 
 	public List<Activity> getActivityList() {
@@ -183,27 +195,30 @@ public class ExerciseBook extends Application {
 		this.question_item = question_item;
 	}
 
+	public int getPropTime_Number() {
+		return propTime_Number;
+	}
+
+	public void setPropTime_Number(int propTime_Number) {
+		this.propTime_Number = propTime_Number;
+	}
+
 	public void onCreate() {
 		super.onCreate();
-		// initImageLoader(getApplicationContext());
+		initImageLoader(getApplicationContext());
 	}
 
 	public static void initImageLoader(Context context) {
-		// This configuration tuning is custom. You can tune every option, you
-		// may tune some of them,
-		// or you can create default configuration by
-		// ImageLoaderConfiguration.createDefault(this);
-		// method.
-		// ImageLoaderConfiguration config = new
-		// ImageLoaderConfiguration.Builder(
-		// context).threadPriority(Thread.NORM_PRIORITY - 2)
-		// .denyCacheImageMultipleSizesInMemory()
-		// .discCacheFileNameGenerator(new Md5FileNameGenerator())
-		// .tasksProcessingOrder(QueueProcessingType.LIFO)
-		// .writeDebugLogs() // Remove for release app
-		// .build();
-		// // Initialize ImageLoader with configuration.
-		// ImageLoader.getInstance().init(config);
+		ImageLoaderConfiguration.createDefault(context);
+		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
+				context).threadPriority(Thread.NORM_PRIORITY - 2)
+				.denyCacheImageMultipleSizesInMemory()
+				.discCacheFileNameGenerator(new Md5FileNameGenerator())
+				.tasksProcessingOrder(QueueProcessingType.LIFO)
+				.writeDebugLogs() // Remove for release app
+				.build();
+		// Initialize ImageLoader with configuration.
+		ImageLoader.getInstance().init(config);
 	}
 
 }

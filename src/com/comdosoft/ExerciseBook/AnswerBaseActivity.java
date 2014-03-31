@@ -53,12 +53,11 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	private int mQuestionType = 0;
 	private int mRatio = 0;
 	private int second;
-	private int type = 0;
+	public int type = 0;
 	private boolean flag = true;
 	private String recordMes;
 	public String json;
-	private String path;
-
+	public String path;
 	private String[] answerArr = new String[] { "你的作答: ", " ", "你的选择: ",
 			"你的选择: ", "你的搭配: ", "你的选择: ", "你的排序: " };
 	private String[] questionArr = new String[] { "listening", "reading",
@@ -111,6 +110,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		super.setContentView(R.layout.answer_base);
 		eb = (ExerciseBook) getApplication();
 		findViewById(R.id.base_back_linearlayout).setOnClickListener(this);
+		findViewById(R.id.base_propTime).setOnClickListener(this);
 		middleLayout = (LinearLayout) findViewById(R.id.base_LinearLayout);
 		base_time_linearlayout = (LinearLayout) findViewById(R.id.base_time_linearlayout);
 		base_history_linearlayout = (LinearLayout) findViewById(R.id.base_history_linearlayout);
@@ -148,13 +148,15 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		mQindex = amp.getQuestions_item();
 		mBindex = amp.getBranch_item();
 
-		setUseTime(amp.getUse_time());
-		setType(amp.getStatus());
+		if (type != 6) {
+			setUseTime(amp.getUse_time());
+			setType(amp.getStatus());
 
-		if (amp.getStatus() == 1) {
-			mRecoirdAnswer = amp.getAnswer();
-			mRecoirdRatio = amp.getRatio();
-			nextRecord();
+			if (amp.getStatus() == 1) {
+				mRecoirdAnswer = amp.getAnswer();
+				mRecoirdRatio = amp.getRatio();
+				nextRecord();
+			}
 		}
 	}
 
@@ -162,7 +164,9 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	public void setType(int type) {
 		this.type = type;
 		if (type == 0) {
-			mTimer.start();
+			if (mQuestionType != 6) {
+				mTimer.start();
+			}
 			base_time_linearlayout.setVisibility(View.VISIBLE);
 			base_history_linearlayout.setVisibility(View.GONE);
 			base_answer_linearlayout.setVisibility(View.GONE);
@@ -292,7 +296,6 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		}
 	}
 
-	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.base_back_linearlayout:
@@ -354,6 +357,8 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 					entity.addPart("publish_question_package_id",
 							new StringBody(eb.getWork_id()));
 					entity.addPart("answer_file", new FileBody(new File(path)));
+					Log.i("linshi", eb.getUid() + "/" + eb.getClass_id() + "/"
+							+ eb.getWork_id() + "/" + path);
 					String answer_json = ExerciseBookTool.sendPhostimg(
 							finish_question_packge, entity);
 					if (!answer_json.equals("")) {
@@ -554,7 +559,30 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		return null;
 	}
 
-	@Override
+	// 编辑道具json文件
+	public void PropJson(int type, int branch_id, int question_type) {
+		String answer_history = ExerciseBookTool.getAnswer_Json_history(path);
+		answerJson = gson.fromJson(answer_history, AnswerJson.class);
+		if (type == 1) {// 减时卡
+			Toast.makeText(AnswerBaseActivity.this, "成功使用减时卡减去5秒时间！",
+					Toast.LENGTH_SHORT).show();
+			mQuestionType = question_type;
+			int utime = getUseTime() - 5;
+			if (utime < 0) {
+				utime = 0;
+			}
+			setUseTime(utime);
+			getAnswerPojo().setUse_time(utime + "");
+		}
+		answerJson.props.get(type).getBranch_id().add(branch_id);
+		String str = gson.toJson(answerJson);
+		try {
+			ExerciseBookTool.writeFile(path, str);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		Log.i("Ax", "resultCode-" + resultCode);

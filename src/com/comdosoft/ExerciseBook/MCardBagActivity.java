@@ -171,7 +171,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 							try {
 								viewPager = (ViewPager) findViewById(R.id.guidePages);
 								Map<String, String> map = new HashMap<String, String>();
-								map.put("student_id", student_id);
+								map.put(" ", student_id);
 								map.put("school_class_id", school_class_id);
 								map.put("mistake_types", mistype);
 								json = ExerciseBookTool.sendGETRequest(
