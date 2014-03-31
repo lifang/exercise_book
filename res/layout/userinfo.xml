@@ -139,7 +139,7 @@
 
                     <ImageView
                         android:id="@+id/userinfo_youyi1"
-                        android:layout_width="0.1px"
+                        android:layout_width="0.01px"
                         android:layout_height="20.1px"
                         android:layout_marginTop="6.7px"
                         android:background="@drawable/chengjiu_huang" />
@@ -194,7 +194,7 @@
 
                     <ImageView
                         android:id="@+id/userinfo_jingzhun1"
-                        android:layout_width="0.1px"
+                        android:layout_width="0.01px"
                         android:layout_height="20.1px"
                         android:layout_marginTop="6.7px"
                         android:background="@drawable/chengjiu_huang" />
@@ -246,7 +246,7 @@
 
                     <ImageView
                         android:id="@+id/userinfo_xunsu1"
-                        android:layout_width="0.1px"
+                        android:layout_width="0.01px"
                         android:layout_height="20.1px"
                         android:layout_marginTop="6.7px"
                         android:background="@drawable/chengjiu_huang" />
@@ -298,7 +298,7 @@
 
                     <ImageView
                         android:id="@+id/userinfo_jiezu1"
-                        android:layout_width="0.1px"
+                        android:layout_width="0.01px"
                         android:layout_height="20.1px"
                         android:layout_marginTop="6.7px"
                         android:background="@drawable/chengjiu_huang" />
