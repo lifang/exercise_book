@@ -60,15 +60,14 @@ public class HomepageAllActivity extends Activity implements
 		OnHeaderRefreshListener, OnFooterRefreshListener, Urlinterface,
 		OnGestureListener {
 	private ExerciseBook exerciseBook;
-	private String user_id = "130"; // 学生 id 上面 会传过来的 学生student_id，
-	private String id = "73";
-	private String school_class_id = "83";
+	private String user_id = "130"; // 学生 user_id
+	private String id = "73";// 学生student_id，
+	private String school_class_id = "83"; // 班级 id
 	private ProgressDialog prodialog;
 	// -------------------------------------------------------------------
 	private String json = "{\"status\":\"success\",\"notice\":\"\u767b\u9646\u6210\u529f\uff01\",\"student\":{\"id\":66,\"name\":\"hrueieurh \",\"user_id\":66,\"nickname\":\"yeueieiri \",\"avatar_url\":\"/avatars/students/2014-01/student_66.jpg\"},\"class\":{\"id\":1,\"name\":\"1401\",\"tearcher_name\":\"fgf\",\"tearcher_id\":1},\"classmates\":[{\"avatar_url\":\"/assets/default_avater.jpg\",\"id\":1,\"name\":\"nan\",\"nickname\":\"zxn\"}],\"task_messages\":[],\"microposts\":{\"page\":1,\"pages_count\":4,\"details_microposts\":[{\"avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"content\":\"ww\u6211\u6d4b\u5b89\u5fbdi\u2026\u2026\n\n\u6d4b\u8bd5\u4e00\u4e0b\",\"created_at\":\"2014-01-27T14:12:02+08:00\",\"micropost_id\":145,\"name\":\"hrueieurh \",\"reply_microposts_count\":1,\"user_id\":66,\"user_types\":1},{\"avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"content\":\"556355265335 \",\"created_at\":\"2014-01-23T07:17:25+08:00\",\"micropost_id\":104,\"name\":\"hrueieurh \",\"reply_microposts_count\":0,\"user_id\":66,\"user_types\":1},{\"avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"content\":\"Babbitt \",\"created_at\":\"2014-01-23T02:58:48+08:00\",\"micropost_id\":103,\"name\":\"hrueieurh \",\"reply_microposts_count\":4,\"user_id\":66,\"user_types\":1},{\"avatar_url\":\"/assets/default_avater.jpg\",\"content\":\"\u5173\u4e8e\u52a0\u5f3a\",\"created_at\":\"2014-01-22T10:11:11+08:00\",\"micropost_id\":99,\"name\":\"???\",\"reply_microposts_count\":6,\"user_id\":9,\"user_types\":1},{\"avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"content\":\"\u7684\u7684\u7684\",\"created_at\":\"2014-01-22T09:47:22+08:00\",\"micropost_id\":97,\"name\":\"hrueieurh \",\"reply_microposts_count\":5,\"user_id\":66,\"user_types\":1},{\"avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"content\":\"\u5927\u5927\u65b9\u65b9\u53d1\",\"created_at\":\"2014-01-22T09:47:12+08:00\",\"micropost_id\":96,\"name\":\"hrueieurh \",\"reply_microposts_count\":0,\"user_id\":66,\"user_types\":1},{\"avatar_url\":\"/assets/default_avater.jpg\",\"content\":\"hjk\",\"created_at\":\"2014-01-22T06:43:12+08:00\",\"micropost_id\":95,\"name\":\"???\",\"reply_microposts_count\":19,\"user_id\":9,\"user_types\":1},{\"avatar_url\":\"/assets/default_avater.jpg\",\"content\":\"ffg\",\"created_at\":\"2014-01-22T02:57:52+08:00\",\"micropost_id\":94,\"name\":\"???\",\"reply_microposts_count\":6,\"user_id\":9,\"user_types\":1},{\"avatar_url\":\"/assets/default_avater.jpg\",\"content\":\"UI o\",\"created_at\":\"2014-01-21T10:48:36+08:00\",\"micropost_id\":93,\"name\":\"???\",\"reply_microposts_count\":2,\"user_id\":9,\"user_types\":1},{\"avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"content\":\"rrrrr\",\"created_at\":\"2014-01-21T10:13:22+08:00\",\"micropost_id\":86,\"name\":\"hrueieurh \",\"reply_microposts_count\":16,\"user_id\":66,\"user_types\":1},{\"avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"content\":\"rrrrr\",\"created_at\":\"2014-01-21T10:13:21+08:00\",\"micropost_id\":85,\"name\":\"hrueieurh \",\"reply_microposts_count\":7,\"user_id\":66,\"user_types\":1},{\"avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"content\":\"dffff\",\"created_at\":\"2014-01-21T10:13:19+08:00\",\"micropost_id\":84,\"name\":\"hrueieurh \",\"reply_microposts_count\":0,\"user_id\":66,\"user_types\":1},{\"avatar_url\":\"/assets/default_avater.jpg\",\"content\":\"\u5feb\u4e86\uff0c\u5feb\u4e86\u5feb\u4e86\",\"created_at\":\"2014-01-21T06:46:09+08:00\",\"micropost_id\":73,\"name\":\"??\",\"reply_microposts_count\":0,\"user_id\":8,\"user_types\":1},{\"avatar_url\":\"/assets/default_avater.jpg\",\"content\":\"dddddd\",\"created_at\":\"2014-01-20T06:24:07+08:00\",\"micropost_id\":72,\"name\":\"???\",\"reply_microposts_count\":3,\"user_id\":9,\"user_types\":1},{\"avatar_url\":\"/assets/default_avater.jpg\",\"content\":\"ggjjkkjhghhjjj\",\"created_at\":\"2014-01-20T04:41:44+08:00\",\"micropost_id\":71,\"name\":\"???\",\"reply_microposts_count\":0,\"user_id\":9,\"user_types\":1},{\"avatar_url\":\"/assets/default_avater.jpg\",\"content\":\"\u98ce\u98ce\u5149\u5149\u97e9\u56fd\u521a\u521a\u597d\u53d1\u98ce\u98ce\u5149\u5149\u5730\u65b9\u98ce\u683c\u56de\u5bb6\u98ce\u683c\u54c8\u54c8\u54c8\u98ce\u683c\u5475\u5475\u7684\u611f\u89c9\u7684\u98ce\u683c\u4e2a\",\"created_at\":\"2014-01-20T02:52:47+08:00\",\"micropost_id\":70,\"name\":\"???\",\"reply_microposts_count\":1,\"user_id\":9,\"user_types\":1},{\"avatar_url\":\"/assets/default_avater.jpg\",\"content\":\"\u89c4\u5212\u5c40\",\"created_at\":\"2014-01-18T10:57:36+08:00\",\"micropost_id\":69,\"name\":\"???\",\"reply_microposts_count\":0,\"user_id\":9,\"user_types\":1},{\"avatar_url\":\"/assets/default_avater.jpg\",\"content\":\"\u4f1a\",\"created_at\":\"2014-01-18T10:41:09+08:00\",\"micropost_id\":68,\"name\":\"???\",\"reply_microposts_count\":1,\"user_id\":9,\"user_types\":1},{\"avatar_url\":\"/assets/default_avater.jpg\",\"content\":\"\u4e2a\u770b\u8fc7\",\"created_at\":\"2014-01-18T10:40:54+08:00\",\"micropost_id\":67,\"name\":\"???\",\"reply_microposts_count\":0,\"user_id\":9,\"user_types\":1},{\"avatar_url\":\"/assets/default_avater.jpg\",\"content\":\"yyuu\",\"created_at\":\"2014-01-18T10:33:45+08:00\",\"micropost_id\":66,\"name\":\"???\",\"reply_microposts_count\":0,\"user_id\":9,\"user_types\":1}]},\"daily_tasks\":[{\"id\":2,\"name\":\"2014-1-20\u4f5c\u4e1a\",\"start_time\":\"2014-01-20T00:00:00+08:00\",\"end_time\":\"2014-01-30T00:00:00+08:00\",\"question_packages_url\":\"/question_package_1.js\",\"listening_schedule\":\"1/4\",\"reading_schedule\":\"0/4\"}],\"follow_microposts_id\":[86,97,97,96,95,93,71,93,71,99],\"messages\":[{\"content\":\"[[fgh]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;jjj\",\"created_at\":\"2014-01-26T12:32:23+08:00\",\"id\":554,\"micropost_id\":103,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[fgh]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;uui\",\"created_at\":\"2014-01-26T12:32:07+08:00\",\"id\":553,\"micropost_id\":103,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[fgh]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;huu\",\"created_at\":\"2014-01-26T12:31:59+08:00\",\"id\":552,\"micropost_id\":103,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[fgh]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;jjii\",\"created_at\":\"2014-01-26T12:30:43+08:00\",\"id\":550,\"micropost_id\":85,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[xhxksn ]]\u56de\u590d\u4e86\u60a8\u5173\u6ce8\u7684\u6d88\u606f\uff1a;||;ca\",\"created_at\":\"2014-01-23T03:04:38+08:00\",\"id\":208,\"micropost_id\":86,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[xhxksn ]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;ca\",\"created_at\":\"2014-01-23T03:04:30+08:00\",\"id\":189,\"micropost_id\":86,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[xhxksn ]]\u56de\u590d\u4e86\u60a8\u5173\u6ce8\u7684\u6d88\u606f\uff1a;||;ca\",\"created_at\":\"2014-01-23T03:04:30+08:00\",\"id\":198,\"micropost_id\":86,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[xhxksn ]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;a\",\"created_at\":\"2014-01-23T03:04:00+08:00\",\"id\":187,\"micropost_id\":97,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[xhxksn ]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;CA\",\"created_at\":\"2014-01-23T03:03:46+08:00\",\"id\":186,\"micropost_id\":97,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[xhxksn ]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;ding\",\"created_at\":\"2014-01-23T03:01:09+08:00\",\"id\":185,\"micropost_id\":103,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[xhxksn ]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;@\",\"created_at\":\"2014-01-23T03:00:51+08:00\",\"id\":184,\"micropost_id\":103,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[xhxksn ]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;ca\",\"created_at\":\"2014-01-23T03:00:29+08:00\",\"id\":183,\"micropost_id\":103,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[xhxksn ]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;ca\",\"created_at\":\"2014-01-23T03:00:29+08:00\",\"id\":182,\"micropost_id\":103,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[xhxksn ]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;abc\",\"created_at\":\"2014-01-23T02:07:00+08:00\",\"id\":180,\"micropost_id\":99,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[xhxksn ]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;''''\",\"created_at\":\"2014-01-23T02:05:37+08:00\",\"id\":175,\"micropost_id\":97,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[???]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;\u54c8\u54c8\u54c8\u5c31\",\"created_at\":\"2014-01-22T10:09:41+08:00\",\"id\":163,\"micropost_id\":97,\"sender_avatar_url\":\"/assets/default_avater.jpg\",\"sender_name\":\"???\",\"user_id\":66},{\"content\":\"[[???]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;\u53cd\u5f39\u6709\",\"created_at\":\"2014-01-22T10:09:22+08:00\",\"id\":162,\"micropost_id\":97,\"sender_avatar_url\":\"/assets/default_avater.jpg\",\"sender_name\":\"???\",\"user_id\":66},{\"content\":\"[[???]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;\u89c4\u5212\",\"created_at\":\"2014-01-22T10:09:15+08:00\",\"id\":161,\"micropost_id\":97,\"sender_avatar_url\":\"/assets/default_avater.jpg\",\"sender_name\":\"???\",\"user_id\":66},{\"content\":\"[[???]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\",\"created_at\":\"2014-01-22T08:18:41+08:00\",\"id\":159,\"micropost_id\":85,\"sender_avatar_url\":\"/assets/default_avater.jpg\",\"sender_name\":\"???\",\"user_id\":66},{\"content\":\"[[???]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\",\"created_at\":\"2014-01-22T08:18:40+08:00\",\"id\":157,\"micropost_id\":85,\"sender_avatar_url\":\"/assets/default_avater.jpg\",\"sender_name\":\"???\",\"user_id\":66},{\"content\":\"[[???]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\",\"created_at\":\"2014-01-22T08:18:39+08:00\",\"id\":153,\"micropost_id\":85,\"sender_avatar_url\":\"/assets/default_avater.jpg\",\"sender_name\":\"???\",\"user_id\":66},{\"content\":\"[[???]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\",\"created_at\":\"2014-01-22T08:18:34+08:00\",\"id\":144,\"micropost_id\":86,\"sender_avatar_url\":\"/assets/default_avater.jpg\",\"sender_name\":\"???\",\"user_id\":66},{\"content\":\"[[???]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\",\"created_at\":\"2014-01-22T08:18:32+08:00\",\"id\":135,\"micropost_id\":86,\"sender_avatar_url\":\"/assets/default_avater.jpg\",\"sender_name\":\"???\",\"user_id\":66},{\"content\":\"[[???]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\",\"created_at\":\"2014-01-22T08:18:30+08:00\",\"id\":126,\"micropost_id\":86,\"sender_avatar_url\":\"/assets/default_avater.jpg\",\"sender_name\":\"???\",\"user_id\":66},{\"content\":\"[[???]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\",\"created_at\":\"2014-01-22T08:18:28+08:00\",\"id\":117,\"micropost_id\":86,\"sender_avatar_url\":\"/assets/default_avater.jpg\",\"sender_name\":\"???\",\"user_id\":66}]}";
 	public PullToRefreshView mPullToRefreshView;
 	public LinearLayout Linear_layout;
-	private DisplayImageOptions options;
 	private int child_page = 1; // 子消息 分页加载的 第几页
 	private int child_pages_count;// 子消息总页数
 	private int page = 1;// 当前第几页
@@ -77,18 +76,19 @@ public class HomepageAllActivity extends Activity implements
 	private String reciver_types = "";
 	private String micropost_id = "";
 	private int list_item;// list集合的最后一位索引
-	private int user_types = 1;
+	private int user_types = 1; // 用户类型 学生 默认为 1
 	public List<Boolean> gk_list;// 主消息 点击操作 开关集合
 	public List<Boolean> reply_gk_list;// 回复 点击操作 开关集合
 	public List<RelativeLayout> item_huifu;// 回复开关集合
-	private List<Micropost> list;
+	private List<Micropost> list; // 主消息 集合
+	private ArrayList<Child_Micropost> child_list; // 子消息 集合
 	private List<String> care;
 	private List<ImageView> guanzhu_list;// 关注按钮 集合
 	private List<TextView> guanzhu_count_list;// 关注数 集合
 	private List<TextView> huifu_count_list;// 回复数 集合
 	private List<HorizontalScrollView> HorizontalScrollView_list;// 主消息 滑动块 集合
 
-	private List<ListView> list_list;
+	private List<ListView> list_list; //
 
 	private List<ZiAdapter> ziAdapter_list;
 	private String avatar_url;
@@ -96,32 +96,29 @@ public class HomepageAllActivity extends Activity implements
 	private String nick_name;
 	private int focus = -1;
 
-	private static ImageMemoryCache memoryCache;
+	private static ImageMemoryCache memoryCache; // 图片 缓存
 
-	private GestureDetector gd;
+	private GestureDetector gd; // 手势监听
 	// 事件状态
 	private final char FLING_CLICK = 0;
 	private final char FLING_LEFT = 1;
 	private final char FLING_RIGHT = 2;
 	private char flingState = FLING_CLICK;
 	public static HomepageAllActivity instance = null;
-	private ArrayList<Child_Micropost> child_list;
+
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case 0:
 				prodialog.dismiss();
 				init();
-
 				break;
-
 			case 2:
 				focus = -1;
 				list.clear();
 				click_list();
 				final String json_all = (String) msg.obj;
 				parseJson_all(json_all);
-
 				for (int i = 0; i < list.size(); i++) {
 					setlayout(i);
 				}
@@ -164,22 +161,12 @@ public class HomepageAllActivity extends Activity implements
 		id = preferences.getString("id", "73");
 		school_class_id = preferences.getString("school_class_id", "83");
 
-		item_huifu = new ArrayList<RelativeLayout>();
-		guanzhu_list = new ArrayList<ImageView>();
-		guanzhu_count_list = new ArrayList<TextView>();
-		huifu_count_list = new ArrayList<TextView>();
-		ziAdapter_list = new ArrayList<ZiAdapter>();
-
-		list = new ArrayList<Micropost>();
-		list_list = new ArrayList<ListView>();
-		gk_list = new ArrayList<Boolean>();
-		HorizontalScrollView_list = new ArrayList<HorizontalScrollView>();
-		reply_gk_list = new ArrayList<Boolean>();
-
+		initialize(); // 初始化参数
 	}
 
 	protected void onResume() {
 		super.onResume();
+		page = 1;
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
 
@@ -188,7 +175,6 @@ public class HomepageAllActivity extends Activity implements
 		school_class_id = preferences.getString("school_class_id", "83");
 		int refresh = exerciseBook.getRefresh();
 		if (refresh == 1) {
-			// memoryCache.removeBitmap(Urlinterface.IP + avatar_url);
 			if (ExerciseBookTool.isConnect(HomepageAllActivity.this)) {
 				prodialog = new ProgressDialog(HomepageAllActivity.this);
 				prodialog.setMessage(ExerciseBookParams.PD_CLASS_INFO);
@@ -288,7 +274,6 @@ public class HomepageAllActivity extends Activity implements
 		} else {
 			String url = IP + mess.getAvatar_url();
 			// ExerciseBookTool.set_background(url, face);
-
 			Bitmap result = memoryCache.getBitmapFromCache(url);
 			if (result == null) {
 				Log.i("aa", " 网络网络" + i);
@@ -298,7 +283,6 @@ public class HomepageAllActivity extends Activity implements
 				Log.i("aa", " 缓存缓存缓存缓存" + i);
 				face.setImageDrawable(new BitmapDrawable(result));
 			}
-
 		}
 
 		Micropost_senderName.setText(mess.getName()); // 发消息的人
@@ -410,7 +394,9 @@ public class HomepageAllActivity extends Activity implements
 		Linear_layout.addView(convertView);
 	}
 
-	// 加载更多
+	/*
+	 * 上拉加载更多
+	 */
 	public void onFooterRefresh(PullToRefreshView view) {
 		page = page + 1;
 		if (page <= pages_count) {
@@ -450,9 +436,10 @@ public class HomepageAllActivity extends Activity implements
 		}
 	}
 
-	// 刷新
+	/*
+	 * 下拉刷新
+	 */
 	public void onHeaderRefresh(PullToRefreshView view) {
-		// memoryCache.removeBitmap(Urlinterface.IP + avatar_url);
 		if (ExerciseBookTool.isConnect(HomepageAllActivity.this)) {
 			shuaxin();
 		} else {
@@ -854,38 +841,35 @@ public class HomepageAllActivity extends Activity implements
 	}
 
 	/*
-	 * 解析  子消息  中消息部分  
-	 * 
-	 * */
-	
+	 * 解析 子消息 中消息部分
+	 */
+
 	public void parse_reply_microposts(String reply_microposts) {
-		
-			try {
-				JSONArray jsonArray2 = new JSONArray(reply_microposts);
-				for (int i = 0; i < jsonArray2.length(); ++i) {
-					JSONObject o = (JSONObject) jsonArray2.get(i);
-					String id = o.getString("id");
-					String sender_id = o.getString("sender_id");
-					String sender_types = o.getString("sender_types");
-					String sender_name = o.getString("sender_name");
-					String sender_avatar_url = o
-							.getString("sender_avatar_url");
-					String content = o.getString("content");
-					String reciver_name = o.getString("reciver_name");
-					String created_at = o.getString("created_at");
-					Child_Micropost child = new Child_Micropost(id,
-							sender_id, sender_types, sender_name,
-							sender_avatar_url, content, reciver_name,
-							created_at);
-					child_list.add(child);
-				}
-			} catch (Exception e) {
+
+		try {
+			JSONArray jsonArray2 = new JSONArray(reply_microposts);
+			for (int i = 0; i < jsonArray2.length(); ++i) {
+				JSONObject o = (JSONObject) jsonArray2.get(i);
+				String id = o.getString("id");
+				String sender_id = o.getString("sender_id");
+				String sender_types = o.getString("sender_types");
+				String sender_name = o.getString("sender_name");
+				String sender_avatar_url = o.getString("sender_avatar_url");
+				String content = o.getString("content");
+				String reciver_name = o.getString("reciver_name");
+				String created_at = o.getString("created_at");
+				Child_Micropost child = new Child_Micropost(id, sender_id,
+						sender_types, sender_name, sender_avatar_url, content,
+						reciver_name, created_at);
+				child_list.add(child);
 			}
+		} catch (Exception e) {
+		}
 	}
-	
-	
-	
-	// 分割时间
+
+	/*
+	 * 分割时间
+	 */
 	public String divisionTime(String timeStr) {
 		timeStr = timeStr.replace("-", "/");
 		int temp1 = timeStr.indexOf("T");
@@ -895,14 +879,12 @@ public class HomepageAllActivity extends Activity implements
 		return timeStr.substring(0, temp1) + "  " + s.substring(0, temp3);
 	}
 
-	// 添加关注
+	/*
+	 * 添加关注
+	 */
 	public void add_concern(final int i, final Micropost mess) {
 		prodialog = new ProgressDialog(HomepageAllActivity.this);
-		// if (guanzhu_list.get(i).getText().toString().equals("关注")) {
-		// prodialog.setMessage("正在添加关注");
-		// } else if (guanzhu_list.get(i).getText().toString().equals("已关注")) {
 		prodialog.setMessage("正在操作...");
-		// }
 		prodialog.setCanceledOnTouchOutside(false);
 		prodialog.show();
 		final Handler gzHandler = new Handler() {
@@ -1118,8 +1100,8 @@ public class HomepageAllActivity extends Activity implements
 								list.get(focus).setReply_microposts_count(
 										a + "");
 								huifu_count_list.get(focus).setText(a + "");
-//								list_list.get(focus).setAdapter(
-//										ziAdapter_list.get(focus));
+								// list_list.get(focus).setAdapter(
+								// ziAdapter_list.get(focus));
 								ExerciseBookTool
 										.setListViewHeightBasedOnChildren(list_list
 												.get(focus));
@@ -1224,7 +1206,6 @@ public class HomepageAllActivity extends Activity implements
 					map.put("micropost_id", mess.getId());
 					String reply = ExerciseBookTool.sendGETRequest(
 							Urlinterface.get_reply_microposts, map);
-
 					parseJson_childMicropost(reply);
 					mHandler.sendEmptyMessage(0);
 				} catch (Exception e) {
@@ -1246,9 +1227,7 @@ public class HomepageAllActivity extends Activity implements
 					gk_list.set(j, true);
 				}
 			}
-
 			focus = i;
-
 			layout1.setVisibility(View.VISIBLE);
 			listView2.setVisibility(View.VISIBLE);
 
@@ -1265,11 +1244,9 @@ public class HomepageAllActivity extends Activity implements
 					child_list = new ArrayList<Child_Micropost>();
 					mHandler.sendEmptyMessage(0);
 				}
-
 			} else {
 				handler.sendEmptyMessage(7);
 			}
-
 		} else {
 			gk_list.set(i, true);
 			layout1.setVisibility(View.GONE);
@@ -1286,7 +1263,6 @@ public class HomepageAllActivity extends Activity implements
 					final String json6 = (String) msg.obj;
 					int a = child_list.size();
 					parseJson_childMicropost(json6);
-
 					for (int j = a; j < child_list.size(); j++) {
 						reply_gk_list.add(true);
 					}
@@ -1342,11 +1318,9 @@ public class HomepageAllActivity extends Activity implements
 			try {
 
 				list = new ArrayList<Micropost>();
-
 				Map<String, String> map = new HashMap<String, String>();
 				map.put("student_id", id);
 				map.put("school_class_id", school_class_id);
-
 				json = ExerciseBookTool.sendGETRequest(
 						Urlinterface.get_class_info, map);
 				setJson(json);
@@ -1384,10 +1358,26 @@ public class HomepageAllActivity extends Activity implements
 		if (ExerciseBookTool.isConnect(HomepageAllActivity.this)) {
 			thread.start();
 		} else {
-
 			handler.sendEmptyMessage(7);
 			mPullToRefreshView.onHeaderRefreshComplete();
 		}
+	}
+
+	/*
+	 * 初始化 参数
+	 */
+	public void initialize() {
+		item_huifu = new ArrayList<RelativeLayout>();
+		guanzhu_list = new ArrayList<ImageView>();
+		guanzhu_count_list = new ArrayList<TextView>();
+		huifu_count_list = new ArrayList<TextView>();
+		ziAdapter_list = new ArrayList<ZiAdapter>();
+
+		list = new ArrayList<Micropost>();
+		list_list = new ArrayList<ListView>();
+		gk_list = new ArrayList<Boolean>();
+		HorizontalScrollView_list = new ArrayList<HorizontalScrollView>();
+		reply_gk_list = new ArrayList<Boolean>();
 	}
 
 	/*
@@ -1483,7 +1473,6 @@ public class HomepageAllActivity extends Activity implements
 			break;
 		}
 		super.onActivityResult(requestCode, resultCode, data);
-
 	}
 
 }

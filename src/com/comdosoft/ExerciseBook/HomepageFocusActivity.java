@@ -60,9 +60,9 @@ public class HomepageFocusActivity extends Activity implements
 		OnHeaderRefreshListener, OnFooterRefreshListener, Urlinterface,
 		OnGestureListener {
 	private ExerciseBook exerciseBook;
-	private String user_id = "130"; // 学生 id 上面 会传过来的 学生student_id，
-	private String id = "73";
-	private String school_class_id = "83";
+	private String user_id = "130"; // 学生 user_id
+	private String id = "73";// 学生student_id，
+	private String school_class_id = "83"; // 班级 id
 	private ProgressDialog prodialog;
 	// -------------------------------------------------------------------
 	private String json = "{\"status\":\"success\",\"notice\":\"\u767b\u9646\u6210\u529f\uff01\",\"student\":{\"id\":66,\"name\":\"hrueieurh \",\"user_id\":66,\"nickname\":\"yeueieiri \",\"avatar_url\":\"/avatars/students/2014-01/student_66.jpg\"},\"class\":{\"id\":1,\"name\":\"1401\",\"tearcher_name\":\"fgf\",\"tearcher_id\":1},\"classmates\":[{\"avatar_url\":\"/assets/default_avater.jpg\",\"id\":1,\"name\":\"nan\",\"nickname\":\"zxn\"}],\"task_messages\":[],\"microposts\":{\"page\":1,\"pages_count\":4,\"details_microposts\":[{\"avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"content\":\"ww\u6211\u6d4b\u5b89\u5fbdi\u2026\u2026\n\n\u6d4b\u8bd5\u4e00\u4e0b\",\"created_at\":\"2014-01-27T14:12:02+08:00\",\"micropost_id\":145,\"name\":\"hrueieurh \",\"reply_microposts_count\":1,\"user_id\":66,\"user_types\":1},{\"avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"content\":\"556355265335 \",\"created_at\":\"2014-01-23T07:17:25+08:00\",\"micropost_id\":104,\"name\":\"hrueieurh \",\"reply_microposts_count\":0,\"user_id\":66,\"user_types\":1},{\"avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"content\":\"Babbitt \",\"created_at\":\"2014-01-23T02:58:48+08:00\",\"micropost_id\":103,\"name\":\"hrueieurh \",\"reply_microposts_count\":4,\"user_id\":66,\"user_types\":1},{\"avatar_url\":\"/assets/default_avater.jpg\",\"content\":\"\u5173\u4e8e\u52a0\u5f3a\",\"created_at\":\"2014-01-22T10:11:11+08:00\",\"micropost_id\":99,\"name\":\"???\",\"reply_microposts_count\":6,\"user_id\":9,\"user_types\":1},{\"avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"content\":\"\u7684\u7684\u7684\",\"created_at\":\"2014-01-22T09:47:22+08:00\",\"micropost_id\":97,\"name\":\"hrueieurh \",\"reply_microposts_count\":5,\"user_id\":66,\"user_types\":1},{\"avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"content\":\"\u5927\u5927\u65b9\u65b9\u53d1\",\"created_at\":\"2014-01-22T09:47:12+08:00\",\"micropost_id\":96,\"name\":\"hrueieurh \",\"reply_microposts_count\":0,\"user_id\":66,\"user_types\":1},{\"avatar_url\":\"/assets/default_avater.jpg\",\"content\":\"hjk\",\"created_at\":\"2014-01-22T06:43:12+08:00\",\"micropost_id\":95,\"name\":\"???\",\"reply_microposts_count\":19,\"user_id\":9,\"user_types\":1},{\"avatar_url\":\"/assets/default_avater.jpg\",\"content\":\"ffg\",\"created_at\":\"2014-01-22T02:57:52+08:00\",\"micropost_id\":94,\"name\":\"???\",\"reply_microposts_count\":6,\"user_id\":9,\"user_types\":1},{\"avatar_url\":\"/assets/default_avater.jpg\",\"content\":\"UI o\",\"created_at\":\"2014-01-21T10:48:36+08:00\",\"micropost_id\":93,\"name\":\"???\",\"reply_microposts_count\":2,\"user_id\":9,\"user_types\":1},{\"avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"content\":\"rrrrr\",\"created_at\":\"2014-01-21T10:13:22+08:00\",\"micropost_id\":86,\"name\":\"hrueieurh \",\"reply_microposts_count\":16,\"user_id\":66,\"user_types\":1},{\"avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"content\":\"rrrrr\",\"created_at\":\"2014-01-21T10:13:21+08:00\",\"micropost_id\":85,\"name\":\"hrueieurh \",\"reply_microposts_count\":7,\"user_id\":66,\"user_types\":1},{\"avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"content\":\"dffff\",\"created_at\":\"2014-01-21T10:13:19+08:00\",\"micropost_id\":84,\"name\":\"hrueieurh \",\"reply_microposts_count\":0,\"user_id\":66,\"user_types\":1},{\"avatar_url\":\"/assets/default_avater.jpg\",\"content\":\"\u5feb\u4e86\uff0c\u5feb\u4e86\u5feb\u4e86\",\"created_at\":\"2014-01-21T06:46:09+08:00\",\"micropost_id\":73,\"name\":\"??\",\"reply_microposts_count\":0,\"user_id\":8,\"user_types\":1},{\"avatar_url\":\"/assets/default_avater.jpg\",\"content\":\"dddddd\",\"created_at\":\"2014-01-20T06:24:07+08:00\",\"micropost_id\":72,\"name\":\"???\",\"reply_microposts_count\":3,\"user_id\":9,\"user_types\":1},{\"avatar_url\":\"/assets/default_avater.jpg\",\"content\":\"ggjjkkjhghhjjj\",\"created_at\":\"2014-01-20T04:41:44+08:00\",\"micropost_id\":71,\"name\":\"???\",\"reply_microposts_count\":0,\"user_id\":9,\"user_types\":1},{\"avatar_url\":\"/assets/default_avater.jpg\",\"content\":\"\u98ce\u98ce\u5149\u5149\u97e9\u56fd\u521a\u521a\u597d\u53d1\u98ce\u98ce\u5149\u5149\u5730\u65b9\u98ce\u683c\u56de\u5bb6\u98ce\u683c\u54c8\u54c8\u54c8\u98ce\u683c\u5475\u5475\u7684\u611f\u89c9\u7684\u98ce\u683c\u4e2a\",\"created_at\":\"2014-01-20T02:52:47+08:00\",\"micropost_id\":70,\"name\":\"???\",\"reply_microposts_count\":1,\"user_id\":9,\"user_types\":1},{\"avatar_url\":\"/assets/default_avater.jpg\",\"content\":\"\u89c4\u5212\u5c40\",\"created_at\":\"2014-01-18T10:57:36+08:00\",\"micropost_id\":69,\"name\":\"???\",\"reply_microposts_count\":0,\"user_id\":9,\"user_types\":1},{\"avatar_url\":\"/assets/default_avater.jpg\",\"content\":\"\u4f1a\",\"created_at\":\"2014-01-18T10:41:09+08:00\",\"micropost_id\":68,\"name\":\"???\",\"reply_microposts_count\":1,\"user_id\":9,\"user_types\":1},{\"avatar_url\":\"/assets/default_avater.jpg\",\"content\":\"\u4e2a\u770b\u8fc7\",\"created_at\":\"2014-01-18T10:40:54+08:00\",\"micropost_id\":67,\"name\":\"???\",\"reply_microposts_count\":0,\"user_id\":9,\"user_types\":1},{\"avatar_url\":\"/assets/default_avater.jpg\",\"content\":\"yyuu\",\"created_at\":\"2014-01-18T10:33:45+08:00\",\"micropost_id\":66,\"name\":\"???\",\"reply_microposts_count\":0,\"user_id\":9,\"user_types\":1}]},\"daily_tasks\":[{\"id\":2,\"name\":\"2014-1-20\u4f5c\u4e1a\",\"start_time\":\"2014-01-20T00:00:00+08:00\",\"end_time\":\"2014-01-30T00:00:00+08:00\",\"question_packages_url\":\"/question_package_1.js\",\"listening_schedule\":\"1/4\",\"reading_schedule\":\"0/4\"}],\"follow_microposts_id\":[86,97,97,96,95,93,71,93,71,99],\"messages\":[{\"content\":\"[[fgh]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;jjj\",\"created_at\":\"2014-01-26T12:32:23+08:00\",\"id\":554,\"micropost_id\":103,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[fgh]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;uui\",\"created_at\":\"2014-01-26T12:32:07+08:00\",\"id\":553,\"micropost_id\":103,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[fgh]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;huu\",\"created_at\":\"2014-01-26T12:31:59+08:00\",\"id\":552,\"micropost_id\":103,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[fgh]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;jjii\",\"created_at\":\"2014-01-26T12:30:43+08:00\",\"id\":550,\"micropost_id\":85,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[xhxksn ]]\u56de\u590d\u4e86\u60a8\u5173\u6ce8\u7684\u6d88\u606f\uff1a;||;ca\",\"created_at\":\"2014-01-23T03:04:38+08:00\",\"id\":208,\"micropost_id\":86,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[xhxksn ]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;ca\",\"created_at\":\"2014-01-23T03:04:30+08:00\",\"id\":189,\"micropost_id\":86,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[xhxksn ]]\u56de\u590d\u4e86\u60a8\u5173\u6ce8\u7684\u6d88\u606f\uff1a;||;ca\",\"created_at\":\"2014-01-23T03:04:30+08:00\",\"id\":198,\"micropost_id\":86,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[xhxksn ]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;a\",\"created_at\":\"2014-01-23T03:04:00+08:00\",\"id\":187,\"micropost_id\":97,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[xhxksn ]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;CA\",\"created_at\":\"2014-01-23T03:03:46+08:00\",\"id\":186,\"micropost_id\":97,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[xhxksn ]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;ding\",\"created_at\":\"2014-01-23T03:01:09+08:00\",\"id\":185,\"micropost_id\":103,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[xhxksn ]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;@\",\"created_at\":\"2014-01-23T03:00:51+08:00\",\"id\":184,\"micropost_id\":103,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[xhxksn ]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;ca\",\"created_at\":\"2014-01-23T03:00:29+08:00\",\"id\":183,\"micropost_id\":103,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[xhxksn ]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;ca\",\"created_at\":\"2014-01-23T03:00:29+08:00\",\"id\":182,\"micropost_id\":103,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[xhxksn ]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;abc\",\"created_at\":\"2014-01-23T02:07:00+08:00\",\"id\":180,\"micropost_id\":99,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[xhxksn ]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;''''\",\"created_at\":\"2014-01-23T02:05:37+08:00\",\"id\":175,\"micropost_id\":97,\"sender_avatar_url\":\"/avatars/students/2014-01/student_66.jpg\",\"sender_name\":\"hrueieurh \",\"user_id\":66},{\"content\":\"[[???]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;\u54c8\u54c8\u54c8\u5c31\",\"created_at\":\"2014-01-22T10:09:41+08:00\",\"id\":163,\"micropost_id\":97,\"sender_avatar_url\":\"/assets/default_avater.jpg\",\"sender_name\":\"???\",\"user_id\":66},{\"content\":\"[[???]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;\u53cd\u5f39\u6709\",\"created_at\":\"2014-01-22T10:09:22+08:00\",\"id\":162,\"micropost_id\":97,\"sender_avatar_url\":\"/assets/default_avater.jpg\",\"sender_name\":\"???\",\"user_id\":66},{\"content\":\"[[???]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;\u89c4\u5212\",\"created_at\":\"2014-01-22T10:09:15+08:00\",\"id\":161,\"micropost_id\":97,\"sender_avatar_url\":\"/assets/default_avater.jpg\",\"sender_name\":\"???\",\"user_id\":66},{\"content\":\"[[???]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\",\"created_at\":\"2014-01-22T08:18:41+08:00\",\"id\":159,\"micropost_id\":85,\"sender_avatar_url\":\"/assets/default_avater.jpg\",\"sender_name\":\"???\",\"user_id\":66},{\"content\":\"[[???]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\",\"created_at\":\"2014-01-22T08:18:40+08:00\",\"id\":157,\"micropost_id\":85,\"sender_avatar_url\":\"/assets/default_avater.jpg\",\"sender_name\":\"???\",\"user_id\":66},{\"content\":\"[[???]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\",\"created_at\":\"2014-01-22T08:18:39+08:00\",\"id\":153,\"micropost_id\":85,\"sender_avatar_url\":\"/assets/default_avater.jpg\",\"sender_name\":\"???\",\"user_id\":66},{\"content\":\"[[???]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\",\"created_at\":\"2014-01-22T08:18:34+08:00\",\"id\":144,\"micropost_id\":86,\"sender_avatar_url\":\"/assets/default_avater.jpg\",\"sender_name\":\"???\",\"user_id\":66},{\"content\":\"[[???]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\",\"created_at\":\"2014-01-22T08:18:32+08:00\",\"id\":135,\"micropost_id\":86,\"sender_avatar_url\":\"/assets/default_avater.jpg\",\"sender_name\":\"???\",\"user_id\":66},{\"content\":\"[[???]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\",\"created_at\":\"2014-01-22T08:18:30+08:00\",\"id\":126,\"micropost_id\":86,\"sender_avatar_url\":\"/assets/default_avater.jpg\",\"sender_name\":\"???\",\"user_id\":66},{\"content\":\"[[???]]\u56de\u590d\u4e86\u60a8\u7684\u6d88\u606f\uff1a;||;\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\u554a\",\"created_at\":\"2014-01-22T08:18:28+08:00\",\"id\":117,\"micropost_id\":86,\"sender_avatar_url\":\"/assets/default_avater.jpg\",\"sender_name\":\"???\",\"user_id\":66}]}";
@@ -72,18 +72,19 @@ public class HomepageFocusActivity extends Activity implements
 	private String classname;
 	private int child_page = 1; // 子消息 分页加载的 第几页
 	private int child_pages_count = 1;// 子消息总页数
-	private int page=1;// 当前第几页
-	private int pages_count=1;// 总页数
+	private int page = 1;// 当前第几页
+	private int pages_count = 1;// 总页数
 	private String reciver_id = "";
 	private String reciver_types = "";
 	private String micropost_id = "";
 
 	private int list_item;// list集合的最后一位索引
-	private int user_types = 1;
+	private int user_types = 1;// 用户类型 学生 默认为 1
 	public List<Boolean> gk_list;// 主消息 点击操作 开关集合
 	public List<Boolean> reply_gk_list;// 回复 点击操作 开关集合
 	public List<RelativeLayout> item_huifu;// 回复开关集合
-	private List<Micropost> list;
+	private List<Micropost> list; // 主消息 集合
+	private ArrayList<Child_Micropost> child_list; // 子消息 集合
 	private List<ListView> list_list;
 	private List<ZiAdapter> ziAdapter_list;
 	private List<EditText> Reply_edit_list;
@@ -91,9 +92,8 @@ public class HomepageFocusActivity extends Activity implements
 	private List<TextView> guanzhu_count_list;// 关注数 集合
 	private List<TextView> huifu_count_list;// 回复数 集合
 	private List<HorizontalScrollView> HorizontalScrollView_list;// 滑动块 集合
-	private ArrayList<Child_Micropost> child_list;
-	private GestureDetector gd;
-	private static ImageMemoryCache memoryCache;
+	private GestureDetector gd;// 手势监听
+	private static ImageMemoryCache memoryCache; // 图片 缓存
 	// 事件状态
 	private final char FLING_CLICK = 0;
 	private final char FLING_LEFT = 1;
@@ -103,10 +103,10 @@ public class HomepageFocusActivity extends Activity implements
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
-			case 0:
+			case 0: 
 				prodialog.dismiss();
 				final String json_1 = (String) msg.obj;
-				parseJson_Myself(json_1);
+				parseJson_MyFocus(json_1);
 				init();
 				break;
 			case 2:
@@ -114,7 +114,7 @@ public class HomepageFocusActivity extends Activity implements
 				list.clear();
 				click_list();
 				final String json_all = (String) msg.obj;
-				parseJson_Myself(json_all);
+				parseJson_MyFocus(json_all);
 				for (int i = 0; i < list.size(); i++) {
 					setlayout(i);
 				}
@@ -123,7 +123,7 @@ public class HomepageFocusActivity extends Activity implements
 			case 3:
 				final String json_all2 = (String) msg.obj;
 
-				parseJson_Myself(json_all2);
+				parseJson_MyFocus(json_all2);
 
 				for (int i = list_item; i < list.size(); i++) {
 					setlayout(i);
@@ -151,24 +151,17 @@ public class HomepageFocusActivity extends Activity implements
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
 
-		 user_id = preferences.getString("user_id", null);
-		 id = preferences.getString("id", "73");
+		user_id = preferences.getString("user_id", null);
+		id = preferences.getString("id", "73");
 		school_class_id = preferences.getString("school_class_id", null);
 
-		item_huifu = new ArrayList<RelativeLayout>();
-		guanzhu_count_list = new ArrayList<TextView>();
-		huifu_count_list = new ArrayList<TextView>();
-		HorizontalScrollView_list = new ArrayList<HorizontalScrollView>();
-		ziAdapter_list = new ArrayList<ZiAdapter>();
-		Reply_edit_list = new ArrayList<EditText>();
-		list = new ArrayList<Micropost>();
-		list_list = new ArrayList<ListView>();
-		gk_list = new ArrayList<Boolean>();
-		reply_gk_list = new ArrayList<Boolean>();
+		initialize(); // 初始化参数
+
 	}
 
 	protected void onResume() {
 		super.onResume();
+		page = 1;
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
 
@@ -214,9 +207,9 @@ public class HomepageFocusActivity extends Activity implements
 		final Micropost mess = list.get(i);
 		ZiAdapter Adapter = new ZiAdapter();
 		ziAdapter_list.add(Adapter);
-		final View convertView = LayoutInflater.from(
-				HomepageFocusActivity.this).inflate(R.layout.class_layout,
-				null);
+		final View convertView = LayoutInflater
+				.from(HomepageFocusActivity.this).inflate(
+						R.layout.class_layout, null);
 		final HorizontalScrollView hSView = (HorizontalScrollView) convertView
 				.findViewById(R.id.hsv);
 		final View action = convertView.findViewById(R.id.ll_action);
@@ -275,11 +268,11 @@ public class HomepageFocusActivity extends Activity implements
 
 			Bitmap result = memoryCache.getBitmapFromCache(url);
 			if (result == null) {
-				Log.i("aa", " 网络网络"+i);
-				ExerciseBookTool.set_bk(url, face,memoryCache);
+				Log.i("aa", " 网络网络" + i);
+				ExerciseBookTool.set_bk(url, face, memoryCache);
 			} else {
-				
-				Log.i("aa", " 缓存缓存缓存缓存"+i);
+
+				Log.i("aa", " 缓存缓存缓存缓存" + i);
 				face.setImageDrawable(new BitmapDrawable(result));
 			}
 		}
@@ -302,18 +295,17 @@ public class HomepageFocusActivity extends Activity implements
 		});
 
 		/**
-		 *取消 关注
+		 * 取消 关注
 		 */
-		button2.setBackgroundResource(
-				R.drawable.homepage_guanzhu2);
-			button1.setVisibility(View.GONE);
-			button2.setVisibility(View.VISIBLE);
-			button2.setOnClickListener(new OnClickListener() {
-				public void onClick(View v) {
-					del_concern(i, mess);
-				}
-			});
-		
+		button2.setBackgroundResource(R.drawable.homepage_guanzhu2);
+		button1.setVisibility(View.GONE);
+		button2.setVisibility(View.VISIBLE);
+		button2.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				del_concern(i, mess);
+			}
+		});
+
 		final RelativeLayout layout1 = (RelativeLayout) convertView
 				.findViewById(R.id.child_micropost); // 回复界面
 		item_huifu.add(layout1);
@@ -363,7 +355,7 @@ public class HomepageFocusActivity extends Activity implements
 		if (page <= pages_count) {
 			list_item = list.size();
 			Thread thread = new Thread() {
-				public void run() {// 我的关注  页面加载 更多
+				public void run() {// 我的关注 页面加载 更多
 
 					Map<String, String> map = new HashMap<String, String>();
 					map.put("student_id", id);
@@ -504,11 +496,11 @@ public class HomepageFocusActivity extends Activity implements
 
 				Bitmap result = memoryCache.getBitmapFromCache(url);
 				if (result == null) {
-					Log.i("aa", " 适配器    网络网络"+position2);
-					ExerciseBookTool.set_bk(url, face,memoryCache);
+					Log.i("aa", " 适配器    网络网络" + position2);
+					ExerciseBookTool.set_bk(url, face, memoryCache);
 				} else {
-					
-					Log.i("aa", " 适配器   缓存缓存缓存缓存"+position2);
+
+					Log.i("aa", " 适配器   缓存缓存缓存缓存" + position2);
 					face.setImageDrawable(new BitmapDrawable(result));
 				}
 			}
@@ -637,9 +629,9 @@ public class HomepageFocusActivity extends Activity implements
 	}
 
 	/*
-	 * 解析 我的 模块中的 主消息
+	 * 解析 我的关注 模块中的 主消息
 	 */
-	void parseJson_Myself(String json3) {
+	void parseJson_MyFocus(String json3) {
 
 		if ("error".equals(json3)) {
 		} else {
@@ -649,8 +641,7 @@ public class HomepageFocusActivity extends Activity implements
 				String status = array.getString("status");
 				String notice = array.getString("notice");
 				if ("success".equals(status)) {
-					String micropostsListJson = array
-							.getString("microposts");
+					String micropostsListJson = array.getString("microposts");
 					pages_count = Integer.parseInt(array
 							.getString("pages_count"));
 					parseJson_details_microposts(micropostsListJson);
@@ -760,27 +751,27 @@ public class HomepageFocusActivity extends Activity implements
 
 	// 取消关注
 	public void del_concern(final int i, final Micropost mess) {
-		
+
 		final Handler gzHandler = new Handler() {
 			public void handleMessage(android.os.Message msg) {
 				JSONObject jsonobject;
 				prodialog.dismiss();
 				switch (msg.what) {
-				
+
 				case 1:
 					try {
 						jsonobject = new JSONObject(msg.obj.toString());
 						String status = jsonobject.getString("status");
 						String notic = jsonobject.getString("notice");
 						if (status.equals("success")) {
-							
+
 							focus = -1;
 							list.remove(i);
 							click_list();
 							for (int i = 0; i < list.size(); i++) {
 								setlayout(i);
 							}
-							
+
 						}
 						Toast.makeText(getApplicationContext(), notic,
 								Toast.LENGTH_SHORT).show();
@@ -802,10 +793,10 @@ public class HomepageFocusActivity extends Activity implements
 					mp.put("micropost_id", String.valueOf(mess.getId()));
 					String str = "";
 					Message msg = new Message();// 创建Message 对象
-						str = ExerciseBookTool.sendGETRequest(
-								Urlinterface.unfollow, mp);
-						msg.what = 1;
-						msg.obj = str;
+					str = ExerciseBookTool.sendGETRequest(
+							Urlinterface.unfollow, mp);
+					msg.what = 1;
+					msg.obj = str;
 
 					gzHandler.sendMessage(msg);
 				} catch (Exception e) {
@@ -824,9 +815,7 @@ public class HomepageFocusActivity extends Activity implements
 			handler.sendEmptyMessage(7);
 		}
 	}
-	
-	
-	
+
 	/*
 	 * 删除 主消息
 	 */
@@ -945,8 +934,8 @@ public class HomepageFocusActivity extends Activity implements
 								list.get(focus).setReply_microposts_count(
 										a + "");
 								huifu_count_list.get(focus).setText(a + "");
-//								list_list.get(focus).setAdapter(
-//										ziAdapter_list.get(focus));
+								// list_list.get(focus).setAdapter(
+								// ziAdapter_list.get(focus));
 								ExerciseBookTool
 										.setListViewHeightBasedOnChildren(list_list
 												.get(focus));
@@ -1011,7 +1000,6 @@ public class HomepageFocusActivity extends Activity implements
 		}
 	}
 
-
 	// 回复隐藏变显示
 	public void setHuiFu(int i, final Micropost mess, RelativeLayout layout1,
 			final ListView listView2, final Button lookMore) {
@@ -1023,13 +1011,13 @@ public class HomepageFocusActivity extends Activity implements
 				case 0:
 					prodialog.dismiss();
 					if (child_list.size() > 0) {// 如果没有子消息，隐藏加载更多按钮
-//						lookMore.setVisibility(View.VISIBLE);
+					// lookMore.setVisibility(View.VISIBLE);
 						listView2.setVisibility(View.VISIBLE);
 
-					} 
-					if(child_pages_count>=2){
+					}
+					if (child_pages_count >= 2) {
 						lookMore.setVisibility(View.VISIBLE);
-					}else {
+					} else {
 						lookMore.setVisibility(View.GONE);
 					}
 					listView2.setAdapter(ziAdapter_list.get(focus));
@@ -1078,10 +1066,9 @@ public class HomepageFocusActivity extends Activity implements
 			focus = i;
 			layout1.setVisibility(View.VISIBLE);
 			listView2.setVisibility(View.VISIBLE);
-			
 
 			if (ExerciseBookTool.isConnect(HomepageFocusActivity.this)) {
-				
+
 				if (Integer.parseInt(mess.getReply_microposts_count()) > 0) {
 					prodialog = new ProgressDialog(HomepageFocusActivity.this);
 					prodialog.setMessage("正在加载中");
@@ -1236,6 +1223,23 @@ public class HomepageFocusActivity extends Activity implements
 			mPullToRefreshView.onHeaderRefreshComplete();
 			handler.sendEmptyMessage(7);
 		}
+	}
+
+	/*
+	 * 初始化 参数
+	 */
+	public void initialize() {
+		item_huifu = new ArrayList<RelativeLayout>();
+		guanzhu_count_list = new ArrayList<TextView>();
+		huifu_count_list = new ArrayList<TextView>();
+		HorizontalScrollView_list = new ArrayList<HorizontalScrollView>();
+		ziAdapter_list = new ArrayList<ZiAdapter>();
+		Reply_edit_list = new ArrayList<EditText>();
+		list = new ArrayList<Micropost>();
+		list_list = new ArrayList<ListView>();
+		gk_list = new ArrayList<Boolean>();
+		reply_gk_list = new ArrayList<Boolean>();
+
 	}
 
 	/*

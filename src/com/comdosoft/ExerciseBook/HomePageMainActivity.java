@@ -49,9 +49,9 @@ import com.comdosoft.ExerciseBook.tools.Urlinterface;
 public class HomePageMainActivity extends TabActivity implements Urlinterface {
 	TabHost tabhost;
 	TabHost.TabSpec spec1, spec2, spec3, spec4;
-	private ImageView allbottom, myselfbottom, focusbottom, senderbottom, logo;
+	private ImageView allbottom, myselfbottom, focusbottom, senderbottom;
 	private ImageView faceImage;
-	private LinearLayout userInfo;
+	private LinearLayout userInfo, logo;
 	private Resources res;
 	public Field mBottomLeftStrip;
 	public Field mBottomRightStrip;
@@ -143,7 +143,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 		instance = this;
 		tabhost = getTabHost();
 		res = getResources();
-		logo = (ImageView) findViewById(R.id.img_tab_now);
+		logo = (LinearLayout) findViewById(R.id.img_tab_now);
 		allbottom = (ImageView) findViewById(R.id.all_bottom);
 		myselfbottom = (ImageView) findViewById(R.id.myself_bottom);
 		focusbottom = (ImageView) findViewById(R.id.focus_bottom);

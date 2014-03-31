@@ -4,8 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity" >
+
     <!-- 共用标题的组件 -->
-     <RelativeLayout
+
+    <RelativeLayout
         android:id="@+id/main_top"
         android:layout_width="fill_parent"
         android:layout_height="106px"
@@ -13,16 +15,22 @@
         android:background="@color/top_qianlv"
         android:orientation="vertical" >
 
-        <ImageView
+        <LinearLayout
             android:id="@+id/img_tab_now"
-            android:layout_width="54px"
-            android:layout_height="50px"
-            android:layout_marginLeft="68px"
-            android:layout_marginTop="35px"
-            android:background="#00000000"
-            android:src="@drawable/logo" />
+            android:layout_width="150px"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal" >
 
-       <LinearLayout
+            <ImageView
+                android:layout_width="54px"
+                android:layout_height="50px"
+                android:layout_marginLeft="68px"
+                android:layout_marginTop="35px"
+                android:background="#00000000"
+                android:src="@drawable/logo" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="341.67px"
             android:layout_height="fill_parent"
             android:layout_alignParentRight="true"
@@ -52,11 +60,13 @@
                 android:id="@+id/user_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="13.5px"
-                android:layout_marginTop="47.5px"
-                android:padding="15px" >
+                android:layout_marginRight="0.05px"
+                >
 
                 <ImageView
+                    android:layout_marginTop="62.5px"
+                    android:layout_marginRight="28.5px"
+                    android:layout_marginLeft="15px"
                     android:layout_width="26px"
                     android:layout_height="15px"
                     android:background="@drawable/userinfo_button" />
@@ -64,6 +74,7 @@
         </LinearLayout>
     </RelativeLayout>
     <!-- 中间不同的部分 -->
+
     <LinearLayout
         android:id="@+id/middle_layout"
         android:layout_width="fill_parent"
@@ -71,4 +82,5 @@
         android:layout_below="@id/main_top"
         android:orientation="vertical" >
     </LinearLayout>
+
 </RelativeLayout>
