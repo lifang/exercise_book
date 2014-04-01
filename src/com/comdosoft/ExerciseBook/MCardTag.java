@@ -9,6 +9,8 @@ import java.util.Map;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -60,6 +62,10 @@ public class MCardTag extends Activity implements Urlinterface ,Serializable
 		Bundle extras = getIntent().getExtras(); 
 		id=extras.getString("getid");
 		index=extras.getInt("index");
+		SharedPreferences preferences = getSharedPreferences(SHARED,
+				Context.MODE_PRIVATE);
+		student_id = preferences.getString("id", "73");
+		school_class_id = preferences.getString("school_class_id", "85");
 		tagll=(RelativeLayout) findViewById(R.id.tagrl);
 		biaoqian=(LinearLayout) findViewById(R.id.biaoqian);
 		if(width==800)
@@ -131,6 +137,8 @@ public class MCardTag extends Activity implements Urlinterface ,Serializable
 	}
 	public boolean onTouchEvent(MotionEvent event) {
 		this.finish();
+		eb.setAllmap(null);
+		eb.setTagsList(null);
 		return super.onTouchEvent(event);
 	}
 	public void set()
@@ -146,6 +154,9 @@ public class MCardTag extends Activity implements Urlinterface ,Serializable
 							mytags, student_id, school_class_id,
 							id);
 					biaoqianlv.setAdapter(adapter);
+					break;
+				case 1:
+					
 					break;
 				default:
 					break;
@@ -165,7 +176,6 @@ public class MCardTag extends Activity implements Urlinterface ,Serializable
 								String json;
 								public void run() {
 									try {
-										//										viewPager = (ViewPager) findViewById(R.id.guidePages);
 										Map<String, String> map = new HashMap<String, String>();
 										map.put("student_id", student_id);
 										map.put("school_class_id",
@@ -201,6 +211,10 @@ public class MCardTag extends Activity implements Urlinterface ,Serializable
 													update_at));
 											MyMap.get(index).getTagsarr().add(
 													Integer.valueOf(id));
+										}
+										else
+										{
+											
 										}
 										handler1.sendEmptyMessage(0);
 									} catch (Exception e) {

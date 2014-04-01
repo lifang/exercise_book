@@ -15,6 +15,7 @@ import android.util.Log;
 public class MyReceiver extends BroadcastReceiver
 {
 	private int type;
+	private int school_class_id;
 	public void onReceive(Context context, Intent intent) {
 		 Bundle bundle = intent.getExtras();
 		 if (JPushInterface.ACTION_REGISTRATION_ID.equals(intent.getAction())) {
@@ -32,10 +33,14 @@ public class MyReceiver extends BroadcastReceiver
 					int notifactionId = bundle.getInt(JPushInterface.EXTRA_NOTIFICATION_ID);
 					Log.d("bbb", "[MyReceiver] 接收到推送下来的通知的ID: " + notifactionId);
 					String extras = bundle.getString(JPushInterface.EXTRA_EXTRA);
-					JSONObject jsonobject = new JSONObject(extras);
+					String title = bundle.getString(JPushInterface.EXTRA_NOTIFICATION_TITLE);
+		        	String content = bundle.getString(JPushInterface.EXTRA_ALERT);
+		        	Log.i("bbb", "Title : " + title + "  " + "Content : " + content+"fudai:"+extras);
 					SharedPreferences sharedPreferences = context.getSharedPreferences("replyMenu", 0);
 					Editor editor = sharedPreferences.edit();//获取编辑器
+					JSONObject jsonobject = new JSONObject(extras);
 					type=jsonobject.getInt("type");
+					school_class_id =jsonobject.getInt("class_id");
 					Log.i("asd",type+"<---tye");
 					switch (type) {
 					case 0:
