@@ -30,6 +30,7 @@ import com.comdosoft.ExerciseBook.pojo.AnswerBasePojo;
 import com.comdosoft.ExerciseBook.pojo.AnswerSelectItemPojo;
 import com.comdosoft.ExerciseBook.tools.AnswerTools;
 
+//2014年4月1日 10:45:06
 public class AnswerSelectActivity extends AnswerBaseActivity implements
 		OnItemClickListener, OnClickListener, OnPreparedListener {
 

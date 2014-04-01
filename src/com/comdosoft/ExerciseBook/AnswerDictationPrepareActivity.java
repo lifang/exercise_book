@@ -24,6 +24,7 @@ import com.comdosoft.ExerciseBook.pojo.AnswerBasePojo;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
+// 2014年4月1日 10:45:06
 public class AnswerDictationPrepareActivity extends AnswerBaseActivity
 		implements OnClickListener, OnPreparedListener, OnCompletionListener,
 		Urlinterface {
@@ -160,7 +161,7 @@ public class AnswerDictationPrepareActivity extends AnswerBaseActivity
 				mHandler.sendEmptyMessage(1);
 				if (mp3Index >= mp3List.size()) {
 					mp3Index = 0;
-//					mHandler.sendEmptyMessage(3);
+					// mHandler.sendEmptyMessage(3);
 					new MyMediaPlay().start();
 				} else if (playFlag) {
 					mediaPlayer.start();

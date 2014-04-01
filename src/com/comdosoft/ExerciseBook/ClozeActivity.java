@@ -90,6 +90,8 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		// setTimePropEnd();// 禁用道具
 		// setTruePropEnd();// 禁用道具
 		eb = (ExerciseBook) getApplication();
+		// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
+		this.mQuestionType = 5;
 		findViewById(R.id.base_back_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_propTrue).setOnClickListener(this);
@@ -100,9 +102,9 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		path = intent.getStringExtra("path");
 		String json = intent.getStringExtra("json");
 		status = intent.getIntExtra("status", 1);
+		
 		SetJson(json);
 		SetAnswer();
-		Finish_Json();
 	}
 
 	private void SetAnswer() {
@@ -344,18 +346,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 							SetAnswer();
 							break;
 						case 1:
-							prodialog.show();
-							if (Finish_Json()) {
-								intent.putExtra("precision", ExerciseBookTool
-										.getRatio(path, "cloze"));// 正确率100时获取精准成就
-								intent.putExtra("use_time", getUseTime());// 用户使用的时间
-								intent.putExtra("specified_time",
-										specified_time);// 任务基础时间
-								intent.setClass(ClozeActivity.this,
-										WorkEndActivity.class);
-								ClozeActivity.this.startActivityForResult(
-										intent, 1);
-							}
+							super.roundOver();
 							break;
 						}
 
@@ -422,7 +413,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			super.close();
+			close();
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);

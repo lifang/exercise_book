@@ -84,6 +84,7 @@ public class Ten_HistoryActivity extends AnswerBaseActivity implements
 		setTimePropEnd();// 禁用道具
 		setTruePropEnd();// 禁用道具
 		setType(1);
+		setQuestionType(2);
 		setCheckText("下一个");
 		initialize();
 		branch_questions = new ArrayList<Time_LimitPojo>();
@@ -129,7 +130,7 @@ public class Ten_HistoryActivity extends AnswerBaseActivity implements
 								";\\|\\|;");
 						Time_LimitPojo tl = new Time_LimitPojo(
 								item.getInt("id"), item.getString("content"),
-								opption, item.getString("anwser"));
+								opption, item.getString("answer"));
 						branch_questions.add(tl);
 					}
 				}

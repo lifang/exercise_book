@@ -80,14 +80,15 @@ public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 		findViewById(R.id.base_back_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
 		setType(1);
+		setQuestionType(5);
 		setCheckText("下一个");
 		gson = new Gson();
 		initialize();
 		Intent intent = getIntent();
 		path = intent.getStringExtra("path");
 		String json = intent.getStringExtra("json");
+		Log.i("suanfa", path);
 		SetJson(json);
-		SetAnswer();
 	}
 
 	private void SetAnswer() {
@@ -155,6 +156,7 @@ public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 
 	private void SetJson(String json) {
 		list = new ArrayList<ClozePojo>();
+		Log.i("suanfa", json);
 		if (json != "") {
 			try {
 				JSONObject time_limit = new JSONObject(json);
@@ -169,7 +171,7 @@ public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 						for (int j = 0; j < jsonarr.length(); j++) {
 							JSONObject item = jsonarr.getJSONObject(j);
 							Branch_PoJo tl = new Branch_PoJo(item.getInt("id"),
-									item.getString("opption"),
+									item.getString("options"),
 									item.getString("answer"));
 							Branchlist.add(tl);
 						}
@@ -184,6 +186,7 @@ public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 				Toast.makeText(Cloze_HistoryActivity.this, "解析json发生错误",
 						Toast.LENGTH_SHORT).show();
 			}
+			SetAnswer();
 		}
 	}
 

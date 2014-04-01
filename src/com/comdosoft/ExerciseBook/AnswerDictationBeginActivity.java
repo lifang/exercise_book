@@ -39,6 +39,7 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Soundex_Levenshtein;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
+// 2014年4月1日 10:45:06
 public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		OnClickListener, ExerciseBookParams, OnPreparedListener,
 		OnCompletionListener, Urlinterface {
