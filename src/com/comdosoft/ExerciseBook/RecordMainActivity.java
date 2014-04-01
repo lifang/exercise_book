@@ -301,6 +301,8 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 				eb.setWork_number(number);
 				eb.setActivity_item(1);
 				Log.i("aaa", "worknumber:" + number);
+				Log.i("suanfa", "path:" + pathList.get(pager.getCurrentItem()));
+				Log.i("suanfa", "path2:" + pojo.getQuestion_packages_url());
 				if (ExerciseBookTool.FileExist(pathList.get(pager
 						.getCurrentItem()))) {// 判断文件是否存在
 					getJsonPath();
@@ -517,6 +519,8 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 				// 判断SD卡是否存在，并且是否具有读写权限
 				if (Environment.getExternalStorageState().equals(
 						Environment.MEDIA_MOUNTED)) {
+					Log.i("suanfa",
+							IP + downloadList.get(pager.getCurrentItem()));
 					URL url = new URL(downloadList.get(pager.getCurrentItem()));
 					// 创建连接
 					HttpURLConnection conn = (HttpURLConnection) url
@@ -625,6 +629,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 	// 根据日期获取过往记录
 	class search_tasks implements Runnable {
 		public void run() {
+			downloadList = new ArrayList<String>();
 			pathList = new ArrayList<String>();
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("date", date);

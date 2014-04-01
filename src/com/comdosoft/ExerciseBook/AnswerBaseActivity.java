@@ -15,6 +15,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -41,8 +42,7 @@ import com.google.gson.Gson;
 
 // 答题父类
 public class AnswerBaseActivity extends Activity implements OnClickListener,
-		Urlinterface {
-
+		OnPreparedListener, Urlinterface {
 	public ExerciseBook eb;
 	public int mQindex = 0;
 	public int mBindex = 0;
@@ -332,7 +332,6 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	}
 
 	public void onClick(View v) {
-		Log.i("suanfa", v.getId() + "");
 		switch (v.getId()) {
 		case R.id.base_back_linearlayout:
 			close();
@@ -341,22 +340,12 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	}
 
 	public void close() {
-		prodialog.show();
-		if (Finish_Json()) {
-			mHandler.sendEmptyMessage(3);
+		index = 0;
+		if (status == 0) {// status:0表示答题 1重做 2表示历史
+			prodialog.show();
+			Finish_Json();
 		} else {
-			mHandler.sendEmptyMessage(2);
-			index = 0;
-			switch (type) {
-			case 0:
-				prodialog.show();
-				// setWork_Status();
-				Finish_Json();
-				break;
-			case 1:
-				mHandler.sendEmptyMessage(5);
-				break;
-			}
+			mHandler.sendEmptyMessage(5);
 		}
 	}
 
@@ -407,6 +396,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 						if (new JSONObject(answer_json).getString("status")
 								.equals("success")) {
 							answer_boolean = true;
+							Log.i("suanfa", answer_boolean + "--" + index);
 							if (index == 0) {// 0表示退出
 								mHandler.sendEmptyMessage(3);
 							} else {
@@ -690,6 +680,39 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 
 	public void MyPlayer(boolean status) {
 
+		if (player.isPlaying()) {
+			player.pause();
+		} else {
+			// String mp3URL = path+
+			// new MyMediaPlay().start();
+		}
+	}
+
+	class MyMediaPlay extends Thread {
+		public void run() {
+			super.run();
+			playerAmr();
+		}
+	}
+
+	// 播放音频
+	public void playerAmr() {
+		try {
+			player.reset();
+			player = MediaPlayer.create(this, R.raw.true_mp3);
+			player.prepare();
+			player.setOnPreparedListener(this);
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void onPrepared(MediaPlayer mp) {
+		mp.start();
 	}
 
 	protected void onStart() {
