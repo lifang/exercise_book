@@ -3,12 +3,9 @@ package com.comdosoft.ExerciseBook;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -66,7 +63,7 @@ public class AnswerDictationPrepareActivity extends AnswerBaseActivity
 		dictationImg.setOnClickListener(this);
 		eb = (ExerciseBook) getApplication();
 
-		setQuestionType(6);
+		setQuestionType(7);
 
 		analysisJSON(json);
 
@@ -163,7 +160,7 @@ public class AnswerDictationPrepareActivity extends AnswerBaseActivity
 				mHandler.sendEmptyMessage(1);
 				if (mp3Index >= mp3List.size()) {
 					mp3Index = 0;
-					mHandler.sendEmptyMessage(3);
+//					mHandler.sendEmptyMessage(3);
 					new MyMediaPlay().start();
 				} else if (playFlag) {
 					mediaPlayer.start();

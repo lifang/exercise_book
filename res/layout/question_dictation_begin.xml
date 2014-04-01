@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/jzlb" />
+            android:src="@drawable/xiao2" />
 
         <LinearLayout
             android:id="@+id/question_dictation_linearLayout"
