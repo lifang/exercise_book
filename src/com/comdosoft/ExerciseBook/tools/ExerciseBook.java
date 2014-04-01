@@ -9,6 +9,8 @@ import android.content.Context;
 
 import com.comdosoft.ExerciseBook.pojo.ListeningPojo;
 import com.comdosoft.ExerciseBook.pojo.QuestionPojo;
+import com.comdosoft.ExerciseBook.pojo.knowledges_card;
+import com.comdosoft.ExerciseBook.pojo.tags;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -35,6 +37,9 @@ public class ExerciseBook extends Application {
 	private boolean history_type;
 	private int propTime_Number;
 	private String path;
+	private List<knowledges_card> Allmap;
+	public List<tags> tagsList;
+	public List<Integer> Tagsarr;
 
 	public ExerciseBook() {
 		this.setMneu(true);
@@ -45,6 +50,30 @@ public class ExerciseBook extends Application {
 		this.setMneu(true);
 		this.setHistory_type(false);
 		this.setPropTime_Number(0);
+	}
+
+	public List<knowledges_card> getAllmap() {
+		return Allmap;
+	}
+
+	public void setAllmap(List<knowledges_card> allmap) {
+		Allmap = allmap;
+	}
+
+	public List<tags> getTagsList() {
+		return tagsList;
+	}
+
+	public void setTagsList(List<tags> tagsList) {
+		this.tagsList = tagsList;
+	}
+
+	public List<Integer> getTagsarr() {
+		return Tagsarr;
+	}
+
+	public void setTagsarr(List<Integer> tagsarr) {
+		Tagsarr = tagsarr;
 	}
 
 	public String getPath() {

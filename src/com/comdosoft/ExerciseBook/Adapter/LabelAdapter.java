@@ -28,40 +28,33 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
 public class LabelAdapter extends BaseAdapter implements Urlinterface {
-	private int page;
-	private int index;
 	public List<tags> tagsList;
-	public Map<Integer, List<knowledges_card>> Allmap;
+	public List<Integer> cardlist;
 	Context content;
 	knowledges_card myList;
 	List<Integer> mytags;
-	List<knowledges_card> kcList;
 	private String student_id;
 	private String school_class_id;
 	private String card_id;
 
-	public LabelAdapter(Context content, int page, int index,
-			List<tags> tagsList, Map<Integer, List<knowledges_card>> map, String student_id,
+	public LabelAdapter(Context content, int index,
+			List<tags> tagsList, List<Integer> card, String student_id,
 			String school_class_id, String card_id) {
 		this.content = content;
-		this.page = page;
-		this.index = index;
 		this.tagsList = tagsList;
-		this.Allmap = map;
+		this.cardlist = card;
 		this.student_id = student_id;
 		this.school_class_id = school_class_id;
 		this.card_id = card_id;
-		myList = (knowledges_card) Allmap.get(page + 1).get(index);
-		//		myList = kcList;
 		mytags = new ArrayList<Integer>();
-		for(int i=0;i<myList.getTagsarr().size();i++)
+		for(int i=0;i<cardlist.size();i++)
 		{
-			mytags.add(myList.getTagsarr().get(i));
+			mytags.add(cardlist.get(i));
 		}
+		Log.i("2",mytags.size()+"1!!"+tagsList.size());
 	}
 
 	public int getCount() {
-
 		return tagsList.size();
 	}
 
@@ -83,11 +76,9 @@ public class LabelAdapter extends BaseAdapter implements Urlinterface {
 		Holder holder = null;
 		convertView = inflater.inflate(R.layout.biaoqian_iteam, null);
 		holder = new Holder();
-
 		holder.img = (ImageView) convertView.findViewById(R.id.bq_iteam_iv);
 		holder.tv = (TextView) convertView.findViewById(R.id.bq_iteam_tv);
 		convertView.setPadding(0, 10, 0, 10);
-
 		for (int i = 0; i < mytags.size(); i++) {
 			if (mytags.get(i) == Integer
 					.valueOf(tagsList.get(position).getId())) {
@@ -117,17 +108,14 @@ public class LabelAdapter extends BaseAdapter implements Urlinterface {
 								switch (type) {
 								case 0:
 									msg.obj = "错误";
-									Log.i("bbb", "错误");
 									break;
 								case 1:
 									msg.obj = "删除成功";
 									mytags.remove(setList(tagsList.get(position).getId()));
-									Log.i("bbb", "mytags.size:"+mytags.size());
 									break;
 								case 2:
 									msg.obj = "添加成功";
 									mytags.add(Integer.valueOf(tagsList.get(position).getId()));
-									Log.i("bbb", "mytags.size:"+mytags.size());
 									break;
 								}
 								msg.what = 0;
@@ -156,18 +144,12 @@ public class LabelAdapter extends BaseAdapter implements Urlinterface {
 		return 0;
 	}
 	Handler handler1 = new Handler() {
-		@Override
 		public void handleMessage(Message msg) {
-			// TODO Auto-generated method stub
 			super.handleMessage(msg);
 			switch (msg.what) {
 			case 0:
 				notifyDataSetChanged();
 				Toast.makeText(content, String.valueOf(msg.obj), Toast.LENGTH_SHORT).show();
-				break;
-			case 1:
-				break;
-			case 2:
 				break;
 			}
 		}

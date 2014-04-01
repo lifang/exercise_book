@@ -9,15 +9,15 @@
         android:id="@+id/bq_iteam_iv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="25px"
+        android:layout_marginLeft="16.75px"
         android:src="@drawable/biaoqiant" />
 
     <TextView
         android:id="@+id/bq_iteam_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="32px"
+        android:layout_marginLeft="21.44px"
         android:textColor="@color/white"
-        android:textSize="30px" />
+        android:textSize="23px" />
 
 </LinearLayout>

@@ -75,8 +75,8 @@ OnGestureListener
 		topTv2=(TextView) findViewById(R.id.topTv2);
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
-		user_id = preferences.getString("user_id", "1");
-		school_class_id = preferences.getString("school_class_id", "1");
+		user_id = preferences.getString("user_id", "121");
+		school_class_id = preferences.getString("school_class_id", "106");
 		topTv2.setOnClickListener(new OnClickListener(){
 			public void onClick(View v) {
 				ReplyListViewActivity.this.finish();
