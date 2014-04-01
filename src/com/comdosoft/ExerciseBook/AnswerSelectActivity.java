@@ -10,7 +10,6 @@ import java.util.Map.Entry;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnPreparedListener;
@@ -25,7 +24,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.comdosoft.ExerciseBook.pojo.AnswerBasePojo;
 import com.comdosoft.ExerciseBook.pojo.AnswerSelectItemPojo;
 import com.comdosoft.ExerciseBook.tools.AnswerTools;
@@ -66,8 +64,6 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 
 		setQuestionType(3);
 
-		Log.i("Ax", "jsonselect--" + json);
-
 		analysisJson(json);
 
 		answerOption = mQuestList.get(mQindex).get(mBindex).getOption();
@@ -104,6 +100,7 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 			break;
 		// 图片
 		case 2:
+			Log.i("Ax", "img" + mQuestList.get(mQindex).get(mBindex).getPath());
 			answerText.setText(content);
 			answerImg.setImageDrawable(Drawable.createFromPath(mQuestList
 					.get(mQindex).get(mBindex).getPath()));
@@ -199,16 +196,6 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 		selectAdapter.notifyDataSetChanged();
 		listView.setAdapter(selectAdapter);
 		setSelectType(sp.getType(), sp.getContent());
-		// switch (sp.getType()) {
-		// case 0:
-		// break;
-		// case 1:
-		// answerText.setText(sp.getContent());
-		// break;
-		// case 2:
-		// answerText.setText(sp.getContent());
-		// break;
-		// }
 		checkMap.clear();
 	}
 
@@ -290,6 +277,7 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 	// 播放音频
 	public void playerAmr() {
 		try {
+			Log.i("Ax", "mp3:" + mQuestList.get(mQindex).get(mBindex).getPath());
 			mediaPlayer.reset();
 			mediaPlayer.setDataSource(mQuestList.get(mQindex).get(mBindex)
 					.getPath());

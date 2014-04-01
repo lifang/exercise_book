@@ -402,8 +402,6 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 						if (new JSONObject(answer_json).getString("status")
 								.equals("success")) {
 							answer_boolean = true;
-							Log.i("Ax", answer_boolean + "--boolean");
-							mHandler.sendEmptyMessage(4);
 							if (index == 0) {// 0表示退出
 								mHandler.sendEmptyMessage(3);
 							} else {
@@ -429,7 +427,9 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 				MyDialog("没有更多历史记录了,点击确定退出!", 1);
 			} else {
 				// 答题
-				roundOver();
+				if (status != 0) {
+					mHandler.sendEmptyMessage(4);
+				}
 			}
 		} else if (mQindex < mQuestList.size()
 				&& mBindex < mQuestList.get(mQindex).size()) {
@@ -519,8 +519,17 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		this.ratio = 0;
 		try {
 			ExerciseBookTool.writeFile(path, str);
+			uploadJSON(ap.getStatus());
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+
+	public void uploadJSON(String type) {
+		if (type.equals("1")) {
+			if (status == 0) {
+				roundOver();
+			}
 		}
 	}
 
@@ -606,7 +615,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	}
 
 	public void setWork_Status() {
-		Log.i("suanfa", "设置work_status");
+		Log.i("Ax", "设置work_status");
 		int number = 0;
 		String answer_history = ExerciseBookTool.getAnswer_Json_history(path);
 		answerJson = gson.fromJson(answer_history, AnswerJson.class);
@@ -616,7 +625,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 				number += 1;
 			}
 		}
-		Log.i("suanfa", "number:" + number + "/" + eb.getWork_number());
+		Log.i("Ax", "number:" + number + "/" + eb.getWork_number());
 		if (number == eb.getWork_number()) {
 			answerJson.status = "1";
 			String str = gson.toJson(answerJson);
