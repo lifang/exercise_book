@@ -4,14 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -154,7 +152,6 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		json = intent.getStringExtra("json");
 		path = intent.getStringExtra("path");
 		status = intent.getIntExtra("status", 2);
-		Log.i("suanfa", status + "=");
 	}
 
 	// 设置子布局View
@@ -186,6 +183,10 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 				nextRecord();
 			}
 		}
+	}
+
+	public void setTimeGone() {
+		base_time_linearlayout.setVisibility(View.GONE);
 	}
 
 	// 设置答题|记录 type 0答题 1历史
@@ -357,7 +358,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		if (mRecoirdRatio.size() > 0 && mRecoirdAnswer.size() > 0) {
 			setAccuracyAndUseTime(mRecoirdRatio.get(mRecordIndex),
 					amp.getUse_time());
-			if (mQuestionType == 3) {
+			if (mQuestionType == 0) {
 				recordMes = null;
 				String s[] = mRecoirdAnswer.get(mRecordIndex).split(";&&;");
 				if (s.length > 1) {
@@ -679,6 +680,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	}
 
 	public void MyPlayer(boolean status) {
+
 		if (player.isPlaying()) {
 			player.pause();
 		} else {
