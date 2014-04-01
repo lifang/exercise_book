@@ -1,16 +1,19 @@
 package com.comdosoft.ExerciseBook;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -27,13 +30,16 @@ import com.comdosoft.ExerciseBook.pojo.AnswerBasePojo;
 import com.comdosoft.ExerciseBook.pojo.AnswerSelectItemPojo;
 import com.comdosoft.ExerciseBook.tools.AnswerTools;
 
+//2014年4月1日 10:45:06
 public class AnswerSelectActivity extends AnswerBaseActivity implements
-		OnItemClickListener, OnClickListener {
+		OnItemClickListener, OnClickListener, OnPreparedListener {
 
-	private String[] letterArr = new String[] { "A", "B", "C", "D", "E", "F" };
-	private StringBuffer mAnswer = new StringBuffer();
 	// private String json =
 	// "{  \"selecting\": {\"specified_time\": \"100\", \"question_types\": \"6\", \"questions\": [{\"id\": \"284\",\"branch_questions\": [ {\"id\": \"181\", \"content\": \"This is ___ apple!\", \"option\": \"a;||;an\", \"answer\": \"an;||;a\" },{\"id\": \"181\", \"content\": \"<file>apple.jpg</file>Why he is ___ Google!\", \"option\": \"apple;||;banana;||;orange;||;pear\", \"answer\": \"apple;||;banana\"},{\"id\": \"181\", \"content\": \"<file>apple.mp3</file>\", \"option\": \"one;||;two;||;three\", \"answer\": \"two\"}, {\"id\": \"181\", \"content\": \"<file>apple.jpg</file>Pears have white flesh and thin green or yellow skin.\", \"option\": \"iPhone;||;S5;||;Xperia\", \"answer\": \"iPhone\"},{\"id\": \"181\", \"content\": \"Dad.come set here!\", \"option\": \"ZhangDaCa;||;ChenLong\", \"answer\": \"ZhangDaCa\"}]}]}}";
+
+	private boolean playFlag = false;
+	private String[] letterArr = new String[] { "A", "B", "C", "D", "E", "F" };
+	private StringBuffer mAnswer = new StringBuffer();
 	private List<String> answerOption = new ArrayList<String>();
 	private Map<Integer, String> checkMap = new HashMap<Integer, String>();
 	private ListView listView;
@@ -43,6 +49,7 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 	private ImageView answerLaba;
 	private TextView answerText;
 	private LinearLayout answer_select_answerLinearLayout;
+	private MediaPlayer mediaPlayer = new MediaPlayer();
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -53,30 +60,35 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 		listView = (ListView) findViewById(R.id.answer_select_listview);
 		answerImg = (ImageView) findViewById(R.id.answer_select_img);
 		answerLaba = (ImageView) findViewById(R.id.answer_select_laba);
+		answerLaba.setOnClickListener(this);
 		answerText = (TextView) findViewById(R.id.answer_select_text);
 		answer_select_answerLinearLayout = (LinearLayout) findViewById(R.id.answer_select_answerLinearLayout);
 
-		setQuestionType(2);
+		setQuestionType(3);
 
-		Log.i("aaa", "jsonselect--" + json);
+		Log.i("Ax", "jsonselect--" + json);
 
 		analysisJson(json);
 
 		answerOption = mQuestList.get(mQindex).get(mBindex).getOption();
 		selectAdapter = new AnswerSelectAdapter(this, answerOption);
-		if (amp.getStatus() == 1 && status > 1) {
-			selectAdapter.setOptionAndAnswerList(1, answerOption, mQuestList
-					.get(mQindex).get(mBindex).getAnswer());
-		} else {
+		if (amp.getStatus() == 0 || status == 1) {
 			listView.setOnItemClickListener(this);
 		}
-		listView.setAdapter(selectAdapter);
+		// if (amp.getStatus() == 1 && status > 1) {
+		// selectAdapter.setOptionAndAnswerList(1, answerOption, mQuestList
+		// .get(mQindex).get(mBindex).getAnswer());
+		// } else {
+		// listView.setOnItemClickListener(this);
+		// }
+		// listView.setAdapter(selectAdapter);
 		listView.setDividerHeight(10);
+		updateView();
 
 	}
 
 	// 设置选择类型
-	public void setSelectType(int i) {
+	public void setSelectType(int i, String content) {
 		switch (i) {
 		// 听力
 		case 0:
@@ -85,12 +97,16 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 			break;
 		// 文本
 		case 1:
+			answerText.setText(content);
 			answer_select_answerLinearLayout.setVisibility(View.VISIBLE);
 			answerImg.setVisibility(View.GONE);
 			answerLaba.setVisibility(View.GONE);
 			break;
 		// 图片
 		case 2:
+			answerText.setText(content);
+			answerImg.setImageDrawable(Drawable.createFromPath(mQuestList
+					.get(mQindex).get(mBindex).getPath()));
 			answer_select_answerLinearLayout.setVisibility(View.VISIBLE);
 			answerImg.setVisibility(View.VISIBLE);
 			answerLaba.setVisibility(View.GONE);
@@ -163,6 +179,10 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 	@Override
 	public void updateView() {
 		super.updateView();
+		if (mediaPlayer != null) {
+			mediaPlayer.pause();
+		}
+
 		asipList.clear();
 		setPage(mBindex + 1, mQuestList.get(mQindex).size());
 		mAnswer.delete(0, mAnswer.length());
@@ -178,17 +198,17 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 
 		selectAdapter.notifyDataSetChanged();
 		listView.setAdapter(selectAdapter);
-		setSelectType(sp.getType());
-		switch (sp.getType()) {
-		case 0:
-			break;
-		case 1:
-			answerText.setText(sp.getContent());
-			break;
-		case 2:
-			answerText.setText(sp.getContent());
-			break;
-		}
+		setSelectType(sp.getType(), sp.getContent());
+		// switch (sp.getType()) {
+		// case 0:
+		// break;
+		// case 1:
+		// answerText.setText(sp.getContent());
+		// break;
+		// case 2:
+		// answerText.setText(sp.getContent());
+		// break;
+		// }
 		checkMap.clear();
 	}
 
@@ -236,6 +256,16 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 		case R.id.base_propTrue:
 			rightAnswer();
 			break;
+		case R.id.answer_select_laba:
+			if (!playFlag) {
+				new MyMediaPlay().start();
+				playFlag = true;
+			} else if (mediaPlayer.isPlaying()) {
+				mediaPlayer.pause();
+			} else {
+				mediaPlayer.start();
+			}
+			break;
 		}
 	}
 
@@ -257,6 +287,61 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 		}
 	}
 
+	// 播放音频
+	public void playerAmr() {
+		try {
+			mediaPlayer.reset();
+			mediaPlayer.setDataSource(mQuestList.get(mQindex).get(mBindex)
+					.getPath());
+			mediaPlayer.prepare();
+			mediaPlayer.setOnPreparedListener(this);
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void stop() {
+		if (mediaPlayer.isPlaying()) {
+			mediaPlayer.pause();
+		}
+	}
+
+	class MyMediaPlay extends Thread {
+		@Override
+		public void run() {
+			super.run();
+			playerAmr();
+		}
+	}
+
+	@Override
+	public void onPrepared(MediaPlayer mp) {
+		mp.start();
+	}
+
+	// 销毁音频
+	@Override
+	public void onDestroy() {
+		if (mediaPlayer != null) {
+			mediaPlayer.stop();
+			mediaPlayer.release();
+			mediaPlayer = null;
+		}
+		super.onDestroy();
+	}
+
+	// 停止音频
+	protected void onStop() {
+		if (mediaPlayer.isPlaying()) {// 正在播放
+			mediaPlayer.stop();// 停止
+		}
+		super.onStop();
+	}
+
 	// 解析选择题JSON
 	public void analysisJson(String json) {
 		try {
@@ -276,16 +361,18 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 					int type = AnswerTools.getSelectType(s);
 					String content = AnswerTools.getSelectContent(s);
 					List<String> arr = AnswerTools.getSelectOption(jb
-							.getString("option"));
+							.getString("options"));
 					List<String> answer = AnswerTools.getSelectAnswer(jb
 							.getString("answer"));
 
-					if (type != 0) {
+					if (type != 1) {
 						String path = AnswerTools.getSelectPath(s);
-						String fileName = AnswerTools.getSelectPath(path);
+						String fileName = AnswerTools.getSelectFileName(path);
+
 						list.add(new AnswerBasePojo(questions_id,
-								branch_questions_id, type, content, fileName,
-								arr, answer));
+								branch_questions_id, type, content, eb
+										.getPath() + "/" + fileName, arr,
+								answer));
 					} else {
 						list.add(new AnswerBasePojo(questions_id,
 								branch_questions_id, type, content, arr, answer));

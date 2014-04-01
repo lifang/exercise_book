@@ -3,12 +3,9 @@ package com.comdosoft.ExerciseBook;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -27,6 +24,7 @@ import com.comdosoft.ExerciseBook.pojo.AnswerBasePojo;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
+// 2014年4月1日 10:45:06
 public class AnswerDictationPrepareActivity extends AnswerBaseActivity
 		implements OnClickListener, OnPreparedListener, OnCompletionListener,
 		Urlinterface {
@@ -66,7 +64,7 @@ public class AnswerDictationPrepareActivity extends AnswerBaseActivity
 		dictationImg.setOnClickListener(this);
 		eb = (ExerciseBook) getApplication();
 
-		setQuestionType(6);
+		setQuestionType(7);
 
 		analysisJSON(json);
 
@@ -163,7 +161,7 @@ public class AnswerDictationPrepareActivity extends AnswerBaseActivity
 				mHandler.sendEmptyMessage(1);
 				if (mp3Index >= mp3List.size()) {
 					mp3Index = 0;
-					mHandler.sendEmptyMessage(3);
+					// mHandler.sendEmptyMessage(3);
 					new MyMediaPlay().start();
 				} else if (playFlag) {
 					mediaPlayer.start();

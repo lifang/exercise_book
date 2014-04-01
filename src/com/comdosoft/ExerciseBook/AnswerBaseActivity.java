@@ -170,6 +170,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	// 设置题目类型
 	public void setQuestionType(int type) {
 		this.mQuestionType = type;
+		mQuestionType = mQuestionType == 7 ? 0 : mQuestionType;
 		amp = getAnswerItem(ExerciseBookTool.getAnswer_Json_history(path));
 
 		mQindex = amp.getQuestions_item();
@@ -191,7 +192,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	public void setType(int type) {
 		this.type = type;
 		if (type == 0) {
-			if (mQuestionType != 6) {
+			if (mQuestionType != 7) {
 				mTimer.start();
 			}
 			base_time_linearlayout.setVisibility(View.VISIBLE);
@@ -204,6 +205,11 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 			base_time_linearlayout.setVisibility(View.GONE);
 			base_history_linearlayout.setVisibility(View.VISIBLE);
 			base_answer_linearlayout.setVisibility(View.VISIBLE);
+		}
+		if (status == 1) {
+			// 重做
+			setUseTime(0);
+			mTimer.start();
 		}
 	}
 
@@ -333,21 +339,26 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	}
 
 	public void close() {
-		index = 0;
-		switch (type) {
-		case 0:
-			prodialog.show();
-			// setWork_Status();
-			Finish_Json();
-			break;
-		case 1:
-			mHandler.sendEmptyMessage(5);
-			break;
+		prodialog.show();
+		if (Finish_Json()) {
+			mHandler.sendEmptyMessage(3);
+		} else {
+			mHandler.sendEmptyMessage(2);
+			index = 0;
+			switch (type) {
+			case 0:
+				prodialog.show();
+				// setWork_Status();
+				Finish_Json();
+				break;
+			case 1:
+				mHandler.sendEmptyMessage(5);
+				break;
+			}
 		}
-
 	}
 
-	// 切换下一记录
+	// 切换下一历史记录
 	public void nextRecord() {
 		setAccuracyAndUseTime(mRecoirdRatio.get(mRecordIndex),
 				amp.getUse_time());
@@ -394,6 +405,8 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 						if (new JSONObject(answer_json).getString("status")
 								.equals("success")) {
 							answer_boolean = true;
+							Log.i("Ax", answer_boolean + "--boolean");
+							mHandler.sendEmptyMessage(4);
 							if (index == 0) {// 0表示退出
 								mHandler.sendEmptyMessage(3);
 							} else {
@@ -415,8 +428,10 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 				&& mBindex == mQuestList.get(mQindex).size() - 1) {
 			// 最后一题
 			if (amp.getStatus() == 1 && status > 1) {
+				// 历史记录
 				MyDialog("没有更多历史记录了,点击确定退出!", 1);
 			} else {
+				// 答题
 				roundOver();
 			}
 		} else if (mQindex < mQuestList.size()
@@ -432,14 +447,20 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		}
 	}
 
+	// 子类实现父类刷新视图方法
 	public void updateView() {
 	}
 
+	// 通关界面
 	public void roundOver() {
-		prodialog.show();
-		index = 1;
-		setWork_Status();
-		Finish_Json();
+		if (status == 0) {
+			prodialog.show();
+			index = 1;
+			setWork_Status();
+			Finish_Json();
+		} else {
+			mHandler.sendEmptyMessage(4);
+		}
 	}
 
 	public AnswerPojo getAnswerPojo() {

@@ -12,7 +12,6 @@ import java.util.regex.Pattern;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -40,6 +39,7 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Soundex_Levenshtein;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
+// 2014年4月1日 10:45:06
 public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		OnClickListener, ExerciseBookParams, OnPreparedListener,
 		OnCompletionListener, Urlinterface {
@@ -70,24 +70,16 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 	private TextView mesText;
 	private ImageView mPlayImg;
 	private MediaPlayer mediaPlayer = new MediaPlayer();
-	private ProgressDialog mPd;
 	private LayoutParams etlp;
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
 			switch (msg.what) {
 			case 1:
-				mPd.dismiss();
+				mPlayImg.setImageResource(R.drawable.xiao1);
 				break;
 			case 2:
 				mPlayImg.setImageResource(R.drawable.xiao2);
-				break;
-			case 3:
-				mPlayImg.setImageResource(R.drawable.xiao1);
-				break;
-			case 4:
-				mPd.setMessage("正在缓冲...");
-				mPd.show();
 				break;
 			}
 		}
@@ -104,6 +96,7 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		mPlayImg.setOnClickListener(this);
 
 		setQuestionType(0);
+		setTruePropEnd();
 
 		etlp = new LayoutParams(LayoutParams.WRAP_CONTENT,
 				LayoutParams.WRAP_CONTENT);
@@ -145,8 +138,6 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		mesText.setVisibility(LinearLayout.GONE);
 
 		playFlag = false;
-
-		handler.sendEmptyMessage(3);
 
 		// 获取当前大&小题数据
 		mp3URL = mQuestList.get(mQindex).get(mBindex).getPath();
@@ -323,7 +314,8 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 					String answer = jb.getString("content");
 					String path = jb.getString("resource_url");
 					mBranchList.add(new AnswerBasePojo(question_id,
-							branch_question_id, answer, path));
+							branch_question_id, answer, eb.getPath() + "/"
+									+ path));
 				}
 				mQuestList.add(mBranchList);
 			}
@@ -507,12 +499,11 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 			if (!playFlag) {
 				new MyMediaPlay().start();
 				playFlag = true;
-				handler.sendEmptyMessage(4);
 			} else if (mediaPlayer.isPlaying()) {
-				handler.sendEmptyMessage(3);
+				handler.sendEmptyMessage(2);
 				mediaPlayer.pause();
 			} else {
-				handler.sendEmptyMessage(2);
+				handler.sendEmptyMessage(1);
 				mediaPlayer.start();
 			}
 			break;
@@ -522,13 +513,12 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 	@Override
 	public void onPrepared(MediaPlayer mp) {
 		handler.sendEmptyMessage(1);
-		handler.sendEmptyMessage(2);
 		mp.start();
 	}
 
 	@Override
 	public void onCompletion(MediaPlayer mp) {
-		handler.sendEmptyMessage(3);
+		handler.sendEmptyMessage(2);
 	}
 
 	// 销毁音频

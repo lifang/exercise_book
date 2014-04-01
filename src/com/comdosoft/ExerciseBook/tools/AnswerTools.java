@@ -8,9 +8,11 @@ public class AnswerTools {
 	public static int getSelectType(String s) {
 		int index = s.indexOf("</file>");
 		if (index != -1) {
-			if (s.substring(index - 3, index).equals("jpg")) {
+			String resource = s.substring(index - 3, index);
+			if (resource.equals("jpg") || resource.equals("png")) {
 				return 2;
-			} else if (s.substring(index - 3, index).equals("wav")) {
+			} else if (resource.equals("wav") || resource.equals("mp3")
+					|| resource.equals("amr")) {
 				return 0;
 			}
 		} else {

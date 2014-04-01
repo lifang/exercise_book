@@ -10,7 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.comdosoft.ExerciseBook.pojo.AnswerSelectItemPojo;
-
+//2014年4月1日 10:45:06
 public class AnswerSelectAdapter extends BaseAdapter {
 
 	private int type = 0;
