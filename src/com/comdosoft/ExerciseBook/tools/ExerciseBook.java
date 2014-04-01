@@ -35,6 +35,8 @@ public class ExerciseBook extends Application {
 	private boolean history_type;
 	private int propTime_Number;
 	private String path;
+	private int activity_item;
+	private int work_number;
 
 	public ExerciseBook() {
 		this.setMneu(true);
@@ -45,6 +47,22 @@ public class ExerciseBook extends Application {
 		this.setMneu(true);
 		this.setHistory_type(false);
 		this.setPropTime_Number(0);
+	}
+
+	public int getWork_number() {
+		return work_number;
+	}
+
+	public void setWork_number(int work_number) {
+		this.work_number = work_number;
+	}
+
+	public int getActivity_item() {
+		return activity_item;
+	}
+
+	public void setActivity_item(int activity_item) {
+		this.activity_item = activity_item;
 	}
 
 	public String getPath() {

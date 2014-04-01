@@ -113,6 +113,8 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
 		setTimePropEnd();// 禁用道具
 		setTruePropEnd();// 禁用道具
+		// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
+		this.mQuestionType = 1;
 		eb = (ExerciseBook) getApplication();
 
 		qid = eb.getQuestion_id();
@@ -570,17 +572,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 						handler.sendEmptyMessage(0);
 						break;
 					case 1:
-						prodialog.show();
-						if (Finish_Json()) {
-							intent.putExtra("precision",
-									ExerciseBookTool.getRatio(path, "reading"));// 正确率100时获取精准成就
-							intent.putExtra("use_time", getUseTime());// 用户使用的时间
-							intent.putExtra("specified_time", specified_time);// 任务基础时间
-							intent.setClass(SpeakBeginActivity.this,
-									WorkEndActivity.class);
-							SpeakBeginActivity.this.startActivityForResult(
-									intent, 1);
-						}
+						super.roundOver();
 						break;
 					case 2:
 						intent.putExtra("path", path);

@@ -1,5 +1,6 @@
 package com.comdosoft.ExerciseBook.pojo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AnswerJson {
@@ -32,4 +33,15 @@ public class AnswerJson {
 		this.sort = sort;
 	}
 
+	public List<AnswerPojo> Work_list() {
+		List<AnswerPojo> answer = new ArrayList<AnswerPojo>();
+		answer.add(reading);
+		answer.add(listening);
+		answer.add(time_limit);
+		answer.add(selecting);
+		answer.add(lining);
+		answer.add(cloze);
+		answer.add(sort);
+		return answer;
+	}
 }

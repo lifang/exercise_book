@@ -69,7 +69,6 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 	// "{\"status\": \"success\",\"notice\": \"\u83b7\u53d6\u6210\u529f\uff01\",\"tasks\": [{\"id\": 130,\"name\": \"\",\"start_time\": \"2014-03-12T14: 44: 45+08: 00\",\"question_types\": [0,1,2,3,4,5,6],\"finish_types\": [2,5],\"end_time\": \"2014-03-13T18: 00: 00+08: 00\",\"question_packages_url\": \"/que_ps/question_p_264/resourse.zip\"},{\"id\": 131,\"name\": \"\",\"start_time\": \"2014-03-12T14: 44: 45+08: 00\",\"question_types\": [0,1,2,3,4,5,6],\"finish_types\": [2,5],\"end_time\": \"2014-03-13T18: 00: 00+08: 00\",\"question_packages_url\": \"/que_ps/question_p_264/resourse.zip\"}],\"knowledges_cards_count\": 10}";
 	private ViewPager pager;
 	private List<LinearLayout> linearList = new ArrayList<LinearLayout>();
-	private List<Integer> questiontype_list = new ArrayList<Integer>();
 	private List<Integer> finish_list = new ArrayList<Integer>();
 	private List<WorkPoJo> work_list = new ArrayList<WorkPoJo>();
 	private int linear_item = 0;
@@ -263,7 +262,8 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 				linear_item = 0;
 				// Log.i("linshi", work_list.get(arg1).toString()+ "");
 				typeList = new ArrayList<Boolean>();
-				questiontype_list = work_list.get(arg1).getQuestion_types();
+				final List<Integer> questiontype_list = work_list.get(arg1)
+						.getQuestion_types();
 				finish_list = work_list.get(arg1).getFinish_types();
 				cardType = work_list.get(arg1).getNumber() < 20 ? true : false;
 				eb.setWork_id(work_list.get(arg1).getId() + "");
@@ -271,7 +271,9 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 						.initAnswer(pathList.get(arg1), eb.getWork_id());// 初始化answer
 				for (int i = 0; i < work_list.get(arg1).getQuestion_types()
 						.size(); i++) {
-					setlayout(i, mylayout, work_list.get(arg1));
+					setlayout(i, mylayout, work_list.get(arg1),
+							questiontype_list, work_list.get(arg1)
+									.getQuestion_types().size());
 				}
 			}
 			((ViewPager) arg0).addView(nl, 0);
@@ -280,7 +282,8 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 	}
 
 	public void setlayout(final int i, LinearLayout mylayout,
-			final WorkPoJo pojo) {
+			final WorkPoJo pojo, final List<Integer> questiontype_list,
+			final int number) {
 		View view = View.inflate(this, R.layout.work_item, null);
 		RelativeLayout layout = (RelativeLayout) view.findViewById(R.id.layout);
 		ImageView imageView = (ImageView) view.findViewById(R.id.image);
@@ -295,17 +298,18 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 		});
 		layout.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View arg0) {
-				Log.i("aaa", pathList.get(pager.getCurrentItem()));
-				// startDekaron(pojo.getQuestion_types().get(i));// 跳转到答题页面
+				eb.setWork_number(number);
+				eb.setActivity_item(1);
+				Log.i("aaa", "worknumber:" + number);
 				if (ExerciseBookTool.FileExist(pathList.get(pager
 						.getCurrentItem()))) {// 判断文件是否存在
 					getJsonPath();
 					if (typeList.get(i)) {// 已完成
-						MyDialog(i);
+						MyDialog(i, questiontype_list);
 					} else {
 						if (cardType) {
 							status = 0;
-							Start_Acvivity(i);
+							Start_Acvivity(i, questiontype_list);
 						} else {
 							Builder builder = new Builder(
 									RecordMainActivity.this);
@@ -362,7 +366,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 		linearList.get(linear_item).addView(view);
 	}
 
-	public void Start_Acvivity(int i) {// 做题跳转
+	public void Start_Acvivity(int i, List<Integer> questiontype_list) {// 做题跳转
 		switch (questiontype_list.get(i)) {
 		case 0:
 			intent.setClass(this, AnswerDictationBeginActivity.class);
@@ -397,18 +401,20 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 			intent.setClass(this, AnswerOrderActivity.class);
 			break;
 		}
-		intent.putExtra("json", json_list.get(i));
+		Log.i("suanfa", json_list.get(questiontype_list.get(i)));
+		intent.putExtra("json", json_list.get(questiontype_list.get(i)));
 		intent.putExtra("path", pathList.get(pager.getCurrentItem())
 				+ "/answer.json");
 		intent.putExtra("type", 0);// 0 今日任务列表跳转 1历史记录列表跳转
 		intent.putExtra("status", status);// 0表示第一次做 1表示重做 2历史
-		Log.i("aaa", json_list.get(i));
 		eb.setWork_end_dath(work_list.get(0).getEnd_time());
+
+		Log.i("suanfa", questiontype_list.get(i) + "");
 		startActivity(intent);
 		this.finish();
 	}
 
-	public void Start_History_Acvivity(int i) {// 历史记录跳转
+	public void Start_History_Acvivity(int i, List<Integer> questiontype_list) {// 历史记录跳转
 		switch (questiontype_list.get(i)) {
 		case 0:
 			intent.setClass(this, SpeakPrepareActivity.class);
@@ -437,19 +443,18 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 			intent.setClass(this, AnswerOrderActivity.class);
 			break;
 		}
-		intent.putExtra("json", json_list.get(i));
+		intent.putExtra("json", json_list.get(questiontype_list.get(i)));
 		intent.putExtra("path", pathList.get(pager.getCurrentItem())
 				+ "/answer.json");
 		intent.putExtra("type", 0);// 0 今日任务列表跳转 1历史记录列表跳转
 		intent.putExtra("status", status);// 0表示第一次做 1表示重做 2历史
-		Log.i("aaa", json_list.get(i));
 		eb.setWork_end_dath(work_list.get(0).getEnd_time());
 		startActivity(intent);
 		this.finish();
 	}
 
 	// 自定义dialog设置
-	private void MyDialog(final int type) {
+	private void MyDialog(final int type, final List<Integer> questiontype_list) {
 		// type :0表示退出 1表示结束
 		final Dialog dialog = new Dialog(this, R.style.Transparent);
 		dialog.setContentView(R.layout.my_dialog_main);
@@ -467,14 +472,14 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 			public void onClick(View v) {
 				dialog.dismiss();
 				status = 2;
-				Start_History_Acvivity(type);
+				Start_History_Acvivity(type, questiontype_list);
 			}
 		});
 		working.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				dialog.dismiss();
 				status = 1;// 0表示第一次做 1表示重做 2历史
-				Start_Acvivity(type);
+				Start_Acvivity(type, questiontype_list);
 			}
 		});
 		dialog.show();
@@ -830,7 +835,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 		File file = new File(pathList.get(pager.getCurrentItem())
 				+ "/questions.json");
 		if (file.exists()) {
-			Log.i("linshi", "获取json");
+			Log.i("linshi", "获取json" + pathList.get(pager.getCurrentItem()));
 			String json = ExerciseBookTool.getJson(pathList.get(pager
 					.getCurrentItem()) + "/questions.json");
 			SetJson(json);
@@ -851,45 +856,6 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-	}
-
-	// 跳转到挑战
-	/**
-	 * 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
-	 * 
-	 * @param i
-	 */
-	public void startDekaron(int i) {
-		switch (i) {
-		case 0:
-			intent.setClass(this, AnswerDictationPrepareActivity.class);
-			break;
-		case 1:
-			intent.setClass(this, SpeakPrepareActivity.class);
-			break;
-		case 2:
-			intent.setClass(this, TenSpeedActivity.class);
-			break;
-		case 3:
-			intent.setClass(this, AnswerSelectActivity.class);
-			break;
-		case 4:
-			intent.setClass(this, AnswerWireActivity.class);
-			break;
-		case 5:
-			intent.setClass(this, ClozeActivity.class);
-			break;
-		case 6:
-			intent.setClass(this, AnswerOrderActivity.class);
-			break;
-		}
-		intent.putExtra("json", json_list.get(i));
-		intent.putExtra("path", pathList.get(pager.getCurrentItem())
-				+ "/answer.json");
-		Log.i("aaa", json_list.get(i));
-		eb.setWork_end_dath(work_list.get(0).getEnd_time());
-		startActivity(intent);
-		this.finish();
 	}
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
