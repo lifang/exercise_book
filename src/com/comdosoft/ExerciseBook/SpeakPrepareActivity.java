@@ -72,6 +72,7 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 	private int status;
 	private int type;
 	private String json;
+	private int use_time = 0;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			Builder builder = new Builder(SpeakPrepareActivity.this);
@@ -151,6 +152,7 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
 		setTimePropEnd();// 禁用道具
 		setTruePropEnd();// 禁用道具
+		setTimeGone();
 		setCheckText("开始");
 		initialize();
 		tvlist = new ArrayList<TextView>();
@@ -159,7 +161,7 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 
 		path = intent.getStringExtra("path");
 		json = intent.getStringExtra("json");
-		status = intent.getIntExtra("status", 1);
+		status = intent.getIntExtra("status", 2);
 		Log.i("suanfa", json);
 		SetQuestionsJson(json);
 
@@ -194,7 +196,7 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 						.getQuesttionList().size());
 				break;
 			case 2:
-				setType(1);
+				// setType(1);
 				type = 2;
 				questionlist = list.get(eb.getQuestion_item())
 						.getQuesttionList();
@@ -266,8 +268,7 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 				JSONObject time_limit = obj.getJSONObject("reading");
 				questions_item = time_limit.getInt("questions_item");
 				branch_item = time_limit.getInt("branch_item");
-				int use_time = time_limit.getInt("use_time");
-				setUseTime(use_time);
+				use_time = time_limit.getInt("use_time");
 				setStart();
 				Log.i("aaa", specified_time + "--" + branch_item);
 				JSONArray questions = time_limit.getJSONArray("questions");
@@ -587,7 +588,8 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 			intent.putExtra("specified_time", specified_time);
 			intent.putExtra("path", path);
 			intent.putExtra("json", json);
-			if (eb.isHistory_type()) {
+			intent.putExtra("time", use_time);
+			if (super.status == 2) {
 				intent.setClass(SpeakPrepareActivity.this,
 						SpeakHistoryActivity.class);
 			} else {

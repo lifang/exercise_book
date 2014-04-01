@@ -17,7 +17,6 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -44,7 +43,7 @@ import com.google.gson.Gson;
 
 // 答题父类
 public class AnswerBaseActivity extends Activity implements OnClickListener,
-		OnPreparedListener, Urlinterface {
+		Urlinterface {
 	public ExerciseBook eb;
 	public int mQindex = 0;
 	public int mBindex = 0;
@@ -194,6 +193,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		this.type = type;
 		if (type == 0) {
 			if (mQuestionType != 7) {
+				Log.i("suanfa", status + "---1");
 				mTimer.start();
 			}
 			base_time_linearlayout.setVisibility(View.VISIBLE);
@@ -210,6 +210,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		if (status == 1) {
 			// 重做
 			setUseTime(0);
+			Log.i("suanfa", status + "---2");
 			mTimer.start();
 		}
 	}
@@ -681,36 +682,10 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		if (player.isPlaying()) {
 			player.pause();
 		} else {
-			// String mp3URL = path+
-			// new MyMediaPlay().start();
+			int mp3_url = status ? R.raw.true_mp3 : R.raw.false_mp3;
+			player = MediaPlayer.create(this, mp3_url);
+			player.start();
 		}
-	}
-
-	class MyMediaPlay extends Thread {
-		public void run() {
-			super.run();
-			playerAmr();
-		}
-	}
-
-	// 播放音频
-	public void playerAmr() {
-		try {
-			player.reset();
-			player = MediaPlayer.create(this, R.raw.true_mp3);
-			player.prepare();
-			player.setOnPreparedListener(this);
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void onPrepared(MediaPlayer mp) {
-		mp.start();
 	}
 
 	protected void onStart() {
@@ -719,12 +694,8 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		super.onStart();
 	}
 
-	// 停止音频
-	protected void onStop() {
-		if (player.isPlaying()) {// 正在播放
-			player.stop();
-		}
-		super.onStop();
+	public void setTimeGone() {
+		base_time_linearlayout.setVisibility(View.GONE);
 	}
 
 	// 销毁音频

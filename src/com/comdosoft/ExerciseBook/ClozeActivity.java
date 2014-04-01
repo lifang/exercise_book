@@ -237,13 +237,16 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		Answer_QuestionsPojo aq = new Answer_QuestionsPojo(id + "",
 				new ArrayList<Branch_AnswerPoJo>());
 		answerJson.cloze.getQuestions().add(aq);
+
 		q_item += 1;
 		answerJson.cloze.setQuestions_item(q_item + "");
+		int true_number = 0;
 		for (Map.Entry<Integer, String> entry : answer.entrySet()) {
 			int ratio = 0;
 			if (entry.getValue().equals(
 					cloze.getList().get(entry.getKey()).getAnswer())) {
 				ratio = 100;
+				true_number += 1;
 			}
 			Log.i("aaa", "ratio:"
 					+ cloze.getList().get(entry.getKey()).getAnswer());
@@ -256,6 +259,11 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 							+ "", entry.getValue(), ratio + ""));
 		}
 		Log.i("aaa", q_item + "/" + list.size());
+		if (true_number == answer.size()) {
+			MyPlayer(true);
+		} else {
+			MyPlayer(true);
+		}
 		if (q_item + 1 == list.size()) {// 结束
 			answerJson.cloze.setStatus("1");
 			type = 1;
@@ -329,6 +337,9 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 					Check = false;
 					setCheckText("检查");
 					propItem = 0;
+				} else {
+					Check = true;
+					setCheckText("下一个");
 					int type = 0;
 					String answer_history = ExerciseBookTool
 							.getAnswer_Json_history(path);
@@ -350,13 +361,9 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 							super.roundOver();
 							break;
 						}
-
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-				} else {
-					Check = true;
-					setCheckText("下一个");
 				}
 			}
 			break;

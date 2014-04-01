@@ -326,11 +326,6 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 			break;
 		case 1:
 			intent.setClass(this, SpeakPrepareActivity.class);
-			if (typeList.get(i)) {// 已完成
-				eb.setHistory_type(true);
-			} else {
-				eb.setHistory_type(false);
-			}
 			break;
 		case 2:
 			intent.setClass(this, TenSpeedActivity.class);
@@ -365,11 +360,6 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 			break;
 		case 1:
 			intent.setClass(this, SpeakPrepareActivity.class);
-			if (typeList.get(i)) {// 已完成
-				eb.setHistory_type(true);
-			} else {
-				eb.setHistory_type(false);
-			}
 			break;
 		case 2:
 			intent.setClass(this, Ten_HistoryActivity.class);

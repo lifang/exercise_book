@@ -257,12 +257,6 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 				if (Check) {
 					Check = false;
 					setCheckText("检查");
-					if (user_select.equals(branch_questions.get(index)
-							.getAnwser())) {
-						user_boolean = 100;
-					} else {
-						user_boolean = 0;
-					}
 					img_index -= 1;
 					String answer_history = ExerciseBookTool
 							.getAnswer_Json_history(path);
@@ -292,6 +286,14 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 					}
 				} else {
 					Check = true;
+					if (user_select.equals(branch_questions.get(index)
+							.getAnwser())) {
+						user_boolean = 100;
+						MyPlayer(true);
+					} else {
+						user_boolean = 0;
+						MyPlayer(false);
+					}
 					setCheckText("下一个");
 				}
 			}
