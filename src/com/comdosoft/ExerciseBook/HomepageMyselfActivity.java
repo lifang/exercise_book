@@ -233,11 +233,11 @@ public class HomepageMyselfActivity extends Activity implements
 				.findViewById(R.id.guanzhu_count); // 关注数
 		TextView huifu_count = (TextView) convertView
 				.findViewById(R.id.huifu_count); // 回复数
-		ImageView button1 = (ImageView) convertView
+		RelativeLayout button1 = (RelativeLayout) convertView
 				.findViewById(R.id.shanchu_button); // 删除按钮
-		ImageView button2 = (ImageView) convertView
+		RelativeLayout button2 = (RelativeLayout) convertView
 				.findViewById(R.id.guanzhu_button); // 关注按钮
-		ImageView button3 = (ImageView) convertView
+		RelativeLayout button3 = (RelativeLayout) convertView
 				.findViewById(R.id.huifu_button); // 回复按钮
 		TextView Micropost_content = (TextView) convertView
 				.findViewById(R.id.micropost_content); // 消息内容

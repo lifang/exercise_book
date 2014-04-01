@@ -246,11 +246,13 @@ public class HomepageAllActivity extends Activity implements
 				.findViewById(R.id.guanzhu_count); // 关注数
 		TextView huifu_count = (TextView) convertView
 				.findViewById(R.id.huifu_count); // 回复数
-		ImageView button1 = (ImageView) convertView
+		RelativeLayout button1 = (RelativeLayout) convertView
 				.findViewById(R.id.shanchu_button); // 删除按钮
-		ImageView button2 = (ImageView) convertView
+		RelativeLayout button2 = (RelativeLayout) convertView
 				.findViewById(R.id.guanzhu_button); // 关注按钮
-		ImageView button3 = (ImageView) convertView
+		ImageView imageView = (ImageView) convertView
+				.findViewById(R.id.guanzhu_button2); // 关注按钮
+		RelativeLayout button3 = (RelativeLayout) convertView
 				.findViewById(R.id.huifu_button); // 回复按钮
 		TextView Micropost_content = (TextView) convertView
 				.findViewById(R.id.micropost_content); // 消息内容
@@ -259,7 +261,7 @@ public class HomepageAllActivity extends Activity implements
 		final ListView listView2 = (ListView) convertView// 子消息的list
 				.findViewById(R.id.aa);//
 		list_list.add(listView2);
-		guanzhu_list.add(button2);
+		guanzhu_list.add(imageView);
 		guanzhu_count_list.add(guanzhu_count);
 		huifu_count_list.add(huifu_count);
 		gk_list.add(true);

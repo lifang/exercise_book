@@ -136,7 +136,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 	}
 
 	private void setTextView() {
-		str = content.split("\\[\\[tag\\]\\]");
+		str = content.split("\\[\\[sign\\]\\]");
 		user_select = new HashMap<Integer, String>();
 		tv_list = new ArrayList<TextView>();
 		for (int i = 0; i < str.length; i++) {
@@ -145,12 +145,13 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 			text.setText(str[i].toString());
 			final TextView spinner = (TextView) view1
 					.findViewById(R.id.spinner);
+			final int item = i;
 			if (i != str.length - 1) {
 				String Opption = cloze.getList().get(i).getOpption();
 				final String[] Opption_str = Opption.split(";\\|\\|;");
 				spinner.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {
-						showWindow(spinner, Opption_str);
+						showWindow(spinner, Opption_str, item);
 					}
 				});
 			}
@@ -273,7 +274,8 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		return type;
 	}
 
-	public void showWindow(final View position, final String[] Opption_str) {
+	public void showWindow(final View position, final String[] Opption_str,
+			final int item) {
 
 		LinearLayout layout = (LinearLayout) LayoutInflater.from(this).inflate(
 				R.layout.mypinner_dropdown, null);
@@ -301,7 +303,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 				popupWindow.dismiss();
 				popupWindow = null;
 				if (!Opption_str[arg2].equals("")) {
-					user_select.put(arg2, Opption_str[arg2]);
+					user_select.put(item, Opption_str[arg2]);
 				}
 			}
 		});
@@ -370,7 +372,11 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		case R.id.base_propTrue:
 			Log.i("linshi", propItem + "----" + tv_list.size());
 			if (propItem < tv_list.size()) {
-				PropJson(0, cloze.getList().get(propItem).getId(), 5);//1道具类型 --0显示答案 1时间  , 2--小题id ,3--任务类型
+				PropJson(0, cloze.getList().get(propItem).getId(), 5);// 1道具类型
+																		// --0显示答案
+																		// 1时间 ,
+																		// 2--小题id
+																		// ,3--任务类型
 				tv_list.get(propItem).setText(
 						cloze.getList().get(propItem).getAnswer());
 				tv_list.get(propItem).setTextColor(
@@ -387,7 +393,11 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 			break;
 		case R.id.base_propTime:
 			// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
-			PropJson(1, cloze.getList().get(propItem).getId(), 5);//1道具类型 --0显示答案 1时间  , 2--小题id ,3--任务类型
+			PropJson(1, cloze.getList().get(propItem).getId(), 5);// 1道具类型
+																	// --0显示答案
+																	// 1时间 ,
+																	// 2--小题id
+																	// ,3--任务类型
 			break;
 		}
 	}

@@ -111,6 +111,9 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		eb = (ExerciseBook) getApplication();
 		findViewById(R.id.base_back_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_propTime).setOnClickListener(this);
+		prodialog = new ProgressDialog(AnswerBaseActivity.this);
+		prodialog.setMessage("正在保存作业");
+		prodialog.setCanceledOnTouchOutside(false);
 		middleLayout = (LinearLayout) findViewById(R.id.base_LinearLayout);
 		base_time_linearlayout = (LinearLayout) findViewById(R.id.base_time_linearlayout);
 		base_history_linearlayout = (LinearLayout) findViewById(R.id.base_history_linearlayout);
@@ -306,9 +309,6 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	}
 
 	public void close() {
-		prodialog = new ProgressDialog(AnswerBaseActivity.this);
-		prodialog.setMessage("正在保存作业");
-		prodialog.setCanceledOnTouchOutside(false);
 		prodialog.show();
 
 		if (Finish_Json()) {
