@@ -90,6 +90,9 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		// setTimePropEnd();// 禁用道具
 		// setTruePropEnd();// 禁用道具
 		eb = (ExerciseBook) getApplication();
+		// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
+		super.mQuestionType = 5;
+		super.type = 0;
 		findViewById(R.id.base_back_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_propTrue).setOnClickListener(this);
@@ -100,9 +103,9 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		path = intent.getStringExtra("path");
 		String json = intent.getStringExtra("json");
 		status = intent.getIntExtra("status", 1);
+
 		SetJson(json);
 		SetAnswer();
-		Finish_Json();
 	}
 
 	private void SetAnswer() {
@@ -234,13 +237,16 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		Answer_QuestionsPojo aq = new Answer_QuestionsPojo(id + "",
 				new ArrayList<Branch_AnswerPoJo>());
 		answerJson.cloze.getQuestions().add(aq);
+
 		q_item += 1;
 		answerJson.cloze.setQuestions_item(q_item + "");
+		int true_number = 0;
 		for (Map.Entry<Integer, String> entry : answer.entrySet()) {
 			int ratio = 0;
 			if (entry.getValue().equals(
 					cloze.getList().get(entry.getKey()).getAnswer())) {
 				ratio = 100;
+				true_number += 1;
 			}
 			Log.i("aaa", "ratio:"
 					+ cloze.getList().get(entry.getKey()).getAnswer());
@@ -253,6 +259,11 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 							+ "", entry.getValue(), ratio + ""));
 		}
 		Log.i("aaa", q_item + "/" + list.size());
+		if (true_number == answer.size()) {
+			MyPlayer(true);
+		} else {
+			MyPlayer(true);
+		}
 		if (q_item + 1 == list.size()) {// 结束
 			answerJson.cloze.setStatus("1");
 			type = 1;
@@ -326,6 +337,9 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 					Check = false;
 					setCheckText("检查");
 					propItem = 0;
+				} else {
+					Check = true;
+					setCheckText("下一个");
 					int type = 0;
 					String answer_history = ExerciseBookTool
 							.getAnswer_Json_history(path);
@@ -344,27 +358,12 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 							SetAnswer();
 							break;
 						case 1:
-							prodialog.show();
-							if (Finish_Json()) {
-								intent.putExtra("precision", ExerciseBookTool
-										.getRatio(path, "cloze"));// 正确率100时获取精准成就
-								intent.putExtra("use_time", getUseTime());// 用户使用的时间
-								intent.putExtra("specified_time",
-										specified_time);// 任务基础时间
-								intent.setClass(ClozeActivity.this,
-										WorkEndActivity.class);
-								ClozeActivity.this.startActivityForResult(
-										intent, 1);
-							}
+							super.roundOver();
 							break;
 						}
-
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-				} else {
-					Check = true;
-					setCheckText("下一个");
 				}
 			}
 			break;
@@ -422,7 +421,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			super.close();
+			close();
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);

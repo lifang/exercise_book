@@ -4,18 +4,17 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -50,7 +49,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	public int ratio = 0;
 	public int status = 0;
 	public int specified_time = 0;
-	private int mQuestionType = 0;
+	public int mQuestionType = 0;
 	private int mRatio = 0;
 	private int second;
 	public int type = 0;
@@ -85,6 +84,8 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	private AnswerJson answerJson;
 	private Thread mTimer = new Timer();
 	public ProgressDialog prodialog;
+	public int index = 0;
+	private MediaPlayer player;
 	private Handler mHandler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -100,6 +101,25 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 				prodialog.dismiss();
 				MyDialog("确认退出吗？", 0);
 				break;
+			case 4:
+				prodialog.dismiss();
+				Intent intent = new Intent();
+				if (mQuestionType == 1 || mQuestionType == 2
+						|| mQuestionType == 5) {
+					intent.putExtra("precision", ExerciseBookTool.getRatio(
+							path, questionArr[mQuestionType]));// 正确率100时
+				} else {
+					intent.putExtra("precision", ExerciseBookTool.getRatio(
+							path, questionArr[mQuestionType], mRatio));// 正确率100时
+				}
+				intent.putExtra("use_time", getUseTime());// 用户使用的时间
+				intent.putExtra("specified_time", specified_time);// 任务基础时间
+				intent.setClass(AnswerBaseActivity.this, WorkEndActivity.class);
+				startActivityForResult(intent, 1);
+				break;
+			case 5:
+				MyDialog("确认退出吗？", 0);
+				break;
 			}
 			super.handleMessage(msg);
 		}
@@ -111,6 +131,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		eb = (ExerciseBook) getApplication();
 		findViewById(R.id.base_back_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_propTime).setOnClickListener(this);
+		player = new MediaPlayer();
 		prodialog = new ProgressDialog(AnswerBaseActivity.this);
 		prodialog.setMessage("正在保存作业");
 		prodialog.setCanceledOnTouchOutside(false);
@@ -146,12 +167,13 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	// 设置题目类型
 	public void setQuestionType(int type) {
 		this.mQuestionType = type;
+		mQuestionType = mQuestionType == 7 ? 0 : mQuestionType;
 		amp = getAnswerItem(ExerciseBookTool.getAnswer_Json_history(path));
 
 		mQindex = amp.getQuestions_item();
 		mBindex = amp.getBranch_item();
 
-		if (type != 6) {
+		if (type != 7) {
 			setUseTime(amp.getUse_time());
 			setType(amp.getStatus());
 
@@ -163,11 +185,16 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		}
 	}
 
+	public void setTimeGone() {
+		base_time_linearlayout.setVisibility(View.GONE);
+	}
+
 	// 设置答题|记录 type 0答题 1历史
 	public void setType(int type) {
 		this.type = type;
 		if (type == 0) {
-			if (mQuestionType != 6) {
+			if (mQuestionType != 7) {
+				Log.i("suanfa", status + "---1");
 				mTimer.start();
 			}
 			base_time_linearlayout.setVisibility(View.VISIBLE);
@@ -180,6 +207,12 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 			base_time_linearlayout.setVisibility(View.GONE);
 			base_history_linearlayout.setVisibility(View.VISIBLE);
 			base_answer_linearlayout.setVisibility(View.VISIBLE);
+		}
+		if (status == 1) {
+			// 重做
+			setUseTime(0);
+			Log.i("suanfa", status + "---2");
+			mTimer.start();
 		}
 	}
 
@@ -303,22 +336,21 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		switch (v.getId()) {
 		case R.id.base_back_linearlayout:
 			close();
-			// mHandler.sendEmptyMessage(3);
 			break;
 		}
 	}
 
 	public void close() {
-		prodialog.show();
-
-		if (Finish_Json()) {
-			mHandler.sendEmptyMessage(3);
+		index = 0;
+		if (status == 0) {// status:0表示答题 1重做 2表示历史
+			prodialog.show();
+			Finish_Json();
 		} else {
-			mHandler.sendEmptyMessage(2);
+			mHandler.sendEmptyMessage(5);
 		}
 	}
 
-	// 切换下一记录
+	// 切换下一历史记录
 	public void nextRecord() {
 		setAccuracyAndUseTime(mRecoirdRatio.get(mRecordIndex),
 				amp.getUse_time());
@@ -326,7 +358,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		if (mRecoirdRatio.size() > 0 && mRecoirdAnswer.size() > 0) {
 			setAccuracyAndUseTime(mRecoirdRatio.get(mRecordIndex),
 					amp.getUse_time());
-			if (mQuestionType == 3) {
+			if (mQuestionType == 0) {
 				recordMes = null;
 				String s[] = mRecoirdAnswer.get(mRecordIndex).split(";&&;");
 				if (s.length > 1) {
@@ -365,6 +397,12 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 						if (new JSONObject(answer_json).getString("status")
 								.equals("success")) {
 							answer_boolean = true;
+							Log.i("suanfa", answer_boolean + "--" + index);
+							if (index == 0) {// 0表示退出
+								mHandler.sendEmptyMessage(3);
+							} else {
+								mHandler.sendEmptyMessage(4);
+							}
 						}
 					}
 				} catch (Exception e) {
@@ -381,9 +419,13 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 				&& mBindex == mQuestList.get(mQindex).size() - 1) {
 			// 最后一题
 			if (amp.getStatus() == 1 && status > 1) {
+				// 历史记录
 				MyDialog("没有更多历史记录了,点击确定退出!", 1);
 			} else {
-				roundOver();
+				// 答题
+				if (status != 0) {
+					mHandler.sendEmptyMessage(4);
+				}
 			}
 		} else if (mQindex < mQuestList.size()
 				&& mBindex < mQuestList.get(mQindex).size()) {
@@ -398,19 +440,19 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		}
 	}
 
+	// 子类实现父类刷新视图方法
 	public void updateView() {
 	}
 
+	// 通关界面
 	public void roundOver() {
-		prodialog.show();
-		if (Finish_Json()) {
-			Intent intent = new Intent();
-			intent.putExtra("precision", ExerciseBookTool.getRatio(path,
-					questionArr[mQuestionType], mRatio));// 正确率100时
-			intent.putExtra("use_time", getUseTime());// 用户使用的时间
-			intent.putExtra("specified_time", specified_time);// 任务基础时间
-			intent.setClass(this, WorkEndActivity.class);
-			startActivityForResult(intent, 1);
+		if (status == 0) {
+			prodialog.show();
+			index = 1;
+			setWork_Status();
+			Finish_Json();
+		} else {
+			mHandler.sendEmptyMessage(4);
 		}
 	}
 
@@ -473,8 +515,17 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		this.ratio = 0;
 		try {
 			ExerciseBookTool.writeFile(path, str);
+			uploadJSON(ap.getStatus());
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+
+	public void uploadJSON(String type) {
+		if (type.equals("1")) {
+			if (status == 0) {
+				roundOver();
+			}
 		}
 	}
 
@@ -497,7 +548,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 			public void onClick(View v) {
 				dialog.dismiss();
 				Intent inent = new Intent();
-				if (type == 0) {
+				if (eb.getActivity_item() == 0) {
 					inent.setClass(AnswerBaseActivity.this,
 							HomeWorkIngActivity.class);
 				} else {
@@ -559,6 +610,29 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		return null;
 	}
 
+	public void setWork_Status() {
+		Log.i("Ax", "设置work_status");
+		int number = 0;
+		String answer_history = ExerciseBookTool.getAnswer_Json_history(path);
+		answerJson = gson.fromJson(answer_history, AnswerJson.class);
+		List<AnswerPojo> answer_list = answerJson.Work_list();
+		for (int i = 0; i < answer_list.size(); i++) {
+			if (answer_list.get(i).getStatus().equals("1")) {
+				number += 1;
+			}
+		}
+		Log.i("Ax", "number:" + number + "/" + eb.getWork_number());
+		if (number == eb.getWork_number()) {
+			answerJson.status = "1";
+			String str = gson.toJson(answerJson);
+			try {
+				ExerciseBookTool.writeFile(path, str);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	// 编辑道具json文件
 	public void PropJson(int type, int branch_id, int question_type) {
 		String answer_history = ExerciseBookTool.getAnswer_Json_history(path);
@@ -603,5 +677,36 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 				break;
 			}
 		}
+	}
+
+	public void MyPlayer(boolean status) {
+
+		if (player.isPlaying()) {
+			player.pause();
+		} else {
+			int mp3_url = status ? R.raw.true_mp3 : R.raw.false_mp3;
+			player = MediaPlayer.create(this, mp3_url);
+			player.start();
+		}
+	}
+
+	protected void onStart() {
+		if (player == null)
+			player = new MediaPlayer();
+		super.onStart();
+	}
+
+	public void setTimeGone() {
+		base_time_linearlayout.setVisibility(View.GONE);
+	}
+
+	// 销毁音频
+	protected void onDestroy() {
+		if (player != null) {
+			player.stop();
+			player.release();
+			player = null;
+		}
+		super.onDestroy();
 	}
 }

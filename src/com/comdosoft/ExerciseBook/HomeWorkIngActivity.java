@@ -264,6 +264,8 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 				if (obj.getString("status").equals("success")) {
 					work_list = WorkJson.json(json);
 					if (work_list.size() != 0) {
+						eb.setWork_number(work_list.get(0).getQuestion_types()
+								.size());
 						cardType = work_list.get(0).getNumber() < 20 ? true
 								: false;
 						eb.setWork_id(work_list.get(0).getId() + "");
@@ -297,8 +299,8 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 
 	public void startDekaron(int i) {
 		if (ExerciseBookTool.FileExist(path)) {// 判断文件是否存在
+			eb.setActivity_item(0);
 			if (typeList.get(i)) {// 已完成
-				Log.i("linshi", "---");
 				MyDialog(i);
 			} else {
 				if (cardType) {
@@ -324,11 +326,6 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 			break;
 		case 1:
 			intent.setClass(this, SpeakPrepareActivity.class);
-			if (typeList.get(i)) {// 已完成
-				eb.setHistory_type(true);
-			} else {
-				eb.setHistory_type(false);
-			}
 			break;
 		case 2:
 			intent.setClass(this, TenSpeedActivity.class);
@@ -363,11 +360,6 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 			break;
 		case 1:
 			intent.setClass(this, SpeakPrepareActivity.class);
-			if (typeList.get(i)) {// 已完成
-				eb.setHistory_type(true);
-			} else {
-				eb.setHistory_type(false);
-			}
 			break;
 		case 2:
 			intent.setClass(this, Ten_HistoryActivity.class);

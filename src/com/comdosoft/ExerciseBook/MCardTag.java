@@ -33,8 +33,7 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
-public class MCardTag extends Activity implements Urlinterface ,Serializable
-{
+public class MCardTag extends Activity implements Urlinterface, Serializable {
 	LinearLayout biaoqian;
 	RelativeLayout tagll;
 	TextView biaoqianet;
@@ -49,13 +48,15 @@ public class MCardTag extends Activity implements Urlinterface ,Serializable
 	int index;
 	ExerciseBook eb;
 	int width;
+
 	@SuppressWarnings("unchecked")
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		super.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.cardtag);
-		width= getWindowManager().getDefaultDisplay().getWidth();
+		width = getWindowManager().getDefaultDisplay().getWidth();
 		eb = (ExerciseBook) getApplication();
+<<<<<<< HEAD
 		MyMap=eb.getAllmap();
 		tagsList=eb.getTagsList();
 		mytags=eb.getTagsarr();
@@ -70,6 +71,17 @@ public class MCardTag extends Activity implements Urlinterface ,Serializable
 		biaoqian=(LinearLayout) findViewById(R.id.biaoqian);
 		if(width==800)
 		{
+=======
+		MyMap = eb.getAllmap();
+		tagsList = eb.getTagsList();
+		mytags = eb.getTagsarr();
+		Bundle extras = getIntent().getExtras();
+		id = extras.getString("getid");
+		index = extras.getInt("index");
+		tagll = (RelativeLayout) findViewById(R.id.tagrl);
+		biaoqian = (LinearLayout) findViewById(R.id.biaoqian);
+		if (width == 800) {
+>>>>>>> d1a8790943c881962b39998169cf30005c1a39dd
 			switch (index) {
 			case 0:
 				tagll.setGravity(Gravity.LEFT);
@@ -81,16 +93,14 @@ public class MCardTag extends Activity implements Urlinterface ,Serializable
 				break;
 			case 2:
 				tagll.setGravity(Gravity.LEFT);
-				tagll.setPadding(33,670, 0, 0);
+				tagll.setPadding(33, 670, 0, 0);
 				break;
 			case 3:
 				tagll.setGravity(Gravity.RIGHT);
 				tagll.setPadding(0, 670, 23, 0);
 				break;
 			}
-		}
-		else if(width==1200)
-		{
+		} else if (width == 1200) {
 			switch (index) {
 			case 0:
 				tagll.setGravity(Gravity.LEFT);
@@ -110,22 +120,20 @@ public class MCardTag extends Activity implements Urlinterface ,Serializable
 				break;
 			}
 		}
-		biaoqianlv=(ListView) findViewById(R.id.biaoqianlv);
-		newTv=(TextView) findViewById(R.id.newTv);
-		biaoqianet=(TextView) findViewById(R.id.biaoqianet);
+		biaoqianlv = (ListView) findViewById(R.id.biaoqianlv);
+		newTv = (TextView) findViewById(R.id.newTv);
+		biaoqianet = (TextView) findViewById(R.id.biaoqianet);
 		biaoqianlv.setDividerHeight(0);
-		LabelAdapter adapter = new LabelAdapter(
-				getApplicationContext(),  index, tagsList,
-				mytags, student_id, school_class_id,
-				id);
+		LabelAdapter adapter = new LabelAdapter(getApplicationContext(), index,
+				tagsList, mytags, student_id, school_class_id, id);
 		biaoqianlv.setAdapter(adapter);
-		biaoqian.setOnClickListener(new OnClickListener()
-		{
+		biaoqian.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 			}
 		});
 		set();
 	}
+
 	public List<tags> findbiaoqian(String et) {
 		List<tags> findlist = new ArrayList<tags>();
 		for (int i = 0; i < tagsList.size(); i++) {
@@ -135,14 +143,15 @@ public class MCardTag extends Activity implements Urlinterface ,Serializable
 		}
 		return findlist;
 	}
+
 	public boolean onTouchEvent(MotionEvent event) {
 		this.finish();
 		eb.setAllmap(null);
 		eb.setTagsList(null);
 		return super.onTouchEvent(event);
 	}
-	public void set()
-	{
+
+	public void set() {
 		final Handler handler1 = new Handler() {
 			public void handleMessage(Message msg) {
 				super.handleMessage(msg);
@@ -150,9 +159,8 @@ public class MCardTag extends Activity implements Urlinterface ,Serializable
 				case 0:
 					biaoqianet.setText("");
 					LabelAdapter adapter = new LabelAdapter(
-							getApplicationContext(),  index, tagsList,
-							mytags, student_id, school_class_id,
-							id);
+							getApplicationContext(), index, tagsList, mytags,
+							student_id, school_class_id, id);
 					biaoqianlv.setAdapter(adapter);
 					break;
 				case 1:
@@ -164,31 +172,32 @@ public class MCardTag extends Activity implements Urlinterface ,Serializable
 			}
 		};
 		biaoqianet.addTextChangedListener(new TextWatcher() {
-			public void onTextChanged(CharSequence s, int start,
-					int before, int count) {
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
 				if (findbiaoqian(biaoqianet.getText().toString()).size() <= 2) {
 					newTv.setVisibility(View.VISIBLE);
-					newTv.setText("新建'" + biaoqianet.getText().toString()
-							+ "'");
+					newTv.setText("新建'" + biaoqianet.getText().toString() + "'");
 					newTv.setOnClickListener(new OnClickListener() {
 						public void onClick(View v) {
 							Thread thread = new Thread() {
 								String json;
+
 								public void run() {
 									try {
+<<<<<<< HEAD
+=======
+										// viewPager = (ViewPager)
+										// findViewById(R.id.guidePages);
+>>>>>>> d1a8790943c881962b39998169cf30005c1a39dd
 										Map<String, String> map = new HashMap<String, String>();
 										map.put("student_id", student_id);
 										map.put("school_class_id",
 												school_class_id);
-										map.put("knowledge_card_id",
-												id);
+										map.put("knowledge_card_id", id);
 										map.put("name", String
-												.valueOf(biaoqianet
-														.getText()));
-										json = ExerciseBookTool
-												.sendGETRequest(
-														create_card_tag,
-														map);
+												.valueOf(biaoqianet.getText()));
+										json = ExerciseBookTool.sendGETRequest(
+												create_card_tag, map);
 										JSONObject jsonobject2 = new JSONObject(
 												json);
 										if (jsonobject2.getString("status")
@@ -205,12 +214,11 @@ public class MCardTag extends Activity implements Urlinterface ,Serializable
 													.getString("name");
 											String update_at = jsonobject3
 													.getString("updated_at");
-											tagsList.add(new tags(
-													card_bag_id,
+											tagsList.add(new tags(card_bag_id,
 													created_at, id, name,
 													update_at));
-											MyMap.get(index).getTagsarr().add(
-													Integer.valueOf(id));
+											MyMap.get(index).getTagsarr()
+													.add(Integer.valueOf(id));
 										}
 										else
 										{
@@ -227,14 +235,13 @@ public class MCardTag extends Activity implements Urlinterface ,Serializable
 					});
 				}
 				LabelAdapter adapter = new LabelAdapter(
-						getApplicationContext(),  index, tagsList,
-						mytags, student_id, school_class_id,
-						id);
+						getApplicationContext(), index, tagsList, mytags,
+						student_id, school_class_id, id);
 				biaoqianlv.setAdapter(adapter);
 			}
 
-			public void beforeTextChanged(CharSequence s, int start,
-					int count, int after) {
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
 			}
 
 			public void afterTextChanged(Editable s) {

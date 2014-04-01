@@ -104,6 +104,7 @@ public class SpeakHistoryActivity extends AnswerBaseActivity implements
 		setTimePropEnd();// 禁用道具
 		setTruePropEnd();// 禁用道具
 		setType(1);
+		setQuestionType(1);
 		setCheckText("下一个");
 		eb = (ExerciseBook) getApplication();
 

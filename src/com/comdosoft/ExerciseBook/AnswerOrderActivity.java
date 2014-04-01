@@ -18,10 +18,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.comdosoft.ExerciseBook.pojo.AnswerBasePojo;
-
+//2014年4月1日 10:45:06
 public class AnswerOrderActivity extends AnswerBaseActivity {
 
-//	private String json = "{ \"sort\": {\"specified_time\" :\"100\", \"questions\": [{\"id\": \"284\", \"branch_questions\": [ {\"id\": \"181\", \"content\": \"This is an apple\"},{\"id\": \"182\", \"content\": \"2 3 4 5\"},{\"id\": \"183\", \"content\": \"This is orange\"}]  }, {\"id\": \"285\", \"branch_questions\": [ {\"id\": \"184\", \"content\": \"why is Google\"},{\"id\": \"185\", \"content\": \"1 2 3\"},{\"id\": \"186\", \"content\": \"How are you\"} ] }]}}";
+	// private String json =
+	// "{ \"sort\": {\"specified_time\" :\"100\", \"questions\": [{\"id\": \"284\", \"branch_questions\": [ {\"id\": \"181\", \"content\": \"This is an apple\"},{\"id\": \"182\", \"content\": \"2 3 4 5\"},{\"id\": \"183\", \"content\": \"This is orange\"}]  }, {\"id\": \"285\", \"branch_questions\": [ {\"id\": \"184\", \"content\": \"why is Google\"},{\"id\": \"185\", \"content\": \"1 2 3\"},{\"id\": \"186\", \"content\": \"How are you\"} ] }]}}";
 	private int mAnswerIndex = 0;
 	private int mSubjectIndex = 0;
 	private int mOptionIndex = 0;
@@ -56,7 +57,7 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 				new MyOnClick());
 		findViewById(R.id.base_propTrue).setOnClickListener(new MyOnClick());
 		answer_order_again.setOnClickListener(new MyOnClick());
-		answer_order_again.setOnClickListener(new MyOnClick());
+		answer_order_back.setOnClickListener(new MyOnClick());
 
 		setQuestionType(6);
 

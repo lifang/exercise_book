@@ -91,6 +91,8 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 		findViewById(R.id.base_propTrue).setOnClickListener(this);
 		// setTimePropEnd();// 禁用道具
 		// setTruePropEnd();// 禁用道具
+		// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
+		this.mQuestionType = 2;
 		eb = (ExerciseBook) getApplication();
 		initialize();
 		branch_questions = new ArrayList<Time_LimitPojo>();
@@ -251,52 +253,49 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 			super.onClick(v);
 			break;
 		case R.id.base_check_linearlayout:
-			if (Check) {
-				Check = false;
-				setCheckText("检查");
-				if (user_select.equals(branch_questions.get(index).getAnwser())) {
-					user_boolean = 100;
-				} else {
-					user_boolean = 0;
-				}
-				img_index -= 1;
-				String answer_history = ExerciseBookTool
-						.getAnswer_Json_history(path);
-				int type = 0;
-				try {
-					JSONObject obj = new JSONObject(answer_history);
-					if (status == 0) {
-						type = setAnswerJson(answer_history, user_select,
-								user_boolean, branch_questions.get(index)
-										.getId());
-					} else {
-						type = Again();
+			if (img_index >= 0) {
+				if (Check) {
+					Check = false;
+					setCheckText("检查");
+					img_index -= 1;
+					String answer_history = ExerciseBookTool
+							.getAnswer_Json_history(path);
+					int type = 0;
+					try {
+						// JSONObject obj = new JSONObject(answer_history);
+						if (status == 0) {
+							type = setAnswerJson(answer_history, user_select,
+									user_boolean, branch_questions.get(index)
+											.getId());
+						} else {
+							type = Again();
+						}
+					} catch (Exception e) {
+						Toast.makeText(TenSpeedActivity.this, "json写入发生错误",
+								Toast.LENGTH_SHORT).show();
 					}
-				} catch (Exception e) {
-					Toast.makeText(TenSpeedActivity.this, "json写入发生错误",
-							Toast.LENGTH_SHORT).show();
-				}
-				index += 1;
+					index += 1;
 
-				switch (type) {
-				case 0:
-					handler.sendEmptyMessage(1);
-					break;
-				case 1:
-					if (Finish_Json()) {
-						intent.putExtra("precision",
-								ExerciseBookTool.getRatio(path, "time_limit"));// 正确率100时获取精准成就
-						intent.putExtra("use_time", getUseTime());// 用户使用的时间
-						intent.putExtra("specified_time", specified_time);// 任务基础时间
-						intent.setClass(TenSpeedActivity.this,
-								WorkEndActivity.class);
-						TenSpeedActivity.this.startActivityForResult(intent, 0);
+					switch (type) {
+					case 0:
+						handler.sendEmptyMessage(1);
+						break;
+					case 1:
+						super.roundOver();
+						break;
 					}
-					break;
+				} else {
+					Check = true;
+					if (user_select.equals(branch_questions.get(index)
+							.getAnwser())) {
+						user_boolean = 100;
+						MyPlayer(true);
+					} else {
+						user_boolean = 0;
+						MyPlayer(false);
+					}
+					setCheckText("下一个");
 				}
-			} else {
-				Check = true;
-				setCheckText("下一个");
 			}
 			break;
 		// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
