@@ -16,6 +16,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -86,6 +87,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	private Thread mTimer = new Timer();
 	public ProgressDialog prodialog;
 	public int index = 0;
+	private MediaPlayer player;
 	private Handler mHandler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -131,6 +133,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		eb = (ExerciseBook) getApplication();
 		findViewById(R.id.base_back_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_propTime).setOnClickListener(this);
+		player = new MediaPlayer();
 		prodialog = new ProgressDialog(AnswerBaseActivity.this);
 		prodialog.setMessage("正在保存作业");
 		prodialog.setCanceledOnTouchOutside(false);
@@ -681,5 +684,33 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 				break;
 			}
 		}
+	}
+
+	public void MyPlayer(boolean status) {
+		
+	}
+
+	protected void onStart() {
+		if (player == null)
+			player = new MediaPlayer();
+		super.onStart();
+	}
+
+	// 停止音频
+	protected void onStop() {
+		if (player.isPlaying()) {// 正在播放
+			player.stop();
+		}
+		super.onStop();
+	}
+
+	// 销毁音频
+	protected void onDestroy() {
+		if (player != null) {
+			player.stop();
+			player.release();
+			player = null;
+		}
+		super.onDestroy();
 	}
 }

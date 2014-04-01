@@ -456,15 +456,6 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 		super.onDestroy();
 	}
 
-	//
-	// public boolean onKeyDown(int keyCode, KeyEvent event) {
-	// if (keyCode == KeyEvent.KEYCODE_BACK) {
-	// MyDialog("你还没有做完题,确认要退出吗?", "确认", "取消", 0);
-	// return true;
-	// }
-	// return super.onKeyDown(keyCode, event);
-	// }
-	//
 	public void onCompletion(MediaPlayer mp) {
 		Log.i("linshi", "over");
 		handler.sendEmptyMessage(8);
