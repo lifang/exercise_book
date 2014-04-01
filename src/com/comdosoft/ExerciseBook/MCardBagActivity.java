@@ -208,7 +208,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,Seri
 					viewPager = (ViewPager) findViewById(R.id.guidePages);
 					Map<String, String> map = new HashMap<String, String>();
 					map.put("student_id", student_id);
-					map.put("school_class_id", /*school_class_id*/"85");
+					map.put("school_class_id", school_class_id);
 					String json = ExerciseBookTool.sendGETRequest(
 							get_knowledges_card, map);
 					pageAdapter = new GuidePageAdapter();
