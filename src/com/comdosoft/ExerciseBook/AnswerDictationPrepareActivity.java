@@ -183,6 +183,7 @@ public class AnswerDictationPrepareActivity extends AnswerBaseActivity
 			startActivity(intent);
 			break;
 		case R.id.base_back_linearlayout:
+			super.onClick(v);
 			break;
 		}
 	}
