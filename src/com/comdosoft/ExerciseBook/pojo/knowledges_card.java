@@ -1,8 +1,13 @@
 package com.comdosoft.ExerciseBook.pojo;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class knowledges_card
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.os.Parcelable.Creator;
+
+public class knowledges_card 
 {
 	private String answer;
 	private String branch_question_id;
@@ -61,6 +66,13 @@ public class knowledges_card
 		this.your_answer = your_answer;
 	}
 	
+	
+	public String getFull_text() {
+		return full_text;
+	}
+	public void setFull_text(String full_text) {
+		this.full_text = full_text;
+	}
 	public knowledges_card(String answer, String branch_question_id,
 			String card_bag_id, String content, String created_at,
 			String full_text, String id, String mistake_types, String options,
@@ -81,23 +93,6 @@ public class knowledges_card
 		this.updated_at = updated_at;
 		this.your_answer = your_answer;
 		this.tagsarr = tags_list;
-	}
-	public String getFull_text() {
-		return full_text;
-	}
-	public void setFull_text(String full_text) {
-		this.full_text = full_text;
-	}
-	@Override
-	public String toString() {
-		return "knowledges_card [answer=" + answer + ", branch_question_id="
-				+ branch_question_id + ", card_bag_id=" + card_bag_id
-				+ ", content=" + content + ", created_at=" + created_at
-				+ ", full_text=" + full_text + ", id=" + id
-				+ ", mistake_types=" + mistake_types + ", options=" + options
-				+ ", question_id=" + question_id + ", resource_url="
-				+ resource_url + ", type=" + type + ", updated_at="
-				+ updated_at + ", your_answer=" + your_answer + "]";
 	}
 	
 	public List<Integer> getTagsarr() {
@@ -184,5 +179,51 @@ public class knowledges_card
 	public void setYour_answer(String your_answer) {
 		this.your_answer = your_answer;
 	}
+//	@Override
+//	public int describeContents() {
+//		return 0;
+//	}
+//	@Override
+//	public void writeToParcel(Parcel dest, int flags) {
+//		dest.writeString(answer);  
+//		dest.writeString(branch_question_id);
+//		dest.writeString(card_bag_id);  
+//		dest.writeString(content);
+//		dest.writeString(created_at);
+//		dest.writeString(full_text);
+//		dest.writeString(id);
+//		dest.writeString(mistake_types);
+//		dest.writeString(options);
+//		dest.writeString(question_id);
+//		dest.writeString(resource_url);
+//		dest.writeString(type);
+//		dest.writeString(updated_at);
+//		dest.writeString(your_answer);
+//		dest.writeList(tagsarr);
+//	}
+//	public static final Parcelable.Creator<knowledges_card> CREATOR  = new Creator<knowledges_card>(){  
+//		public knowledges_card createFromParcel(Parcel source) {  
+//			knowledges_card app=  new knowledges_card();  
+//			app.answer = source.readString();  
+//			app.branch_question_id = source.readString();  
+//			app.card_bag_id = source.readString();  
+//			app.content = source.readString();  
+//			app.created_at = source.readString();  
+//			app.full_text = source.readString();  
+//			app.id = source.readString();  
+//			app.mistake_types = source.readString();  
+//			app.options = source.readString();  
+//			app.question_id = source.readString();  
+//			app.resource_url = source.readString();  
+//			app.type = source.readString();  
+//			app.updated_at = source.readString();
+//			app.your_answer = source.readString();  
+//			return app;  
+//		}  
+//		public knowledges_card[] newArray(int size) {  
+//			return new knowledges_card[size];  
+//		}  
+//
+//	};  
 	
 }

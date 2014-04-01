@@ -1,6 +1,7 @@
 package com.comdosoft.ExerciseBook;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +13,7 @@ import org.json.JSONObject;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -22,8 +24,6 @@ import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -51,8 +51,8 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
-public class MCardBagActivity extends Table_TabHost implements Urlinterface {
-	List<tags> tagsList;
+public class MCardBagActivity extends Table_TabHost implements Urlinterface,Serializable {
+	public List<tags> tagsList;
 	public Map<Integer, List<knowledges_card>> Allmap;
 	public Map<Integer, List<View>> FontCard;
 	public Map<Integer, List<View>> BackCard;
@@ -62,7 +62,6 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 	private ImageView imageView;
 	private ImageView[] imageViews;
 	private ViewGroup group;
-	// private View ViewGroup;
 	private List<View> viewList;
 	private int page = 0;
 	private int mindex;
@@ -85,7 +84,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 	MediaPlayer mediaplay;
 	ViewGroup viewgroup;
 	List<View> visList;
-
+	int width;
 	@Override
 	@SuppressWarnings("rawtypes")
 	protected void onCreate(Bundle savedInstanceState) {
@@ -95,8 +94,9 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 		eb = (ExerciseBook) getApplication();
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
-		student_id = preferences.getString("id", "1");
-		school_class_id = preferences.getString("school_class_id", "1");
+		width= getWindowManager().getDefaultDisplay().getWidth();
+		student_id = preferences.getString("id", "73");
+		school_class_id = preferences.getString("school_class_id", "85");
 		mediaplay = new MediaPlayer();
 		eb.getActivityList().add(this);
 		initbtn();
@@ -171,7 +171,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 							try {
 								viewPager = (ViewPager) findViewById(R.id.guidePages);
 								Map<String, String> map = new HashMap<String, String>();
-								map.put(" ", student_id);
+								map.put("student_id", student_id);
 								map.put("school_class_id", school_class_id);
 								map.put("mistake_types", mistype);
 								json = ExerciseBookTool.sendGETRequest(
@@ -290,6 +290,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 					Allmap.put(count1, cardList);
 				}
 				JSONArray tags = jsonobject.getJSONArray("tags");
+				Log.i("2", tags.length()+"^^^"+(jsonobject.getJSONArray("tags")==null));
 				for (int i = 0; i < tags.length(); i++) {
 					JSONObject jsonobject2 = tags.getJSONObject(i);
 					String card_bag_id = jsonobject2.getString("card_bag_id");
@@ -297,9 +298,11 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 					String id = jsonobject2.getString("id");
 					String name = jsonobject2.getString("name");
 					String update_at = jsonobject2.getString("updated_at");
+					Log.i("3",card_bag_id+"!"+created_at+"!"+id+"!"+name+"!"+update_at);
 					tagsList.add(new tags(card_bag_id, created_at, id, name,
 							update_at));
 				}
+				Log.i("2", tagsList.size()+"!!");
 				if (flag) {
 					handler.sendEmptyMessage(1);
 				}
@@ -328,20 +331,20 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 				progressDialog.dismiss();
 				viewPager.setAdapter(new GuidePageAdapter());
 				viewPager
-						.setOnPageChangeListener(new GuidePageChangeListener());
+				.setOnPageChangeListener(new GuidePageChangeListener());
 				break;
 			case 2:
 				setViewPager();
 				viewPager.setCurrentItem(viewPager.getCurrentItem());
 				viewPager.setAdapter(new GuidePageAdapter());
 				viewPager
-						.setOnPageChangeListener(new GuidePageChangeListener());
+				.setOnPageChangeListener(new GuidePageChangeListener());
 				break;
 			case 3:
 				setViewPager();
 				viewPager.setAdapter(new GuidePageAdapter());
 				viewPager
-						.setOnPageChangeListener(new GuidePageChangeListener());
+				.setOnPageChangeListener(new GuidePageChangeListener());
 				break;
 			default:
 				break;
@@ -354,7 +357,6 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 		group = (ViewGroup) findViewById(R.id.viewGroup);
 		viewPager = (ViewPager) findViewById(R.id.guidePages);
 		FontCard = new HashMap<Integer, List<View>>();
-		// BackCard = new HashMap<Integer, List<View>>();
 		viewList = new ArrayList<View>();
 		int pageCount = Allmap.size();
 		ListBool = new Boolean[pageCount][4];
@@ -382,7 +384,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 					imageView.setBackgroundResource(R.drawable.page_indicator);
 				} else {
 					imageView
-							.setBackgroundResource(R.drawable.page_inicator_focused);
+					.setBackgroundResource(R.drawable.page_inicator_focused);
 				}
 				imageL.addView(imageView);
 				group.addView(imageL);
@@ -406,7 +408,14 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 							LayoutParams.WRAP_CONTENT));
 					linear.setOrientation(LinearLayout.HORIZONTAL);
 				}
-				fontview.setPadding(53, 23, 23, 23);
+				if(width==800)
+				{
+					fontview.setPadding(33, 23, 23, 23);
+				}
+				else
+				{
+					fontview.setPadding(53, 23, 23, 23);
+				}
 				((ViewGroup) cardview).addView(fontview);
 				linear.addView(cardview);
 				fontlist.add(cardview);
@@ -439,17 +448,6 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 			}
 		}
 	}
-
-	public List<tags> findbiaoqian(String et) {
-		List<tags> findlist = new ArrayList<tags>();
-		for (int i = 0; i < tagsList.size(); i++) {
-			if (tagsList.get(i).getName().indexOf(et) != -1) {
-				findlist.add(tagsList.get(i));
-			}
-		}
-		return findlist;
-	}
-
 	public void addCard(String json) {
 		JSONObject jsonobject2;
 		try {
@@ -494,11 +492,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 		TextView rightanswer;
 		TextView youranswer;
 		TextView rightanswers;
-		final EditText biaoqianet;
-		final ListView biaoqianlv;
-		final LinearLayout biaoqian;
 		ViewGroup v = v1;
-		final TextView newTv;
 		TextView bqtv;
 
 		if (PageBool[page][mindex]) {
@@ -518,124 +512,24 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 			fontIv = (ImageView) v.findViewById(R.id.fontIv);
 			rightanswer = (TextView) v.findViewById(R.id.rightanswer);
 			youranswer = (TextView) v.findViewById(R.id.answer);
-			fontIv = (ImageView) v.findViewById(R.id.fontIv);
-			biaoqian = (LinearLayout) v.findViewById(R.id.biaoqian);
-			biaoqianlv = (ListView) v.findViewById(R.id.biaoqianlv);
-			biaoqianet = (EditText) v.findViewById(R.id.biaoqianet);
-			newTv = (TextView) v.findViewById(R.id.newTv);
-			final Handler handler1 = new Handler() {
-				public void handleMessage(Message msg) {
-					super.handleMessage(msg);
-					switch (msg.what) {
-					case 0:
-						biaoqianet.setText("");
-						LabelAdapter adapter = new LabelAdapter(
-								getApplicationContext(), page, index, tagsList,
-								Allmap, student_id, school_class_id,
-								card.getId());
-						biaoqianlv.setAdapter(adapter);
-						break;
-					default:
-						break;
-					}
-				}
-			};
-			biaoqianet.addTextChangedListener(new TextWatcher() {
-				public void onTextChanged(CharSequence s, int start,
-						int before, int count) {
-					if (findbiaoqian(biaoqianet.getText().toString()).size() <= 2) {
-						newTv.setVisibility(View.VISIBLE);
-						newTv.setText("新建'" + biaoqianet.getText().toString()
-								+ "'");
-						newTv.setOnClickListener(new OnClickListener() {
-							public void onClick(View v) {
-								Thread thread = new Thread() {
-									String json;
-
-									public void run() {
-										try {
-											viewPager = (ViewPager) findViewById(R.id.guidePages);
-											Map<String, String> map = new HashMap<String, String>();
-											map.put("student_id", student_id);
-											map.put("school_class_id",
-													school_class_id);
-											map.put("knowledge_card_id",
-													card.getId());
-											map.put("name", String
-													.valueOf(biaoqianet
-															.getText()));
-											json = ExerciseBookTool
-													.sendGETRequest(
-															create_card_tag,
-															map);
-											JSONObject jsonobject2 = new JSONObject(
-													json);
-											if (jsonobject2.getString("status")
-													.equals("success")) {
-												JSONObject jsonobject3 = jsonobject2
-														.getJSONObject("cardtag");
-												String card_bag_id = jsonobject3
-														.getString("card_bag_id");
-												String created_at = jsonobject3
-														.getString("created_at");
-												String id = jsonobject3
-														.getString("id");
-												String name = jsonobject3
-														.getString("name");
-												String update_at = jsonobject3
-														.getString("updated_at");
-												tagsList.add(new tags(
-														card_bag_id,
-														created_at, id, name,
-														update_at));
-												card.getTagsarr().add(
-														Integer.valueOf(id));
-											}
-											handler1.sendEmptyMessage(0);
-										} catch (Exception e) {
-											e.printStackTrace();
-										}
-									}
-								};
-								thread.start();
-							}
-						});
-					}
-					LabelAdapter adapter = new LabelAdapter(
-							getApplicationContext(), page, index,
-							findbiaoqian(biaoqianet.getText().toString()),
-							Allmap, student_id, school_class_id, card.getId());
-					biaoqianlv.setAdapter(adapter);
-				}
-
-				public void beforeTextChanged(CharSequence s, int start,
-						int count, int after) {
-				}
-
-				public void afterTextChanged(Editable s) {
-				}
-			});
-			biaoqianlv.setDividerHeight(0);
 			reson.setText(card.getMistake_types());
 			wronganswer.setText(card.getYour_answer());
 			rightanswer.setText("正确答案");
-			youranswer.setText(card.getAnswer() + "/.");
+			youranswer.setText(card.getAnswer());
+			Log.i("1", tagsList.size()+"size");
 			fontIv.setOnClickListener(new OnClickListener() {
 				public void onClick(View arg0) {
-					if (ListBool[page][index]) {
-						LabelAdapter adapter = new LabelAdapter(
-								getApplicationContext(), page, index, tagsList,
-								Allmap, student_id, school_class_id, card
-										.getId());
-						biaoqianlv.setAdapter(adapter);
-						biaoqian.setVisibility(View.VISIBLE);
-						ListBool[page][index] = false;
-					} else {
-						biaoqianet.setText("");
-						biaoqian.setVisibility(View.GONE);
-						ListBool[page][index] = true;
-					}
-
+					Intent intent=new Intent(MCardBagActivity.this,MCardTag.class);
+					Bundle mBundle=new Bundle();
+					eb.setAllmap(Allmap.get(page+1));
+					eb.setTagsList(tagsList);
+					eb.setTagsarr( card.getTagsarr());
+					Log.i("asd", Allmap.get(page+1).size()+"asdsadsa");
+					mBundle.putInt("page", page);
+					mBundle.putInt("index", index);
+					mBundle.putString("getid", card.getId());
+					intent.putExtras(mBundle);
+					startActivity(intent);
 				}
 			});
 		} else {
@@ -657,11 +551,11 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 						mediaplay.prepare();
 						mediaplay.start();
 						mediaplay
-								.setOnCompletionListener(new OnCompletionListener() {
-									public void onCompletion(MediaPlayer mp) {
-										mediaplay.release();
-									}
-								});
+						.setOnCompletionListener(new OnCompletionListener() {
+							public void onCompletion(MediaPlayer mp) {
+								mediaplay.release();
+							}
+						});
 					} catch (IllegalArgumentException e) {
 						e.printStackTrace();
 					} catch (SecurityException e) {
@@ -723,7 +617,6 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 		}
 
 		public void destroyItem(View arg0, int arg1, Object arg2) {
-			Log.i("bbb", viewList.size() + "!!" + arg1);
 			if (arg1 < viewList.size()) {
 				((ViewPager) arg0).removeView(viewList.get(arg1));
 			}
@@ -810,7 +703,14 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface {
 				view = (ViewGroup) inflater2.inflate(
 						R.layout.cardbag_grdiview_iteam, null);
 			}
-			view.setPadding(53, 23, 23, 23);
+			if(width==800)
+			{
+				view.setPadding(33, 23, 23, 23);
+			}
+			else
+			{
+				view.setPadding(53, 23, 23, 23);
+			}
 			viewgroup.removeAllViews();
 			viewgroup.addView(view);
 			setFontCard((ViewGroup) view, cardl.get(mindex), mindex, page);

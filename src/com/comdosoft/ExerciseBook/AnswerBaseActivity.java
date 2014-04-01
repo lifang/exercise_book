@@ -104,8 +104,14 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 			case 4:
 				prodialog.dismiss();
 				Intent intent = new Intent();
-				intent.putExtra("precision", ExerciseBookTool.getRatio(path,
-						questionArr[mQuestionType], mRatio));// 正确率100时
+				if (mQuestionType == 1 || mQuestionType == 2
+						|| mQuestionType == 5) {
+					intent.putExtra("precision", ExerciseBookTool.getRatio(
+							path, questionArr[mQuestionType]));// 正确率100时
+				} else {
+					intent.putExtra("precision", ExerciseBookTool.getRatio(
+							path, questionArr[mQuestionType], mRatio));// 正确率100时
+				}
 				intent.putExtra("use_time", getUseTime());// 用户使用的时间
 				intent.putExtra("specified_time", specified_time);// 任务基础时间
 				intent.setClass(AnswerBaseActivity.this, WorkEndActivity.class);
@@ -328,7 +334,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		switch (type) {
 		case 0:
 			prodialog.show();
-			setWork_Status();
+			// setWork_Status();
 			Finish_Json();
 			break;
 		case 1:
@@ -429,6 +435,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	public void roundOver() {
 		prodialog.show();
 		index = 1;
+		setWork_Status();
 		Finish_Json();
 	}
 
@@ -578,6 +585,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	}
 
 	public void setWork_Status() {
+		Log.i("suanfa", "设置work_status");
 		int number = 0;
 		String answer_history = ExerciseBookTool.getAnswer_Json_history(path);
 		answerJson = gson.fromJson(answer_history, AnswerJson.class);

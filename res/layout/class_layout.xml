@@ -120,29 +120,51 @@
                 android:orientation="vertical" >
 
                 <RelativeLayout
-                    android:layout_width="36.85px"
-                    android:layout_height="36.85px"
-                    android:layout_marginTop="52.26px" >
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32.26px" >
 
-                    <ImageView
+                    <RelativeLayout
                         android:id="@+id/guanzhu_button"
-                        android:layout_width="36.85px"
-                        android:layout_height="36.85px"
-                        android:background="@drawable/homepage_guanzhu" />
+                        android:layout_width="fill_parent"
+                        android:layout_height="56.85px"
+                        android:gravity="center" >
 
-                    <ImageView
+                        <ImageView
+                            android:id="@+id/guanzhu_button2"
+                            android:layout_width="36.85px"
+                            android:layout_height="36.85px"
+                            android:background="@drawable/homepage_guanzhu" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
                         android:id="@+id/shanchu_button"
-                        android:layout_width="36.85px"
-                        android:layout_height="36.85px"
-                        android:background="@drawable/homepage_shanchu" />
+                        android:layout_width="fill_parent"
+                        android:layout_height="56.85px"
+                        android:gravity="center" >
+
+                        <ImageView
+                            
+                            android:layout_width="36.85px"
+                            android:layout_height="36.85px"
+                            android:background="@drawable/homepage_shanchu" />
+                    </RelativeLayout>
                 </RelativeLayout>
 
-                <ImageView
+                <RelativeLayout
                     android:id="@+id/huifu_button"
-                    android:layout_width="36.85px"
-                    android:layout_height="36.85px"
-                    android:layout_marginTop="34.5px"
-                    android:background="@drawable/homepage_huifu" />
+                    android:layout_width="fill_parent"
+                    android:layout_height="56.85px"
+                    android:layout_marginTop="24.5px"
+                    android:gravity="center">
+
+                    <ImageView
+                        
+                        android:layout_width="36.85px"
+                        android:layout_height="36.85px"
+                        
+                        android:background="@drawable/homepage_huifu" />
+                </RelativeLayout>
             </LinearLayout>
         </LinearLayout>
     </HorizontalScrollView>

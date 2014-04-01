@@ -60,10 +60,7 @@ public class UserInfoActivity extends Activity {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case 0:
-				if (list.size()==4) {
-					init();
-				}
-
+				init();
 				break;
 
 			case 7:
@@ -89,6 +86,7 @@ public class UserInfoActivity extends Activity {
 		 Display display = this.getWindowManager().getDefaultDisplay();
 			width = display.getWidth();
 		list = new ArrayList();
+
 
 		userinfo_youyi2 = (TextView) findViewById(R.id.userinfo_youyi2); // 优异
 		userinfo_jingzhun2 = (TextView) findViewById(R.id.userinfo_jingzhun2); // 精准
@@ -146,7 +144,10 @@ public class UserInfoActivity extends Activity {
 			try {
 
 				list = new ArrayList();
-
+				list.add(0);
+				list.add(0);
+				list.add(0);
+				list.add(0);
 				Map<String, String> map = new HashMap<String, String>();
 				map.put("student_id", id);
 				map.put("school_class_id", school_class_id);
@@ -179,8 +180,10 @@ public class UserInfoActivity extends Activity {
 					JSONObject o = (JSONObject) archivements.get(i);
 					int archivement_types = o.getInt("archivement_types");
 					int archivement_score = o.getInt("archivement_score");
-
+					int archivement_score2 = list.size();
+					list.remove(archivement_types);
 					list.add(archivement_types, archivement_score);
+				
 				}
 
 			} else {
