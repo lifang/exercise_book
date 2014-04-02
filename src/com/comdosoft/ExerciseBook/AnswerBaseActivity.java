@@ -51,9 +51,10 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	public int status = 0;
 	public int specified_time = 0;
 	public int mQuestionType = 0;
-	private int mRatio = 0;
 	private int second;
 	public int type = 0;
+	private int count = 0;
+	private int ratioSum = 0;
 	private boolean flag = true;
 	private String recordMes;
 	public String json;
@@ -104,14 +105,15 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 				break;
 			case 4:
 				prodialog.dismiss();
+				setPause();
 				Intent intent = new Intent();
-				if (mQuestionType == 1 || mQuestionType == 2
-						|| mQuestionType == 5) {
-					intent.putExtra("precision", ExerciseBookTool.getRatio(
-							path, questionArr[mQuestionType]));// 正确率100时
-				} else {
-					intent.putExtra("precision", ExerciseBookTool.getRatio(
-							path, questionArr[mQuestionType], mRatio));// 正确率100时
+				intent.putExtra("precision", ExerciseBookTool.getRatio(path,
+						questionArr[mQuestionType]));// 正确率100时
+				if (status == 1) {
+					// 重做正确率
+					intent.putExtra("precision", ratioSum / count);
+					ratioSum = 0;
+					count = 0;
 				}
 				intent.putExtra("use_time", getUseTime());// 用户使用的时间
 				intent.putExtra("specified_time", specified_time);// 任务基础时间
@@ -195,7 +197,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		this.type = type;
 		if (type == 0) {
 			if (mQuestionType != 7) {
-				mTimer.start();
+				setStart();
 			}
 			base_time_linearlayout.setVisibility(View.VISIBLE);
 			base_history_linearlayout.setVisibility(View.GONE);
@@ -211,7 +213,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		if (status == 1) {
 			// 重做
 			setUseTime(0);
-			mTimer.start();
+			setStart();
 		}
 	}
 
@@ -414,6 +416,11 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 
 	// 计算索引&更新View
 	public void calculateIndexAndUpdateView() {
+		if (status == 1) {
+			count++;
+			ratioSum = ratioSum + ratio;
+			ratio = 0;
+		}
 		if (mQindex == mQuestList.size() - 1
 				&& mBindex == mQuestList.get(mQindex).size() - 1) {
 			// 最后一题
@@ -504,7 +511,6 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 			ap.getQuestions().add(aq);
 		}
 
-		mRatio = ratio;
 		calculateIndexAndUpdateView();
 
 		ap.setQuestions_item(mQindex + "");
@@ -610,7 +616,6 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	}
 
 	public void setWork_Status() {
-		Log.i("Ax", "设置work_status");
 		int number = 0;
 		String answer_history = ExerciseBookTool.getAnswer_Json_history(path);
 		answerJson = gson.fromJson(answer_history, AnswerJson.class);
@@ -620,7 +625,6 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 				number += 1;
 			}
 		}
-		Log.i("Ax", "number:" + number + "/" + eb.getWork_number());
 		if (number == eb.getWork_number()) {
 			answerJson.status = "1";
 			String str = gson.toJson(answerJson);
@@ -658,7 +662,6 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		Log.i("Ax", "resultCode-" + resultCode);
 		if (requestCode == 1) {
 			switch (resultCode) {
 			case 0:
@@ -672,6 +675,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 				mQindex = 0;
 				mBindex = 0;
 				setUseTime(0);
+				setStart();
 				updateView();
 				break;
 			}

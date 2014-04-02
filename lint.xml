@@ -1,25 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lint>
-<<<<<<< HEAD
     <issue id="HandlerLeak" severity="ignore" />
-=======
-<<<<<<< HEAD
-
-    <issue
-        id="HandlerLeak"
-        severity="ignore" />
-
-    <issue
-        id="ShowToast"
-        severity="ignore" />
-
-    <issue
-        id="UseSparseArrays"
-        severity="ignore" />
-
-=======
->>>>>>> 0deff735654b607c233bd28f4ba0f2eefb03bbe0
     <issue id="ShowToast" severity="ignore" />
     <issue id="UseSparseArrays" severity="ignore" />
->>>>>>> 2438c27ccab899bceef49a1e88d3db4d51fe5764
 </lint>
