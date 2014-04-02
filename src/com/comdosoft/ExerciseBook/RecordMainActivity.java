@@ -291,18 +291,34 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 		TextView top = (TextView) view.findViewById(R.id.top);
 		ImageView over_img = (ImageView) view.findViewById(R.id.over_img);
 		work_name.setText(namearr[pojo.getQuestion_types().get(i)].toString());
+		if (ExerciseBookTool.getExist(pojo.getQuestion_types().get(i),
+				pojo.getFinish_types())) {
+			typeList.add(true);
+			over_img.setVisibility(View.VISIBLE);
+			top.setVisibility(View.VISIBLE);
+		} else {
+			typeList.add(false);
+			over_img.setVisibility(View.GONE);
+			top.setVisibility(View.GONE);
+		}
 		top.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View arg0) {
-				Log.i("linshi", "textview");
+				Intent intent = new Intent(RecordMainActivity.this,
+						RankingOfPointsActivity.class);
+				intent.putExtra("types", questiontype_list.get(i));
+				intent.putExtra("pub_id", Integer.valueOf(pojo.getId()));
+				startActivity(intent);
 			}
 		});
 		layout.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View arg0) {
 				eb.setWork_number(number);
 				eb.setActivity_item(1);
-				Log.i("aaa", "worknumber:" + number);
-				Log.i("suanfa", "path:" + pathList.get(pager.getCurrentItem()));
-				Log.i("suanfa", "path2:" + pojo.getQuestion_packages_url());
+				Log.i("suanfa", "worknumber:" + number);
+				Log.i("suanfa", "类型:" + typeList.size());
+				Log.i("suanfa", "任务ID:" + pojo.getId());
+				Log.i("suanfa", "保存路径:" + pathList.get(pager.getCurrentItem()));
+				Log.i("suanfa", "下载路径:" + pojo.getQuestion_packages_url());
 				if (ExerciseBookTool.FileExist(pathList.get(pager
 						.getCurrentItem()))) {// 判断文件是否存在
 					getJsonPath();
@@ -328,17 +344,6 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 			}
 
 		});
-
-		if (ExerciseBookTool.getExist(pojo.getQuestion_types().get(i),
-				pojo.getFinish_types())) {
-			typeList.add(true);
-			over_img.setVisibility(View.VISIBLE);
-			top.setVisibility(View.VISIBLE);
-		} else {
-			typeList.add(false);
-			over_img.setVisibility(View.GONE);
-			top.setVisibility(View.GONE);
-		}
 
 		int imgid = 0;
 		imageView.setBackgroundResource(0);
@@ -375,22 +380,11 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 			break;
 		case 1:
 			intent.setClass(this, SpeakPrepareActivity.class);
-			if (typeList.get(i)) {// 已完成
-				eb.setHistory_type(true);
-			} else {
-				eb.setHistory_type(false);
-			}
 			break;
 		case 2:
 			intent.setClass(this, TenSpeedActivity.class);
 			break;
 		case 3:
-			// String json =
-			// "{  \"selecting\": {\"specified_time\": \"100\", \"question_types\": \"6\", \"questions\": [{\"id\": \"284\",\"branch_questions\": [ {\"id\": \"181\", \"content\": \"This is ___ apple!\", \"option\": \"a;||;an\", \"answer\": \"an;||;a\" },{\"id\": \"181\", \"content\": \"<file>apple.jpg</file>Why he is ___ Google!\", \"option\": \"apple;||;banana;||;orange;||;pear\", \"answer\": \"apple;||;banana\"},{\"id\": \"181\", \"content\": \"<file>apple.mp3</file>\", \"option\": \"one;||;two;||;three\", \"answer\": \"two\"}, {\"id\": \"181\", \"content\": \"<file>apple.jpg</file>Pears have white flesh and thin green or yellow skin.\", \"option\": \"iPhone;||;S5;||;Xperia\", \"answer\": \"iPhone\"},{\"id\": \"181\", \"content\": \"Dad.come set here!\", \"option\": \"ZhangDaCa;||;ChenLong\", \"answer\": \"ZhangDaCa\"}]}]}}";
-			// String path = "/sdcard/Exercisebook_app/73/85/130/answer.js";
-			// intent.putExtra("json", json);
-			// intent.putExtra("path", path);
-			// intent.putExtra("status", 0);
 			intent.setClass(this, AnswerSelectActivity.class);
 			break;
 		case 4:
@@ -410,8 +404,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 		intent.putExtra("type", 0);// 0 今日任务列表跳转 1历史记录列表跳转
 		intent.putExtra("status", status);// 0表示第一次做 1表示重做 2历史
 		eb.setWork_end_dath(work_list.get(0).getEnd_time());
-
-		Log.i("suanfa", questiontype_list.get(i) + "");
+		eb.setPath(pathList.get(pager.getCurrentItem()));
 		startActivity(intent);
 		this.finish();
 	}
@@ -423,11 +416,6 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 			break;
 		case 1:
 			intent.setClass(this, SpeakPrepareActivity.class);
-			if (typeList.get(i)) {// 已完成
-				eb.setHistory_type(true);
-			} else {
-				eb.setHistory_type(false);
-			}
 			break;
 		case 2:
 			intent.setClass(this, Ten_HistoryActivity.class);
@@ -451,6 +439,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 		intent.putExtra("type", 0);// 0 今日任务列表跳转 1历史记录列表跳转
 		intent.putExtra("status", status);// 0表示第一次做 1表示重做 2历史
 		eb.setWork_end_dath(work_list.get(0).getEnd_time());
+		eb.setPath(pathList.get(pager.getCurrentItem()));
 		startActivity(intent);
 		this.finish();
 	}
@@ -609,7 +598,6 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 								+ "/" + "Exercisebook_app/" + eb.getUid() + "/"
 								+ eb.getClass_id() + "/"
 								+ work_list.get(i).getId();
-						eb.setPath(path);
 						String downPath = IP
 								+ work_list.get(i).getQuestion_packages_url();
 						pathList.add(path);

@@ -12,6 +12,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -37,7 +39,7 @@ import com.comdosoft.ExerciseBook.tools.OpenInputMethod;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
 public class ReplyListViewActivity extends Table_TabHost implements
-		IXListViewListener, Urlinterface, OnGestureListener {
+IXListViewListener, Urlinterface, OnGestureListener {
 	private ReplyListView mListView;
 	private List<Reply> replyList = new ArrayList<Reply>();;
 	private Handler mHandler;
@@ -96,17 +98,17 @@ public class ReplyListViewActivity extends Table_TabHost implements
 		mListView.setDividerHeight(0);
 		mHandler = new Handler();
 	}
-//	public void getnews() {
-//		new Thread() {
-//			public void run() {
-//				if (ExerciseBookTool.isConnect(ReplyListViewActivity.this)) {
-//					get_News();
-//				} else {
-//					handler1.sendEmptyMessage(1);
-//				}
-//			}
-//		}.start();
-//	}
+	public void getnews() {
+		new Thread() {
+			public void run() {
+				if (ExerciseBookTool.isConnect(ReplyListViewActivity.this)) {
+					get_News();
+				} else {
+					handler1.sendEmptyMessage(1);
+				}
+			}
+		}.start();
+	}
 
 	Handler handler1 = new Handler() {
 		public void handleMessage(Message msg) {
@@ -206,20 +208,23 @@ public class ReplyListViewActivity extends Table_TabHost implements
 	}
 	// 分割content
 	public List<String> divisionStr(String str) {
+		//"content":"[[ding]]回复了您的消息：沃尔沃"
 		List<String> list = new ArrayList<String>();
-		int temp1 = str.indexOf(";||;");
-		int temp2 = str.lastIndexOf("]]");
-		list.add(str.substring(temp2 + 2, temp1));
-		list.add(str.substring(temp1 + 4, str.length()));
+		int temp1 = str.indexOf("[[");
+		int temp2 = str.indexOf("]]");
+		int temp3 = str.indexOf("消息：");
+		list.add(str.substring(temp2 + 2, temp3+2));
+		list.add(str.substring(temp3 + 3, str.length()));
 		return list;
 	}
+
 
 	// 分割时间
 	public String divisionTime(String timeStr) {
 		int temp1 = timeStr.indexOf("T");
 		int temp2 = timeStr.lastIndexOf("+");
 		return timeStr.substring(0, temp1) + " "
-				+ timeStr.substring(temp1 + 1, temp2);
+		+ timeStr.substring(temp1 + 1, temp2);
 	}
 
 	private void onLoad() {
@@ -415,9 +420,18 @@ public class ReplyListViewActivity extends Table_TabHost implements
 				holder.hSView.scrollTo(0, 0);
 			}
 			if (replyList.get(position).getSender_avatar_url().length() > 4) {
-				ExerciseBookTool.set_background(Urlinterface.IP
-						+ replyList.get(position).getSender_avatar_url(),
-						holder.use_face);
+//				ExerciseBookTool.set_background(Urlinterface.IP
+//						+ replyList.get(position).getSender_avatar_url(),
+//						holder.use_face);
+				String url = IP +replyList.get(position).getSender_avatar_url();
+				// ExerciseBookTool.set_background(url, face);
+				Bitmap result = memoryCache.getBitmapFromCache(url);
+				if (result == null) {
+					ExerciseBookTool.set_bk(url, holder.use_face, memoryCache);
+				} else {
+
+					holder.use_face.setImageDrawable(new BitmapDrawable(result));
+				}
 			}
 			holder.imgbtn1.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
@@ -464,13 +478,6 @@ public class ReplyListViewActivity extends Table_TabHost implements
 					thread.start();
 				}
 			});
-			if (replyList.get(position).getSender_avatar_url().length() > 4)
-				;
-			{
-				ExerciseBookTool.set_background(Urlinterface.IP
-						+ replyList.get(position).getSender_avatar_url(),
-						holder.use_face);
-			}
 			holder.sender.setText(replyList.get(position).getSender_name());
 			holder.reciver.setText(replyList.get(position).getStatus());
 			holder.content.setText(replyList.get(position).getContent());

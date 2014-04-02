@@ -114,7 +114,8 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 		setTimePropEnd();// 禁用道具
 		setTruePropEnd();// 禁用道具
 		// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
-		this.mQuestionType = 1;
+		super.mQuestionType = 1;
+		super.setStart();
 		eb = (ExerciseBook) getApplication();
 
 		qid = eb.getQuestion_id();
@@ -123,6 +124,8 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 		Intent intent = getIntent();
 		path = intent.getStringExtra("path");
 		json = intent.getStringExtra("json");
+		int time = intent.getIntExtra("time", 0);
+		setUseTime(time);
 		specified_time = intent.getStringExtra("specified_time");
 		initialize();
 		SetTextView();
@@ -563,7 +566,8 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 						handler.sendEmptyMessage(0);
 						break;
 					case 1:
-						super.roundOver();
+						Log.i("suanfa", "结束");
+						roundOver();
 						break;
 					case 2:
 						intent.putExtra("path", path);

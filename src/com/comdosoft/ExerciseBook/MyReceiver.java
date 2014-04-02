@@ -1,8 +1,14 @@
 package com.comdosoft.ExerciseBook;
+import java.util.List;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.comdosoft.ExerciseBook.tools.ExerciseBook;
+import com.comdosoft.ExerciseBook.tools.Urlinterface;
+
 import cn.jpush.android.api.JPushInterface;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,9 +18,11 @@ import android.os.Bundle;
 import android.sax.StartElementListener;
 import android.util.Log;
 
-public class MyReceiver extends BroadcastReceiver
+public class MyReceiver extends BroadcastReceiver implements Urlinterface
 {
 	private int type;
+	private int school_class_id;
+	private String school_class_name;
 	public void onReceive(Context context, Intent intent) {
 		 Bundle bundle = intent.getExtras();
 		 if (JPushInterface.ACTION_REGISTRATION_ID.equals(intent.getAction())) {
@@ -32,23 +40,22 @@ public class MyReceiver extends BroadcastReceiver
 					int notifactionId = bundle.getInt(JPushInterface.EXTRA_NOTIFICATION_ID);
 					Log.d("bbb", "[MyReceiver] 接收到推送下来的通知的ID: " + notifactionId);
 					String extras = bundle.getString(JPushInterface.EXTRA_EXTRA);
-					JSONObject jsonobject = new JSONObject(extras);
+					String title = bundle.getString(JPushInterface.EXTRA_NOTIFICATION_TITLE);
+		        	String content = bundle.getString(JPushInterface.EXTRA_ALERT);
 					SharedPreferences sharedPreferences = context.getSharedPreferences("replyMenu", 0);
 					Editor editor = sharedPreferences.edit();//获取编辑器
+					JSONObject jsonobject = new JSONObject(extras);
 					type=jsonobject.getInt("type");
-					Log.i("asd",type+"<---tye");
+//					school_class_id =jsonobject.getInt("class_id");
 					switch (type) {
 					case 0:
 						editor.putBoolean("ReplyMenu", false);
-						Log.i("aa", "ReplyMenu=false");
 						break;
 					case 1:
 						editor.putBoolean("ReplyMenu", false);
-						Log.i("aa", "ReplyMenu=false");
 						break;
 					case 2:
 						editor.putBoolean("HomeWorkMenu", false);
-						Log.i("aa", "HomeWorkMenu=false");
 						break;
 					}
 					editor.commit();//提交修改
@@ -64,6 +71,23 @@ public class MyReceiver extends BroadcastReceiver
 		        	String content = bundle.getString(JPushInterface.EXTRA_ALERT);
 		        	String extras = bundle.getString(JPushInterface.EXTRA_EXTRA);
 		        	Log.i("bbb", "Title : " + title + "  " + "Content : " + content+"fudai:"+extras);
+//		       Title : 超级作业本  Content : ding：888888fudai:{"type":1,"class_id":107}
+		        	JSONObject jsonobject;
+					try {
+						jsonobject = new JSONObject(extras);
+						type=jsonobject.getInt("type");
+						school_class_id =jsonobject.getInt("class_id");
+						school_class_name=jsonobject.getString("class_name");
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+		        	SharedPreferences preferences = context.getSharedPreferences(SHARED,
+							Context.MODE_PRIVATE);
+					Editor editor = preferences.edit();
+					editor.putString("school_class_id", school_class_id+"");
+					editor.commit();
 					switch (type) {
 					case 0:
 						Intent intent0=new Intent(context,MessageActivity.class);

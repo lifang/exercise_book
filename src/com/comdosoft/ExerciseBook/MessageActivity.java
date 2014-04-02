@@ -35,13 +35,14 @@ import android.widget.Toast;
 
 
 public class MessageActivity extends Table_TabHost implements
-		IXListViewListener, Urlinterface, OnGestureListener {
+IXListViewListener, Urlinterface, OnGestureListener {
 	private ReplyListView mListView;
 	private List<SysMessage> replyList = new ArrayList<SysMessage>();;
 	private Handler mHandler;
 	private int start = 0;
 	private String page = "1";
 	private static int refreshCnt = 0;
+	private String student_id ;
 	private String user_id ;
 	private String school_class_id;
 	private int mShowPosition = -1;
@@ -53,7 +54,7 @@ public class MessageActivity extends Table_TabHost implements
 	private final char FLING_RIGHT = 2;
 	private char flingState = FLING_CLICK;
 	private TextView topTv1;
-
+	private ExerciseBook exerciseBook;
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -65,7 +66,8 @@ public class MessageActivity extends Table_TabHost implements
 		topTv1=(TextView) findViewById(R.id.topTv1);
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
-		user_id = preferences.getString("user_id", "1");
+		student_id = preferences.getString("id", "1");
+		user_id= preferences.getString("user_id", "1");
 		school_class_id = preferences.getString("school_class_id", "1");
 		topTv1.setOnClickListener(new OnClickListener()
 		{
@@ -76,6 +78,8 @@ public class MessageActivity extends Table_TabHost implements
 				overridePendingTransition(R.anim.fade, R.anim.hold); 
 			}
 		});
+		exerciseBook = (ExerciseBook) getApplication();
+		exerciseBook.getActivityList().add(this);
 		get_News();
 		// mListView.setPullLoadEnable(false);
 		// mListView.setPullRefreshEnable(false);
@@ -117,6 +121,9 @@ public class MessageActivity extends Table_TabHost implements
 	// 解析获取到的Json
 	public int getNewsJson(String json) {
 		try {
+//			String json2 = "{\"status\":\"success\",\"notice\":\"\u83b7\u53d6\u6210\u529f\uff01\uff01\",\"sysmessage\":[{\"content\":\"\u606d\u559c\u60a8\u83b7\u5f97\u6210\u5c31\u201c\u6377\u8db3\u201d\",\"created_at\":\"2014-04-01T16:46:05+08:00\",\"id\":31,\"school_class_id\":105,\"status\":0,\"student_id\":73,\"updated_at\":\"2014-04-01T16:46:05+08:00\"},{\"content\":\"\u606d\u559c\u60a8\u83b7\u5f97\u6210\u5c31\u201c\u8fc5\u901f\u201d\",\"created_at\":\"2014-04-01T16:45:47+08:00\",\"id\":30,\"school_class_id\":105,\"status\":0,\"student_id\":73,\"updated_at\":\"2014-04-01T16:45:47+08:00\"}]}";
+			
+//			{"status":"success","notice":"\u83b7\u53d6\u6210\u529f\uff01\uff01","sysmessage":[{"content":"\u606d\u559c\u60a8\u83b7\u5f97\u6210\u5c31\u201c\u6377\u8db3\u201d","created_at":"2014-04-01T16:46:05+08:00","id":31,"school_class_id":105,"status":0,"student_id":73,"updated_at":"2014-04-01T16:46:05+08:00"},{"content":"\u606d\u559c\u60a8\u83b7\u5f97\u6210\u5c31\u201c\u8fc5\u901f\u201d","created_at":"2014-04-01T16:45:47+08:00","id":30,"school_class_id":105,"status":0,"student_id":73,"updated_at":"2014-04-01T16:45:47+08:00"}]}
 			JSONObject jsonobject = new JSONObject(json);
 			String status = (String) jsonobject.get("status");
 			if (status.equals("success")) {
@@ -150,8 +157,9 @@ public class MessageActivity extends Table_TabHost implements
 			public void run() {
 				if (ExerciseBookTool.isConnect(MessageActivity.this)) {
 					try {
-						if (!httpGetNews(user_id, school_class_id).equals(null)) {
-							getNewsJson(httpGetNews(user_id, school_class_id));
+						String json = httpGetNews(student_id, school_class_id);
+						if (!json.equals(null)) {
+							getNewsJson(json);
 							handler1.sendEmptyMessage(0);
 						}
 					} catch (Exception e) {
@@ -166,10 +174,10 @@ public class MessageActivity extends Table_TabHost implements
 	}
 
 	// HTTP请求
-	public String httpGetNews(String user_id, String school_class_id) {
+	public String httpGetNews(String student_id, String school_class_id) {
 		try {
 			HashMap<String, String> mp = new HashMap<String, String>();
-			mp.put("student_id", user_id);
+			mp.put("student_id", student_id);
 			mp.put("school_class_id", school_class_id);
 			mp.put("page",page );
 			String json = ExerciseBookTool
@@ -183,11 +191,13 @@ public class MessageActivity extends Table_TabHost implements
 
 	// 分割content
 	public List<String> divisionStr(String str) {
+		//"content":"[[ding]]回复了您的消息：沃尔沃"
 		List<String> list = new ArrayList<String>();
-		int temp1 = str.indexOf(";||;");
-		int temp2 = str.lastIndexOf("]]");
-		list.add(str.substring(temp2 + 2, temp1));
-		list.add(str.substring(temp1 + 4, str.length()));
+		int temp1 = str.indexOf("[[");
+		int temp2 = str.indexOf("]]");
+		int temp3 = str.indexOf("消息：");
+		list.add(str.substring(temp2 + 2, temp3+2));
+		list.add(str.substring(temp3 + 3, str.length()));
 		return list;
 	}
 
@@ -196,7 +206,7 @@ public class MessageActivity extends Table_TabHost implements
 		int temp1 = timeStr.indexOf("T");
 		int temp2 = timeStr.lastIndexOf("+");
 		return timeStr.substring(0, temp1) + " "
-				+ timeStr.substring(temp1 + 1, temp2);
+		+ timeStr.substring(temp1 + 1, temp2);
 	}
 
 	private void onLoad() {
@@ -310,7 +320,7 @@ public class MessageActivity extends Table_TabHost implements
 											replyList.get(position).getId());
 									mp.put("school_class_id",
 											replyList.get(position)
-													.getClass_id());
+											.getClass_id());
 									String json = ExerciseBookTool
 											.doPost(Urlinterface.delete_sys_message,
 													mp);
