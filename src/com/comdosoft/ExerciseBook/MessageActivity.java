@@ -53,7 +53,7 @@ IXListViewListener, Urlinterface, OnGestureListener {
 	private final char FLING_RIGHT = 2;
 	private char flingState = FLING_CLICK;
 	private TextView topTv1;
-
+	private ExerciseBook exerciseBook;
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -76,6 +76,8 @@ IXListViewListener, Urlinterface, OnGestureListener {
 				overridePendingTransition(R.anim.fade, R.anim.hold); 
 			}
 		});
+		exerciseBook = (ExerciseBook) getApplication();
+		exerciseBook.getActivityList().add(this);
 		get_News();
 		// mListView.setPullLoadEnable(false);
 		// mListView.setPullRefreshEnable(false);

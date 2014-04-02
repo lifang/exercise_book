@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -64,6 +65,33 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 		index = extras.getInt("index");
 		tagll = (RelativeLayout) findViewById(R.id.tagrl);
 		biaoqian = (LinearLayout) findViewById(R.id.biaoqian);
+		biaoqianlv = (ListView) findViewById(R.id.biaoqianlv);
+		newTv = (TextView) findViewById(R.id.newTv);
+		biaoqianet = (TextView) findViewById(R.id.biaoqianet);
+		biaoqianlv.setDividerHeight(0);
+		LabelAdapter adapter = new LabelAdapter(getApplicationContext(), index,
+				tagsList, mytags, student_id, school_class_id, id);
+		biaoqianlv.setAdapter(adapter);
+		biaoqian.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+			}
+		});
+		show();
+		set();
+	}
+
+	public List<tags> findbiaoqian(String et) {
+		List<tags> findlist = new ArrayList<tags>();
+		for (int i = 0; i < tagsList.size(); i++) {
+			if (tagsList.get(i).getName().indexOf(et) != -1) {
+				findlist.add(tagsList.get(i));
+			}
+		}
+		return findlist;
+	}
+
+	public void show()
+	{
 		if (width == 800) {
 			switch (index) {
 			case 0:
@@ -103,30 +131,7 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 				break;
 			}
 		}
-		biaoqianlv = (ListView) findViewById(R.id.biaoqianlv);
-		newTv = (TextView) findViewById(R.id.newTv);
-		biaoqianet = (TextView) findViewById(R.id.biaoqianet);
-		biaoqianlv.setDividerHeight(0);
-		LabelAdapter adapter = new LabelAdapter(getApplicationContext(), index,
-				tagsList, mytags, student_id, school_class_id, id);
-		biaoqianlv.setAdapter(adapter);
-		biaoqian.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-			}
-		});
-		set();
 	}
-
-	public List<tags> findbiaoqian(String et) {
-		List<tags> findlist = new ArrayList<tags>();
-		for (int i = 0; i < tagsList.size(); i++) {
-			if (tagsList.get(i).getName().indexOf(et) != -1) {
-				findlist.add(tagsList.get(i));
-			}
-		}
-		return findlist;
-	}
-
 	public boolean onTouchEvent(MotionEvent event) {
 		this.finish();
 		eb.setAllmap(null);
@@ -198,7 +203,7 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 													created_at, id, name,
 													update_at));
 											MyMap.get(index).getTagsarr()
-													.add(Integer.valueOf(id));
+											.add(Integer.valueOf(id));
 										} else {
 
 										}
@@ -225,5 +230,24 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 			public void afterTextChanged(Editable s) {
 			}
 		});
+	}
+	public void addCard(String json) {
+		JSONObject jsonobject2;
+		try {
+			jsonobject2 = new JSONObject(json);
+			if (jsonobject2.getString("status").equals("success")) {
+				JSONObject jsonobject3 = jsonobject2.getJSONObject("cardtag");
+				String card_bag_id = jsonobject3.getString("card_bag_id");
+				String created_at = jsonobject3.getString("created_at");
+				String id = jsonobject3.getString("id");
+				String name = jsonobject3.getString("name");
+				String update_at = jsonobject3.getString("updated_at");
+				tagsList.add(new tags(card_bag_id, created_at, id, name,
+						update_at));
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
 	}
 }
