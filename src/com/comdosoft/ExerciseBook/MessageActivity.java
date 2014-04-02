@@ -119,6 +119,9 @@ IXListViewListener, Urlinterface, OnGestureListener {
 	// 解析获取到的Json
 	public int getNewsJson(String json) {
 		try {
+//			String json2 = "{\"status\":\"success\",\"notice\":\"\u83b7\u53d6\u6210\u529f\uff01\uff01\",\"sysmessage\":[{\"content\":\"\u606d\u559c\u60a8\u83b7\u5f97\u6210\u5c31\u201c\u6377\u8db3\u201d\",\"created_at\":\"2014-04-01T16:46:05+08:00\",\"id\":31,\"school_class_id\":105,\"status\":0,\"student_id\":73,\"updated_at\":\"2014-04-01T16:46:05+08:00\"},{\"content\":\"\u606d\u559c\u60a8\u83b7\u5f97\u6210\u5c31\u201c\u8fc5\u901f\u201d\",\"created_at\":\"2014-04-01T16:45:47+08:00\",\"id\":30,\"school_class_id\":105,\"status\":0,\"student_id\":73,\"updated_at\":\"2014-04-01T16:45:47+08:00\"}]}";
+			
+//			{"status":"success","notice":"\u83b7\u53d6\u6210\u529f\uff01\uff01","sysmessage":[{"content":"\u606d\u559c\u60a8\u83b7\u5f97\u6210\u5c31\u201c\u6377\u8db3\u201d","created_at":"2014-04-01T16:46:05+08:00","id":31,"school_class_id":105,"status":0,"student_id":73,"updated_at":"2014-04-01T16:46:05+08:00"},{"content":"\u606d\u559c\u60a8\u83b7\u5f97\u6210\u5c31\u201c\u8fc5\u901f\u201d","created_at":"2014-04-01T16:45:47+08:00","id":30,"school_class_id":105,"status":0,"student_id":73,"updated_at":"2014-04-01T16:45:47+08:00"}]}
 			JSONObject jsonobject = new JSONObject(json);
 			String status = (String) jsonobject.get("status");
 			if (status.equals("success")) {
@@ -169,10 +172,10 @@ IXListViewListener, Urlinterface, OnGestureListener {
 	}
 
 	// HTTP请求
-	public String httpGetNews(String user_id, String school_class_id) {
+	public String httpGetNews(String student_id, String school_class_id) {
 		try {
 			HashMap<String, String> mp = new HashMap<String, String>();
-			mp.put("student_id", user_id);
+			mp.put("student_id", student_id);
 			mp.put("school_class_id", school_class_id);
 			mp.put("page",page );
 			String json = ExerciseBookTool
