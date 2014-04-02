@@ -9,6 +9,8 @@ import java.util.Map;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -127,6 +129,8 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 
 	public boolean onTouchEvent(MotionEvent event) {
 		this.finish();
+		eb.setAllmap(null);
+		eb.setTagsList(null);
 		return super.onTouchEvent(event);
 	}
 
@@ -141,6 +145,9 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 							getApplicationContext(), index, tagsList, mytags,
 							student_id, school_class_id, id);
 					biaoqianlv.setAdapter(adapter);
+					break;
+				case 1:
+
 					break;
 				default:
 					break;
@@ -192,6 +199,8 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 													update_at));
 											MyMap.get(index).getTagsarr()
 													.add(Integer.valueOf(id));
+										} else {
+
 										}
 										handler1.sendEmptyMessage(0);
 									} catch (Exception e) {

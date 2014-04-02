@@ -185,9 +185,6 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		}
 	}
 
-	public void setTimeGone() {
-		base_time_linearlayout.setVisibility(View.GONE);
-	}
 
 	// 设置答题|记录 type 0答题 1历史
 	public void setType(int type) {

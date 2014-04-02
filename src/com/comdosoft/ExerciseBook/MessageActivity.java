@@ -35,7 +35,7 @@ import android.widget.Toast;
 
 
 public class MessageActivity extends Table_TabHost implements
-		IXListViewListener, Urlinterface, OnGestureListener {
+IXListViewListener, Urlinterface, OnGestureListener {
 	private ReplyListView mListView;
 	private List<SysMessage> replyList = new ArrayList<SysMessage>();;
 	private Handler mHandler;
@@ -183,11 +183,13 @@ public class MessageActivity extends Table_TabHost implements
 
 	// 分割content
 	public List<String> divisionStr(String str) {
+		//"content":"[[ding]]回复了您的消息：沃尔沃"
 		List<String> list = new ArrayList<String>();
-		int temp1 = str.indexOf(";||;");
-		int temp2 = str.lastIndexOf("]]");
-		list.add(str.substring(temp2 + 2, temp1));
-		list.add(str.substring(temp1 + 4, str.length()));
+		int temp1 = str.indexOf("[[");
+		int temp2 = str.indexOf("]]");
+		int temp3 = str.indexOf("消息：");
+		list.add(str.substring(temp2 + 2, temp3+2));
+		list.add(str.substring(temp3 + 3, str.length()));
 		return list;
 	}
 
@@ -196,7 +198,7 @@ public class MessageActivity extends Table_TabHost implements
 		int temp1 = timeStr.indexOf("T");
 		int temp2 = timeStr.lastIndexOf("+");
 		return timeStr.substring(0, temp1) + " "
-				+ timeStr.substring(temp1 + 1, temp2);
+		+ timeStr.substring(temp1 + 1, temp2);
 	}
 
 	private void onLoad() {
@@ -310,7 +312,7 @@ public class MessageActivity extends Table_TabHost implements
 											replyList.get(position).getId());
 									mp.put("school_class_id",
 											replyList.get(position)
-													.getClass_id());
+											.getClass_id());
 									String json = ExerciseBookTool
 											.doPost(Urlinterface.delete_sys_message,
 													mp);

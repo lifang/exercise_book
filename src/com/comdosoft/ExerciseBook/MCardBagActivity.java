@@ -38,20 +38,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import cn.jpush.android.api.JPushInterface;
 
-import com.comdosoft.ExerciseBook.Adapter.LabelAdapter;
 import com.comdosoft.ExerciseBook.pojo.knowledges_card;
 import com.comdosoft.ExerciseBook.pojo.tags;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
-public class MCardBagActivity extends Table_TabHost implements Urlinterface,Serializable {
+public class MCardBagActivity extends Table_TabHost implements Urlinterface,
+Serializable {
 	public List<tags> tagsList;
 	public Map<Integer, List<knowledges_card>> Allmap;
 	public Map<Integer, List<View>> FontCard;
@@ -85,6 +84,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,Seri
 	ViewGroup viewgroup;
 	List<View> visList;
 	int width;
+
 	@Override
 	@SuppressWarnings("rawtypes")
 	protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +94,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,Seri
 		eb = (ExerciseBook) getApplication();
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
-		width= getWindowManager().getDefaultDisplay().getWidth();
+		width = getWindowManager().getDefaultDisplay().getWidth();
 		student_id = preferences.getString("id", "73");
 		school_class_id = preferences.getString("school_class_id", "85");
 		mediaplay = new MediaPlayer();
@@ -131,7 +131,6 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,Seri
 	public void btnlistClick() {
 		cardbatFind.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-
 				showdialog();
 				Thread thread = new Thread() {
 					public void run() {
@@ -166,7 +165,6 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,Seri
 					showdialog();
 					Thread thread = new Thread() {
 						String json;
-
 						public void run() {
 							try {
 								viewPager = (ViewPager) findViewById(R.id.guidePages);
@@ -194,7 +192,6 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,Seri
 		JPushInterface.onResume(this);
 	}
 
-	@Override
 	protected void onPause() {
 		super.onPause();
 		JPushInterface.onPause(this);
@@ -290,7 +287,6 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,Seri
 					Allmap.put(count1, cardList);
 				}
 				JSONArray tags = jsonobject.getJSONArray("tags");
-				Log.i("2", tags.length()+"^^^"+(jsonobject.getJSONArray("tags")==null));
 				for (int i = 0; i < tags.length(); i++) {
 					JSONObject jsonobject2 = tags.getJSONObject(i);
 					String card_bag_id = jsonobject2.getString("card_bag_id");
@@ -298,11 +294,11 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,Seri
 					String id = jsonobject2.getString("id");
 					String name = jsonobject2.getString("name");
 					String update_at = jsonobject2.getString("updated_at");
-					Log.i("3",card_bag_id+"!"+created_at+"!"+id+"!"+name+"!"+update_at);
+					Log.i("3", card_bag_id + "!" + created_at + "!" + id + "!"
+							+ name + "!" + update_at);
 					tagsList.add(new tags(card_bag_id, created_at, id, name,
 							update_at));
 				}
-				Log.i("2", tagsList.size()+"!!");
 				if (flag) {
 					handler.sendEmptyMessage(1);
 				}
@@ -327,22 +323,26 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,Seri
 						Toast.LENGTH_SHORT).show();
 				break;
 			case 1:
+				page=0;
 				setViewPager();
 				progressDialog.dismiss();
-				viewPager.setAdapter(new GuidePageAdapter());
+				GuidePageAdapter gpa=new GuidePageAdapter();
+				viewPager.setAdapter(gpa);
 				viewPager
 				.setOnPageChangeListener(new GuidePageChangeListener());
 				break;
 			case 2:
 				setViewPager();
-				viewPager.setCurrentItem(viewPager.getCurrentItem());
+				viewPager.setCurrentItem(page+1);
 				viewPager.setAdapter(new GuidePageAdapter());
 				viewPager
 				.setOnPageChangeListener(new GuidePageChangeListener());
 				break;
 			case 3:
+				page=0;
 				setViewPager();
-				viewPager.setAdapter(new GuidePageAdapter());
+				GuidePageAdapter gpa1=new GuidePageAdapter();
+				viewPager.setAdapter(gpa1);
 				viewPager
 				.setOnPageChangeListener(new GuidePageChangeListener());
 				break;
@@ -359,7 +359,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,Seri
 		FontCard = new HashMap<Integer, List<View>>();
 		viewList = new ArrayList<View>();
 		int pageCount = Allmap.size();
-		ListBool = new Boolean[pageCount][4];
+		//		ListBool = new Boolean[pageCount][4];
 		PageBool = new Boolean[pageCount][4];
 		inflater2 = LayoutInflater.from(this);
 		imageViews = new ImageView[Allmap.size()];
@@ -395,7 +395,6 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,Seri
 			LinearLayout linear = null;
 			List<knowledges_card> list1 = Allmap.get(i + 1);
 			for (int j = 0; j < Allmap.get(i + 1).size(); j++) {
-				ListBool[i][j] = true; // 标签集合
 				PageBool[i][j] = true; // 所有卡片的T/F
 				ViewGroup cardview = (android.view.ViewGroup) inflater2
 						.inflate(R.layout.cardbag_gridview, null);
@@ -408,12 +407,9 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,Seri
 							LayoutParams.WRAP_CONTENT));
 					linear.setOrientation(LinearLayout.HORIZONTAL);
 				}
-				if(width==800)
-				{
+				if (width == 800) {
 					fontview.setPadding(33, 23, 23, 23);
-				}
-				else
-				{
+				} else {
 					fontview.setPadding(53, 23, 23, 23);
 				}
 				((ViewGroup) cardview).addView(fontview);
@@ -448,6 +444,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,Seri
 			}
 		}
 	}
+
 	public void addCard(String json) {
 		JSONObject jsonobject2;
 		try {
@@ -467,7 +464,17 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,Seri
 		}
 
 	}
-
+	public String checkAns(String str)
+	{
+		String content = null;
+		String[] strarr=str.split(";||;");
+		for(int i=0;i<strarr.length;i++)
+		{
+			content+=strarr[i];
+		}
+		return content.substring(0, content.lastIndexOf(";&&;"));
+		
+	}
 	public void oneClick() {
 		for (int i = 0; i < FontCard.size(); i++) {
 			for (int j = 0; j < FontCard.get(i).size(); j++) {
@@ -483,7 +490,21 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,Seri
 			}
 		}
 	}
-
+	public String setWrong(String miskatype)
+	{
+		switch (Integer.valueOf(miskatype)) {
+		case 1:
+			return "读错";
+		case 2:
+			return "写错";
+		case 3:
+			return "选错";
+		default:
+			break;
+		}
+		return null;
+		
+	}
 	public void setFontCard(ViewGroup v1, final knowledges_card card,
 			final int index, final int page) {
 		TextView reson = null;
@@ -494,8 +515,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,Seri
 		TextView rightanswers;
 		ViewGroup v = v1;
 		TextView bqtv;
-
-		if (PageBool[page][mindex]) {
+		if (PageBool[page][index]) {
 			bqtv = (TextView) v.findViewById(R.id.bqtv);
 			Ok: for (int i = 0; i < tagsList.size(); i++) {
 				for (int j = 0; j < card.getTagsarr().size(); j++) {
@@ -512,19 +532,23 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,Seri
 			fontIv = (ImageView) v.findViewById(R.id.fontIv);
 			rightanswer = (TextView) v.findViewById(R.id.rightanswer);
 			youranswer = (TextView) v.findViewById(R.id.answer);
-			reson.setText(card.getMistake_types());
-			wronganswer.setText(card.getYour_answer());
-			rightanswer.setText("正确答案");
-			youranswer.setText(card.getAnswer());
-			Log.i("1", tagsList.size()+"size");
+			reson.setText(setWrong(card.getMistake_types()));
+			wronganswer.setText(checkAns(card.getYour_answer()));
+			if (card.getAnswer().equals(null)) {
+				rightanswer.setVisibility(View.GONE);
+				youranswer.setVisibility(View.GONE);
+			} else {
+				rightanswer.setText("正确答案");
+				youranswer.setText(card.getAnswer());
+			}
 			fontIv.setOnClickListener(new OnClickListener() {
 				public void onClick(View arg0) {
-					Intent intent=new Intent(MCardBagActivity.this,MCardTag.class);
-					Bundle mBundle=new Bundle();
-					eb.setAllmap(Allmap.get(page+1));
+					Intent intent = new Intent(MCardBagActivity.this,
+							MCardTag.class);
+					Bundle mBundle = new Bundle();
+					eb.setAllmap(Allmap.get(page + 1));
 					eb.setTagsList(tagsList);
-					eb.setTagsarr( card.getTagsarr());
-					Log.i("asd", Allmap.get(page+1).size()+"asdsadsa");
+					eb.setTagsarr(card.getTagsarr());
 					mBundle.putInt("page", page);
 					mBundle.putInt("index", index);
 					mBundle.putString("getid", card.getId());
@@ -547,7 +571,6 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,Seri
 				public void onClick(View v) {
 					try {
 						mediaplay.setDataSource(IP + card.getResource_url());
-						Log.i("1", IP + card.getResource_url());
 						mediaplay.prepare();
 						mediaplay.start();
 						mediaplay
@@ -585,7 +608,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,Seri
 									if (Allmap.get(page + 1).size() == 0) {
 										Allmap.remove(page + 1);
 									}
-									handler.sendEmptyMessage(3);
+									handler.sendEmptyMessage(2);
 								} else {
 									msg.what = 0;
 									msg.obj = notice;
@@ -604,7 +627,6 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,Seri
 
 	private class GuidePageAdapter extends PagerAdapter {
 		public int getCount() {
-			// Log.i("bbb", viewList.size()+":bbb");
 			return viewList.size();
 		}
 
@@ -623,7 +645,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,Seri
 		}
 
 		public Object instantiateItem(View arg0, int arg1) {
-			((ViewPager) arg0).addView(viewList.get(arg1), arg1);
+			((ViewPager) arg0).addView(viewList.get(arg1), 0);
 			return viewList.get(arg1);
 		}
 
@@ -691,7 +713,6 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,Seri
 			List<knowledges_card> cardl = Allmap.get(page + 1);
 			Log.i("3", "page:" + page + "mindex:" + mindex + "FontCard:"
 					+ FontCard.get(page).size());
-
 			View view;
 			ViewGroup viewgroup = (ViewGroup) fontlist.get(mindex);
 			if (PageBool[page][mindex]) {
@@ -703,18 +724,14 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,Seri
 				view = (ViewGroup) inflater2.inflate(
 						R.layout.cardbag_grdiview_iteam, null);
 			}
-			if(width==800)
-			{
+			if (width == 800) {
 				view.setPadding(33, 23, 23, 23);
-			}
-			else
-			{
+			} else {
 				view.setPadding(53, 23, 23, 23);
 			}
 			viewgroup.removeAllViews();
 			viewgroup.addView(view);
 			setFontCard((ViewGroup) view, cardl.get(mindex), mindex, page);
-
 			for (int i = 0; i < fontlist.size(); i++) {
 				fontlist.get(i).setClickable(true);
 			}
