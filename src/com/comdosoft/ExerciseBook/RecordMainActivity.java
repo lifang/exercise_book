@@ -100,7 +100,6 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 	private TextView tishi;
 	private ProgressBar mProgress;
 	private boolean cancelUpdate;
-	private List<Boolean> typeList;
 	private AlertDialog mDownloadDialog;
 	private int status;
 	private boolean cardType;
@@ -261,7 +260,6 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 				linearList.clear();
 				linear_item = 0;
 				// Log.i("linshi", work_list.get(arg1).toString()+ "");
-				typeList = new ArrayList<Boolean>();
 				final List<Integer> questiontype_list = work_list.get(arg1)
 						.getQuestion_types();
 				finish_list = work_list.get(arg1).getFinish_types();
@@ -291,16 +289,6 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 		TextView top = (TextView) view.findViewById(R.id.top);
 		ImageView over_img = (ImageView) view.findViewById(R.id.over_img);
 		work_name.setText(namearr[pojo.getQuestion_types().get(i)].toString());
-		if (ExerciseBookTool.getExist(pojo.getQuestion_types().get(i),
-				pojo.getFinish_types())) {
-			typeList.add(true);
-			over_img.setVisibility(View.VISIBLE);
-			top.setVisibility(View.VISIBLE);
-		} else {
-			typeList.add(false);
-			over_img.setVisibility(View.GONE);
-			top.setVisibility(View.GONE);
-		}
 		top.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View arg0) {
 				Intent intent = new Intent(RecordMainActivity.this,
@@ -314,11 +302,16 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 			public void onClick(View arg0) {
 				eb.setWork_number(number);
 				eb.setActivity_item(1);
+				List<Boolean> typeList = getTypeList(pojo);
 				Log.i("suanfa", "worknumber:" + number);
 				Log.i("suanfa", "类型:" + typeList.size());
 				Log.i("suanfa", "任务ID:" + pojo.getId());
 				Log.i("suanfa", "保存路径:" + pathList.get(pager.getCurrentItem()));
 				Log.i("suanfa", "下载路径:" + pojo.getQuestion_packages_url());
+				Log.i("suanfa", "Question_types:"
+						+ pojo.getQuestion_types().size() + "/"
+						+ pojo.getQuestion_types().get(i));
+				Log.i("suanfa", "Finish_types:" + pojo.getFinish_types().size());
 				if (ExerciseBookTool.FileExist(pathList.get(pager
 						.getCurrentItem()))) {// 判断文件是否存在
 					getJsonPath();
@@ -354,6 +347,15 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 			imgid = 0;
 		}
 		imageView.setBackgroundResource(imgid);
+
+		if (ExerciseBookTool.getExist(pojo.getQuestion_types().get(i),
+				pojo.getFinish_types())) {// 排行标志的隐藏与显示
+			over_img.setVisibility(View.VISIBLE);
+			top.setVisibility(View.VISIBLE);
+		} else {
+			over_img.setVisibility(View.GONE);
+			top.setVisibility(View.GONE);
+		}
 
 		AbsListView.LayoutParams param = new AbsListView.LayoutParams(210, 220);
 		layout.setLayoutParams(param);
@@ -849,6 +851,19 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public List<Boolean> getTypeList(WorkPoJo pojo) {
+		List<Boolean> list = new ArrayList<Boolean>();
+		for (int i = 0; i < pojo.getQuestion_types().size(); i++) {
+			if (ExerciseBookTool.getExist(pojo.getQuestion_types().get(i),
+					pojo.getFinish_types())) {
+				list.add(true);
+			} else {
+				list.add(false);
+			}
+		}
+		return list;
 	}
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {

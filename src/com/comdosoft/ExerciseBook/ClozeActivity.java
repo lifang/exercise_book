@@ -75,6 +75,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 				Log.i("aaa", "---");
 				myLayout.removeAllViews();
 				content = cloze.getContent();
+				content = ExerciseBookTool.del_tag(content);
 				setTextView();
 				break;
 			case 1:
