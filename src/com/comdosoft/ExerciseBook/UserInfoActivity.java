@@ -303,14 +303,15 @@ public class UserInfoActivity extends Activity {
 							String notice = array2.getString("notice");
 
 							if (status == true) {
-								userinfo_username.setText(content);
-								HomePageMainActivity.instance.userName
-										.setText(content);
 								SharedPreferences preferences = getSharedPreferences(Urlinterface.SHARED,
 										 Context.MODE_PRIVATE);
 										 Editor editor = preferences.edit();
 										 editor.putString("nickname", content);
 										 editor.commit();
+								userinfo_username.setText(content);
+								HomePageMainActivity.instance.userName
+										.setText(content);
+								Table_TabHost.instance.userName.setText(content);
 
 							}
 							Toast.makeText(getApplicationContext(), notice,

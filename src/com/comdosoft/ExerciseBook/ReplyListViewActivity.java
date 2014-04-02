@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -41,7 +42,7 @@ import com.comdosoft.ExerciseBook.tools.Urlinterface;
 public class ReplyListViewActivity extends Table_TabHost implements
 IXListViewListener, Urlinterface, OnGestureListener {
 	private ReplyListView mListView;
-	private List<Reply> replyList = new ArrayList<Reply>();;
+	private List<Reply> replyList = new ArrayList<Reply>();
 	private Handler mHandler;
 	private int start = 0;
 	private String page = "1";
@@ -62,6 +63,7 @@ IXListViewListener, Urlinterface, OnGestureListener {
 	private String reciver_types;
 	private TextView topTv2;
 	private ExerciseBook exerciseBook;
+	private ProgressDialog prodialog;
 	static boolean active = false;
 	String json;
 	public static ReplyListViewActivity instance = null;
@@ -125,6 +127,9 @@ IXListViewListener, Urlinterface, OnGestureListener {
 				Toast.makeText(ReplyListViewActivity.this,
 						String.valueOf(msg.obj), Toast.LENGTH_SHORT).show();
 				break;
+			case 3:
+				madapter.notifyDataSetChanged();
+				break;
 			}
 		}
 	};
@@ -179,9 +184,11 @@ IXListViewListener, Urlinterface, OnGestureListener {
 				if (ExerciseBookTool.isConnect(ReplyListViewActivity.this)) {
 					try {
 						httpGetNews(user_id, school_class_id);
-						if (!json.equals(null)) {
+						if (json.length()==0) {
+						}else {
 							getNewsJson(json);
 							handler1.sendEmptyMessage(0);
+
 						}
 					} catch (Exception e) {
 						handler1.sendEmptyMessage(1);
@@ -208,13 +215,13 @@ IXListViewListener, Urlinterface, OnGestureListener {
 	}
 	// 分割content
 	public List<String> divisionStr(String str) {
-		//"content":"[[ding]]回复了您的消息：沃尔沃"
+		//"content":"[[ding]]回复了您的消息：;||;we we"
 		List<String> list = new ArrayList<String>();
 		int temp1 = str.indexOf("[[");
 		int temp2 = str.indexOf("]]");
 		int temp3 = str.indexOf("消息：");
 		list.add(str.substring(temp2 + 2, temp3+2));
-		list.add(str.substring(temp3 + 3, str.length()));
+		list.add(str.substring(temp3 + 7, str.length()));
 		return list;
 	}
 
@@ -235,7 +242,7 @@ IXListViewListener, Urlinterface, OnGestureListener {
 
 	@Override
 	public void onRefresh() {
-		mHandler.postDelayed(new Runnable() {
+		Thread thread = new Thread() {
 			public void run() {
 				start = ++refreshCnt;
 				SharedPreferences userInfo = getSharedPreferences("replyMenu",
@@ -243,17 +250,41 @@ IXListViewListener, Urlinterface, OnGestureListener {
 				Editor editor = userInfo.edit();// 获取编辑器
 				editor.putBoolean("ReplyMenu", true);
 				editor.commit();
-				replyList.clear();
 				page = "1";
 				get_News();
-				mListView.setAdapter(new ReplyAdapter());
+//				mListView.setAdapter(new ReplyAdapter());
 				onLoad();
 			}
-		}, 2000);
+		};
+		if (ExerciseBookTool.isConnect(ReplyListViewActivity.this)) {
+			replyList = new ArrayList<Reply>();
+			thread.start();
+		} else {
+			handler1.sendEmptyMessage(1);
+			mListView.stopRefresh();
+		}
 	}
 
 	@Override
 	public void onLoadMore() {
+//		Thread thread = new Thread() {
+//			@Override
+//			public void run() {
+//				int num = Integer.valueOf(page);
+//				num++;
+//				page = String.valueOf(num);
+//				get_News();
+////				
+//				onLoad();
+//			}
+//		};
+//		if (ExerciseBookTool.isConnect(ReplyListViewActivity.this)) {
+//			thread.start();
+//		} else {
+//			handler1.sendEmptyMessage(1);
+//			mListView.stopLoadMore();
+//		}
+		
 		mHandler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
@@ -261,12 +292,14 @@ IXListViewListener, Urlinterface, OnGestureListener {
 				num++;
 				page = String.valueOf(num);
 				get_News();
-				mListView.setAdapter(madapter);
+//				mListView.setAdapter(madapter);
 				onLoad();
 			}
 		}, 2000);
 	}
 
+	
+	
 	public static class ViewHolder {
 		public HorizontalScrollView hSView;
 		public ImageView use_face;
