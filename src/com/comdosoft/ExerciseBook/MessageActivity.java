@@ -156,7 +156,7 @@ IXListViewListener, Urlinterface, OnGestureListener {
 				if (ExerciseBookTool.isConnect(MessageActivity.this)) {
 					try {
 						String json = httpGetNews(student_id, school_class_id);
-						if (!json.equals(null)) {
+						if (json.length()!=0) {
 							getNewsJson(json);
 							handler1.sendEmptyMessage(0);
 						}
@@ -215,23 +215,63 @@ IXListViewListener, Urlinterface, OnGestureListener {
 
 	@Override
 	public void onRefresh() {
-		mHandler.postDelayed(new Runnable() {
+		Thread thread = new Thread() {
 			@Override
 			public void run() {
 				start = ++refreshCnt;
-				replyList.clear();
+//				replyList.clear();
 				// mAdapter.notifyDataSetChanged();
 				page = "1";
 				get_News();
-				madapter = new ReplyAdapter();
-				mListView.setAdapter(madapter);
+//				madapter = new ReplyAdapter();
+//				mListView.setAdapter(madapter);
 				onLoad();
 			}
-		}, 2000);
+		};
+		if (ExerciseBookTool.isConnect(MessageActivity.this)) {
+			replyList = new ArrayList<SysMessage>();;
+			thread.start();
+		} else {
+			handler1.sendEmptyMessage(1);
+			mListView.stopRefresh();
+		}
 	}
 
 	@Override
 	public void onLoadMore() {
+//		Thread thread = new Thread() {
+//			@Override
+//			public void run() {
+//				int num = Integer.valueOf(page);
+//				num++;
+//				page = String.valueOf(num);
+//				try {
+//					HashMap<String, String> mp = new HashMap<String, String>();
+//					mp.put("student_id", student_id);
+//					mp.put("school_class_id", school_class_id);
+//					mp.put("page",page );
+//					String json = ExerciseBookTool
+//							.sendGETRequest(Urlinterface.get_sysmessage, mp);
+//					if (json.length()!=0) {
+//						getNewsJson(json);
+//						handler1.sendEmptyMessage(0);
+//					}
+//				} catch (Exception e) {
+//					handler1.sendEmptyMessage(1);
+//				}
+//				
+////				get_News();
+//				onLoad();
+//			}
+//		};
+//		if (ExerciseBookTool.isConnect(MessageActivity.this)) {
+//			thread.start();
+//		} else {
+//			handler1.sendEmptyMessage(1);
+//			mListView.stopLoadMore();
+//		}
+		
+		
 		mHandler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
