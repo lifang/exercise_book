@@ -417,13 +417,17 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		return answer_boolean;
 	}
 
-	// 计算索引&更新View
-	public void calculateIndexAndUpdateView() {
+	public void calculateRatio(int mRatio) {
 		if (status == 1) {
 			count++;
-			ratioSum = ratioSum + ratio;
+			ratioSum = ratioSum + mRatio;
 			ratio = 0;
 		}
+	}
+
+	// 计算索引&更新View
+	public void calculateIndexAndUpdateView() {
+		calculateRatio(ratio);
 		if (mQindex == mQuestList.size() - 1
 				&& mBindex == mQuestList.get(mQindex).size() - 1) {
 			// 最后一题

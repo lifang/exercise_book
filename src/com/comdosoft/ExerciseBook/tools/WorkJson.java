@@ -9,8 +9,10 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
+import com.comdosoft.ExerciseBook.pojo.PropNumberPojo;
 import com.comdosoft.ExerciseBook.pojo.PropPojo;
 import com.comdosoft.ExerciseBook.pojo.WorkPoJo;
+import com.google.gson.JsonObject;
 
 public class WorkJson {
 
@@ -59,12 +61,19 @@ public class WorkJson {
 		return work_list;
 	}
 
-	public static List<PropPojo> getProp(String json) {
-		List<PropPojo> prop_list = new ArrayList<PropPojo>();
+	public static List<PropNumberPojo> getProp(String json) {
+		List<PropNumberPojo> prop_list = new ArrayList<PropNumberPojo>();
 		JSONObject obj;
 		try {
 			obj = new JSONObject(json);
-			JSONArray arr = obj.getJSONArray("tasks");
+			JSONArray arr = obj.getJSONArray("props");
+			if (arr.length() != 0) {
+				for (int j = 0; j < arr.length(); j++) {
+					JSONObject item = arr.getJSONObject(j);
+					PropNumberPojo prop = new PropNumberPojo(item.getInt("types"), item.getInt("number"));
+					prop_list.add(prop);
+				}
+			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

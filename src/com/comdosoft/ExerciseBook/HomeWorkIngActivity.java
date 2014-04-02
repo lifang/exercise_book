@@ -41,6 +41,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.comdosoft.ExerciseBook.pojo.PropNumberPojo;
 import com.comdosoft.ExerciseBook.pojo.WorkPoJo;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
@@ -75,6 +76,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	private Dialog mDownloadDialog;
 	private int progress;
 	private ProgressBar mProgress;
+	private List<PropNumberPojo> prop_number;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -263,6 +265,8 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 				JSONObject obj = new JSONObject(json);
 				if (obj.getString("status").equals("success")) {
 					work_list = WorkJson.json(json);
+					prop_number = WorkJson.getProp(json);
+					Log.i("linshi", "prop_number:" + prop_number.size());
 					if (work_list.size() != 0) {
 						eb.setWork_number(work_list.get(0).getQuestion_types()
 								.size());
@@ -451,6 +455,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 				// 判断SD卡是否存在，并且是否具有读写权限
 				if (Environment.getExternalStorageState().equals(
 						Environment.MEDIA_MOUNTED)) {
+					Log.i("suanfa", downPath);
 					URL url = new URL(downPath);
 					// 创建连接
 					HttpURLConnection conn = (HttpURLConnection) url

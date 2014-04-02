@@ -560,6 +560,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 					} else {
 						type = Again();
 					}
+					calculateRatio(ratio);
 					Log.i("aaa", type + "-type");
 					switch (type) {// 0为下一小题 1为全部做完 2为本小题做完
 					case 0:
@@ -582,7 +583,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 				} catch (Exception e) {
 				}
 			} else {
-				Toast.makeText(SpeakBeginActivity.this, "请先打完本题",
+				Toast.makeText(SpeakBeginActivity.this, "请先答完本题",
 						Toast.LENGTH_SHORT).show();
 			}
 			break;

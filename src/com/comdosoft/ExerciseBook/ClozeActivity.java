@@ -250,8 +250,6 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 				ratio = 100;
 				true_number += 1;
 			}
-			Log.i("aaa", "ratio:"
-					+ cloze.getList().get(entry.getKey()).getAnswer());
 			answerJson.cloze
 					.getQuestions()
 					.get(q_item)
@@ -259,6 +257,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 					.add(new Branch_AnswerPoJo(cloze.getList()
 							.get(entry.getKey()).getId()
 							+ "", entry.getValue(), ratio + ""));
+			calculateRatio(ratio);
 		}
 		Log.i("aaa", q_item + "/" + list.size());
 		if (true_number == answer.size()) {

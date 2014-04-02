@@ -274,8 +274,8 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 						Toast.makeText(TenSpeedActivity.this, "json写入发生错误",
 								Toast.LENGTH_SHORT).show();
 					}
+					calculateRatio(user_boolean);
 					index += 1;
-
 					switch (type) {
 					case 0:
 						handler.sendEmptyMessage(1);
