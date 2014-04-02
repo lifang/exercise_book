@@ -68,6 +68,13 @@ public class ExerciseBookTool implements Urlinterface {
 	private static int readTimeOut = 10000;
 	private static String requestEncoding = "UTF-8";
 
+	public static String del_tag(String str) {// 去除HTML标签
+		Pattern p_html = Pattern.compile("<[^>]+>", Pattern.CASE_INSENSITIVE);
+		Matcher m_html = p_html.matcher(str);
+		String content = m_html.replaceAll(""); // 过滤html标签
+		return content;
+	}
+
 	/**
 	 * 解压一个压缩文档 到指定位置
 	 * 
@@ -628,7 +635,7 @@ public class ExerciseBookTool implements Urlinterface {
 			rd.close();
 			in.close();
 		} catch (IOException e) {
-//			Log.i("linshi", "发生异常");
+			// Log.i("linshi", "发生异常");
 			e.printStackTrace();
 		}
 		Log.i("linshi", tempLine);

@@ -591,7 +591,9 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 			intent.putExtra("path", path);
 			intent.putExtra("json", json);
 			intent.putExtra("time", use_time);
-			if (super.status == 2) {
+			intent.putExtra("status", mystatus);
+			Log.i("suanfa", status + "-prepare");
+			if (status == 2) {
 				intent.setClass(SpeakPrepareActivity.this,
 						SpeakHistoryActivity.class);
 			} else {

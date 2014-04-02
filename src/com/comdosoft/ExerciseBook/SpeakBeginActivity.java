@@ -567,7 +567,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 						break;
 					case 1:
 						Log.i("suanfa", "结束");
-						super.roundOver();
+						roundOver();
 						break;
 					case 2:
 						intent.putExtra("path", path);

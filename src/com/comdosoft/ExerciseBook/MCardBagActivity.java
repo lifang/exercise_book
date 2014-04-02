@@ -445,36 +445,22 @@ Serializable {
 		}
 	}
 
-	public void addCard(String json) {
-		JSONObject jsonobject2;
-		try {
-			jsonobject2 = new JSONObject(json);
-			if (jsonobject2.getString("status").equals("success")) {
-				JSONObject jsonobject3 = jsonobject2.getJSONObject("cardtag");
-				String card_bag_id = jsonobject3.getString("card_bag_id");
-				String created_at = jsonobject3.getString("created_at");
-				String id = jsonobject3.getString("id");
-				String name = jsonobject3.getString("name");
-				String update_at = jsonobject3.getString("updated_at");
-				tagsList.add(new tags(card_bag_id, created_at, id, name,
-						update_at));
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-
-	}
+	
+	//TYPES_NAME = {0 => "听力", 1 => "朗读",  2 => "十速挑战", 3 => "选择", 4 => "连线", 5 => "完型填空", 6 => "排序"}
+	//根据错误类型，分割 content
 	public String checkAns(String str)
 	{
 		String content = null;
 		String[] strarr=str.split(";||;");
 		for(int i=0;i<strarr.length;i++)
 		{
-			content+=strarr[i];
+			content+=strarr[i]+" ";
 		}
+		Log.i("asd", content);
 		return content.substring(0, content.lastIndexOf(";&&;"));
 		
 	}
+	
 	public void oneClick() {
 		for (int i = 0; i < FontCard.size(); i++) {
 			for (int j = 0; j < FontCard.get(i).size(); j++) {
@@ -533,7 +519,7 @@ Serializable {
 			rightanswer = (TextView) v.findViewById(R.id.rightanswer);
 			youranswer = (TextView) v.findViewById(R.id.answer);
 			reson.setText(setWrong(card.getMistake_types()));
-			wronganswer.setText(checkAns(card.getYour_answer()));
+			wronganswer.setText(card.getYour_answer());
 			if (card.getAnswer().equals(null)) {
 				rightanswer.setVisibility(View.GONE);
 				youranswer.setVisibility(View.GONE);

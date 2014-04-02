@@ -171,7 +171,7 @@
     <LinearLayout
         android:id="@+id/base_answer_Linearlayout"
         android:layout_width="fill_parent"
-        android:layout_height="260px"
+        android:layout_height="240px"
         android:layout_alignParentBottom="true"
         android:background="#273039"
         android:gravity="center_vertical"

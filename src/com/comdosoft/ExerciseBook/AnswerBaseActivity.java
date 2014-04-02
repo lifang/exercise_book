@@ -4,17 +4,20 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -39,9 +42,10 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 import com.google.gson.Gson;
 
+//2014年4月2日 15:24:51
 // 答题父类
 public class AnswerBaseActivity extends Activity implements OnClickListener,
-		Urlinterface {
+		OnPreparedListener, Urlinterface {
 	public ExerciseBook eb;
 	public int mQindex = 0;
 	public int mBindex = 0;
@@ -50,9 +54,10 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	public int status = 0;
 	public int specified_time = 0;
 	public int mQuestionType = 0;
-	private int mRatio = 0;
 	private int second;
 	public int type = 0;
+	private int count = 0;
+	private int ratioSum = 0;
 	private boolean flag = true;
 	private String recordMes;
 	public String json;
@@ -103,14 +108,15 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 				break;
 			case 4:
 				prodialog.dismiss();
+				setPause();
 				Intent intent = new Intent();
-				if (mQuestionType == 1 || mQuestionType == 2
-						|| mQuestionType == 5) {
-					intent.putExtra("precision", ExerciseBookTool.getRatio(
-							path, questionArr[mQuestionType]));// 正确率100时
-				} else {
-					intent.putExtra("precision", ExerciseBookTool.getRatio(
-							path, questionArr[mQuestionType], mRatio));// 正确率100时
+				intent.putExtra("precision", ExerciseBookTool.getRatio(path,
+						questionArr[mQuestionType]));// 正确率100时
+				if (status == 1) {
+					// 重做正确率
+					intent.putExtra("precision", ratioSum / count);
+					ratioSum = 0;
+					count = 0;
 				}
 				intent.putExtra("use_time", getUseTime());// 用户使用的时间
 				intent.putExtra("specified_time", specified_time);// 任务基础时间
@@ -185,13 +191,16 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		}
 	}
 
+	public void setTimeGone() {
+		base_time_linearlayout.setVisibility(View.GONE);
+	}
+
 	// 设置答题|记录 type 0答题 1历史
 	public void setType(int type) {
 		this.type = type;
 		if (type == 0) {
 			if (mQuestionType != 7) {
-				Log.i("suanfa", status + "---1");
-				mTimer.start();
+				setStart();
 			}
 			base_time_linearlayout.setVisibility(View.VISIBLE);
 			base_history_linearlayout.setVisibility(View.GONE);
@@ -207,8 +216,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		if (status == 1) {
 			// 重做
 			setUseTime(0);
-			Log.i("suanfa", status + "---2");
-			mTimer.start();
+			setStart();
 		}
 	}
 
@@ -336,10 +344,6 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		}
 	}
 
-	public void setTimeGone() {
-		base_time_linearlayout.setVisibility(View.GONE);
-	}
-
 	public void close() {
 		index = 0;
 		if (status == 0) {// status:0表示答题 1重做 2表示历史
@@ -415,6 +419,11 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 
 	// 计算索引&更新View
 	public void calculateIndexAndUpdateView() {
+		if (status == 1) {
+			count++;
+			ratioSum = ratioSum + ratio;
+			ratio = 0;
+		}
 		if (mQindex == mQuestList.size() - 1
 				&& mBindex == mQuestList.get(mQindex).size() - 1) {
 			// 最后一题
@@ -449,9 +458,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		if (status == 0) {
 			prodialog.show();
 			index = 1;
-			Log.i("suanfa", "-->");
 			setWork_Status();
-			Log.i("suanfa", "开始上传");
 			Finish_Json();
 		} else {
 			mHandler.sendEmptyMessage(4);
@@ -507,7 +514,6 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 			ap.getQuestions().add(aq);
 		}
 
-		mRatio = ratio;
 		calculateIndexAndUpdateView();
 
 		ap.setQuestions_item(mQindex + "");
@@ -613,7 +619,6 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	}
 
 	public void setWork_Status() {
-		Log.i("Ax", "设置work_status");
 		int number = 0;
 		String answer_history = ExerciseBookTool.getAnswer_Json_history(path);
 		answerJson = gson.fromJson(answer_history, AnswerJson.class);
@@ -623,7 +628,6 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 				number += 1;
 			}
 		}
-		Log.i("Ax", "number:" + number + "/" + eb.getWork_number());
 		if (number == eb.getWork_number()) {
 			answerJson.status = "1";
 			String str = gson.toJson(answerJson);
@@ -661,7 +665,6 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		Log.i("Ax", "resultCode-" + resultCode);
 		if (requestCode == 1) {
 			switch (resultCode) {
 			case 0:
@@ -675,6 +678,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 				mQindex = 0;
 				mBindex = 0;
 				setUseTime(0);
+				setStart();
 				updateView();
 				break;
 			}
@@ -692,10 +696,45 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		}
 	}
 
+	class MyMediaPlay extends Thread {
+		public void run() {
+			super.run();
+			playerAmr();
+		}
+	}
+
+	// 播放音频
+	public void playerAmr() {
+		try {
+			player.reset();
+			player = MediaPlayer.create(this, R.raw.true_mp3);
+			player.prepare();
+			player.setOnPreparedListener(this);
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void onPrepared(MediaPlayer mp) {
+		mp.start();
+	}
+
 	protected void onStart() {
 		if (player == null)
 			player = new MediaPlayer();
 		super.onStart();
+	}
+
+	// 停止音频
+	protected void onStop() {
+		if (player.isPlaying()) {// 正在播放
+			player.stop();
+		}
+		super.onStop();
 	}
 
 	// 销毁音频

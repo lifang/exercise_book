@@ -67,6 +67,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 	private List<TextView> tv_list;
 	private boolean Check = false;
 	private PopupWindow popupWindow;
+	private static final String regEx_html = "<[^>]+>";
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -74,6 +75,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 				Log.i("aaa", "---");
 				myLayout.removeAllViews();
 				content = cloze.getContent();
+				content = ExerciseBookTool.del_tag(content);
 				setTextView();
 				break;
 			case 1:
@@ -358,7 +360,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 							SetAnswer();
 							break;
 						case 1:
-							super.roundOver();
+							roundOver();
 							break;
 						}
 					} catch (Exception e) {
