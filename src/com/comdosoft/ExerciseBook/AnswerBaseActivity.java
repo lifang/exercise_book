@@ -4,12 +4,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -688,8 +690,9 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		if (player.isPlaying()) {
 			player.pause();
 		} else {
-			// String mp3URL = path+
-			// new MyMediaPlay().start();
+			int mp3_url = status ? R.raw.true_mp3 : R.raw.false_mp3;
+			player = MediaPlayer.create(this, mp3_url);
+			player.start();
 		}
 	}
 

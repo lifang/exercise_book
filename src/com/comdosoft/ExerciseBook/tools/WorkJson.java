@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.util.Log;
 
+import com.comdosoft.ExerciseBook.pojo.PropPojo;
 import com.comdosoft.ExerciseBook.pojo.WorkPoJo;
 
 public class WorkJson {
@@ -55,5 +57,17 @@ public class WorkJson {
 		}
 
 		return work_list;
+	}
+
+	public static List<PropPojo> getProp(String json) {
+		List<PropPojo> prop_list = new ArrayList<PropPojo>();
+		JSONObject obj;
+		try {
+			obj = new JSONObject(json);
+			JSONArray arr = obj.getJSONArray("tasks");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return prop_list;
 	}
 }
