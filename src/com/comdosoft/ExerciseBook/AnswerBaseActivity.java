@@ -185,7 +185,6 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		}
 	}
 
-
 	// 设置答题|记录 type 0答题 1历史
 	public void setType(int type) {
 		this.type = type;
@@ -337,6 +336,10 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		}
 	}
 
+	public void setTimeGone() {
+		base_time_linearlayout.setVisibility(View.GONE);
+	}
+
 	public void close() {
 		index = 0;
 		if (status == 0) {// status:0表示答题 1重做 2表示历史
@@ -446,6 +449,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		if (status == 0) {
 			prodialog.show();
 			index = 1;
+			Log.i("suanfa", "-->");
 			setWork_Status();
 			Log.i("suanfa", "开始上传");
 			Finish_Json();
