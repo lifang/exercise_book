@@ -56,22 +56,6 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 		setContentView(R.layout.cardtag);
 		width = getWindowManager().getDefaultDisplay().getWidth();
 		eb = (ExerciseBook) getApplication();
-<<<<<<< HEAD
-		MyMap=eb.getAllmap();
-		tagsList=eb.getTagsList();
-		mytags=eb.getTagsarr();
-		Bundle extras = getIntent().getExtras(); 
-		id=extras.getString("getid");
-		index=extras.getInt("index");
-		SharedPreferences preferences = getSharedPreferences(SHARED,
-				Context.MODE_PRIVATE);
-		student_id = preferences.getString("id", "73");
-		school_class_id = preferences.getString("school_class_id", "85");
-		tagll=(RelativeLayout) findViewById(R.id.tagrl);
-		biaoqian=(LinearLayout) findViewById(R.id.biaoqian);
-		if(width==800)
-		{
-=======
 		MyMap = eb.getAllmap();
 		tagsList = eb.getTagsList();
 		mytags = eb.getTagsarr();
@@ -81,7 +65,6 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 		tagll = (RelativeLayout) findViewById(R.id.tagrl);
 		biaoqian = (LinearLayout) findViewById(R.id.biaoqian);
 		if (width == 800) {
->>>>>>> d1a8790943c881962b39998169cf30005c1a39dd
 			switch (index) {
 			case 0:
 				tagll.setGravity(Gravity.LEFT);
@@ -164,7 +147,7 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 					biaoqianlv.setAdapter(adapter);
 					break;
 				case 1:
-					
+
 					break;
 				default:
 					break;
@@ -184,11 +167,8 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 
 								public void run() {
 									try {
-<<<<<<< HEAD
-=======
 										// viewPager = (ViewPager)
 										// findViewById(R.id.guidePages);
->>>>>>> d1a8790943c881962b39998169cf30005c1a39dd
 										Map<String, String> map = new HashMap<String, String>();
 										map.put("student_id", student_id);
 										map.put("school_class_id",
@@ -219,10 +199,8 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 													update_at));
 											MyMap.get(index).getTagsarr()
 													.add(Integer.valueOf(id));
-										}
-										else
-										{
-											
+										} else {
+
 										}
 										handler1.sendEmptyMessage(0);
 									} catch (Exception e) {
