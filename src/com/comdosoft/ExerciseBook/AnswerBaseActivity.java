@@ -104,6 +104,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 			case 4:
 				prodialog.dismiss();
 				Intent intent = new Intent();
+				setPause();
 				if (mQuestionType == 1 || mQuestionType == 2
 						|| mQuestionType == 5) {
 					intent.putExtra("precision", ExerciseBookTool.getRatio(
@@ -152,6 +153,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		json = intent.getStringExtra("json");
 		path = intent.getStringExtra("path");
 		status = intent.getIntExtra("status", 2);
+		Log.i("aaa", status + "===");
 	}
 
 	// 设置子布局View
@@ -446,10 +448,10 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 
 	// 通关界面
 	public void roundOver() {
+		Log.i("suanfa", "-->" + status);
 		if (status == 0) {
 			prodialog.show();
 			index = 1;
-			Log.i("suanfa", "-->");
 			setWork_Status();
 			Log.i("suanfa", "开始上传");
 			Finish_Json();

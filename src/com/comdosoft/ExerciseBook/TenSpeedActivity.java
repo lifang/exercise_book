@@ -281,7 +281,7 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 						handler.sendEmptyMessage(1);
 						break;
 					case 1:
-						super.roundOver();
+						roundOver();
 						break;
 					}
 				} else {
