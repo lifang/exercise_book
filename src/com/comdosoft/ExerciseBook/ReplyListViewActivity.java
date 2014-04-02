@@ -12,6 +12,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -418,9 +420,18 @@ IXListViewListener, Urlinterface, OnGestureListener {
 				holder.hSView.scrollTo(0, 0);
 			}
 			if (replyList.get(position).getSender_avatar_url().length() > 4) {
-				ExerciseBookTool.set_background(Urlinterface.IP
-						+ replyList.get(position).getSender_avatar_url(),
-						holder.use_face);
+//				ExerciseBookTool.set_background(Urlinterface.IP
+//						+ replyList.get(position).getSender_avatar_url(),
+//						holder.use_face);
+				String url = IP +replyList.get(position).getSender_avatar_url();
+				// ExerciseBookTool.set_background(url, face);
+				Bitmap result = memoryCache.getBitmapFromCache(url);
+				if (result == null) {
+					ExerciseBookTool.set_bk(url, holder.use_face, memoryCache);
+				} else {
+
+					holder.use_face.setImageDrawable(new BitmapDrawable(result));
+				}
 			}
 			holder.imgbtn1.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
@@ -467,13 +478,6 @@ IXListViewListener, Urlinterface, OnGestureListener {
 					thread.start();
 				}
 			});
-			if (replyList.get(position).getSender_avatar_url().length() > 4)
-				;
-			{
-				ExerciseBookTool.set_background(Urlinterface.IP
-						+ replyList.get(position).getSender_avatar_url(),
-						holder.use_face);
-			}
 			holder.sender.setText(replyList.get(position).getSender_name());
 			holder.reciver.setText(replyList.get(position).getStatus());
 			holder.content.setText(replyList.get(position).getContent());

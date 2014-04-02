@@ -1,10 +1,14 @@
 package com.comdosoft.ExerciseBook;
+import java.util.List;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
 import cn.jpush.android.api.JPushInterface;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +22,7 @@ public class MyReceiver extends BroadcastReceiver implements Urlinterface
 {
 	private int type;
 	private int school_class_id;
+	private String school_class_name;
 	public void onReceive(Context context, Intent intent) {
 		 Bundle bundle = intent.getExtras();
 		 if (JPushInterface.ACTION_REGISTRATION_ID.equals(intent.getAction())) {
@@ -41,7 +46,7 @@ public class MyReceiver extends BroadcastReceiver implements Urlinterface
 					Editor editor = sharedPreferences.edit();//获取编辑器
 					JSONObject jsonobject = new JSONObject(extras);
 					type=jsonobject.getInt("type");
-					school_class_id =jsonobject.getInt("class_id");
+//					school_class_id =jsonobject.getInt("class_id");
 					switch (type) {
 					case 0:
 						editor.putBoolean("ReplyMenu", false);
@@ -66,6 +71,18 @@ public class MyReceiver extends BroadcastReceiver implements Urlinterface
 		        	String content = bundle.getString(JPushInterface.EXTRA_ALERT);
 		        	String extras = bundle.getString(JPushInterface.EXTRA_EXTRA);
 		        	Log.i("bbb", "Title : " + title + "  " + "Content : " + content+"fudai:"+extras);
+//		       Title : 超级作业本  Content : ding：888888fudai:{"type":1,"class_id":107}
+		        	JSONObject jsonobject;
+					try {
+						jsonobject = new JSONObject(extras);
+						type=jsonobject.getInt("type");
+						school_class_id =jsonobject.getInt("class_id");
+						school_class_name=jsonobject.getString("class_name");
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
 		        	SharedPreferences preferences = context.getSharedPreferences(SHARED,
 							Context.MODE_PRIVATE);
 					Editor editor = preferences.edit();

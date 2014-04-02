@@ -42,6 +42,7 @@ IXListViewListener, Urlinterface, OnGestureListener {
 	private int start = 0;
 	private String page = "1";
 	private static int refreshCnt = 0;
+	private String student_id ;
 	private String user_id ;
 	private String school_class_id;
 	private int mShowPosition = -1;
@@ -53,7 +54,7 @@ IXListViewListener, Urlinterface, OnGestureListener {
 	private final char FLING_RIGHT = 2;
 	private char flingState = FLING_CLICK;
 	private TextView topTv1;
-
+	private ExerciseBook exerciseBook;
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -65,7 +66,8 @@ IXListViewListener, Urlinterface, OnGestureListener {
 		topTv1=(TextView) findViewById(R.id.topTv1);
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
-		user_id = preferences.getString("user_id", "1");
+		student_id = preferences.getString("id", "1");
+		user_id= preferences.getString("user_id", "1");
 		school_class_id = preferences.getString("school_class_id", "1");
 		topTv1.setOnClickListener(new OnClickListener()
 		{
@@ -76,6 +78,8 @@ IXListViewListener, Urlinterface, OnGestureListener {
 				overridePendingTransition(R.anim.fade, R.anim.hold); 
 			}
 		});
+		exerciseBook = (ExerciseBook) getApplication();
+		exerciseBook.getActivityList().add(this);
 		get_News();
 		// mListView.setPullLoadEnable(false);
 		// mListView.setPullRefreshEnable(false);
@@ -117,6 +121,9 @@ IXListViewListener, Urlinterface, OnGestureListener {
 	// 解析获取到的Json
 	public int getNewsJson(String json) {
 		try {
+//			String json2 = "{\"status\":\"success\",\"notice\":\"\u83b7\u53d6\u6210\u529f\uff01\uff01\",\"sysmessage\":[{\"content\":\"\u606d\u559c\u60a8\u83b7\u5f97\u6210\u5c31\u201c\u6377\u8db3\u201d\",\"created_at\":\"2014-04-01T16:46:05+08:00\",\"id\":31,\"school_class_id\":105,\"status\":0,\"student_id\":73,\"updated_at\":\"2014-04-01T16:46:05+08:00\"},{\"content\":\"\u606d\u559c\u60a8\u83b7\u5f97\u6210\u5c31\u201c\u8fc5\u901f\u201d\",\"created_at\":\"2014-04-01T16:45:47+08:00\",\"id\":30,\"school_class_id\":105,\"status\":0,\"student_id\":73,\"updated_at\":\"2014-04-01T16:45:47+08:00\"}]}";
+			
+//			{"status":"success","notice":"\u83b7\u53d6\u6210\u529f\uff01\uff01","sysmessage":[{"content":"\u606d\u559c\u60a8\u83b7\u5f97\u6210\u5c31\u201c\u6377\u8db3\u201d","created_at":"2014-04-01T16:46:05+08:00","id":31,"school_class_id":105,"status":0,"student_id":73,"updated_at":"2014-04-01T16:46:05+08:00"},{"content":"\u606d\u559c\u60a8\u83b7\u5f97\u6210\u5c31\u201c\u8fc5\u901f\u201d","created_at":"2014-04-01T16:45:47+08:00","id":30,"school_class_id":105,"status":0,"student_id":73,"updated_at":"2014-04-01T16:45:47+08:00"}]}
 			JSONObject jsonobject = new JSONObject(json);
 			String status = (String) jsonobject.get("status");
 			if (status.equals("success")) {
@@ -150,8 +157,9 @@ IXListViewListener, Urlinterface, OnGestureListener {
 			public void run() {
 				if (ExerciseBookTool.isConnect(MessageActivity.this)) {
 					try {
-						if (!httpGetNews(user_id, school_class_id).equals(null)) {
-							getNewsJson(httpGetNews(user_id, school_class_id));
+						String json = httpGetNews(student_id, school_class_id);
+						if (!json.equals(null)) {
+							getNewsJson(json);
 							handler1.sendEmptyMessage(0);
 						}
 					} catch (Exception e) {
@@ -166,10 +174,10 @@ IXListViewListener, Urlinterface, OnGestureListener {
 	}
 
 	// HTTP请求
-	public String httpGetNews(String user_id, String school_class_id) {
+	public String httpGetNews(String student_id, String school_class_id) {
 		try {
 			HashMap<String, String> mp = new HashMap<String, String>();
-			mp.put("student_id", user_id);
+			mp.put("student_id", student_id);
 			mp.put("school_class_id", school_class_id);
 			mp.put("page",page );
 			String json = ExerciseBookTool

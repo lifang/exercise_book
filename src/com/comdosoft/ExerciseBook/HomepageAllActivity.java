@@ -1335,6 +1335,7 @@ public class HomepageAllActivity extends Activity implements
 				setJson(json);
 				handler.sendEmptyMessage(0);
 			} catch (Exception e) {
+				prodialog.dismiss();
 				handler.sendEmptyMessage(7);
 			}
 		}
