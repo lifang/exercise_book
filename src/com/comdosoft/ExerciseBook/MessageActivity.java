@@ -42,6 +42,7 @@ IXListViewListener, Urlinterface, OnGestureListener {
 	private int start = 0;
 	private String page = "1";
 	private static int refreshCnt = 0;
+	private String student_id ;
 	private String user_id ;
 	private String school_class_id;
 	private int mShowPosition = -1;
@@ -65,7 +66,8 @@ IXListViewListener, Urlinterface, OnGestureListener {
 		topTv1=(TextView) findViewById(R.id.topTv1);
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
-		user_id = preferences.getString("user_id", "1");
+		student_id = preferences.getString("id", "1");
+		user_id= preferences.getString("user_id", "1");
 		school_class_id = preferences.getString("school_class_id", "1");
 		topTv1.setOnClickListener(new OnClickListener()
 		{
@@ -150,8 +152,9 @@ IXListViewListener, Urlinterface, OnGestureListener {
 			public void run() {
 				if (ExerciseBookTool.isConnect(MessageActivity.this)) {
 					try {
-						if (!httpGetNews(user_id, school_class_id).equals(null)) {
-							getNewsJson(httpGetNews(user_id, school_class_id));
+						String json = httpGetNews(student_id, school_class_id);
+						if (!json.equals(null)) {
+							getNewsJson(json);
 							handler1.sendEmptyMessage(0);
 						}
 					} catch (Exception e) {
