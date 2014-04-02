@@ -447,6 +447,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 			prodialog.show();
 			index = 1;
 			setWork_Status();
+			Log.i("suanfa", "开始上传");
 			Finish_Json();
 		} else {
 			mHandler.sendEmptyMessage(4);
@@ -691,10 +692,6 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		if (player == null)
 			player = new MediaPlayer();
 		super.onStart();
-	}
-
-	public void setTimeGone() {
-		base_time_linearlayout.setVisibility(View.GONE);
 	}
 
 	// 销毁音频

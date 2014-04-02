@@ -566,6 +566,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 						handler.sendEmptyMessage(0);
 						break;
 					case 1:
+						Log.i("suanfa", "结束");
 						super.roundOver();
 						break;
 					case 2:

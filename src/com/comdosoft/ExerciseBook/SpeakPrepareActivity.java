@@ -69,7 +69,7 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 	private int specified_time;
 	private int questions_item;
 	private int branch_item;
-	private int status;
+	private int mystatus;
 	private int type;
 	private String json;
 	private int use_time = 0;
@@ -161,7 +161,7 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 
 		path = intent.getStringExtra("path");
 		json = intent.getStringExtra("json");
-		status = intent.getIntExtra("status", 2);
+		mystatus = intent.getIntExtra("status", 2);
 		Log.i("suanfa", json);
 		SetQuestionsJson(json);
 
@@ -170,7 +170,7 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 		if (answer_file.exists()) {
 			String json2 = ExerciseBookTool.getJson(path);
 			SetAnswer_Json(json2);
-			switch (status) {
+			switch (mystatus) {
 			case 0:
 				if (questions_item == -1) {// 大题索引为-1表示没做
 					Log.i("suanfa", "没有做过");
@@ -180,6 +180,7 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 					eb.setBranch_number(list.get(0).getQuesttionList().size());
 				} else {
 					type = 1;
+					Log.i("suanfa", "没做完");
 					questionlist = list.get(questions_item).getQuesttionList();
 					eb.setQuestion_id(list.get(questions_item).getId());
 					Log.i("suanfa", "id/" + list.get(questions_item).getId());
@@ -189,6 +190,7 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 				break;
 			case 1:
 				type = 2;
+				Log.i("suanfa", "做完了");
 				questionlist = list.get(eb.getQuestion_item())
 						.getQuesttionList();
 				eb.setQuestion_id(list.get(eb.getQuestion_item()).getId());
