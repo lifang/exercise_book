@@ -2,6 +2,8 @@ package com.comdosoft.ExerciseBook;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.comdosoft.ExerciseBook.tools.Urlinterface;
+
 import cn.jpush.android.api.JPushInterface;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -12,7 +14,7 @@ import android.os.Bundle;
 import android.sax.StartElementListener;
 import android.util.Log;
 
-public class MyReceiver extends BroadcastReceiver
+public class MyReceiver extends BroadcastReceiver implements Urlinterface
 {
 	private int type;
 	private int school_class_id;
@@ -35,25 +37,20 @@ public class MyReceiver extends BroadcastReceiver
 					String extras = bundle.getString(JPushInterface.EXTRA_EXTRA);
 					String title = bundle.getString(JPushInterface.EXTRA_NOTIFICATION_TITLE);
 		        	String content = bundle.getString(JPushInterface.EXTRA_ALERT);
-		        	Log.i("bbb", "Title : " + title + "  " + "Content : " + content+"fudai:"+extras);
 					SharedPreferences sharedPreferences = context.getSharedPreferences("replyMenu", 0);
 					Editor editor = sharedPreferences.edit();//获取编辑器
 					JSONObject jsonobject = new JSONObject(extras);
 					type=jsonobject.getInt("type");
 					school_class_id =jsonobject.getInt("class_id");
-					Log.i("asd",type+"<---tye");
 					switch (type) {
 					case 0:
 						editor.putBoolean("ReplyMenu", false);
-						Log.i("aa", "ReplyMenu=false");
 						break;
 					case 1:
 						editor.putBoolean("ReplyMenu", false);
-						Log.i("aa", "ReplyMenu=false");
 						break;
 					case 2:
 						editor.putBoolean("HomeWorkMenu", false);
-						Log.i("aa", "HomeWorkMenu=false");
 						break;
 					}
 					editor.commit();//提交修改
@@ -69,6 +66,11 @@ public class MyReceiver extends BroadcastReceiver
 		        	String content = bundle.getString(JPushInterface.EXTRA_ALERT);
 		        	String extras = bundle.getString(JPushInterface.EXTRA_EXTRA);
 		        	Log.i("bbb", "Title : " + title + "  " + "Content : " + content+"fudai:"+extras);
+		        	SharedPreferences preferences = context.getSharedPreferences(SHARED,
+							Context.MODE_PRIVATE);
+					Editor editor = preferences.edit();
+					editor.putString("school_class_id", school_class_id+"");
+					editor.commit();
 					switch (type) {
 					case 0:
 						Intent intent0=new Intent(context,MessageActivity.class);
