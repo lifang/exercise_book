@@ -407,7 +407,6 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 			// 计算正确率
 			if (ratio == 0) {
 				ratio = (100 * rightCount) / etList.size();
-				Log.i("Ax", ratio + "--" + rightCount + "--" + etList.size());
 				rightCount = 0;
 			}
 		} else {
@@ -488,7 +487,7 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 			super.onClick(v);
 			break;
 		case R.id.base_check_linearlayout:
-			if (amp.getStatus() == 0) {
+			if (status != 2) {
 				check();
 			} else {
 				nextRecord();
