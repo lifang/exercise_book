@@ -467,13 +467,13 @@ IXListViewListener, Urlinterface, OnGestureListener {
 					thread.start();
 				}
 			});
-			if (replyList.get(position).getSender_avatar_url().length() > 4)
-				;
-			{
-				ExerciseBookTool.set_background(Urlinterface.IP
-						+ replyList.get(position).getSender_avatar_url(),
-						holder.use_face);
-			}
+//			if (replyList.get(position).getSender_avatar_url().length() > 4)
+//				;
+//			{
+//				ExerciseBookTool.set_background(Urlinterface.IP
+//						+ replyList.get(position).getSender_avatar_url(),
+//						holder.use_face);
+//			}
 			holder.sender.setText(replyList.get(position).getSender_name());
 			holder.reciver.setText(replyList.get(position).getStatus());
 			holder.content.setText(replyList.get(position).getContent());
