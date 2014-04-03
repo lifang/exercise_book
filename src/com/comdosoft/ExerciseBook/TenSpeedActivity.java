@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.TimerTask;
 
 import org.json.JSONArray;
@@ -40,21 +41,18 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 	private Button one_btn;
 	private Button two_btn;
 	private List<Time_LimitPojo> branch_questions;
-	private String type = "2";// 任务类型 2表示十速挑战
 	private int index = 0;// 题目索引
 	private int img_index = 1;// 图片索引
 	private int user_boolean = 0;
-	private String notice;
 	private ExerciseBook eb;
 	public String path = "";
-	private int specified_time;
 	private int questions_id;
 	private String user_select = "";
 	private Gson gson;
 	private int branch_item;
 	private int status;
 	private boolean Check = false;
-	private boolean jz = true;// 精准成就判断
+	private Map<Integer, Integer> prop_number;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -113,6 +111,11 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 			index = branch_item + 1;
 		}
 		handler.sendEmptyMessage(1);
+
+		prop_number = eb.getProp_number();
+		for (int i = 0; i < prop_number.size(); i++) {
+			Log.i("suanfa", prop_number.get(i) + "-道具数量");
+		}
 	}
 
 	// 初始化
@@ -247,7 +250,6 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 	}
 
 	public void onClick(View v) {
-		Intent intent = new Intent();
 		switch (v.getId()) {
 		case R.id.base_back_linearlayout:
 			super.onClick(v);
@@ -255,6 +257,7 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 		case R.id.base_check_linearlayout:
 			if (img_index >= 0) {
 				if (Check) {
+
 					Check = false;
 					setCheckText("检查");
 					img_index -= 1;
@@ -262,7 +265,6 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 							.getAnswer_Json_history(path);
 					int type = 0;
 					try {
-						// JSONObject obj = new JSONObject(answer_history);
 						if (status == 0) {
 							type = setAnswerJson(answer_history, user_select,
 									user_boolean, branch_questions.get(index)
@@ -284,39 +286,55 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 						roundOver();
 						break;
 					}
+					user_select = "";
 				} else {
-					Check = true;
-					if (user_select.equals(branch_questions.get(index)
-							.getAnwser())) {
-						user_boolean = 100;
-						MyPlayer(true);
+					if (user_select.equals("")) {
+						Toast.makeText(this, "请选择答案!", Toast.LENGTH_SHORT)
+								.show();
 					} else {
-						user_boolean = 0;
-						MyPlayer(false);
+						Check = true;
+						if (user_select.equals(branch_questions.get(index)
+								.getAnwser())) {
+							user_boolean = 100;
+							MyPlayer(true);
+						} else {
+							user_boolean = 0;
+							MyPlayer(false);
+						}
+						setCheckText("下一个");
 					}
-					setCheckText("下一个");
 				}
 			}
 			break;
 		// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
 		case R.id.base_propTrue:
-			if (branch_questions.get(index).getOpption()[0]
-					.equals(branch_questions.get(index).getAnwser())) {
-				one_btn.setBackgroundResource(R.drawable.loginbtn_lv);
-				two_btn.setBackgroundResource(R.drawable.loginbtn_hui);
+			if (prop_number.get(0) > 0) {// 判断显示答案的道具数量是否大于0
+				if (branch_questions.get(index).getOpption()[0]
+						.equals(branch_questions.get(index).getAnwser())) {
+					one_btn.setBackgroundResource(R.drawable.loginbtn_lv);
+					two_btn.setBackgroundResource(R.drawable.loginbtn_hui);
+				} else {
+					one_btn.setBackgroundResource(R.drawable.loginbtn_hui);
+					two_btn.setBackgroundResource(R.drawable.loginbtn_lv);
+				}
+				Check = true;
+				setCheckText("下一个");
+				PropJson(0, branch_questions.get(index).getId(), 2);
+				Toast.makeText(TenSpeedActivity.this, "使用成功!",
+						Toast.LENGTH_SHORT).show();
 			} else {
-				one_btn.setBackgroundResource(R.drawable.loginbtn_hui);
-				two_btn.setBackgroundResource(R.drawable.loginbtn_lv);
+				Toast.makeText(TenSpeedActivity.this,
+						R.string.prop_number_error, Toast.LENGTH_SHORT).show();
 			}
-			Check = true;
-			setCheckText("下一个");
-			PropJson(0, branch_questions.get(index).getId(), 2);
-			Toast.makeText(TenSpeedActivity.this, "使用成功!", Toast.LENGTH_SHORT)
-					.show();
 			break;
 		case R.id.base_propTime:
 			// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
-			PropJson(1, branch_questions.get(index).getId(), 2);
+			if (prop_number.get(1) > 0) {
+				PropJson(1, branch_questions.get(index).getId(), 2);
+			} else {
+				Toast.makeText(TenSpeedActivity.this,
+						R.string.prop_number_error, Toast.LENGTH_SHORT).show();
+			}
 			break;
 		}
 	}

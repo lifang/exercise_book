@@ -29,6 +29,7 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 
 	private int coordinateIndex = 0;
 	private int last = -1;
+	private int height = 0;
 	// private String JSON =
 	// "{    \"lining\":{\"specified_time\": \"100\",  \"questions\":[ {\"id\": \"284\",  \"branch_questions\": [{\"id\": \"181\", \"content\": \"This is<=>an apple;||;A<=>B;||;ZhangDaCa<=>Dog\"}]},{\"id\": \"285\", \"branch_questions\": [{\"id\": \"182\", \"content\": \"C<=>D;||;Chen<=>Long;||;Gao<=>Shi\"}]}, {\"id\": \"285\", \"branch_questions\": [ {\"id\": \"182\", \"content\": \"Ma<=>Long;||;123<=>456;||;1111<=>2222\"} ]},  {\"id\": \"291\",\"branch_questions\": [ {\"id\": \"182\", \"content\": \"ZhangDaCa<=>ZXN;||;ChenLong<=>CL;||;MaLong<=>ML\"}]}] }}";
 	private StringBuffer sb = new StringBuffer();
@@ -66,8 +67,8 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 		lp.topMargin = 50;
 
 		DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-		int height = displayMetrics.heightPixels;
-		if (height == 1205) {
+		height = displayMetrics.heightPixels;
+		if (height == 1205 || height == 1216) {
 			lp.topMargin = 30;
 			xyArr = new int[][] { { 0, 100 }, { 200, 100 }, { 0, 330 },
 					{ 200, 330 }, { 0, 560 }, { 200, 560 } };
@@ -221,7 +222,12 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 	}
 
 	public Bitmap drawView() {
-		Bitmap bitmap = Bitmap.createBitmap(200, 660, Config.ARGB_8888);
+		Bitmap bitmap;
+		if (height == 1205 || height == 1216) {
+			bitmap = Bitmap.createBitmap(200, 660, Config.ARGB_8888);
+		} else {
+			bitmap = Bitmap.createBitmap(273, 940, Config.ARGB_8888);
+		}
 		Canvas canvas = new Canvas(bitmap);
 		canvas.drawARGB(0, 0, 0, 0);
 		Paint paint = new Paint();

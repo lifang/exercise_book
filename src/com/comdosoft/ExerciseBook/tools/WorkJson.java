@@ -1,7 +1,9 @@
 package com.comdosoft.ExerciseBook.tools;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -9,10 +11,7 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
-import com.comdosoft.ExerciseBook.pojo.PropNumberPojo;
-import com.comdosoft.ExerciseBook.pojo.PropPojo;
 import com.comdosoft.ExerciseBook.pojo.WorkPoJo;
-import com.google.gson.JsonObject;
 
 public class WorkJson {
 
@@ -61,8 +60,8 @@ public class WorkJson {
 		return work_list;
 	}
 
-	public static List<PropNumberPojo> getProp(String json) {
-		List<PropNumberPojo> prop_list = new ArrayList<PropNumberPojo>();
+	public static Map<Integer, Integer> getProp(String json) {
+		Map<Integer, Integer> prop_map = new HashMap<Integer, Integer>();
 		JSONObject obj;
 		try {
 			obj = new JSONObject(json);
@@ -70,13 +69,12 @@ public class WorkJson {
 			if (arr.length() != 0) {
 				for (int j = 0; j < arr.length(); j++) {
 					JSONObject item = arr.getJSONObject(j);
-					PropNumberPojo prop = new PropNumberPojo(item.getInt("types"), item.getInt("number"));
-					prop_list.add(prop);
+					prop_map.put(item.getInt("types"), item.getInt("number"));
 				}
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		return prop_list;
+		return prop_map;
 	}
 }

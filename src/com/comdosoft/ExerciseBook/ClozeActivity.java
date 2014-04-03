@@ -67,6 +67,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 	private List<TextView> tv_list;
 	private boolean Check = false;
 	private PopupWindow popupWindow;
+	private Map<Integer, Integer> prop_number;
 	private static final String regEx_html = "<[^>]+>";
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -108,6 +109,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 
 		SetJson(json);
 		SetAnswer();
+		prop_number = eb.getProp_number();
 	}
 
 	private void SetAnswer() {
@@ -283,6 +285,14 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		if (index + 1 == list.size()) {// 结束
 			type = 1;
 		}
+		for (Map.Entry<Integer, String> entry : user_select.entrySet()) {
+			int ratio = 0;
+			if (entry.getValue().equals(
+					cloze.getList().get(entry.getKey()).getAnswer())) {
+				ratio = 100;
+			}
+			calculateRatio(ratio);
+		}
 		return type;
 	}
 
@@ -370,34 +380,44 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 			break;
 
 		case R.id.base_propTrue:
-			Log.i("linshi", propItem + "----" + tv_list.size());
-			if (propItem < tv_list.size()) {
-				PropJson(0, cloze.getList().get(propItem).getId(), 5);// 1道具类型
+			if (prop_number.get(0) > 0) {// 判断显示答案的道具数量是否大于0
+				if (propItem < tv_list.size()) {
+					PropJson(0, cloze.getList().get(propItem).getId(), 5);// 1道具类型
+																			// --0显示答案
+																			// 1时间
+																			// ,
+																			// 2--小题id
+																			// ,3--任务类型
+					tv_list.get(propItem).setText(
+							cloze.getList().get(propItem).getAnswer());
+					tv_list.get(propItem).setTextColor(
+							getResources().getColor(R.color.work_end));
+					user_select.put(propItem, cloze.getList().get(propItem)
+							.getAnswer());
+					if (propItem + 1 == tv_list.size()) {
+						Check = true;
+						setCheckText("下一个");
+					} else {
+						propItem += 1;
+					}
+				}
+			} else {
+				Toast.makeText(ClozeActivity.this, R.string.prop_number_error,
+						Toast.LENGTH_SHORT).show();
+			}
+			break;
+		case R.id.base_propTime:
+			if (prop_number.get(1) > 0) {// 判断显示答案的道具数量是否大于0
+				// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
+				PropJson(1, cloze.getList().get(propItem).getId(), 5);// 1道具类型
 																		// --0显示答案
 																		// 1时间 ,
 																		// 2--小题id
 																		// ,3--任务类型
-				tv_list.get(propItem).setText(
-						cloze.getList().get(propItem).getAnswer());
-				tv_list.get(propItem).setTextColor(
-						getResources().getColor(R.color.work_end));
-				user_select.put(propItem, cloze.getList().get(propItem)
-						.getAnswer());
-				if (propItem + 1 == tv_list.size()) {
-					Check = true;
-					setCheckText("下一个");
-				} else {
-					propItem += 1;
-				}
+			} else {
+				Toast.makeText(ClozeActivity.this, R.string.prop_number_error,
+						Toast.LENGTH_SHORT).show();
 			}
-			break;
-		case R.id.base_propTime:
-			// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
-			PropJson(1, cloze.getList().get(propItem).getId(), 5);// 1道具类型
-																	// --0显示答案
-																	// 1时间 ,
-																	// 2--小题id
-																	// ,3--任务类型
 			break;
 		}
 	}
