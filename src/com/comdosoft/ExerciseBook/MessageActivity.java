@@ -18,8 +18,11 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -345,53 +348,35 @@ IXListViewListener, Urlinterface, OnGestureListener {
 			holder.imgbtn2.setOnClickListener(new OnClickListener() {
 
 				public void onClick(View v) {
-					if (ExerciseBookTool.isConnect(MessageActivity.this)) {
+					
+					Dialog dialog = new AlertDialog.Builder(
+							MessageActivity.this)
+							.setTitle("提示")
+							.setMessage("您确认要删除么?")
+							.setPositiveButton("确认",
+									new DialogInterface.OnClickListener() {
+										@Override
+										public void onClick(DialogInterface dialog,
+												int which) {
+											del(position);
+										}
+									})
+							.setNegativeButton("取消",
+									new DialogInterface.OnClickListener() {
 
-						Thread thread = new Thread() {
-							public void run() {
-								try {
-									HashMap<String, String> mp = new HashMap<String, String>();
-									mp.put("user_id", user_id);
-									mp.put("sys_message_id",
-											replyList.get(position).getId());
-									mp.put("school_class_id",
-											replyList.get(position)
-											.getClass_id());
-									String json = ExerciseBookTool
-											.doPost(Urlinterface.delete_sys_message,
-													mp);
-									JSONObject jsonobejct = new JSONObject(json);
-									String status = jsonobejct
-											.getString("status");
-									String notice = jsonobejct
-											.getString("notice");
-									if (status.equals("success")) {
-										Toast.makeText(getApplicationContext(),
-												notice, Toast.LENGTH_SHORT)
-												.show();
-										replyList.remove(position);
-										madapter.notifyDataSetChanged();
-									} else {
-										Toast.makeText(getApplicationContext(),
-												notice, Toast.LENGTH_SHORT)
-												.show();
-									}
-									Message msg=new Message();
-									msg.obj=notice;
-									msg.what=2;
-									handler1.sendMessage(msg);
-								} catch (Exception e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-							}
-						};
-						thread.start();
-					}
+										@Override
+										public void onClick(DialogInterface dialog,
+												int which) {
+											dialog.dismiss();
+										}
+									}).create();
+					dialog.show();
+					
 				}
 
 			});
 
+			
 			convertView.setOnTouchListener(new View.OnTouchListener() {
 				final int showPosition = position;
 
@@ -435,6 +420,88 @@ IXListViewListener, Urlinterface, OnGestureListener {
 			holder.content.setText(replyList.get(position).getContent());
 			holder.date.setText(replyList.get(position).getCreated_at());
 			return convertView;
+		}
+		
+		
+		
+
+		public void del(final int position){
+			
+			final Handler mHandler = new Handler() {
+				public void handleMessage(android.os.Message msg) {
+					switch (msg.what) {
+					case 0:
+						final String json5 = (String) msg.obj;
+						prodialog.dismiss();
+						if (json5.equals("error")) {
+						} else {
+							JSONObject jsonobejct;
+							try {
+								jsonobejct = new JSONObject(json5);
+								String status = jsonobejct.getString("status");
+								String notice = jsonobejct.getString("notice");
+								if (status.equals("success")) {
+									Toast.makeText(getApplicationContext(),
+											notice, Toast.LENGTH_SHORT)
+											.show();
+									replyList.remove(position);
+									madapter.notifyDataSetChanged();
+								} else {
+									Toast.makeText(getApplicationContext(),
+											notice, Toast.LENGTH_SHORT)
+											.show();
+								}
+							} catch (JSONException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							
+							
+						}
+						break;
+					default:
+						break;
+					}
+				}
+			};
+			Thread thread = new Thread() {
+				public void run() {
+					try {
+						HashMap<String, String> mp = new HashMap<String, String>();
+						mp.put("user_id", user_id);
+						mp.put("sys_message_id",
+								replyList.get(position).getId());
+						mp.put("school_class_id",
+								replyList.get(position)
+								.getClass_id());
+						String json = ExerciseBookTool
+								.doPost(Urlinterface.delete_sys_message,
+										mp);
+						Message msg = new Message();// 创建Message 对象
+						msg.what = 0;
+						msg.obj = json;
+						mHandler.sendMessage(msg);
+						
+//						Message msg=new Message();
+//						msg.obj=notice;
+//						msg.what=2;
+//						handler1.sendMessage(msg);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			};
+			if (ExerciseBookTool.isConnect(MessageActivity.this)) {
+				prodialog = new ProgressDialog(MessageActivity.this);
+				prodialog.setMessage("正在删除消息");
+				prodialog.setCanceledOnTouchOutside(false);
+				prodialog.show();
+			thread.start();	
+			}else {
+				handler1.sendEmptyMessage(1);
+			}
+			
 		}
 
 	}

@@ -88,6 +88,8 @@ public class MyReceiver extends BroadcastReceiver implements Urlinterface
 						e.printStackTrace();
 					}
 					
+						
+					
 		        	SharedPreferences preferences = context.getSharedPreferences(SHARED,
 							Context.MODE_PRIVATE);
 					Editor editor = preferences.edit();
@@ -98,13 +100,25 @@ public class MyReceiver extends BroadcastReceiver implements Urlinterface
 					clearActivity();
 					switch (type) {
 					case 0:
-						
+						if (1==1) {
 						Editor editor0 = sharedPreferences.edit();//获取编辑器
 						editor0.putString(school_class_id + "ReplyMenu", "none");
 						editor0.commit();
 						Intent intent0=new Intent(context,MessageActivity.class);
 						intent0.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); 
 						context.startActivity(intent0);
+						}else {
+							SharedPreferences preferences0 = context.getSharedPreferences(SHARED,
+									Context.MODE_PRIVATE);
+							Editor editor0 = preferences.edit();
+							editor0.putString("user_id", "");
+							editor0.putString("school_class_id", "");
+							editor0.putString("id", "");
+							editor0.commit();
+
+							Intent intent4 = new Intent(context, LoginActivity.class);
+							context.startActivity(intent4);
+						}
 						break;
 					case 1:
 						Editor editor1 = sharedPreferences.edit();//获取编辑器
@@ -123,6 +137,10 @@ public class MyReceiver extends BroadcastReceiver implements Urlinterface
 						context.startActivity(intent3);
 						break;
 					}
+					
+					
+					
+					
 	        	
 	        } else if (JPushInterface.ACTION_RICHPUSH_CALLBACK.equals(intent.getAction())) {
 	            Log.d("bbb", "[MyReceiver] 用户收到到RICH PUSH CALLBACK: " + bundle.getString(JPushInterface.EXTRA_EXTRA));
