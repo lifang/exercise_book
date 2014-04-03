@@ -296,7 +296,7 @@ public class HomepageAllActivity extends Activity implements
 
 		Micropost_senderName.setText(mess.getName()); // 发消息的人
 		Micropost_content.setText(mess.getContent()); // 消息内容
-		Micropost_date.setText(divisionTime(mess.getCreated_at())); // 消息日期
+		Micropost_date.setText(ExerciseBookTool.divisionTime2(mess.getCreated_at())); // 消息日期
 		String mic_id = mess.getId();
 		for (int j = 0; j < care.size(); j++) {
 			String a = (String) care.get(j);
@@ -569,7 +569,7 @@ public class HomepageAllActivity extends Activity implements
 			Micropost_who.setText(child_Micropost.getSender_name()); // 回复人
 			Micropost_ToWho.setText(child_Micropost.getReciver_name()); // 接收人
 			Micropost_date
-					.setText(divisionTime(child_Micropost.getCreated_at())); // 时间
+					.setText(ExerciseBookTool.divisionTime2(child_Micropost.getCreated_at())); // 时间
 			Micropost_content.setText(child_Micropost.getContent()); // 消息内容
 			if (user_id.equals(child_Micropost.getSender_id())) {// 自己回复的帖子现实删除按钮
 				delete.setVisibility(View.VISIBLE);
@@ -876,17 +876,7 @@ public class HomepageAllActivity extends Activity implements
 		}
 	}
 
-	/*
-	 * 分割时间
-	 */
-	public String divisionTime(String timeStr) {
-		timeStr = timeStr.replace("-", "/");
-		int temp1 = timeStr.indexOf("T");
-		int temp2 = timeStr.lastIndexOf("+");
-		String s = timeStr.substring(temp1 + 1, temp2);
-		int temp3 = s.lastIndexOf(":");
-		return timeStr.substring(0, temp1) + "  " + s.substring(0, temp3);
-	}
+
 
 	/*
 	 * 添加关注

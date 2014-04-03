@@ -138,8 +138,9 @@ public class ExerciseBookTool implements Urlinterface {
 			if (!file.exists()) {
 				file.createNewFile();
 				Log.i("linshi", path + "/answer.json");
-				AnswerJson answer = new AnswerJson(id, "0", getTimeIng(),
-						propList, new AnswerPojo("0", "", "-1", "-1", "0",
+				AnswerJson answer = new AnswerJson(id, "0",
+						"0000-00-00 00:00:00", propList, new AnswerPojo("0",
+								"", "-1", "-1", "0",
 								new ArrayList<Answer_QuestionsPojo>()),
 						new AnswerPojo("0", "", "-1", "-1", "0",
 								new ArrayList<Answer_QuestionsPojo>()),
@@ -351,7 +352,7 @@ public class ExerciseBookTool implements Urlinterface {
 		return stringBuilder.toString();
 	}
 
-	// 分割时间 带时分秒
+	// 分割时间 带时分秒  2014-03-21  13:14:15
 	public static String divisionTime(String timeStr) {
 		int temp1 = timeStr.indexOf("T");
 		int temp2 = timeStr.lastIndexOf("+");
@@ -844,6 +845,19 @@ public class ExerciseBookTool implements Urlinterface {
 
 		thread.start();
 
+	}
+	
+	
+	/*
+	 * 分割时间   2014/03/21  13:14:15
+	 */
+	public static String divisionTime2(String timeStr) {
+		timeStr = timeStr.replace("-", "/");
+		int temp1 = timeStr.indexOf("T");
+		int temp2 = timeStr.lastIndexOf("+");
+		String s = timeStr.substring(temp1 + 1, temp2);
+		int temp3 = s.lastIndexOf(":");
+		return timeStr.substring(0, temp1) + "  " + s.substring(0, temp3);
 	}
 
 }

@@ -23,8 +23,10 @@ public class MyReceiver extends BroadcastReceiver implements Urlinterface
 	private int type;
 	private int school_class_id;
 	private String school_class_name;
+	ExerciseBook eb;
 	public void onReceive(Context context, Intent intent) {
 		 Bundle bundle = intent.getExtras();
+		 eb =  (ExerciseBook) context.getApplicationContext();
 		 if (JPushInterface.ACTION_REGISTRATION_ID.equals(intent.getAction())) {
 	            String regId = bundle.getString(JPushInterface.EXTRA_REGISTRATION_ID);
 	            Log.d("bbb", "[MyReceiver] 接收Registration Id : " + regId);
@@ -46,16 +48,19 @@ public class MyReceiver extends BroadcastReceiver implements Urlinterface
 					Editor editor = sharedPreferences.edit();//获取编辑器
 					JSONObject jsonobject = new JSONObject(extras);
 					type=jsonobject.getInt("type");
-//					school_class_id =jsonobject.getInt("class_id");
+					int class_id =jsonobject.getInt("class_id");
 					switch (type) {
 					case 0:
-						editor.putBoolean("ReplyMenu", false);
+//						editor.putBoolean("ReplyMenu", false);
+						editor.putString(class_id+"ReplyMenu", "exist");
 						break;
 					case 1:
-						editor.putBoolean("ReplyMenu", false);
+//						editor.putBoolean("ReplyMenu", false);
+						editor.putString(class_id+"ReplyMenu", "exist");
 						break;
 					case 2:
-						editor.putBoolean("HomeWorkMenu", false);
+//						editor.putBoolean("HomeWorkMenu", false);
+						editor.putString(class_id+"HomeWorkMenu", "exist");
 						break;
 					}
 					editor.commit();//提交修改
@@ -83,29 +88,59 @@ public class MyReceiver extends BroadcastReceiver implements Urlinterface
 						e.printStackTrace();
 					}
 					
+						
+					
 		        	SharedPreferences preferences = context.getSharedPreferences(SHARED,
 							Context.MODE_PRIVATE);
 					Editor editor = preferences.edit();
 					editor.putString("school_class_id", school_class_id+"");
 					editor.putString("school_class_name", school_class_name);
 					editor.commit();
+					SharedPreferences sharedPreferences = context.getSharedPreferences("replyMenu", 0);
+					clearActivity();
 					switch (type) {
 					case 0:
+						if (1==1) {
+						Editor editor0 = sharedPreferences.edit();//获取编辑器
+						editor0.putString(school_class_id + "ReplyMenu", "none");
+						editor0.commit();
 						Intent intent0=new Intent(context,MessageActivity.class);
 						intent0.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); 
 						context.startActivity(intent0);
+						}else {
+							SharedPreferences preferences0 = context.getSharedPreferences(SHARED,
+									Context.MODE_PRIVATE);
+							Editor editor0 = preferences.edit();
+							editor0.putString("user_id", "");
+							editor0.putString("school_class_id", "");
+							editor0.putString("id", "");
+							editor0.commit();
+
+							Intent intent4 = new Intent(context, LoginActivity.class);
+							context.startActivity(intent4);
+						}
 						break;
 					case 1:
+						Editor editor1 = sharedPreferences.edit();//获取编辑器
+						editor1.putString(school_class_id + "ReplyMenu", "none");
+						editor1.commit();
 						Intent intent2=new Intent(context,ReplyListViewActivity.class);
 						intent2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 						context.startActivity(intent2);
 						break;
 					case 2:
+						Editor editor2 = sharedPreferences.edit();//获取编辑器
+						editor2.putString(school_class_id + "HomeWorkMenu", "none");
+						editor2.commit();
 						Intent intent3=new Intent(context,HomeWorkIngActivity.class);
 						intent3.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 						context.startActivity(intent3);
 						break;
 					}
+					
+					
+					
+					
 	        	
 	        } else if (JPushInterface.ACTION_RICHPUSH_CALLBACK.equals(intent.getAction())) {
 	            Log.d("bbb", "[MyReceiver] 用户收到到RICH PUSH CALLBACK: " + bundle.getString(JPushInterface.EXTRA_EXTRA));
@@ -114,5 +149,15 @@ public class MyReceiver extends BroadcastReceiver implements Urlinterface
 	        } else {
 	        	Log.d("bbb", "[MyReceiver] Unhandled intent - " + intent.getAction());
 	        }
+	}
+	
+	
+	// 关闭上个主界面
+	public void clearActivity() {
+		List<Activity> activityList = eb.getActivityList();
+		for (int i = 0; i < activityList.size(); i++) {
+			activityList.get(i).finish();
+		}
+		eb.setActivityList();
 	}
 }

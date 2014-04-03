@@ -43,6 +43,7 @@ public class SettingPhoto extends Activity implements Urlinterface {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);// 去掉标题栏
 		setContentView(R.layout.settingphoto);
 		exerciseBook = (ExerciseBook) getApplication();
+		exerciseBook.getActivityList().add(this);
 		File file = new File(photoStr);
 		if (file.exists()) {
 			file.delete();

@@ -66,6 +66,7 @@ public class LeftMenu extends Activity implements Urlinterface {
 		super.onCreate(savedInstanceState);
 		super.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.left_menu);
+		eb = (ExerciseBook) getApplication();
 		userInfo = getSharedPreferences("replyMenu", 0);
 		LeftMenu.this.setFinishOnTouchOutside(true);
 		SharedPreferences preferences = getSharedPreferences(SHARED,
@@ -75,7 +76,8 @@ public class LeftMenu extends Activity implements Urlinterface {
 		Invit();
 		linear = (LinearLayout) findViewById(R.id.linear);
 		ClickLis();
-		eb = (ExerciseBook) getApplication();
+
+		eb.getActivityList().add(this);
 	}
 
 	public void setBackColor() {
@@ -165,6 +167,7 @@ public class LeftMenu extends Activity implements Urlinterface {
 				eb.setMneu(true);
 				Editor editor = userInfo.edit();// 获取编辑器
 				editor.putBoolean("HomeWorkMenu", true);
+				editor.putString(school_class_id + "HomeWorkMenu", "none");
 				editor.commit();
 				clearActivity();
 				Intent intent = new Intent(LeftMenu.this,
@@ -186,6 +189,7 @@ public class LeftMenu extends Activity implements Urlinterface {
 				eb.setMneu(true);
 				Editor editor = userInfo.edit();// 获取编辑器
 				editor.putBoolean("ReplyMenu", true);
+				editor.putString(school_class_id + "ReplyMenu", "none");
 				editor.commit();
 			}
 
@@ -345,17 +349,14 @@ public class LeftMenu extends Activity implements Urlinterface {
 		teachIV = (ImageView) findViewById(R.id.teacherIm);
 		teachname = (TextView) findViewById(R.id.teachname);
 		ClassStuGv = (GridView) findViewById(R.id.classstugv);
-		boolean homeWork = true;
-		if (userInfo.getBoolean("HomeWorkMenu", true)) {
-			homeWork = true;
-		} else {
-			homeWork = false;
-		}
-		boolean reply = userInfo.getBoolean("ReplyMenu", true);
-		if (!homeWork) {
+		String homeWork = "none";
+		homeWork = userInfo.getString(school_class_id + "HomeWorkMenu", "none");
+		String reply = userInfo
+				.getString(school_class_id + "ReplyMenu", "none");
+		if ("exist".equals(homeWork)) {
 			hwImg.setVisibility(View.VISIBLE);
 		}
-		if (!reply) {
+		if ("exist".equals(reply)) {
 			rImg.setVisibility(View.VISIBLE);
 		}
 		setBackColor();
