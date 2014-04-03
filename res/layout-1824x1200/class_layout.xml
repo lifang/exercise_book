@@ -131,7 +131,7 @@
                         android:gravity="center" >
 
                         <ImageView
-                            android:id="@+id/guanzhu_button"
+                            android:id="@+id/guanzhu_button2"
                             android:layout_width="55px"
                             android:layout_height="55px"
                             android:background="@drawable/homepage_guanzhu" />

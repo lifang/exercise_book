@@ -54,7 +54,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="6.7px"
-                        android:text="回复"
+                        android:text="回复了"
                         android:textColor="#cacaca"
                         android:textSize="21px" />
 

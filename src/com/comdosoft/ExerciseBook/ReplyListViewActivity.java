@@ -3,6 +3,7 @@ package com.comdosoft.ExerciseBook;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,20 +33,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.comdosoft.ExerciseBook.HomepageAllActivity.get_class_info;
 import com.comdosoft.ExerciseBook.ReplyListView.IXListViewListener;
+import com.comdosoft.ExerciseBook.pojo.Micropost;
 import com.comdosoft.ExerciseBook.pojo.Reply;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
+import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.OpenInputMethod;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
 public class ReplyListViewActivity extends Table_TabHost implements
-IXListViewListener, Urlinterface, OnGestureListener {
+		IXListViewListener, Urlinterface, OnGestureListener {
 	private ReplyListView mListView;
 	private List<Reply> replyList = new ArrayList<Reply>();
 	private Handler mHandler;
 	private int start = 0;
-	private String page = "1";
+	private int page = 1;
 	private static int refreshCnt = 0;
 	private String user_id;
 	private String school_class_id;
@@ -91,7 +95,19 @@ IXListViewListener, Urlinterface, OnGestureListener {
 				overridePendingTransition(R.anim.fade, R.anim.hold);
 			}
 		});
-		get_News();
+		if (ExerciseBookTool.isConnect(ReplyListViewActivity.this)) {
+			page = 1;
+			prodialog = new ProgressDialog(ReplyListViewActivity.this);
+			prodialog.setMessage(ExerciseBookParams.PD_CLASS_INFO);
+			prodialog.setCanceledOnTouchOutside(false);
+			prodialog.show();
+			Thread thread = new Thread(new get_news());
+			thread.start();
+
+		} else {
+			handler1.sendEmptyMessage(1);
+			onLoad();
+		}
 		active = true;
 		instance = this;
 		exerciseBook = (ExerciseBook) getApplication();
@@ -100,35 +116,46 @@ IXListViewListener, Urlinterface, OnGestureListener {
 		mListView.setDividerHeight(0);
 		mHandler = new Handler();
 	}
-	public void getnews() {
-		new Thread() {
-			public void run() {
-				if (ExerciseBookTool.isConnect(ReplyListViewActivity.this)) {
-					get_News();
-				} else {
-					handler1.sendEmptyMessage(1);
-				}
-			}
-		}.start();
-	}
+
 
 	Handler handler1 = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case 0:
+				prodialog.dismiss();
+				final String json_all2 = (String) msg.obj;
+
+				if (json_all2.length() == 0) {
+				} else {
+					replyList = new ArrayList<Reply>();
+					getNewsJson(json_all2);
+				}
+				int a = replyList.size();
 				mListView.setAdapter(madapter);
+				onLoad();
+
 				break;
 			case 1:
 				Toast.makeText(ReplyListViewActivity.this, "未开启网络",
 						Toast.LENGTH_SHORT).show();
 				break;
 			case 2:
-				mListView.setAdapter(new ReplyAdapter());
+//				mListView.setAdapter(new ReplyAdapter());
 				Toast.makeText(ReplyListViewActivity.this,
 						String.valueOf(msg.obj), Toast.LENGTH_SHORT).show();
 				break;
 			case 3:
 				madapter.notifyDataSetChanged();
+				break;
+			case 4:
+				final String json4 = (String) msg.obj;
+
+				if (json4.length() == 0) {
+				} else {
+					getNewsJson(json4);
+				}
+				madapter.notifyDataSetChanged();
+				onLoad();
 				break;
 			}
 		}
@@ -141,17 +168,20 @@ IXListViewListener, Urlinterface, OnGestureListener {
 
 			String status = (String) jsonobject.get("status");
 			if (status.equals("success")) {
+				// [{"id":1378,"content":"[[布尔]]回复了您的消息：;||;nani","reciver_types":0,"sender_avatar_url":"\/avatars\/teachers\/2014-03\/teacher_75_2.jpg","reciver_id":158,"created_at":"2014-04-02T15:25:15+08:00","user_id":130,"sender_name":"布尔","micropost_id":647},{"id":1325,"content":"[[布尔]]回复了您的消息：结婚","reciver_types":0,"sender_avatar_url":"\/avatars\/teachers\/2014-03\/teacher_75_2.jpg","reciver_id":158,"created_at":"2014-04-01T17:21:04+08:00","user_id":130,"sender_name":"布尔","micropost_id":605},{"id":1318,"content":"[[布尔]]回复了您的消息：换个号","reciver_types":0,"sender_avatar_url":"\/avatars\/teachers\/2014-03\/teacher_75_2.jpg","reciver_id":158,"created_at":"2014-04-01T16:55:02+08:00","user_id":130,"sender_name":"布尔","micropost_id":605},{"id":1314,"content":"[[布尔]]回复了您的消息：将卡卡卡","reciver_types":0,"sender_avatar_url":"\/avatars\/teachers\/2014-03\/teacher_75_2.jpg","reciver_id":158,"created_at":"2014-04-01T16:52:15+08:00","user_id":130,"sender_name":"布尔","micropost_id":605},{"id":1304,"content":"[[wm]]回复了您的消息：qqqqqq","reciver_types":1,"sender_avatar_url":"\/avatars\/students\/2014-04\/student_92.jpg","reciver_id":161,"created_at":"2014-04-01T16:29:01+08:00","user_id":130,"sender_name":"wm","micropost_id":605},{"id":1302,"content":"[[wm]]回复了您的消息：ggggw","reciver_types":1,"sender_avatar_url":"\/avatars\/students\/2014-04\/student_92.jpg","reciver_id":161,"created_at":"2014-04-01T16:28:09+08:00","user_id":130,"sender_name":"wm","micropost_id":605},{"id":1300,"content":"[[charles]]回复了您的消息：hhhhh","reciver_types":1,"sender_avatar_url":"\/assets\/default_avater.jpg","reciver_id":163,"created_at":"2014-04-01T16:26:12+08:00","user_id":130,"sender_name":"charles","micropost_id":605},{"id":1298,"content":"[[charles]]回复了您的消息：ghhjj","reciver_types":1,"sender_avatar_url":"\/assets\/default_avater.jpg","reciver_id":163,"created_at":"2014-04-01T16:24:58+08:00","user_id":130,"sender_name":"charles","micropost_id":605}]
 				JSONArray jsonarray = jsonobject.getJSONArray("messages");
 				for (int i = 0; i < jsonarray.length(); i++) {
+					Log.i("aaa",  "getNewsJson----"+i);
 					JSONObject jsonobject2 = jsonarray.getJSONObject(i);
 					List<String> liststr = divisionStr(jsonobject2
-							.getString("content"));
+							.getString("content"));Log.i("aaa",  "getNewsJson----"+i);
 					String jsonstatus = liststr.get(0);
 					String content = liststr.get(1);
 
 					String created_at = divisionTime(jsonobject2
 							.getString("created_at"));
 					String id = jsonobject2.getString("id");
+					
 					String micropost_id = jsonobject2.getString("micropost_id");
 					String reciver_id = jsonobject2.getString("reciver_id");
 					String reciver_types = jsonobject2
@@ -164,6 +194,7 @@ IXListViewListener, Urlinterface, OnGestureListener {
 					replyList.add(new Reply(id, micropost_id, user_id,
 							reciver_id, reciver_types, sender_avatar_url,
 							sender_name, jsonstatus, content, created_at));
+					
 				}
 				return replyList.size();
 			} else {
@@ -176,62 +207,88 @@ IXListViewListener, Urlinterface, OnGestureListener {
 		return 0;
 	}
 
-	// 请求获取和我相关的消息
-	public void get_News() {
-		Thread thread = new Thread() {
-			public void run() {
-				Log.i("3", "get_News()");
-				if (ExerciseBookTool.isConnect(ReplyListViewActivity.this)) {
-					try {
-						httpGetNews(user_id, school_class_id);
-						if (json.length()==0) {
-						}else {
-							getNewsJson(json);
-							handler1.sendEmptyMessage(0);
+	/*
+	 * 获得第一页信息
+	 */
+	class get_news implements Runnable {
+		public void run() {
+			try {
+				HashMap<String, String> mp = new HashMap<String, String>();
+				mp.put("user_id", user_id);
+				mp.put("school_class_id", school_class_id);
+				mp.put("page", "1");
+				String json = ExerciseBookTool.sendGETRequest(
+						Urlinterface.get_News, mp);
 
-						}
-					} catch (Exception e) {
-						handler1.sendEmptyMessage(1);
-					}
-				}
+				Message msg = new Message();// 创建Message 对象
+				msg.what = 0;
+				msg.obj = json;
+				handler1.sendMessage(msg);
+			} catch (Exception e) {
+				onLoad();
+				handler1.sendEmptyMessage(1);
 			}
-		};
-		thread.start();
+		}
 	}
 
-	// HTTP请求
-	public String httpGetNews(String user_id, String school_class_id) {
-		try {
-			HashMap<String, String> mp = new HashMap<String, String>();
-			mp.put("user_id", user_id);
-			mp.put("school_class_id", school_class_id);
-			mp.put("page", page);
-			json = ExerciseBookTool.sendGETRequest(Urlinterface.get_News, mp);
-			return json;
-		} catch (Exception e) {
-			handler1.sendEmptyMessage(1);
+	/*
+	 * 获得 更多 信息
+	 */
+	class get_news2 implements Runnable {
+		public void run() {
+			try {
+				Log.i("aaa",  "get_news2");
+				HashMap<String, String> mp = new HashMap<String, String>();
+				mp.put("user_id", user_id);
+				mp.put("school_class_id", school_class_id);
+				mp.put("page", page + "");
+				String json = ExerciseBookTool.sendGETRequest(
+						Urlinterface.get_News, mp);
+
+				Message msg = new Message();// 创建Message 对象
+				msg.what = 4;
+				msg.obj = json;
+				handler1.sendMessage(msg);
+			} catch (Exception e) {
+				onLoad();
+				handler1.sendEmptyMessage(1);
+			}
 		}
-		return null;
 	}
+
 	// 分割content
 	public List<String> divisionStr(String str) {
-		//"content":"[[ding]]回复了您的消息：;||;we we"
+		// "content":"[[ding]]回复了您的消息：;||;we we"
+//"content":"[[ding]]回复了您的消息：沃尔沃","reciver_types":0,"sender_avatar_url":"\/avatars\/students\/2014-04\/student_17.jpg","reciver_id":115,"created_at":"2014-04-01T16:57:20+08:00","user_id":130,"sender_name":"ding","micropost_id":604}
 		List<String> list = new ArrayList<String>();
 		int temp1 = str.indexOf("[[");
 		int temp2 = str.indexOf("]]");
 		int temp3 = str.indexOf("消息：");
-		list.add(str.substring(temp2 + 2, temp3+2));
-		list.add(str.substring(temp3 + 7, str.length()));
+//		String st1 = str.substring(temp3 + 3, temp3 + 7);
+//		list.add(str.substring(temp2 + 2, temp3 + 2));
+//		if (";||;".equals(st1)) {
+//		list.add(str.substring(temp3 + 7, str.length()));
+//	} else {
+//		list.add(str.substring(temp3 + 3, str.length()));
+//	}
+		String st1 = str.substring(temp3 + 3, temp3 + 4);
+		list.add(str.substring(temp2 +5, temp3 + 2));
+		if (";".equals(st1)) {
+			list.add(str.substring(temp3 + 7, str.length()));
+		} else {
+			list.add(str.substring(temp3 + 3, str.length()));
+		}
+
 		return list;
 	}
 
-
 	// 分割时间
 	public String divisionTime(String timeStr) {
+		timeStr = timeStr.replace("-", "/");
 		int temp1 = timeStr.indexOf("T");
 		int temp2 = timeStr.lastIndexOf("+");
 		return timeStr.substring(0, temp1) + " "
-		+ timeStr.substring(temp1 + 1, temp2);
+				+ timeStr.substring(temp1 + 1, temp2);
 	}
 
 	private void onLoad() {
@@ -242,64 +299,40 @@ IXListViewListener, Urlinterface, OnGestureListener {
 
 	@Override
 	public void onRefresh() {
-		Thread thread = new Thread() {
-			public void run() {
-				start = ++refreshCnt;
-				SharedPreferences userInfo = getSharedPreferences("replyMenu",
-						0);
-				Editor editor = userInfo.edit();// 获取编辑器
-				editor.putBoolean("ReplyMenu", true);
-				editor.commit();
-				page = "1";
-				get_News();
-//				mListView.setAdapter(new ReplyAdapter());
-				onLoad();
-			}
-		};
+	
+//		SharedPreferences userInfo = getSharedPreferences("replyMenu", 0);
+//		Editor editor = userInfo.edit();// 获取编辑器
+//		editor.putBoolean("ReplyMenu", true);
+//		editor.commit();
+		page = 1;
 		if (ExerciseBookTool.isConnect(ReplyListViewActivity.this)) {
-			replyList = new ArrayList<Reply>();
+
+			Thread thread = new Thread(new get_news());
 			thread.start();
+
 		} else {
 			handler1.sendEmptyMessage(1);
-			mListView.stopRefresh();
+			onLoad();
 		}
 	}
 
 	@Override
 	public void onLoadMore() {
-//		Thread thread = new Thread() {
-//			@Override
-//			public void run() {
-//				int num = Integer.valueOf(page);
-//				num++;
-//				page = String.valueOf(num);
-//				get_News();
-////				
-//				onLoad();
-//			}
-//		};
-//		if (ExerciseBookTool.isConnect(ReplyListViewActivity.this)) {
-//			thread.start();
-//		} else {
-//			handler1.sendEmptyMessage(1);
-//			mListView.stopLoadMore();
-//		}
-		
-		mHandler.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				int num = Integer.valueOf(page);
-				num++;
-				page = String.valueOf(num);
-				get_News();
-//				mListView.setAdapter(madapter);
-				onLoad();
-			}
-		}, 2000);
+
+		Log.i("aaa",  "onLoadMore（）");
+		if (ExerciseBookTool.isConnect(ReplyListViewActivity.this)) {
+			page = page + 1;
+			Log.i("aaa",  "onLoadMore（）--page："+page);
+			Thread thread = new Thread(new get_news2());
+			thread.start();
+
+		} else {
+			handler1.sendEmptyMessage(1);
+			onLoad();
+		}
+
 	}
 
-	
-	
 	public static class ViewHolder {
 		public HorizontalScrollView hSView;
 		public ImageView use_face;
@@ -453,17 +486,19 @@ IXListViewListener, Urlinterface, OnGestureListener {
 				holder.hSView.scrollTo(0, 0);
 			}
 			if (replyList.get(position).getSender_avatar_url().length() > 4) {
-//				ExerciseBookTool.set_background(Urlinterface.IP
-//						+ replyList.get(position).getSender_avatar_url(),
-//						holder.use_face);
-				String url = IP +replyList.get(position).getSender_avatar_url();
+				// ExerciseBookTool.set_background(Urlinterface.IP
+				// + replyList.get(position).getSender_avatar_url(),
+				// holder.use_face);
+				String url = IP
+						+ replyList.get(position).getSender_avatar_url();
 				// ExerciseBookTool.set_background(url, face);
 				Bitmap result = memoryCache.getBitmapFromCache(url);
 				if (result == null) {
 					ExerciseBookTool.set_bk(url, holder.use_face, memoryCache);
 				} else {
 
-					holder.use_face.setImageDrawable(new BitmapDrawable(result));
+					holder.use_face
+							.setImageDrawable(new BitmapDrawable(result));
 				}
 			}
 			holder.imgbtn1.setOnClickListener(new OnClickListener() {
