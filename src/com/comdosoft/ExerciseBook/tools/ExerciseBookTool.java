@@ -15,6 +15,7 @@ import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -67,6 +68,13 @@ public class ExerciseBookTool implements Urlinterface {
 	private static int connectTimeOut = 5000;
 	private static int readTimeOut = 10000;
 	private static String requestEncoding = "UTF-8";
+
+	public static String getTimeIng() {// 获取当前时间
+		SimpleDateFormat sDateFormat = new SimpleDateFormat(
+				"yyyy-MM-dd hh:mm:ss");
+		String date = sDateFormat.format(new java.util.Date());
+		return date;
+	}
 
 	public static String del_tag(String str) {// 去除HTML标签
 		Pattern p_html = Pattern.compile("<[^>]+>", Pattern.CASE_INSENSITIVE);
@@ -130,8 +138,8 @@ public class ExerciseBookTool implements Urlinterface {
 			if (!file.exists()) {
 				file.createNewFile();
 				Log.i("linshi", path + "/answer.json");
-				AnswerJson answer = new AnswerJson(id, "0", propList,
-						new AnswerPojo("0", "", "-1", "-1", "0",
+				AnswerJson answer = new AnswerJson(id, "0", getTimeIng(),
+						propList, new AnswerPojo("0", "", "-1", "-1", "0",
 								new ArrayList<Answer_QuestionsPojo>()),
 						new AnswerPojo("0", "", "-1", "-1", "0",
 								new ArrayList<Answer_QuestionsPojo>()),

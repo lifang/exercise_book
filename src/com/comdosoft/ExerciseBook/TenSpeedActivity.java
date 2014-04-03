@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.TimerTask;
 
 import org.json.JSONArray;
@@ -52,8 +51,6 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 	private int branch_item;
 	private int status;
 	private boolean Check = false;
-	private int True_number;
-	private int Time_number;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -113,8 +110,6 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 		}
 		handler.sendEmptyMessage(1);
 
-		True_number = eb.getTrue_number();
-		Time_number = eb.getTime_number();
 	}
 
 	// 初始化
@@ -209,7 +204,7 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 			int id) {
 		int type = 0;
 		AnswerJson answerJson = gson.fromJson(answer_history, AnswerJson.class);
-		answerJson.time_limit.setUpdate_time("2014-03-12 08:00:00");
+		answerJson.time_limit.setUpdate_time(ExerciseBookTool.getTimeIng());
 		int q_item = Integer.valueOf(answerJson.time_limit.getQuestions_item());
 		int b_item = Integer.valueOf(answerJson.time_limit.getBranch_item());
 
@@ -307,7 +302,7 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 			break;
 		// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
 		case R.id.base_propTrue:
-			if (True_number > 0) {// 判断显示答案的道具数量是否大于0
+			if (eb.getTrue_number() > 0) {// 判断显示答案的道具数量是否大于0
 				if (branch_questions.get(index).getOpption()[0]
 						.equals(branch_questions.get(index).getAnwser())) {
 					one_btn.setBackgroundResource(R.drawable.loginbtn_lv);
@@ -328,7 +323,7 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 			break;
 		case R.id.base_propTime:
 			// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
-			if (Time_number > 0) {
+			if (eb.getTime_number() > 0) {
 				PropJson(1, branch_questions.get(index).getId());
 			} else {
 				Toast.makeText(TenSpeedActivity.this,

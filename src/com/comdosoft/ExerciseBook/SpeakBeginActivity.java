@@ -77,8 +77,6 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 	private AnswerJson answerJson;
 	private String specified_time;
 	private int qid;
-	private int True_number;
-	private int Time_number;
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			Intent intent = new Intent();
@@ -132,8 +130,6 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 		initialize();
 		SetTextView();
 		Display display = this.getWindowManager().getDefaultDisplay();
-		True_number = eb.getTrue_number();
-		Time_number = eb.getTime_number();
 	}
 
 	// 初始化
@@ -500,7 +496,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 
 		int type = 0;
 		answerJson = gson.fromJson(answer_history, AnswerJson.class);
-		answerJson.reading.setUpdate_time("2014-03-12 08:00:00");
+		answerJson.reading.setUpdate_time(ExerciseBookTool.getTimeIng());
 		int q_item = Integer.valueOf(answerJson.reading.getQuestions_item());
 		int b_item = Integer.valueOf(answerJson.reading.getBranch_item());
 
@@ -593,7 +589,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 			break;
 		case R.id.base_propTime:
 			// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
-			if (Time_number > 0) {
+			if (eb.getTime_number() > 0) {
 				PropJson(1, branch_questions.get(index).getId());
 			} else {
 				Toast.makeText(SpeakBeginActivity.this,
