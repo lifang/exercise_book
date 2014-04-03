@@ -318,7 +318,7 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 				}
 				Check = true;
 				setCheckText("下一个");
-				PropJson(0, branch_questions.get(index).getId(), 2);
+				PropJson(0, branch_questions.get(index).getId());
 				Toast.makeText(TenSpeedActivity.this, "使用成功!",
 						Toast.LENGTH_SHORT).show();
 			} else {
@@ -329,7 +329,7 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 		case R.id.base_propTime:
 			// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
 			if (Time_number > 0) {
-				PropJson(1, branch_questions.get(index).getId(), 2);
+				PropJson(1, branch_questions.get(index).getId());
 			} else {
 				Toast.makeText(TenSpeedActivity.this,
 						R.string.prop_number_error, Toast.LENGTH_SHORT).show();

@@ -384,12 +384,12 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		case R.id.base_propTrue:
 			if (True_number > 0) {// 判断显示答案的道具数量是否大于0
 				if (propItem < tv_list.size()) {
-					PropJson(0, cloze.getList().get(propItem).getId(), 5);// 1道具类型
-																			// --0显示答案
-																			// 1时间
-																			// ,
-																			// 2--小题id
-																			// ,3--任务类型
+					PropJson(0, cloze.getList().get(propItem).getId());// 1道具类型
+																		// --0显示答案
+																		// 1时间
+																		// ,
+																		// 2--小题id
+																		// ,3--任务类型
 					tv_list.get(propItem).setText(
 							cloze.getList().get(propItem).getAnswer());
 					tv_list.get(propItem).setTextColor(
@@ -411,11 +411,11 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		case R.id.base_propTime:
 			if (Time_number > 0) {// 判断显示答案的道具数量是否大于0
 				// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
-				PropJson(1, cloze.getList().get(propItem).getId(), 5);// 1道具类型
-																		// --0显示答案
-																		// 1时间 ,
-																		// 2--小题id
-																		// ,3--任务类型
+				PropJson(1, cloze.getList().get(propItem).getId());// 1道具类型
+																	// --0显示答案
+																	// 1时间 ,
+																	// 2--小题id
+																	// ,3--任务类型
 			} else {
 				Toast.makeText(ClozeActivity.this, R.string.prop_number_error,
 						Toast.LENGTH_SHORT).show();
