@@ -271,10 +271,13 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 					}
 				}
 			}
-		}
 
-		if (count == coordinate.size()) {
-			ratio = 100;
+			if (count == coordinate.size()) {
+				ratio = 100;
+				MyPlayer(true);
+			} else {
+				MyPlayer(false);
+			}
 		}
 
 		if (sb.length() > 0) {
@@ -283,8 +286,6 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 
 		if (type == 1) {
 			// 使用道具
-			Toast.makeText(getApplicationContext(),
-					coordinateIndex + "--" + intList.size(), 0).show();
 			if (coordinateIndex < answerList.size() / 2) {
 				Integer[] arr = intList.get(coordinateIndex++);
 				calculateCoordinate(arr);
@@ -405,7 +406,7 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 				// }
 				break;
 			case R.id.base_check_linearlayout:
-				if (amp.getStatus() == 0) {
+				if (status != 2) {
 					if (coordinate.size() == answerList.size() / 2) {
 						coordinateIndex = 0;
 						check(0);

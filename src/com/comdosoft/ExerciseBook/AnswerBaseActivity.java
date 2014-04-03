@@ -24,6 +24,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.AlphaAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -81,6 +82,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	private TextView useTimeText;
 	private TextView accuracyText;
 	private TextView base_answer_text;
+	private TextView base_time_flash;
 	private ImageView propTrue;
 	private ImageView propTime;
 	private boolean answer_boolean = false;
@@ -153,6 +155,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		accuracyText = (TextView) findViewById(R.id.base_accuracyText);
 		useTimeText = (TextView) findViewById(R.id.base_useTimeText);
 		base_answer_text = (TextView) findViewById(R.id.base_answer_text);
+		base_time_flash = (TextView) findViewById(R.id.base_timeFlash);
 
 		Intent intent = getIntent();
 		json = intent.getStringExtra("json");
@@ -220,6 +223,14 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		}
 	}
 
+	public void startTimeFlash() {
+		base_time_flash.setVisibility(View.VISIBLE);
+		AlphaAnimation myAnimation_Alpha = new AlphaAnimation(1.0f, 0.0f);
+		myAnimation_Alpha.setFillAfter(true);
+		myAnimation_Alpha.setDuration(1000);
+		base_time_flash.startAnimation(myAnimation_Alpha);
+	}
+
 	// 获取时间(秒)
 	public int getUseTime() {
 		return second;
@@ -265,13 +276,13 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 
 	// 时间道具使用完
 	public void setTimePropEnd() {
-		propTime.setImageResource(R.drawable.base_prop4);
+		propTime.setImageResource(R.drawable.base_prop3);
 		propTime.setClickable(false);
 	}
 
 	// 正确道具使用完
 	public void setTruePropEnd() {
-		propTrue.setImageResource(R.drawable.base_prop3);
+		propTrue.setImageResource(R.drawable.base_prop4);
 		propTrue.setClickable(false);
 	}
 
@@ -340,6 +351,17 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		switch (v.getId()) {
 		case R.id.base_back_linearlayout:
 			close();
+			break;
+		case R.id.base_propTime:
+			if (true) {
+				setUseTime(second - 5 < 0 ? 0 : second - 5);
+				startTimeFlash();
+				// PropJson(1, mQuestList.get(mQindex).get(mBindex)
+				// .getBranch_questions_id(), mQuestionType);
+			}
+			break;
+		case R.id.base_propTrue:
+
 			break;
 		}
 	}
@@ -462,6 +484,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		if (status == 0) {
 			prodialog.show();
 			index = 1;
+			setPause();
 			setWork_Status();
 			Finish_Json();
 		} else {
