@@ -29,6 +29,7 @@ public class OpenInputMethod_size8 extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);// 去掉标题栏
 		setContentView(R.layout.inputmethod);
 		exerciseBook = (ExerciseBook) getApplication();
+		exerciseBook.getActivityList().add(this);
 		edittext = (EditText) findViewById(R.id.edittext);
 		queding = (Button) findViewById(R.id.queding);
 		queding.setOnClickListener(listener);

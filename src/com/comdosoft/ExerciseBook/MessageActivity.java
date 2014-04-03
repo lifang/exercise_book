@@ -177,7 +177,7 @@ IXListViewListener, Urlinterface, OnGestureListener {
 					JSONObject jsonobject2 = jsonarray.getJSONObject(i);
 
 					String content = jsonobject2.getString("content");
-					String created_at = divisionTime(jsonobject2
+					String created_at = ExerciseBookTool.divisionTime2(jsonobject2
 							.getString("created_at"));
 					String id = jsonobject2.getString("id");
 					String class_id = jsonobject2.getString("student_id");
@@ -245,14 +245,7 @@ IXListViewListener, Urlinterface, OnGestureListener {
 		}
 	}
 
-	// 分割时间
-	public String divisionTime(String timeStr) {
-		timeStr = timeStr.replace("-", "/");
-		int temp1 = timeStr.indexOf("T");
-		int temp2 = timeStr.lastIndexOf("+");
-		return timeStr.substring(0, temp1) + " "
-		+ timeStr.substring(temp1 + 1, temp2);
-	}
+
 
 	private void onLoad() {
 		mListView.stopRefresh();

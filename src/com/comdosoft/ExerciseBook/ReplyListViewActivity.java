@@ -178,7 +178,7 @@ public class ReplyListViewActivity extends Table_TabHost implements
 					String jsonstatus = liststr.get(0);
 					String content = liststr.get(1);
 
-					String created_at = divisionTime(jsonobject2
+					String created_at = ExerciseBookTool.divisionTime2(jsonobject2
 							.getString("created_at"));
 					String id = jsonobject2.getString("id");
 					
@@ -282,14 +282,7 @@ public class ReplyListViewActivity extends Table_TabHost implements
 		return list;
 	}
 
-	// 分割时间
-	public String divisionTime(String timeStr) {
-		timeStr = timeStr.replace("-", "/");
-		int temp1 = timeStr.indexOf("T");
-		int temp2 = timeStr.lastIndexOf("+");
-		return timeStr.substring(0, temp1) + " "
-				+ timeStr.substring(temp1 + 1, temp2);
-	}
+
 
 	private void onLoad() {
 		mListView.stopRefresh();
