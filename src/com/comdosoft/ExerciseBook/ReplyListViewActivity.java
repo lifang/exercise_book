@@ -9,8 +9,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -131,7 +134,12 @@ public class ReplyListViewActivity extends Table_TabHost implements
 					getNewsJson(json_all2);
 				}
 				int a = replyList.size();
-				mListView.setAdapter(madapter);
+				if (a==0) {
+					Toast.makeText(ReplyListViewActivity.this, "暂无任何通知",
+							Toast.LENGTH_SHORT).show();
+				}else {
+					mListView.setAdapter(madapter);
+				}
 				onLoad();
 
 				break;
@@ -139,13 +147,12 @@ public class ReplyListViewActivity extends Table_TabHost implements
 				Toast.makeText(ReplyListViewActivity.this, "未开启网络",
 						Toast.LENGTH_SHORT).show();
 				break;
-			case 2:
-//				mListView.setAdapter(new ReplyAdapter());
+			case 3:
+				prodialog.dismiss();
+//				madapter.notifyDataSetChanged();
+				mListView.setAdapter(madapter);
 				Toast.makeText(ReplyListViewActivity.this,
 						String.valueOf(msg.obj), Toast.LENGTH_SHORT).show();
-				break;
-			case 3:
-				madapter.notifyDataSetChanged();
 				break;
 			case 4:
 				final String json4 = (String) msg.obj;
@@ -408,6 +415,13 @@ public class ReplyListViewActivity extends Table_TabHost implements
 				convertView = inflater.inflate(R.layout.reply_layout_iteam,
 						null);
 				holder = new ViewHolder();
+				View vew = convertView.findViewById(R.id.child_user_left);
+
+				if (position % 2 == 0) {
+					vew.setBackgroundResource(R.color.before_click);
+				} else {
+					vew.setBackgroundResource(R.color.huse);
+				}
 				holder.hSView = (HorizontalScrollView) convertView
 						.findViewById(R.id.hsv2);
 
@@ -426,13 +440,7 @@ public class ReplyListViewActivity extends Table_TabHost implements
 				holder.imgbtn2 = (ImageView) convertView
 						.findViewById(R.id.child_micropost_delete);
 				holder.ll_action2 = convertView.findViewById(R.id.ll_action2);
-				View vew = convertView.findViewById(R.id.child_user_left);
-
-				if (position % 2 == 0) {
-					vew.setBackgroundResource(R.color.before_click);
-				} else {
-					vew.setBackgroundResource(R.color.huse);
-				}
+				
 				convertView.setTag(holder);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
@@ -506,37 +514,31 @@ public class ReplyListViewActivity extends Table_TabHost implements
 			});
 			holder.imgbtn2.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
-					Thread thread = new Thread() {
-						public void run() {
-							try {
-								HashMap<String, String> mp = new HashMap<String, String>();
-								mp.put("user_id", user_id);
-								mp.put("school_class_id", school_class_id);
-								mp.put("message_id", replyList.get(position)
-										.getId());
-								String json = ExerciseBookTool.sendGETRequest(
-										delete_message, mp);
-								JSONObject jsonobject = new JSONObject(json);
-								String notice = jsonobject.getString("notice");
-								if (jsonobject.getString("status").equals(
-										"success")) {
-									replyList.remove(position);
-								}
-								Message msg = new Message();
-								msg.obj = notice;
-								msg.what = 2;
-								handler1.sendMessage(msg);
-							} catch (JSONException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							} catch (Exception e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
+					
+					Dialog dialog = new AlertDialog.Builder(
+							ReplyListViewActivity.this)
+							.setTitle("提示")
+							.setMessage("您确认要删除么?")
+							.setPositiveButton("确认",
+									new DialogInterface.OnClickListener() {
+										@Override
+										public void onClick(DialogInterface dialog,
+												int which) {
+											del(position);
+										}
+									})
+							.setNegativeButton("取消",
+									new DialogInterface.OnClickListener() {
 
-						}
-					};
-					thread.start();
+										@Override
+										public void onClick(DialogInterface dialog,
+												int which) {
+											dialog.dismiss();
+										}
+									}).create();
+					dialog.show();
+					
+					
 				}
 			});
 			holder.sender.setText(replyList.get(position).getSender_name());
@@ -545,6 +547,49 @@ public class ReplyListViewActivity extends Table_TabHost implements
 			holder.date.setText(replyList.get(position).getCreated_at());
 
 			return convertView;
+		}
+		public void del(final int position){
+			
+			
+			Thread thread = new Thread() {
+				public void run() {
+					try {
+						HashMap<String, String> mp = new HashMap<String, String>();
+						mp.put("user_id", user_id);
+						mp.put("school_class_id", school_class_id);
+						mp.put("message_id", replyList.get(position)
+								.getId());
+						String json = ExerciseBookTool.sendGETRequest(
+								delete_message, mp);
+						JSONObject jsonobject = new JSONObject(json);
+						String notice = jsonobject.getString("notice");
+						if (jsonobject.getString("status").equals(
+								"success")) {
+							replyList.remove(position);
+						}
+						Message msg = new Message();
+						msg.obj = notice;
+						msg.what = 3;
+						handler1.sendMessage(msg);
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+				}
+			};
+			if (ExerciseBookTool.isConnect(ReplyListViewActivity.this)) {
+				prodialog = new ProgressDialog(ReplyListViewActivity.this);
+				prodialog.setMessage("正在删除消息");
+				prodialog.setCanceledOnTouchOutside(false);
+				prodialog.show();
+			thread.start();	
+			}else {
+				handler1.sendEmptyMessage(1);
+			}
 		}
 
 	}
