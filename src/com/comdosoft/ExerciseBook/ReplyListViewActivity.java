@@ -420,16 +420,11 @@ IXListViewListener, Urlinterface, OnGestureListener {
 				holder.hSView.scrollTo(0, 0);
 			}
 			if (replyList.get(position).getSender_avatar_url().length() > 4) {
-//				ExerciseBookTool.set_background(Urlinterface.IP
-//						+ replyList.get(position).getSender_avatar_url(),
-//						holder.use_face);
 				String url = IP +replyList.get(position).getSender_avatar_url();
-				// ExerciseBookTool.set_background(url, face);
 				Bitmap result = memoryCache.getBitmapFromCache(url);
 				if (result == null) {
 					ExerciseBookTool.set_bk(url, holder.use_face, memoryCache);
 				} else {
-
 					holder.use_face.setImageDrawable(new BitmapDrawable(result));
 				}
 			}

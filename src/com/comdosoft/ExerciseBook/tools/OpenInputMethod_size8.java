@@ -34,34 +34,34 @@ public class OpenInputMethod_size8 extends Activity {
 		queding.setOnClickListener(listener);
 		hasnum = (TextView) findViewById(R.id.tv_num);
 		hasnum.setText(num + "");
-		 hasnum.setText(" 剩余 " + num+" 字" );
+		hasnum.setText(" 剩余 " + num+" 字" );
 		edittext.addTextChangedListener(new TextWatcher() {
-			  private CharSequence temp;
-			  private int selectionStart;
-			  private int selectionEnd;
-			  public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-			  }
+			private CharSequence temp;
+			private int selectionStart;
+			private int selectionEnd;
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
 
-			  public void onTextChanged(CharSequence s, int start, int before, int count) {
-			   temp = s;
-			  }
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				temp = s;
+			}
 
-			  public void afterTextChanged(Editable s) {
-			   int number = num - s.length();
-			   hasnum.setText(" 剩余 " + number+" 字" );
-			   selectionStart = edittext.getSelectionStart();
-			   selectionEnd = edittext.getSelectionEnd();
-			   if (temp.length() > num) {
-			    s.delete(selectionStart - 1, selectionEnd);
-			    int tempSelection = selectionEnd;
-			    edittext.setText(s);
-			    edittext.setSelection(tempSelection);//设置光标在最后
-			   }
-			  }
-			 });
+			public void afterTextChanged(Editable s) {
+				int number = num - s.length();
+				hasnum.setText(" 剩余 " + number+" 字" );
+				selectionStart = edittext.getSelectionStart();
+				selectionEnd = edittext.getSelectionEnd();
+				if (temp.length() > num) {
+					s.delete(selectionStart - 1, selectionEnd);
+					int tempSelection = selectionEnd;
+					edittext.setText(s);
+					edittext.setSelection(tempSelection);//设置光标在最后
+				}
+			}
+		});
 	}
 
-	
+
 	private View.OnClickListener listener = new View.OnClickListener() {
 
 		@Override

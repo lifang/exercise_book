@@ -11,10 +11,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
@@ -27,8 +32,10 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.AccelerateInterpolator;
@@ -40,7 +47,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import cn.jpush.android.api.JPushInterface;
 
 import com.comdosoft.ExerciseBook.pojo.knowledges_card;
@@ -95,8 +101,8 @@ Serializable {
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
 		width = getWindowManager().getDefaultDisplay().getWidth();
-		student_id = preferences.getString("id", "73");
-		school_class_id = preferences.getString("school_class_id", "85");
+		student_id = preferences.getString("id", "70");
+		school_class_id = preferences.getString("school_class_id", "109");
 		mediaplay = new MediaPlayer();
 		eb.getActivityList().add(this);
 		initbtn();
@@ -165,6 +171,7 @@ Serializable {
 					showdialog();
 					Thread thread = new Thread() {
 						String json;
+
 						public void run() {
 							try {
 								viewPager = (ViewPager) findViewById(R.id.guidePages);
@@ -231,51 +238,33 @@ Serializable {
 				allsize = jsonarray.length();
 				for (int i = 0; i < jsonarray.length(); i++) {
 					JSONObject jsonobject2 = jsonarray.getJSONObject(i);
-					String answer = jsonobject2.getString("answer");
+					String id = jsonobject2.getString("id");
+					String card_bag_id = jsonobject2.getString("card_bag_id");
+					String mistake_types = jsonobject2
+							.getString("mistake_types");
 					String branch_question_id = jsonobject2
 							.getString("branch_question_id");
-					String card_bag_id = jsonobject2.getString("card_bag_id");
+					String your_answer = jsonobject2.getString("your_answer");
+					String created_at = jsonobject2.getString("created_at");
+					String updated_at = jsonobject2.getString("updated_at");
+					String content = jsonobject2.getString("content");
+					String question_id = jsonobject2.getString("question_id");
+					String resource_url = jsonobject2.getString("resource_url");
+					String types = jsonobject2.getString("types");
+					String answer = jsonobject2.getString("answer");
+					String options = jsonobject2.getString("options");
+					String full_text = jsonobject2.getString("full_text");
 					JSONArray tagsarray = jsonobject2
 							.getJSONArray("card_tags_id");
 					List<Integer> intlist = new ArrayList<Integer>();
 					for (int j = 0; j < tagsarray.length(); j++) {
 						intlist.add(tagsarray.getInt(j));
 					}
-					String content = jsonobject2.getString("content");
-					String created_at = jsonobject2.getString("created_at");
-					String full_text;
-					if (jsonobject2.getString("full_text").equals(null)) {
-						full_text = "";
-					} else {
-						full_text = jsonobject2.getString("full_text");
-					}
-					String id = jsonobject2.getString("id");
-					String mistake_types = jsonobject2
-							.getString("mistake_types");
-					String options;
-					if (jsonobject2.getString("options").equals(null)) {
-						options = "";
-					} else {
-						options = jsonobject2.getString("options");
-					}
-					String question_id = jsonobject2.getString("question_id");
-					String resource_ur = jsonobject2.getString("resource_url");
-
-					String types;
-					if (jsonobject2.getString("types").equals(null)) {
-						types = "";
-					} else {
-						types = jsonobject2.getString("types");
-					}
-					String updated_at = jsonobject2.getString("updated_at");
-					String your_answer = jsonobject2.getString("your_answer");
-
-					cardList.add(new knowledges_card(answer,
-							branch_question_id, card_bag_id, content,
-							created_at, full_text, id, mistake_types, options,
-							question_id, resource_ur, types, updated_at,
-							your_answer, intlist));
-
+					cardList.add(new knowledges_card(id, card_bag_id,
+							mistake_types, branch_question_id, your_answer,
+							created_at, updated_at, content, question_id,
+							resource_url, types, answer, options, full_text,
+							intlist));
 					if ((i + 1) % 4 == 0) {
 						count1++;
 						Allmap.put(count1, cardList);
@@ -294,8 +283,6 @@ Serializable {
 					String id = jsonobject2.getString("id");
 					String name = jsonobject2.getString("name");
 					String update_at = jsonobject2.getString("updated_at");
-					Log.i("3", card_bag_id + "!" + created_at + "!" + id + "!"
-							+ name + "!" + update_at);
 					tagsList.add(new tags(card_bag_id, created_at, id, name,
 							update_at));
 				}
@@ -323,43 +310,43 @@ Serializable {
 						Toast.LENGTH_SHORT).show();
 				break;
 			case 1:
-				page=0;
+				page = 0;
 				setViewPager();
 				progressDialog.dismiss();
-				GuidePageAdapter gpa=new GuidePageAdapter();
+				GuidePageAdapter gpa = new GuidePageAdapter();
 				viewPager.setAdapter(gpa);
 				viewPager
 				.setOnPageChangeListener(new GuidePageChangeListener());
 				break;
 			case 2:
 				setViewPager();
-				viewPager.setCurrentItem(page+1);
+
+				Log.i("asd"," page:"+ page);
 				viewPager.setAdapter(new GuidePageAdapter());
+				viewPager.setCurrentItem(page);
 				viewPager
 				.setOnPageChangeListener(new GuidePageChangeListener());
 				break;
-			case 3:
-				page=0;
-				setViewPager();
-				GuidePageAdapter gpa1=new GuidePageAdapter();
-				viewPager.setAdapter(gpa1);
-				viewPager
-				.setOnPageChangeListener(new GuidePageChangeListener());
-				break;
+				// case 3:
+				// page = 0;
+				// setViewPager();
+				// GuidePageAdapter gpa1 = new GuidePageAdapter();
+				// viewPager.setAdapter(gpa1);
+				// viewPager
+				// .setOnPageChangeListener(new GuidePageChangeListener());
+				// break;
 			default:
 				break;
 			}
 		}
 	};
 
-	@SuppressWarnings("unused")
 	public void setViewPager() {
 		group = (ViewGroup) findViewById(R.id.viewGroup);
 		viewPager = (ViewPager) findViewById(R.id.guidePages);
 		FontCard = new HashMap<Integer, List<View>>();
 		viewList = new ArrayList<View>();
 		int pageCount = Allmap.size();
-		//		ListBool = new Boolean[pageCount][4];
 		PageBool = new Boolean[pageCount][4];
 		inflater2 = LayoutInflater.from(this);
 		imageViews = new ImageView[Allmap.size()];
@@ -445,22 +432,66 @@ Serializable {
 		}
 	}
 
-	
-	//TYPES_NAME = {0 => "听力", 1 => "朗读",  2 => "十速挑战", 3 => "选择", 4 => "连线", 5 => "完型填空", 6 => "排序"}
-	//根据错误类型，分割 content
-	public String checkAns(String str)
-	{
+	// TYPES_NAME = {0 => "听力", 1 => "朗读", 2 => "十速挑战", 3 => "选择", 4 => "连线", 5
+	// => "完型填空", 6 => "排序"}
+	// 根据错误类型，卡包正面分割 content
+	public String checkAns(String str, int types) {
 		String content = null;
-		String[] strarr=str.split(";||;");
-		for(int i=0;i<strarr.length;i++)
-		{
-			content+=strarr[i]+" ";
+		String[] strarr;
+		switch (types) {
+		case 0:
+			if (str.indexOf(";||;") != -1) {
+				strarr = str.split(";\\|\\|;");
+				for (int i = 0; i < strarr.length - 1; i++) {
+					content += strarr[i] + " ";
+				}
+				content = content.substring(4, content.length());
+			} else {
+				content = str.substring(0, str.lastIndexOf(";&&;"));
+			}
+			Log.i("asd", "正面听力case0:" + content);
+			return content;
+		case 1:
+			return str;
+		case 2:
+			return str;
+		case 3:
+			return str;
+			// if ((str.indexOf(".mp3") != -1) || (str.indexOf(".amr") != -1)
+			// || (str.indexOf(".wav") != -1)) {
+			// str = "";
+			// return str;
+			// } else if ((str.indexOf(".png") != -1)
+			// || (str.indexOf(".jpg") != -1)) {
+			// str = str.substring(
+			// (str.lastIndexOf("</file>") + "</file>".length()),
+			// str.length());
+			// return str;
+			// } else {
+			// return str;
+			// }
+		case 4:
+			strarr = str.split("  ");
+			for (int i = 0; i < strarr.length; i++) {
+				String[] strarr1 = strarr[i].split(" ");
+				for (int j = 0; j < strarr1.length; j++) {
+					content += strarr1[j] + " ";
+				}
+				content += "\n";
+			}
+			return content.substring(4, content.length());
+		case 5:
+			return str;
+		case 6:
+			strarr = str.split(" ");
+			for (int i = 0; i < strarr.length; i++) {
+				content += strarr[i] + " ";
+			}
+			return content.substring(4, content.length());
 		}
-		Log.i("asd", content);
-		return content.substring(0, content.lastIndexOf(";&&;"));
-		
+		return null;
 	}
-	
+
 	public void oneClick() {
 		for (int i = 0; i < FontCard.size(); i++) {
 			for (int j = 0; j < FontCard.get(i).size(); j++) {
@@ -476,21 +507,55 @@ Serializable {
 			}
 		}
 	}
-	public String setWrong(String miskatype)
-	{
+
+	public String setWrong(String miskatype) {
 		switch (Integer.valueOf(miskatype)) {
 		case 1:
 			return "读错";
 		case 2:
-			return "写错";
+			return "拼错";
 		case 3:
 			return "选错";
 		default:
 			break;
 		}
 		return null;
-		
 	}
+	// TYPES_NAME = {0 => "听力", 1 => "朗读", 2 => "十速挑战", 3 => "选择", 4 => "连线", 5
+	// => "完型填空", 6 => "排序"}
+	// 背面
+	public String setback(String str, int types) {
+		String content = null;
+		String[] strarr;
+		switch (types) {
+		case 0:
+			return str;
+		case 1:
+			return str;
+		case 2:
+			return str;
+		case 4:
+			strarr = str.split("  ");
+			for (int i = 0; i < strarr.length; i++) {
+				String[] strarr1 = strarr[i].split(" ");
+				for (int j = 0; j < strarr1.length; j++) {
+					content += strarr1[j] + " ";
+				}
+				content += "\n";
+			}
+			return content.substring(4, content.length());
+		case 5:
+			break;
+		}
+		return str;
+	}
+	//完形填空
+	public void settypes5(String full_text,String options)
+	{
+		String[] arrs=options.split(";\\|\\|;");
+		full_text.split("");
+	}
+
 	public void setFontCard(ViewGroup v1, final knowledges_card card,
 			final int index, final int page) {
 		TextView reson = null;
@@ -501,6 +566,7 @@ Serializable {
 		TextView rightanswers;
 		ViewGroup v = v1;
 		TextView bqtv;
+		ImageView rightIv;
 		if (PageBool[page][index]) {
 			bqtv = (TextView) v.findViewById(R.id.bqtv);
 			Ok: for (int i = 0; i < tagsList.size(); i++) {
@@ -518,15 +584,17 @@ Serializable {
 			fontIv = (ImageView) v.findViewById(R.id.fontIv);
 			rightanswer = (TextView) v.findViewById(R.id.rightanswer);
 			youranswer = (TextView) v.findViewById(R.id.answer);
-			reson.setText(setWrong(card.getMistake_types()));
-			wronganswer.setText(card.getYour_answer());
-			if (card.getAnswer().equals(null)) {
+			reson.setText(setWrong(card.getMistake_types())); // 错误类型
+			if (card.getTypes().equals("0") || card.getTypes().equals("1")
+					|| card.getTypes().equals("4")) {
 				rightanswer.setVisibility(View.GONE);
 				youranswer.setVisibility(View.GONE);
 			} else {
 				rightanswer.setText("正确答案");
 				youranswer.setText(card.getAnswer());
 			}
+			wronganswer.setText(checkAns(card.getYour_answer(), // 你的错误
+					Integer.valueOf(card.getTypes())));
 			fontIv.setOnClickListener(new OnClickListener() {
 				public void onClick(View arg0) {
 					Intent intent = new Intent(MCardBagActivity.this,
@@ -549,14 +617,47 @@ Serializable {
 			rightanswers = (TextView) v.findViewById(R.id.rightanswerb);
 			cardbatread = (ImageView) v.findViewById(R.id.cardbatread);
 			cardbatdel = (ImageView) v.findViewById(R.id.cardbatdel);
-			if (card.getResource_url().equals(""))
-				cardbatread.setVisibility(View.GONE);
+			rightIv = (ImageView) v.findViewById(R.id.rightIv);
+			String playerIP = IP + card.getResource_url();
 			reson.setText("原题:");
-			rightanswers.setText(card.getContent());
+			rightanswers.setText(setback(card.getContent(),
+					Integer.valueOf(card.getTypes())));
+			if (card.getTypes().equals("3")) {
+				if ((card.getContent().indexOf(".mp3") != -1)
+						|| (card.getContent().indexOf(".amr") != -1)
+						|| (card.getContent().indexOf(".wav") != -1)) {
+					playerIP = IP
+							+ card.getContent().substring("<file>".length(),
+									card.getContent().lastIndexOf("</file>"));
+				} else if ((card.getContent().indexOf(".png") != -1)
+						|| (card.getContent().indexOf(".jpg") != -1)) {
+					rightIv.setVisibility(View.VISIBLE);
+					String url = IP
+							+ card.getContent().substring("<file>".length(),
+									card.getContent().lastIndexOf("</file>"));
+					Bitmap result = memoryCache.getBitmapFromCache(url);
+					if (result == null) {
+						ExerciseBookTool.set_bk(url, rightIv, memoryCache);
+					} else {
+						rightIv.setImageDrawable(new BitmapDrawable(result));
+					}
+					cardbatread.setVisibility(View.GONE);
+				}
+				rightanswers.setText(card.getContent().substring(
+						card.getContent().lastIndexOf("</file>")
+						+ "</file>".length(),
+						card.getContent().length())
+						+ setback(card.getOptions(),
+								Integer.valueOf(card.getTypes())));
+			} else if (card.getResource_url().equals(""))
+				cardbatread.setVisibility(View.GONE);
+			final String IP2 = playerIP;
+			
 			cardbatread.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
 					try {
-						mediaplay.setDataSource(IP + card.getResource_url());
+						Log.i("3", IP2);
+						mediaplay.setDataSource(IP2);
 						mediaplay.prepare();
 						mediaplay.start();
 						mediaplay
@@ -578,34 +679,72 @@ Serializable {
 			});
 			cardbatdel.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
-					Thread thread = new Thread() {
-						public void run() {
-							try {
-								Map<String, String> map = new HashMap<String, String>();
-								map.put("knowledges_card_id", card.getId());
-								String json = ExerciseBookTool.sendGETRequest(
-										delete_knowledges_card, map);
-								JSONObject jsonobj = new JSONObject(json);
-								String notice = jsonobj.getString("notice");
-								Message msg = new Message();
-								if (jsonobj.getString("status").equals(
-										"success")) {
-									Allmap.get(page + 1).remove(index);
-									if (Allmap.get(page + 1).size() == 0) {
-										Allmap.remove(page + 1);
+					Dialog dialog = new AlertDialog.Builder(
+							MCardBagActivity.this)
+					.setTitle("提示")
+					.setMessage("您确认要删除么?")
+					.setPositiveButton("确认",
+							new DialogInterface.OnClickListener() {
+						public void onClick(
+								DialogInterface dialog,
+								int which) {
+							Thread thread = new Thread() {
+								public void run() {
+									try {
+										Map<String, String> map = new HashMap<String, String>();
+										map.put("knowledges_card_id",
+												card.getId());
+										String json = ExerciseBookTool
+												.sendGETRequest(
+														delete_knowledges_card,
+														map);
+										JSONObject jsonobj = new JSONObject(
+												json);
+										String notice = jsonobj
+												.getString("notice");
+										Message msg = new Message();
+										if (jsonobj
+												.getString(
+														"status")
+														.equals("success")) {
+											Map<String, String> map1 = new HashMap<String, String>();
+											map1.put(
+													"student_id",
+													student_id);
+											map1.put(
+													"school_class_id",
+													school_class_id);
+											json = ExerciseBookTool
+													.sendGETRequest(
+															get_knowledges_card,
+															map1);
+											parsejson(json,
+													false);
+											handler.sendEmptyMessage(2);
+										} else {
+											msg.what = 0;
+											msg.obj = notice;
+											handler.sendMessage(msg);
+										}
+									} catch (Exception e) {
+										e.printStackTrace();
 									}
-									handler.sendEmptyMessage(2);
-								} else {
-									msg.what = 0;
-									msg.obj = notice;
-									handler.sendMessage(msg);
 								}
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
+
+							};
+							thread.start();
 						}
-					};
-					thread.start();
+					})
+					.setNegativeButton("取消",
+							new DialogInterface.OnClickListener() {
+						public void onClick(
+								DialogInterface dialog,
+								int which) {
+							dialog.dismiss();
+						}
+					}).create();
+					dialog.show();
+
 				}
 			});
 		}
@@ -650,18 +789,15 @@ Serializable {
 	}
 
 	private class GuidePageChangeListener implements OnPageChangeListener {
-
-		@Override
 		public void onPageScrollStateChanged(int arg0) {
 		}
 
-		@Override
 		public void onPageScrolled(int arg0, float arg1, int arg2) {
 		}
 
-		@Override
 		public void onPageSelected(int arg0) {
 			page = arg0;
+			Log.i("asd", "pageseke:"+page);
 			for (int i = 0; i < imageViews.length; i++) {
 				imageViews[arg0]
 						.setBackgroundResource(R.drawable.page_indicator);
@@ -695,7 +831,9 @@ Serializable {
 		// 动画结束
 		public void onAnimationEnd(Animation animation) {
 			List<View> fontlist = FontCard.get(page);
-			mediaplay.stop();
+			if (mediaplay.isPlaying()) {
+				mediaplay.stop();
+			}
 			List<knowledges_card> cardl = Allmap.get(page + 1);
 			Log.i("3", "page:" + page + "mindex:" + mindex + "FontCard:"
 					+ FontCard.get(page).size());
