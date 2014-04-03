@@ -77,7 +77,8 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 	private AnswerJson answerJson;
 	private String specified_time;
 	private int qid;
-	private Map<Integer, Integer> prop_number;
+	private int True_number;
+	private int Time_number;
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			Intent intent = new Intent();
@@ -131,7 +132,8 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 		initialize();
 		SetTextView();
 		Display display = this.getWindowManager().getDefaultDisplay();
-		prop_number = eb.getProp_number();
+		True_number = eb.getTrue_number();
+		Time_number = eb.getTime_number();
 	}
 
 	// 初始化
@@ -591,7 +593,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 			break;
 		case R.id.base_propTime:
 			// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
-			if (prop_number.get(1) > 0) {
+			if (Time_number > 0) {
 				PropJson(1, branch_questions.get(index).getId(), 2);
 			} else {
 				Toast.makeText(SpeakBeginActivity.this,

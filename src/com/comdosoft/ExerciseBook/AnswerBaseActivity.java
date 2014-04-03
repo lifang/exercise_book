@@ -655,8 +655,11 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 			if (utime < 0) {
 				utime = 0;
 			}
+			eb.setTime_number(eb.getTime_number() - 1);
 			setUseTime(utime);
 			getAnswerPojo().setUse_time(utime + "");
+		} else {
+			eb.setTrue_number(eb.getTrue_number() - 1);
 		}
 		answerJson.props.get(type).getBranch_id().add(branch_id);
 		String str = gson.toJson(answerJson);

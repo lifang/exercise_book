@@ -263,7 +263,9 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 				JSONObject obj = new JSONObject(json);
 				if (obj.getString("status").equals("success")) {
 					work_list = WorkJson.json(json);
-					eb.setProp_number(WorkJson.getProp(json));
+					int[] number = WorkJson.getProp(json);
+					eb.setTrue_number(number[0]);
+					eb.setTime_number(number[1]);
 					if (work_list.size() != 0) {
 						eb.setWork_number(work_list.get(0).getQuestion_types()
 								.size());

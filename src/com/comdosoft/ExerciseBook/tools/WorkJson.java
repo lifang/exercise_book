@@ -60,8 +60,8 @@ public class WorkJson {
 		return work_list;
 	}
 
-	public static Map<Integer, Integer> getProp(String json) {
-		Map<Integer, Integer> prop_map = new HashMap<Integer, Integer>();
+	public static int[] getProp(String json) {
+		int[] number = new int[] { 0, 0 };
 		JSONObject obj;
 		try {
 			obj = new JSONObject(json);
@@ -69,12 +69,12 @@ public class WorkJson {
 			if (arr.length() != 0) {
 				for (int j = 0; j < arr.length(); j++) {
 					JSONObject item = arr.getJSONObject(j);
-					prop_map.put(item.getInt("types"), item.getInt("number"));
+					number[item.getInt("types")] = item.getInt("number");
 				}
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		return prop_map;
+		return number;
 	}
 }

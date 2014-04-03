@@ -52,7 +52,8 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 	private int branch_item;
 	private int status;
 	private boolean Check = false;
-	private Map<Integer, Integer> prop_number;
+	private int True_number;
+	private int Time_number;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -112,10 +113,8 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 		}
 		handler.sendEmptyMessage(1);
 
-		prop_number = eb.getProp_number();
-		for (int i = 0; i < prop_number.size(); i++) {
-			Log.i("suanfa", prop_number.get(i) + "-道具数量");
-		}
+		True_number = eb.getTrue_number();
+		Time_number = eb.getTime_number();
 	}
 
 	// 初始化
@@ -308,7 +307,7 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 			break;
 		// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
 		case R.id.base_propTrue:
-			if (prop_number.get(0) > 0) {// 判断显示答案的道具数量是否大于0
+			if (True_number > 0) {// 判断显示答案的道具数量是否大于0
 				if (branch_questions.get(index).getOpption()[0]
 						.equals(branch_questions.get(index).getAnwser())) {
 					one_btn.setBackgroundResource(R.drawable.loginbtn_lv);
@@ -329,7 +328,7 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 			break;
 		case R.id.base_propTime:
 			// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
-			if (prop_number.get(1) > 0) {
+			if (Time_number > 0) {
 				PropJson(1, branch_questions.get(index).getId(), 2);
 			} else {
 				Toast.makeText(TenSpeedActivity.this,

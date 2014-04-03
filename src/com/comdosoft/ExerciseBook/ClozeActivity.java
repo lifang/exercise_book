@@ -41,6 +41,7 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.MyspinnerAdapter;
 import com.comdosoft.ExerciseBook.tools.PredicateLayout;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
+import com.comdosoft.ExerciseBook.tools.WorkJson;
 import com.google.gson.Gson;
 
 public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
@@ -67,8 +68,9 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 	private List<TextView> tv_list;
 	private boolean Check = false;
 	private PopupWindow popupWindow;
-	private Map<Integer, Integer> prop_number;
 	private static final String regEx_html = "<[^>]+>";
+	private int True_number;
+	private int Time_number;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -109,7 +111,8 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 
 		SetJson(json);
 		SetAnswer();
-		prop_number = eb.getProp_number();
+		True_number = eb.getTrue_number();
+		Time_number = eb.getTime_number();
 	}
 
 	private void SetAnswer() {
@@ -333,7 +336,6 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 	}
 
 	public void onClick(View v) {
-		Intent intent = new Intent();
 		switch (v.getId()) {
 		case R.id.base_back_linearlayout:
 			super.onClick(v);
@@ -380,7 +382,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 			break;
 
 		case R.id.base_propTrue:
-			if (prop_number.get(0) > 0) {// 判断显示答案的道具数量是否大于0
+			if (True_number > 0) {// 判断显示答案的道具数量是否大于0
 				if (propItem < tv_list.size()) {
 					PropJson(0, cloze.getList().get(propItem).getId(), 5);// 1道具类型
 																			// --0显示答案
@@ -407,7 +409,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 			}
 			break;
 		case R.id.base_propTime:
-			if (prop_number.get(1) > 0) {// 判断显示答案的道具数量是否大于0
+			if (Time_number > 0) {// 判断显示答案的道具数量是否大于0
 				// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
 				PropJson(1, cloze.getList().get(propItem).getId(), 5);// 1道具类型
 																		// --0显示答案
