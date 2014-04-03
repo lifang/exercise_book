@@ -58,17 +58,19 @@
                 android:text="0"
                 android:textColor="#ffffff"
                 android:textSize="24dp" />
-
-            <TextView
-                android:id="@+id/base_timeFlash"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="-5"
-                android:textColor="#ffffff"
-                android:textSize="36dp"
-                android:visibility="gone" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/base_timeFlash"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="2dp"
+            android:layout_toRightOf="@id/base_time_linearlayout"
+            android:text="-5"
+            android:textColor="#fcdc06"
+            android:textSize="30dp"
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/base_history_linearlayout"

@@ -18,8 +18,11 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -112,17 +115,6 @@ IXListViewListener, Urlinterface, OnGestureListener {
 	Handler handler1 = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
-//			case 0:
-//				mListView.setAdapter(madapter);
-//				break;
-//			case 1:
-//				Toast.makeText(getApplicationContext(), "未开启网络",
-//						Toast.LENGTH_SHORT).show();
-//				break;
-//			case 2:
-//				mListView.setAdapter(new ReplyAdapter());
-//				Toast.makeText(MessageActivity.this, String.valueOf(msg.obj), Toast.LENGTH_SHORT).show();
-//				break;
 			case 0:
 				prodialog.dismiss();
 				final String json_all2 = (String) msg.obj;
@@ -133,7 +125,13 @@ IXListViewListener, Urlinterface, OnGestureListener {
 					getNewsJson(json_all2);
 				}
 				int a = replyList.size();
-				mListView.setAdapter(madapter);
+				if (a==0) {
+					Toast.makeText(MessageActivity.this, "暂无任何通知",
+							Toast.LENGTH_SHORT).show();
+				}else {
+					mListView.setAdapter(madapter);
+				}
+				
 				onLoad();
 
 				break;
@@ -141,13 +139,12 @@ IXListViewListener, Urlinterface, OnGestureListener {
 				Toast.makeText(MessageActivity.this, "未开启网络",
 						Toast.LENGTH_SHORT).show();
 				break;
-			case 2:
-//				mListView.setAdapter(new ReplyAdapter());
+			case 3:
+				prodialog.dismiss();
+//				madapter.notifyDataSetChanged();
+				mListView.setAdapter(madapter);
 				Toast.makeText(MessageActivity.this,
 						String.valueOf(msg.obj), Toast.LENGTH_SHORT).show();
-				break;
-			case 3:
-				madapter.notifyDataSetChanged();
 				break;
 			case 4:
 				final String json4 = (String) msg.obj;
@@ -183,6 +180,7 @@ IXListViewListener, Urlinterface, OnGestureListener {
 					String class_id = jsonobject2.getString("student_id");
 					replyList.add(new SysMessage(content, created_at, id,
 							class_id));
+				
 				}
 				return replyList.size();
 			} else {
@@ -321,6 +319,13 @@ IXListViewListener, Urlinterface, OnGestureListener {
 			if (convertView == null) {
 				convertView = inflater.inflate(R.layout.message_layout_iteam,
 						null);
+				View vew = convertView.findViewById(R.id.child_user_left);
+
+				if (position % 2 == 0) {
+					vew.setBackgroundResource(R.color.before_click);
+				} else {
+					vew.setBackgroundResource(R.color.huse);
+				}
 				holder = new ViewHolder();
 				holder.hSView = (HorizontalScrollView) convertView
 						.findViewById(R.id.hsv2);
@@ -331,13 +336,7 @@ IXListViewListener, Urlinterface, OnGestureListener {
 				holder.imgbtn2 = (ImageView) convertView
 						.findViewById(R.id.child_micropost_delete);
 				holder.ll_action2 = convertView.findViewById(R.id.ll_action2);
-				View vew = convertView.findViewById(R.id.child_user_left);
-
-				if (position % 2 == 0) {
-					vew.setBackgroundResource(R.color.before_click);
-				} else {
-					vew.setBackgroundResource(R.color.huse);
-				}
+				
 				convertView.setTag(holder);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
@@ -345,53 +344,35 @@ IXListViewListener, Urlinterface, OnGestureListener {
 			holder.imgbtn2.setOnClickListener(new OnClickListener() {
 
 				public void onClick(View v) {
-					if (ExerciseBookTool.isConnect(MessageActivity.this)) {
+					
+					Dialog dialog = new AlertDialog.Builder(
+							MessageActivity.this)
+							.setTitle("提示")
+							.setMessage("您确认要删除么?")
+							.setPositiveButton("确认",
+									new DialogInterface.OnClickListener() {
+										@Override
+										public void onClick(DialogInterface dialog,
+												int which) {
+											del(position);
+										}
+									})
+							.setNegativeButton("取消",
+									new DialogInterface.OnClickListener() {
 
-						Thread thread = new Thread() {
-							public void run() {
-								try {
-									HashMap<String, String> mp = new HashMap<String, String>();
-									mp.put("user_id", user_id);
-									mp.put("sys_message_id",
-											replyList.get(position).getId());
-									mp.put("school_class_id",
-											replyList.get(position)
-											.getClass_id());
-									String json = ExerciseBookTool
-											.doPost(Urlinterface.delete_sys_message,
-													mp);
-									JSONObject jsonobejct = new JSONObject(json);
-									String status = jsonobejct
-											.getString("status");
-									String notice = jsonobejct
-											.getString("notice");
-									if (status.equals("success")) {
-										Toast.makeText(getApplicationContext(),
-												notice, Toast.LENGTH_SHORT)
-												.show();
-										replyList.remove(position);
-										madapter.notifyDataSetChanged();
-									} else {
-										Toast.makeText(getApplicationContext(),
-												notice, Toast.LENGTH_SHORT)
-												.show();
-									}
-									Message msg=new Message();
-									msg.obj=notice;
-									msg.what=2;
-									handler1.sendMessage(msg);
-								} catch (Exception e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-							}
-						};
-						thread.start();
-					}
+										@Override
+										public void onClick(DialogInterface dialog,
+												int which) {
+											dialog.dismiss();
+										}
+									}).create();
+					dialog.show();
+					
 				}
 
 			});
 
+			
 			convertView.setOnTouchListener(new View.OnTouchListener() {
 				final int showPosition = position;
 
@@ -435,6 +416,53 @@ IXListViewListener, Urlinterface, OnGestureListener {
 			holder.content.setText(replyList.get(position).getContent());
 			holder.date.setText(replyList.get(position).getCreated_at());
 			return convertView;
+		}
+		
+		
+		
+
+		public void del(final int position){
+			
+			
+			Thread thread = new Thread() {
+				public void run() {
+					try {
+						HashMap<String, String> mp = new HashMap<String, String>();
+						mp.put("user_id", user_id);
+						mp.put("sys_message_id",
+								replyList.get(position).getId());
+						mp.put("school_class_id",school_class_id);
+						String json = ExerciseBookTool
+								.doPost(Urlinterface.delete_sys_message,
+										mp);
+						JSONObject jsonobejct;
+						jsonobejct = new JSONObject(json);
+						String status = jsonobejct.getString("status");
+						String notice = jsonobejct.getString("notice");
+						if (status.equals("success")) {
+							replyList.remove(position);
+							
+						} 
+						Message msg=new Message();
+						msg.obj=notice;
+						msg.what=3;
+						handler1.sendMessage(msg);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			};
+			if (ExerciseBookTool.isConnect(MessageActivity.this)) {
+				prodialog = new ProgressDialog(MessageActivity.this);
+				prodialog.setMessage("正在删除消息");
+				prodialog.setCanceledOnTouchOutside(false);
+				prodialog.show();
+			thread.start();	
+			}else {
+				handler1.sendEmptyMessage(1);
+			}
+			
 		}
 
 	}

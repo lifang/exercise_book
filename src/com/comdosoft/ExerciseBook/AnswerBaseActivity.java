@@ -138,7 +138,6 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		super.setContentView(R.layout.answer_base);
 		eb = (ExerciseBook) getApplication();
 		findViewById(R.id.base_back_linearlayout).setOnClickListener(this);
-		findViewById(R.id.base_propTime).setOnClickListener(this);
 		player = new MediaPlayer();
 		prodialog = new ProgressDialog(AnswerBaseActivity.this);
 		prodialog.setMessage("正在保存作业");
@@ -156,6 +155,8 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		useTimeText = (TextView) findViewById(R.id.base_useTimeText);
 		base_answer_text = (TextView) findViewById(R.id.base_answer_text);
 		base_time_flash = (TextView) findViewById(R.id.base_timeFlash);
+		propTrue.setOnClickListener(this);
+		propTime.setOnClickListener(this);
 
 		Intent intent = getIntent();
 		json = intent.getStringExtra("json");
@@ -192,6 +193,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 				nextRecord();
 			}
 		}
+
 	}
 
 	public void setTimeGone() {
@@ -353,15 +355,21 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 			close();
 			break;
 		case R.id.base_propTime:
-			if (true) {
-				setUseTime(second - 5 < 0 ? 0 : second - 5);
-				startTimeFlash();
-				// PropJson(1, mQuestList.get(mQindex).get(mBindex)
-				// .getBranch_questions_id(), mQuestionType);
+			if (eb.getTime_number() > 0) {
+				PropJson(1, mQuestList.get(mQindex).get(mBindex)
+						.getBranch_questions_id());
+			} else {
+				Toast.makeText(getApplicationContext(), "道具数量不足!", 0).show();
 			}
 			break;
 		case R.id.base_propTrue:
-
+			if (eb.getTrue_number() > 0) {
+				rightAnswer();
+				PropJson(0, mQuestList.get(mQindex).get(mBindex)
+						.getBranch_questions_id());
+			} else {
+				Toast.makeText(getApplicationContext(), "道具数量不足!", 0).show();
+			}
 			break;
 		}
 	}
@@ -477,6 +485,9 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 
 	// 子类实现父类刷新视图方法
 	public void updateView() {
+	}
+
+	public void rightAnswer() {
 	}
 
 	// 通关界面
@@ -673,16 +684,14 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		if (type == 1) {// 减时卡
 			Toast.makeText(AnswerBaseActivity.this, "成功使用减时卡减去5秒时间！",
 					Toast.LENGTH_SHORT).show();
-			int utime = getUseTime() - 5;
-			if (utime < 0) {
-				utime = 0;
-			}
+			setUseTime(second - 5 < 0 ? 0 : second - 5);
+			startTimeFlash();
+			getAnswerPojo().setUse_time(getUseTime() + "");
 			eb.setTime_number(eb.getTime_number() - 1);
-			setUseTime(utime);
-			getAnswerPojo().setUse_time(utime + "");
 		} else {
 			eb.setTrue_number(eb.getTrue_number() - 1);
 		}
+		Log.i("Ax", "type-bid:" + type + "--" + branch_id);
 		answerJson.props.get(type).getBranch_id().add(branch_id);
 		String str = gson.toJson(answerJson);
 		try {
