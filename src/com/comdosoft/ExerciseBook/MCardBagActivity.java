@@ -10,6 +10,7 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -29,6 +30,7 @@ import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -98,9 +100,9 @@ Serializable {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.cardbag);
 		eb = (ExerciseBook) getApplication();
+		width = getWindowManager().getDefaultDisplay().getWidth();
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
-		width = getWindowManager().getDefaultDisplay().getWidth();
 		student_id = preferences.getString("id", "70");
 		school_class_id = preferences.getString("school_class_id", "109");
 		mediaplay = new MediaPlayer();
@@ -432,10 +434,10 @@ Serializable {
 		case 0:
 			if (str.indexOf(";||;") != -1) {
 				strarr = str.split(";\\|\\|;");
-				for (int i = 0; i < strarr.length - 1; i++) {
+				for (int i = 0; i < strarr.length ; i++) {
 					content += strarr[i] + " ";
 				}
-				content = content.substring(4, content.length());
+				content = content.substring(4, content.length()-5);
 			} else {
 				content = str.substring(0, str.lastIndexOf(";&&;"));
 			}
@@ -447,19 +449,6 @@ Serializable {
 			return str;
 		case 3:
 			return str;
-			// if ((str.indexOf(".mp3") != -1) || (str.indexOf(".amr") != -1)
-			// || (str.indexOf(".wav") != -1)) {
-			// str = "";
-			// return str;
-			// } else if ((str.indexOf(".png") != -1)
-			// || (str.indexOf(".jpg") != -1)) {
-			// str = str.substring(
-			// (str.lastIndexOf("</file>") + "</file>".length()),
-			// str.length());
-			// return str;
-			// } else {
-			// return str;
-			// }
 		case 4:
 			strarr = str.split("  ");
 			for (int i = 0; i < strarr.length; i++) {
@@ -533,25 +522,34 @@ Serializable {
 			}
 			return content.substring(4, content.length());
 		case 4:
-			strarr = str.split("  ");
+			strarr = str.split(";\\|\\|;");
 			for (int i = 0; i < strarr.length; i++) {
-				String[] strarr1 = strarr[i].split(" ");
+				String[] strarr1 = strarr[i].split("<=>");
 				for (int j = 0; j < strarr1.length; j++) {
 					content += strarr1[j] + " ";
 				}
 				content += "\n";
 			}
 			return content.substring(4, content.length());
-		case 5:
-			break;
+		case 6:
+			return str;
 		}
 		return str;
 	}
 
 	// 完形填空
 	public void settypes5(String full_text, String options) {
+		String content = null;
 		String[] arrs = options.split(";\\|\\|;");
-		full_text.split("");
+		full_text=ExerciseBookTool.del_tag(full_text);
+		String[] textarr=full_text.split("[[sign]]");
+		for(int i=0;i<textarr.length;i++)
+		{
+			content+=textarr[i];
+			for (int j = 0; j < arrs.length; j++) {
+				content+=(Html.fromHtml("<u>"+arrs[j]+"</u>"));
+			}
+		}
 	}
 
 	public void setFontCard(ViewGroup v1, final knowledges_card card,
@@ -595,6 +593,7 @@ Serializable {
 					Integer.valueOf(card.getTypes())));
 			fontIv.setOnClickListener(new OnClickListener() {
 				public void onClick(View arg0) {
+					Log.i("asd", "page:"+page+"index:"+index);
 					Intent intent = new Intent(MCardBagActivity.this,
 							MCardTag.class);
 					Bundle mBundle = new Bundle();
@@ -662,12 +661,14 @@ Serializable {
 				}
 			} else if (card.getResource_url().equals(""))
 				cardbatread.setVisibility(View.GONE);
-
+			if(card.getTypes().equals("5"))
+			{
+				settypes5(card.getFull_text(), card.getOptions());
+			}
 			final String IP2 = playerIP;
 			cardbatread.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
 					try {
-						Log.i("3", IP2);
 						mediaplay.setDataSource(IP2);
 						mediaplay.prepare();
 						mediaplay.start();

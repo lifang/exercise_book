@@ -147,15 +147,10 @@ IXListViewListener, Urlinterface, OnGestureListener {
 				Toast.makeText(ReplyListViewActivity.this, "未开启网络",
 						Toast.LENGTH_SHORT).show();
 				break;
-<<<<<<< HEAD
-			case 2:
-				//				mListView.setAdapter(new ReplyAdapter());
-=======
 			case 3:
 				prodialog.dismiss();
 //				madapter.notifyDataSetChanged();
 				mListView.setAdapter(madapter);
->>>>>>> efcea7b7ab486edbdeaba7ff35d097c531bfe500
 				Toast.makeText(ReplyListViewActivity.this,
 						String.valueOf(msg.obj), Toast.LENGTH_SHORT).show();
 				break;
