@@ -1,7 +1,9 @@
 package com.comdosoft.ExerciseBook.tools;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -9,10 +11,7 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
-import com.comdosoft.ExerciseBook.pojo.PropNumberPojo;
-import com.comdosoft.ExerciseBook.pojo.PropPojo;
 import com.comdosoft.ExerciseBook.pojo.WorkPoJo;
-import com.google.gson.JsonObject;
 
 public class WorkJson {
 
@@ -37,16 +36,18 @@ public class WorkJson {
 						finish_list.add(finish_arr.getInt(j));
 					}
 				}
+				Log.i("aaa", 1 + "");
 				String startstr = item.getString("start_time");
-				startstr = ExerciseBookTool.divisionTime(startstr);
+//				startstr = ExerciseBookTool.divisionTime(startstr);
 				String endstr = item.getString("end_time");
-				endstr = ExerciseBookTool.divisionTime(endstr);
+//				endstr = ExerciseBookTool.divisionTime(endstr);
+				Log.i("aaa", 2 + "");
 				int number;
 				if (obj.get("knowledges_cards_count").equals(JSONObject.NULL)) {
-					Log.i("aaa", 1 + "");
+					Log.i("aaa", 4 + "");
 					number = 0;
 				} else {
-					Log.i("aaa", 2 + "");
+					Log.i("aaa", 5 + "");
 					number = obj.getInt("knowledges_cards_count");
 				}
 				WorkPoJo work = new WorkPoJo(item.getInt("id"),
@@ -61,22 +62,26 @@ public class WorkJson {
 		return work_list;
 	}
 
-	public static List<PropNumberPojo> getProp(String json) {
-		List<PropNumberPojo> prop_list = new ArrayList<PropNumberPojo>();
+	public static Map<Integer, Integer> getProp(String json) {
+		Map<Integer, Integer> number = new HashMap<Integer, Integer>();
+		number.put(0, 0);
+		number.put(1, 0);
+		Log.i("suanfa", 1 + "");
 		JSONObject obj;
 		try {
 			obj = new JSONObject(json);
 			JSONArray arr = obj.getJSONArray("props");
+			Log.i("suanfa", 2 + "");
 			if (arr.length() != 0) {
 				for (int j = 0; j < arr.length(); j++) {
 					JSONObject item = arr.getJSONObject(j);
-					PropNumberPojo prop = new PropNumberPojo(item.getInt("types"), item.getInt("number"));
-					prop_list.add(prop);
+					number.put(item.getInt("types"), item.getInt("number"));
 				}
 			}
+			Log.i("suanfa", 3 + "");
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		return prop_list;
+		return number;
 	}
 }

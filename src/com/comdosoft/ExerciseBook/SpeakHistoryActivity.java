@@ -155,7 +155,7 @@ public class SpeakHistoryActivity extends AnswerBaseActivity implements
 	}
 
 	public void SetUserSelect() {
-		StringBuffer sb = new StringBuffer("需要多度的词：");
+		StringBuffer sb = new StringBuffer("需要多读的词：");
 		if (!error_str.equals("")) {
 			String[] arr = error_str.split(";\\|\\|;");
 			if (arr.length > 0) {

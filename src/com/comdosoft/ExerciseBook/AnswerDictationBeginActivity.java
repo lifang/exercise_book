@@ -23,17 +23,22 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import com.comdosoft.ExerciseBook.pojo.AnswerBasePojo;
 import com.comdosoft.ExerciseBook.pojo.DictationPojo;
+import com.comdosoft.ExerciseBook.pojo.MoveLRPojo;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Soundex_Levenshtein;
@@ -47,6 +52,7 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 	private int rightCount = 0;
 	private int linearLayoutIndex = 0;
 	private int mesLinearLayoutIndex = 0;
+	private int testIndex = 0;
 	private boolean mesFlag = false;
 	private boolean playFlag = false;
 
@@ -65,6 +71,7 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 	private List<LinearLayout> linearLayoutList = new ArrayList<LinearLayout>();
 	private List<LinearLayout> mesLinearLayoutList = new ArrayList<LinearLayout>();
 	private Map<String, Integer> errorMap = new HashMap<String, Integer>();
+	private List<MoveLRPojo> moveList = new ArrayList<MoveLRPojo>();
 
 	private LinearLayout editLinearLayout;
 	private TextView mesText;
@@ -178,6 +185,8 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 				| InputType.TYPE_TEXT_FLAG_MULTI_LINE
 				| InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
 		et.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+		et.setId(R.id.aa);
+		et.setOnTouchListener(new MyTouch(i));
 		et.setOnEditorActionListener(new OnEditorActionListener() {
 			public boolean onEditorAction(TextView v, int actionId,
 					KeyEvent event) {
@@ -237,21 +246,34 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 
 	// 半对提示
 	public void initMesView(int i) {
-		TextView et = new TextView(getApplicationContext());
+		LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+		RelativeLayout rl = (RelativeLayout) inflater.inflate(
+				R.layout.question_dictation_begin_mes_item, null);
+		RelativeLayout r = (RelativeLayout) rl
+				.findViewById(R.id.question_dictation_mes_rl);
+		TextView et = (TextView) rl.findViewById(R.id.question_item_mesText);
+		ImageView left = (ImageView) rl.findViewById(R.id.left_move);
+		ImageView right = (ImageView) rl.findViewById(R.id.right_move);
+
 		String value = dictationList.get(i).getValue();
 		String s = value.substring(value.length() - 1, value.length());
 		if (isChinesePunctuation(s.charAt(0)) || isEnglistPunctuation(s)) {
 			value = value.substring(0, value.length() - 1);
 		}
 		et.setText(value);
-		et.setWidth(value.length() * 20 + 80);
-		et.setHeight(20);
 		et.setTextSize(16);
-		et.setTextColor(Color.rgb(110, 107, 107));
-		et.setGravity(Gravity.CENTER);
-		et.setLayoutParams(etlp);
-		et.setSingleLine(true);
+
+		LayoutParams rllp = new LayoutParams(dictationList.get(i).getValue()
+				.length() * 20 + 80, LayoutParams.WRAP_CONTENT);
+		r.setLayoutParams(rllp);
+
+		left.setOnClickListener(this);
+		right.setOnClickListener(this);
+
+		right.setVisibility(View.INVISIBLE);
+		left.setVisibility(View.INVISIBLE);
 		et.setVisibility(View.INVISIBLE);
+
 		if (i == 0 || i % 4 == 0) {
 			LinearLayout linear = new LinearLayout(getApplicationContext());
 			linear.setOrientation(LinearLayout.HORIZONTAL);
@@ -260,8 +282,9 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 				mesLinearLayoutIndex++;
 			}
 		}
+		moveList.add(new MoveLRPojo(left, right));
 		tvList.add(et);
-		mesLinearLayoutList.get(mesLinearLayoutIndex).addView(et);
+		mesLinearLayoutList.get(mesLinearLayoutIndex).addView(rl);
 	}
 
 	// 判断是否英文符号
@@ -480,6 +503,82 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		}
 	}
 
+	public void move(int index, int type) {
+		int left = -1;
+		int right = -1;
+		for (int i = 0; i < etList.size(); i++) {
+			EditText et = etList.get(i);
+			if (et.getText().toString().equals("")) {
+				if (i < index) {
+					if (i > left) {
+						left = i;
+					}
+				} else if (i > index && right == -1) {
+					right = i;
+				}
+			}
+			if (i != index) {
+				moveList.get(i).getLeftMove().setVisibility(View.GONE);
+				moveList.get(i).getRightMove().setVisibility(View.GONE);
+			}
+		}
+
+		if (type == 2) {
+			if (left >= 0) {
+				moveList.get(index).getLeftMove().setVisibility(View.VISIBLE);
+			} else {
+				moveList.get(index).getLeftMove().setVisibility(View.GONE);
+			}
+			if (right >= 0) {
+				moveList.get(index).getRightMove().setVisibility(View.VISIBLE);
+			} else {
+				moveList.get(index).getRightMove().setVisibility(View.GONE);
+			}
+		}
+
+		if (type == 0) {
+			if (left >= 0) {
+				for (int i = left; i < index; i++) {
+					etList.get(i).setText(
+							etList.get(i + 1).getText().toString());
+				}
+				etList.get(index).setText("");
+			}
+		} else if (type == 1) {
+			if (right >= 0) {
+				for (int i = right; i > index; i--) {
+					etList.get(i).setText(
+							etList.get(i - 1).getText().toString());
+				}
+				etList.get(index).setText("");
+			}
+		}
+	}
+
+	class MyTouch implements OnTouchListener {
+		private int index = 0;
+
+		public MyTouch() {
+		}
+
+		public MyTouch(int index) {
+			super();
+			this.index = index;
+		}
+
+		@Override
+		public boolean onTouch(View v, MotionEvent event) {
+			switch (v.getId()) {
+			case R.id.aa:
+				testIndex = index;
+				move(index, 2);
+				break;
+			}
+			return false;
+		}
+
+	}
+
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -505,6 +604,22 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 				handler.sendEmptyMessage(1);
 				mediaPlayer.start();
 			}
+			break;
+		case R.id.left_move:
+			move(testIndex, 0);
+			moveList.get(testIndex).getLeftMove().setVisibility(View.GONE);
+			moveList.get(testIndex).getRightMove().setVisibility(View.GONE);
+			break;
+		case R.id.right_move:
+			move(testIndex, 1);
+			moveList.get(testIndex).getLeftMove().setVisibility(View.GONE);
+			moveList.get(testIndex).getRightMove().setVisibility(View.GONE);
+			break;
+		case R.id.base_propTime:
+			super.onClick(v);
+			break;
+		case R.id.base_propTrue:
+			super.onClick(v);
 			break;
 		}
 	}

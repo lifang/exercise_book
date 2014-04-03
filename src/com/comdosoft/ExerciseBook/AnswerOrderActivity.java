@@ -228,9 +228,9 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 		mAnswerStr = mAnswerStr.substring(0, mAnswerStr.length() - 1);
 		if (mAnswer.toString().equals(mSb.toString())) {
 			ratio = 100;
-			// Toast.makeText(getApplicationContext(), "true", 0).show();
+			MyPlayer(true);
 		} else {
-			// Toast.makeText(getApplicationContext(), "false", 0).show();
+			MyPlayer(false);
 		}
 	}
 

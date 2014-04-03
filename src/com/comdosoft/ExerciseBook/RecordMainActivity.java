@@ -595,6 +595,9 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 				JSONObject obj = new JSONObject(json);
 				if (obj.getString("status").equals("success")) {
 					work_list = WorkJson.json(json);
+					Map<Integer, Integer> number = WorkJson.getProp(json);
+					eb.setTrue_number(number.get(0));
+					eb.setTime_number(number.get(1));
 					for (int i = 0; i < work_list.size(); i++) {
 						String path = Environment.getExternalStorageDirectory()
 								+ "/" + "Exercisebook_app/" + eb.getUid() + "/"

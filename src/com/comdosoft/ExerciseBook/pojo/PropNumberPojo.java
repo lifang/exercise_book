@@ -1,19 +1,17 @@
 package com.comdosoft.ExerciseBook.pojo;
 
-import java.util.List;
-
 public class PropNumberPojo {
 
 	private int type;
-	private int branch_id;
+	private int number;
 
 	public PropNumberPojo() {
 	}
 
-	public PropNumberPojo(int type, int branch_id) {
+	public PropNumberPojo(int type, int number) {
 		super();
 		this.type = type;
-		this.branch_id = branch_id;
+		this.number = number;
 	}
 
 	public int getType() {
@@ -24,12 +22,11 @@ public class PropNumberPojo {
 		this.type = type;
 	}
 
-	public int getBranch_id() {
-		return branch_id;
+	public int getNumber() {
+		return number;
 	}
 
-	public void setBranch_id(int branch_id) {
-		this.branch_id = branch_id;
+	public void setNumber(int number) {
+		this.number = number;
 	}
-
 }
