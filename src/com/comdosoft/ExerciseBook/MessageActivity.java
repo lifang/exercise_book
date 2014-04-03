@@ -9,17 +9,26 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.comdosoft.ExerciseBook.ReplyListView.IXListViewListener;
+import com.comdosoft.ExerciseBook.ReplyListViewActivity.get_news;
+import com.comdosoft.ExerciseBook.ReplyListViewActivity.get_news2;
+import com.comdosoft.ExerciseBook.pojo.Reply;
 import com.comdosoft.ExerciseBook.pojo.SysMessage;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
+import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.LayoutInflater;
@@ -40,7 +49,7 @@ IXListViewListener, Urlinterface, OnGestureListener {
 	private List<SysMessage> replyList = new ArrayList<SysMessage>();;
 	private Handler mHandler;
 	private int start = 0;
-	private String page = "1";
+	private int page = 1;
 	private static int refreshCnt = 0;
 	private String student_id ;
 	private String user_id ;
@@ -55,6 +64,7 @@ IXListViewListener, Urlinterface, OnGestureListener {
 	private char flingState = FLING_CLICK;
 	private TextView topTv1;
 	private ExerciseBook exerciseBook;
+	private ProgressDialog prodialog;
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -80,7 +90,20 @@ IXListViewListener, Urlinterface, OnGestureListener {
 		});
 		exerciseBook = (ExerciseBook) getApplication();
 		exerciseBook.getActivityList().add(this);
-		get_News();
+		
+		if (ExerciseBookTool.isConnect(MessageActivity.this)) {
+			page = 1;
+			prodialog = new ProgressDialog(MessageActivity.this);
+			prodialog.setMessage(ExerciseBookParams.PD_CLASS_INFO);
+			prodialog.setCanceledOnTouchOutside(false);
+			prodialog.show();
+			Thread thread = new Thread(new get_news());
+			thread.start();
+
+		} else {
+			handler1.sendEmptyMessage(1);
+			onLoad();
+		}
 		// mListView.setPullLoadEnable(false);
 		// mListView.setPullRefreshEnable(false);
 		mListView.setXListViewListener(this);
@@ -88,31 +111,56 @@ IXListViewListener, Urlinterface, OnGestureListener {
 		mHandler = new Handler();
 	}
 
-	public void getnews() {
-		new Thread() {
-			public void run() {
-				if (ExerciseBookTool.isConnect(MessageActivity.this)) {
-					get_News();
-				} else {
-					handler1.sendEmptyMessage(1);
-				}
-			}
-		}.start();
-	}
 
 	Handler handler1 = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
+//			case 0:
+//				mListView.setAdapter(madapter);
+//				break;
+//			case 1:
+//				Toast.makeText(getApplicationContext(), "未开启网络",
+//						Toast.LENGTH_SHORT).show();
+//				break;
+//			case 2:
+//				mListView.setAdapter(new ReplyAdapter());
+//				Toast.makeText(MessageActivity.this, String.valueOf(msg.obj), Toast.LENGTH_SHORT).show();
+//				break;
 			case 0:
+				prodialog.dismiss();
+				final String json_all2 = (String) msg.obj;
+
+				if (json_all2.length() == 0) {
+				} else {
+					replyList = new ArrayList<SysMessage>();
+					getNewsJson(json_all2);
+				}
+				int a = replyList.size();
 				mListView.setAdapter(madapter);
+				onLoad();
+
 				break;
 			case 1:
-				Toast.makeText(getApplicationContext(), "未开启网络",
+				Toast.makeText(MessageActivity.this, "未开启网络",
 						Toast.LENGTH_SHORT).show();
 				break;
 			case 2:
-				mListView.setAdapter(new ReplyAdapter());
-				Toast.makeText(MessageActivity.this, String.valueOf(msg.obj), Toast.LENGTH_SHORT).show();
+//				mListView.setAdapter(new ReplyAdapter());
+				Toast.makeText(MessageActivity.this,
+						String.valueOf(msg.obj), Toast.LENGTH_SHORT).show();
+				break;
+			case 3:
+				madapter.notifyDataSetChanged();
+				break;
+			case 4:
+				final String json4 = (String) msg.obj;
+
+				if (json4.length() == 0) {
+				} else {
+					getNewsJson(json4);
+				}
+				madapter.notifyDataSetChanged();
+				onLoad();
 				break;
 			}
 		}
@@ -132,7 +180,7 @@ IXListViewListener, Urlinterface, OnGestureListener {
 					JSONObject jsonobject2 = jsonarray.getJSONObject(i);
 
 					String content = jsonobject2.getString("content");
-					String created_at = divisionTime(jsonobject2
+					String created_at = ExerciseBookTool.divisionTime2(jsonobject2
 							.getString("created_at"));
 					String id = jsonobject2.getString("id");
 					String class_id = jsonobject2.getString("student_id");
@@ -151,63 +199,56 @@ IXListViewListener, Urlinterface, OnGestureListener {
 		return 0;
 	}
 
-	// 请求获取和我相关的消息
-	public void get_News() {
-		Thread thread = new Thread() {
-			public void run() {
-				if (ExerciseBookTool.isConnect(MessageActivity.this)) {
-					try {
-						String json = httpGetNews(student_id, school_class_id);
-						if (!json.equals(null)) {
-							getNewsJson(json);
-							handler1.sendEmptyMessage(0);
-						}
-					} catch (Exception e) {
-						handler1.sendEmptyMessage(1);
-					}
 
-				}
+	/*
+	 * 获得第一页信息
+	 */
+	class get_news implements Runnable {
+		public void run() {
+			try {
+				HashMap<String, String> mp = new HashMap<String, String>();
+				mp.put("student_id", student_id);
+				mp.put("school_class_id", school_class_id);
+				mp.put("page","1" );
+				String json = ExerciseBookTool
+						.sendGETRequest(Urlinterface.get_sysmessage, mp);
+				Message msg = new Message();// 创建Message 对象
+				msg.what = 0;
+				msg.obj = json;
+				handler1.sendMessage(msg);
+			} catch (Exception e) {
+				onLoad();
+				handler1.sendEmptyMessage(1);
 			}
-
-		};
-		thread.start();
-	}
-
-	// HTTP请求
-	public String httpGetNews(String student_id, String school_class_id) {
-		try {
-			HashMap<String, String> mp = new HashMap<String, String>();
-			mp.put("student_id", student_id);
-			mp.put("school_class_id", school_class_id);
-			mp.put("page",page );
-			String json = ExerciseBookTool
-					.sendGETRequest(Urlinterface.get_sysmessage, mp);
-			return json;
-		} catch (Exception e) {
-			handler1.sendEmptyMessage(1);
 		}
-		return null;
 	}
 
-	// 分割content
-	public List<String> divisionStr(String str) {
-		//"content":"[[ding]]回复了您的消息：沃尔沃"
-		List<String> list = new ArrayList<String>();
-		int temp1 = str.indexOf("[[");
-		int temp2 = str.indexOf("]]");
-		int temp3 = str.indexOf("消息：");
-		list.add(str.substring(temp2 + 2, temp3+2));
-		list.add(str.substring(temp3 + 3, str.length()));
-		return list;
+	/*
+	 * 获得 更多 信息
+	 */
+	class get_news2 implements Runnable {
+		public void run() {
+			try {
+				Log.i("aaa",  "get_news2");
+				HashMap<String, String> mp = new HashMap<String, String>();
+				mp.put("student_id", student_id);
+				mp.put("school_class_id", school_class_id);
+				mp.put("page",page+"" );
+				String json = ExerciseBookTool
+						.sendGETRequest(Urlinterface.get_sysmessage, mp);
+
+				Message msg = new Message();// 创建Message 对象
+				msg.what = 4;
+				msg.obj = json;
+				handler1.sendMessage(msg);
+			} catch (Exception e) {
+				onLoad();
+				handler1.sendEmptyMessage(1);
+			}
+		}
 	}
 
-	// 分割时间
-	public String divisionTime(String timeStr) {
-		int temp1 = timeStr.indexOf("T");
-		int temp2 = timeStr.lastIndexOf("+");
-		return timeStr.substring(0, temp1) + " "
-		+ timeStr.substring(temp1 + 1, temp2);
-	}
+
 
 	private void onLoad() {
 		mListView.stopRefresh();
@@ -217,34 +258,32 @@ IXListViewListener, Urlinterface, OnGestureListener {
 
 	@Override
 	public void onRefresh() {
-		mHandler.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				start = ++refreshCnt;
-				replyList.clear();
-				// mAdapter.notifyDataSetChanged();
-				page = "1";
-				get_News();
-				madapter = new ReplyAdapter();
-				mListView.setAdapter(madapter);
-				onLoad();
-			}
-		}, 2000);
+		page = 1;
+		if (ExerciseBookTool.isConnect(MessageActivity.this)) {
+
+			Thread thread = new Thread(new get_news());
+			thread.start();
+
+		} else {
+			handler1.sendEmptyMessage(1);
+			onLoad();
+		}
 	}
 
 	@Override
 	public void onLoadMore() {
-		mHandler.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				int num = Integer.valueOf(page);
-				num++;
-				page = String.valueOf(num);
-				get_News();
-				mListView.setAdapter(madapter);
-				onLoad();
-			}
-		}, 2000);
+		Log.i("aaa",  "onLoadMore（）");
+		if (ExerciseBookTool.isConnect(MessageActivity.this)) {
+			page = page + 1;
+			Log.i("aaa",  "onLoadMore（）--page："+page);
+			Thread thread = new Thread(new get_news2());
+			thread.start();
+
+		} else {
+			handler1.sendEmptyMessage(1);
+			onLoad();
+		}
+
 	}
 
 	public static class ViewHolder {
@@ -309,53 +348,35 @@ IXListViewListener, Urlinterface, OnGestureListener {
 			holder.imgbtn2.setOnClickListener(new OnClickListener() {
 
 				public void onClick(View v) {
-					if (ExerciseBookTool.isConnect(MessageActivity.this)) {
+					
+					Dialog dialog = new AlertDialog.Builder(
+							MessageActivity.this)
+							.setTitle("提示")
+							.setMessage("您确认要删除么?")
+							.setPositiveButton("确认",
+									new DialogInterface.OnClickListener() {
+										@Override
+										public void onClick(DialogInterface dialog,
+												int which) {
+											del(position);
+										}
+									})
+							.setNegativeButton("取消",
+									new DialogInterface.OnClickListener() {
 
-						Thread thread = new Thread() {
-							public void run() {
-								try {
-									HashMap<String, String> mp = new HashMap<String, String>();
-									mp.put("user_id", user_id);
-									mp.put("sys_message_id",
-											replyList.get(position).getId());
-									mp.put("school_class_id",
-											replyList.get(position)
-											.getClass_id());
-									String json = ExerciseBookTool
-											.doPost(Urlinterface.delete_sys_message,
-													mp);
-									JSONObject jsonobejct = new JSONObject(json);
-									String status = jsonobejct
-											.getString("status");
-									String notice = jsonobejct
-											.getString("notice");
-									if (status.equals("success")) {
-										Toast.makeText(getApplicationContext(),
-												notice, Toast.LENGTH_SHORT)
-												.show();
-										replyList.remove(position);
-										madapter.notifyDataSetChanged();
-									} else {
-										Toast.makeText(getApplicationContext(),
-												notice, Toast.LENGTH_SHORT)
-												.show();
-									}
-									Message msg=new Message();
-									msg.obj=notice;
-									msg.what=2;
-									handler1.sendMessage(msg);
-								} catch (Exception e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-							}
-						};
-						thread.start();
-					}
+										@Override
+										public void onClick(DialogInterface dialog,
+												int which) {
+											dialog.dismiss();
+										}
+									}).create();
+					dialog.show();
+					
 				}
 
 			});
 
+			
 			convertView.setOnTouchListener(new View.OnTouchListener() {
 				final int showPosition = position;
 
@@ -399,6 +420,88 @@ IXListViewListener, Urlinterface, OnGestureListener {
 			holder.content.setText(replyList.get(position).getContent());
 			holder.date.setText(replyList.get(position).getCreated_at());
 			return convertView;
+		}
+		
+		
+		
+
+		public void del(final int position){
+			
+			final Handler mHandler = new Handler() {
+				public void handleMessage(android.os.Message msg) {
+					switch (msg.what) {
+					case 0:
+						final String json5 = (String) msg.obj;
+						prodialog.dismiss();
+						if (json5.equals("error")) {
+						} else {
+							JSONObject jsonobejct;
+							try {
+								jsonobejct = new JSONObject(json5);
+								String status = jsonobejct.getString("status");
+								String notice = jsonobejct.getString("notice");
+								if (status.equals("success")) {
+									Toast.makeText(getApplicationContext(),
+											notice, Toast.LENGTH_SHORT)
+											.show();
+									replyList.remove(position);
+									madapter.notifyDataSetChanged();
+								} else {
+									Toast.makeText(getApplicationContext(),
+											notice, Toast.LENGTH_SHORT)
+											.show();
+								}
+							} catch (JSONException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							
+							
+						}
+						break;
+					default:
+						break;
+					}
+				}
+			};
+			Thread thread = new Thread() {
+				public void run() {
+					try {
+						HashMap<String, String> mp = new HashMap<String, String>();
+						mp.put("user_id", user_id);
+						mp.put("sys_message_id",
+								replyList.get(position).getId());
+						mp.put("school_class_id",
+								replyList.get(position)
+								.getClass_id());
+						String json = ExerciseBookTool
+								.doPost(Urlinterface.delete_sys_message,
+										mp);
+						Message msg = new Message();// 创建Message 对象
+						msg.what = 0;
+						msg.obj = json;
+						mHandler.sendMessage(msg);
+						
+//						Message msg=new Message();
+//						msg.obj=notice;
+//						msg.what=2;
+//						handler1.sendMessage(msg);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			};
+			if (ExerciseBookTool.isConnect(MessageActivity.this)) {
+				prodialog = new ProgressDialog(MessageActivity.this);
+				prodialog.setMessage("正在删除消息");
+				prodialog.setCanceledOnTouchOutside(false);
+				prodialog.show();
+			thread.start();	
+			}else {
+				handler1.sendEmptyMessage(1);
+			}
+			
 		}
 
 	}

@@ -15,6 +15,7 @@ import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -67,6 +68,20 @@ public class ExerciseBookTool implements Urlinterface {
 	private static int connectTimeOut = 5000;
 	private static int readTimeOut = 10000;
 	private static String requestEncoding = "UTF-8";
+
+	public static String getTimeIng() {// 获取当前时间
+		SimpleDateFormat sDateFormat = new SimpleDateFormat(
+				"yyyy-MM-dd hh:mm:ss");
+		String date = sDateFormat.format(new java.util.Date());
+		return date;
+	}
+
+	public static String del_tag(String str) {// 去除HTML标签
+		Pattern p_html = Pattern.compile("<[^>]+>", Pattern.CASE_INSENSITIVE);
+		Matcher m_html = p_html.matcher(str);
+		String content = m_html.replaceAll(""); // 过滤html标签
+		return content;
+	}
 
 	/**
 	 * 解压一个压缩文档 到指定位置
@@ -123,8 +138,9 @@ public class ExerciseBookTool implements Urlinterface {
 			if (!file.exists()) {
 				file.createNewFile();
 				Log.i("linshi", path + "/answer.json");
-				AnswerJson answer = new AnswerJson(id, "0", propList,
-						new AnswerPojo("0", "", "-1", "-1", "0",
+				AnswerJson answer = new AnswerJson(id, "0",
+						"0000-00-00 00:00:00", propList, new AnswerPojo("0",
+								"", "-1", "-1", "0",
 								new ArrayList<Answer_QuestionsPojo>()),
 						new AnswerPojo("0", "", "-1", "-1", "0",
 								new ArrayList<Answer_QuestionsPojo>()),
@@ -336,7 +352,7 @@ public class ExerciseBookTool implements Urlinterface {
 		return stringBuilder.toString();
 	}
 
-	// 分割时间 带时分秒
+	// 分割时间 带时分秒  2014-03-21  13:14:15
 	public static String divisionTime(String timeStr) {
 		int temp1 = timeStr.indexOf("T");
 		int temp2 = timeStr.lastIndexOf("+");
@@ -628,7 +644,7 @@ public class ExerciseBookTool implements Urlinterface {
 			rd.close();
 			in.close();
 		} catch (IOException e) {
-//			Log.i("linshi", "发生异常");
+			// Log.i("linshi", "发生异常");
 			e.printStackTrace();
 		}
 		Log.i("linshi", tempLine);
@@ -829,6 +845,19 @@ public class ExerciseBookTool implements Urlinterface {
 
 		thread.start();
 
+	}
+	
+	
+	/*
+	 * 分割时间   2014/03/21  13:14:15
+	 */
+	public static String divisionTime2(String timeStr) {
+		timeStr = timeStr.replace("-", "/");
+		int temp1 = timeStr.indexOf("T");
+		int temp2 = timeStr.lastIndexOf("+");
+		String s = timeStr.substring(temp1 + 1, temp2);
+		int temp3 = s.lastIndexOf(":");
+		return timeStr.substring(0, temp1) + "  " + s.substring(0, temp3);
 	}
 
 }

@@ -320,21 +320,11 @@ Serializable {
 				break;
 			case 2:
 				setViewPager();
-
-				Log.i("asd"," page:"+ page);
 				viewPager.setAdapter(new GuidePageAdapter());
 				viewPager.setCurrentItem(page);
 				viewPager
 				.setOnPageChangeListener(new GuidePageChangeListener());
 				break;
-				// case 3:
-				// page = 0;
-				// setViewPager();
-				// GuidePageAdapter gpa1 = new GuidePageAdapter();
-				// viewPager.setAdapter(gpa1);
-				// viewPager
-				// .setOnPageChangeListener(new GuidePageChangeListener());
-				// break;
 			default:
 				break;
 			}
@@ -521,6 +511,7 @@ Serializable {
 		}
 		return null;
 	}
+
 	// TYPES_NAME = {0 => "听力", 1 => "朗读", 2 => "十速挑战", 3 => "选择", 4 => "连线", 5
 	// => "完型填空", 6 => "排序"}
 	// 背面
@@ -534,6 +525,13 @@ Serializable {
 			return str;
 		case 2:
 			return str;
+		case 3:
+			strarr=str.split(";\\|\\|;");
+			for(int i=0;i<strarr.length;i++)
+			{
+				content+=strarr[i]+"\n";
+			}
+			return content.substring(4, content.length());
 		case 4:
 			strarr = str.split("  ");
 			for (int i = 0; i < strarr.length; i++) {
@@ -549,10 +547,10 @@ Serializable {
 		}
 		return str;
 	}
-	//完形填空
-	public void settypes5(String full_text,String options)
-	{
-		String[] arrs=options.split(";\\|\\|;");
+
+	// 完形填空
+	public void settypes5(String full_text, String options) {
+		String[] arrs = options.split(";\\|\\|;");
 		full_text.split("");
 	}
 
@@ -622,37 +620,50 @@ Serializable {
 			reson.setText("原题:");
 			rightanswers.setText(setback(card.getContent(),
 					Integer.valueOf(card.getTypes())));
+			if (card.getTypes().equals("0") || card.getTypes().equals("1")
+					|| card.getTypes().equals("3")) {
+				cardbatread.setVisibility(View.GONE);
+			}
 			if (card.getTypes().equals("3")) {
-				if ((card.getContent().indexOf(".mp3") != -1)
-						|| (card.getContent().indexOf(".amr") != -1)
-						|| (card.getContent().indexOf(".wav") != -1)) {
-					playerIP = IP
-							+ card.getContent().substring("<file>".length(),
-									card.getContent().lastIndexOf("</file>"));
-				} else if ((card.getContent().indexOf(".png") != -1)
-						|| (card.getContent().indexOf(".jpg") != -1)) {
-					rightIv.setVisibility(View.VISIBLE);
-					String url = IP
-							+ card.getContent().substring("<file>".length(),
-									card.getContent().lastIndexOf("</file>"));
-					Bitmap result = memoryCache.getBitmapFromCache(url);
-					if (result == null) {
-						ExerciseBookTool.set_bk(url, rightIv, memoryCache);
-					} else {
-						rightIv.setImageDrawable(new BitmapDrawable(result));
+				if((card.getContent().indexOf("<file>") != -1))
+				{
+					if ((card.getContent().indexOf(".mp3") != -1)
+							|| (card.getContent().indexOf(".amr") != -1)
+							|| (card.getContent().indexOf(".wav") != -1)) {
+						playerIP = IP
+								+ card.getContent().substring("<file>".length(),
+										card.getContent().lastIndexOf("</file>"));
+					} else if ((card.getContent().indexOf(".png") != -1)
+							|| (card.getContent().indexOf(".jpg") != -1)) {
+						rightIv.setVisibility(View.VISIBLE);
+						String url = IP
+								+ card.getContent().substring("<file>".length(),
+										card.getContent().lastIndexOf("</file>"));
+						Bitmap result = memoryCache.getBitmapFromCache(url);
+						if (result == null) {
+							ExerciseBookTool.set_bk(url, rightIv, memoryCache);
+						} else {
+							rightIv.setImageDrawable(new BitmapDrawable(result));
+						}
+						cardbatread.setVisibility(View.GONE);
 					}
-					cardbatread.setVisibility(View.GONE);
+					rightanswers.setText(card.getContent().substring(
+							card.getContent().lastIndexOf("</file>")
+							+ "</file>".length(),
+							card.getContent().length())
+							+ setback(card.getOptions(),
+									Integer.valueOf(card.getTypes())));
 				}
-				rightanswers.setText(card.getContent().substring(
-						card.getContent().lastIndexOf("</file>")
-						+ "</file>".length(),
-						card.getContent().length())
-						+ setback(card.getOptions(),
-								Integer.valueOf(card.getTypes())));
+				else
+				{
+					rightanswers.setText(card.getContent()+"\n"+ 
+							setback(card.getOptions(),
+									Integer.valueOf(card.getTypes())));
+				}
 			} else if (card.getResource_url().equals(""))
 				cardbatread.setVisibility(View.GONE);
+
 			final String IP2 = playerIP;
-			
 			cardbatread.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
 					try {
@@ -797,7 +808,7 @@ Serializable {
 
 		public void onPageSelected(int arg0) {
 			page = arg0;
-			Log.i("asd", "pageseke:"+page);
+			Log.i("asd", "pageseke:" + page);
 			for (int i = 0; i < imageViews.length; i++) {
 				imageViews[arg0]
 						.setBackgroundResource(R.drawable.page_indicator);

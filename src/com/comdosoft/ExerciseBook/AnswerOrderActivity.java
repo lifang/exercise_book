@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.comdosoft.ExerciseBook.pojo.AnswerBasePojo;
+
 //2014年4月1日 10:45:06
 public class AnswerOrderActivity extends AnswerBaseActivity {
 
@@ -112,7 +113,7 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 		}
 
 		EditText et = new EditText(this);
-		et.setWidth(257);
+		et.setWidth(240);
 		et.setHeight(97);
 		et.setSingleLine(true);
 		et.setFocusable(false);
@@ -227,9 +228,9 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 		mAnswerStr = mAnswerStr.substring(0, mAnswerStr.length() - 1);
 		if (mAnswer.toString().equals(mSb.toString())) {
 			ratio = 100;
-			// Toast.makeText(getApplicationContext(), "true", 0).show();
+			MyPlayer(true);
 		} else {
-			// Toast.makeText(getApplicationContext(), "false", 0).show();
+			MyPlayer(false);
 		}
 	}
 
@@ -292,7 +293,7 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 				}
 				break;
 			case R.id.base_check_linearlayout:
-				if (amp.getStatus() == 0) {
+				if (status != 2) {
 					if (mAnswerList.size() == answerList.size()) {
 						check();
 						if (status == 0) {

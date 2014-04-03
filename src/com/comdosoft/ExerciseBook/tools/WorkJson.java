@@ -1,9 +1,12 @@
 package com.comdosoft.ExerciseBook.tools;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.util.Log;
@@ -34,15 +37,13 @@ public class WorkJson {
 					}
 				}
 				String startstr = item.getString("start_time");
-				startstr = ExerciseBookTool.divisionTime(startstr);
+				// startstr = ExerciseBookTool.divisionTime(startstr);
 				String endstr = item.getString("end_time");
-				endstr = ExerciseBookTool.divisionTime(endstr);
+				// endstr = ExerciseBookTool.divisionTime(endstr);
 				int number;
 				if (obj.get("knowledges_cards_count").equals(JSONObject.NULL)) {
-					Log.i("aaa", 1 + "");
 					number = 0;
 				} else {
-					Log.i("aaa", 2 + "");
 					number = obj.getInt("knowledges_cards_count");
 				}
 				WorkPoJo work = new WorkPoJo(item.getInt("id"),
@@ -55,5 +56,25 @@ public class WorkJson {
 		}
 
 		return work_list;
+	}
+
+	public static Map<Integer, Integer> getProp(String json) {
+		Map<Integer, Integer> number = new HashMap<Integer, Integer>();
+		number.put(0, 0);
+		number.put(1, 0);
+		JSONObject obj;
+		try {
+			obj = new JSONObject(json);
+			JSONArray arr = obj.getJSONArray("props");
+			if (arr.length() != 0) {
+				for (int j = 0; j < arr.length(); j++) {
+					JSONObject item = arr.getJSONObject(j);
+					number.put(item.getInt("types"), item.getInt("number"));
+				}
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return number;
 	}
 }

@@ -174,6 +174,7 @@ public class Ten_HistoryActivity extends AnswerBaseActivity implements
 			if (index + 1 < branch_questions.size()) {
 				index += 1;
 				img_index -= 1;
+				nextRecord();
 				handler.sendEmptyMessage(1);
 			} else {
 				MyDialog("没有更多历史记录了,点击确定退出!", 1);

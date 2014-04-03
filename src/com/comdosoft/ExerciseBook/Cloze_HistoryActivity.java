@@ -61,6 +61,7 @@ public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 				cloze = list.get(index);
 				myLayout.removeAllViews();
 				content = cloze.getContent();
+				content = ExerciseBookTool.del_tag(content);
 				setTextView();
 				break;
 			case 1:
@@ -208,6 +209,7 @@ public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 		case R.id.base_check_linearlayout:
 			if (index + 1 < list.size()) {
 				index += 1;
+				nextRecord();
 				handler.sendEmptyMessage(0);
 			} else {
 				MyDialog("没有更多历史记录了,点击确定退出!", 1);

@@ -263,6 +263,9 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 				JSONObject obj = new JSONObject(json);
 				if (obj.getString("status").equals("success")) {
 					work_list = WorkJson.json(json);
+					Map<Integer, Integer> number = WorkJson.getProp(json);
+					eb.setTrue_number(number.get(0));
+					eb.setTime_number(number.get(1));
 					if (work_list.size() != 0) {
 						eb.setWork_number(work_list.get(0).getQuestion_types()
 								.size());
@@ -451,6 +454,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 				// 判断SD卡是否存在，并且是否具有读写权限
 				if (Environment.getExternalStorageState().equals(
 						Environment.MEDIA_MOUNTED)) {
+					Log.i("suanfa", downPath);
 					URL url = new URL(downPath);
 					// 创建连接
 					HttpURLConnection conn = (HttpURLConnection) url

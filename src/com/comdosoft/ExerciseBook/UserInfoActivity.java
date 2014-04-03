@@ -33,6 +33,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cn.jpush.android.api.JPushInterface;
 
+import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
@@ -70,13 +71,13 @@ public class UserInfoActivity extends Activity {
 			}
 		}
 	};
-
+	ExerciseBook eb;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);// 去掉标题栏
 		setContentView(R.layout.userinfo);
-		instance = this;
+		eb = (ExerciseBook) getApplication();
 		SharedPreferences preferences = getSharedPreferences(
 				Urlinterface.SHARED, Context.MODE_PRIVATE);
 		classname = preferences.getString("school_class_name", "");
@@ -86,7 +87,7 @@ public class UserInfoActivity extends Activity {
 		 Display display = this.getWindowManager().getDefaultDisplay();
 			width = display.getWidth();
 		list = new ArrayList();
-
+		eb.getActivityList().add(this);
 
 		userinfo_youyi2 = (TextView) findViewById(R.id.userinfo_youyi2); // 优异
 		userinfo_jingzhun2 = (TextView) findViewById(R.id.userinfo_jingzhun2); // 精准
@@ -303,14 +304,15 @@ public class UserInfoActivity extends Activity {
 							String notice = array2.getString("notice");
 
 							if (status == true) {
-								userinfo_username.setText(content);
-								HomePageMainActivity.instance.userName
-										.setText(content);
 								SharedPreferences preferences = getSharedPreferences(Urlinterface.SHARED,
 										 Context.MODE_PRIVATE);
 										 Editor editor = preferences.edit();
 										 editor.putString("nickname", content);
 										 editor.commit();
+								userinfo_username.setText(content);
+								HomePageMainActivity.instance.userName
+										.setText(content);
+								Table_TabHost.instance.userName.setText(content);
 
 							}
 							Toast.makeText(getApplicationContext(), notice,
