@@ -60,7 +60,6 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 		super.setContentView(R.layout.answer_wire);
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(
 				new MyClick());
-		findViewById(R.id.base_propTrue).setOnClickListener(new MyClick());
 		leftLinearLayout = (LinearLayout) findViewById(R.id.answer_wireLeft);
 		rightLinearLayout = (LinearLayout) findViewById(R.id.answer_wireRight);
 		imgCanvas = (ImageView) findViewById(R.id.answer_wire_canvas);
@@ -288,13 +287,14 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 			// 使用道具
 			if (coordinateIndex < answerList.size() / 2) {
 				Integer[] arr = intList.get(coordinateIndex++);
+				setCheckStatusForIndex(arr[0]);
+				setCheckStatusForIndex(arr[1]);
 				calculateCoordinate(arr);
 				coordinate.add(arr);
 				imgCanvas.setImageBitmap(drawView());
 				count++;
 			}
 		}
-		// Toast.makeText(getApplicationContext(), "正确个数:" + count, 0).show();
 	}
 
 	public void calculateCoordinate(Integer[] arr) {
@@ -321,6 +321,11 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 			indexAwp.getTv().setBackgroundResource(
 					R.drawable.answer_wire_item_check_style);
 		}
+	}
+
+	@Override
+	public void rightAnswer() {
+		check(1);
 	}
 
 	class MyClick implements OnClickListener {
@@ -424,9 +429,6 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 					nextRecord();
 					calculateIndexAndUpdateView();
 				}
-				break;
-			case R.id.base_propTrue:
-				check(1);
 				break;
 			}
 		}
