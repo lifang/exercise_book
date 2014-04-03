@@ -667,19 +667,21 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	}
 
 	// 编辑道具json文件
-	public void PropJson(int type, int branch_id, int question_type) {
+	public void PropJson(int type, int branch_id) {
 		String answer_history = ExerciseBookTool.getAnswer_Json_history(path);
 		answerJson = gson.fromJson(answer_history, AnswerJson.class);
 		if (type == 1) {// 减时卡
 			Toast.makeText(AnswerBaseActivity.this, "成功使用减时卡减去5秒时间！",
 					Toast.LENGTH_SHORT).show();
-			mQuestionType = question_type;
 			int utime = getUseTime() - 5;
 			if (utime < 0) {
 				utime = 0;
 			}
+			eb.setTime_number(eb.getTime_number() - 1);
 			setUseTime(utime);
 			getAnswerPojo().setUse_time(utime + "");
+		} else {
+			eb.setTrue_number(eb.getTrue_number() - 1);
 		}
 		answerJson.props.get(type).getBranch_id().add(branch_id);
 		String str = gson.toJson(answerJson);

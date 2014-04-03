@@ -7,6 +7,7 @@ public class AnswerJson {
 
 	public String pub_id;
 	public String status;
+	public String update;
 	public List<PropPojo> props;
 	public AnswerPojo reading;
 	public AnswerPojo listening;
@@ -16,13 +17,14 @@ public class AnswerJson {
 	public AnswerPojo cloze;
 	public AnswerPojo sort;
 
-	public AnswerJson(String pub_id, String status, List<PropPojo> props,
-			AnswerPojo reading, AnswerPojo listening, AnswerPojo time_limit,
-			AnswerPojo selecting, AnswerPojo lining, AnswerPojo cloze,
-			AnswerPojo sort) {
+	public AnswerJson(String pub_id, String status, String update,
+			List<PropPojo> props, AnswerPojo reading, AnswerPojo listening,
+			AnswerPojo time_limit, AnswerPojo selecting, AnswerPojo lining,
+			AnswerPojo cloze, AnswerPojo sort) {
 		super();
 		this.pub_id = pub_id;
 		this.status = status;
+		this.update = update;
 		this.props = props;
 		this.reading = reading;
 		this.listening = listening;
