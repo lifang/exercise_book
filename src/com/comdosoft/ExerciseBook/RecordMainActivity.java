@@ -106,6 +106,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 	private int progress;
 	private List<String> pathList;
 	private List<String> downloadList;
+	private boolean out_time;// 是否超时
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -309,10 +310,16 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 						+ pojo.getQuestion_types().size() + "/"
 						+ pojo.getQuestion_types().get(i));
 				Log.i("suanfa", "Finish_types:" + pojo.getFinish_types().size());
+				if (ExerciseBookTool.Comparison_Time(ExerciseBookTool
+						.getTimeIng(), work_list.get(i).getEnd_time())) {
+					out_time = false;
+				} else {
+					out_time = true;
+				}
 				if (ExerciseBookTool.FileExist(pathList.get(pager
 						.getCurrentItem()))) {// 判断文件是否存在
 					getJsonPath();
-					if (typeList.get(i)) {// 已完成
+					if (typeList.get(i) || out_time) {// 已完成
 						MyDialog(i, questiontype_list);
 					} else {
 						if (cardType) {

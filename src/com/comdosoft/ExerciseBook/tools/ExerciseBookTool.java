@@ -15,9 +15,11 @@ import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -68,6 +70,35 @@ public class ExerciseBookTool implements Urlinterface {
 	private static int connectTimeOut = 5000;
 	private static int readTimeOut = 10000;
 	private static String requestEncoding = "UTF-8";
+
+	// 过去answer中的时间
+	public static String getAnswerTime(String path) {
+		Gson gson = new Gson();
+		Log.i("linshi", "---1");
+		String answer_history = ExerciseBookTool.getAnswer_Json_history(path);
+		AnswerJson answerJson = gson.fromJson(answer_history, AnswerJson.class);
+		Log.i("linshi", "---2");
+		return answerJson.update;
+	}
+
+	// 比较时间大小
+	public static boolean Comparison_Time(String date1, String date2) {
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+		try {
+			Date dt1 = df.parse(date1);
+			Date dt2 = df.parse(date2);
+			if (dt1.getTime() >= dt2.getTime()) {
+				Log.i("suanfa", "a比b大");
+				return false;
+			} else {
+				Log.i("suanfa", "a比b小");
+				return true;
+			}
+		} catch (Exception exception) {
+			exception.printStackTrace();
+		}
+		return false;
+	}
 
 	public static String getTimeIng() {// 获取当前时间
 		SimpleDateFormat sDateFormat = new SimpleDateFormat(
@@ -158,7 +189,8 @@ public class ExerciseBookTool implements Urlinterface {
 				Gson gson = new Gson();
 				String result = gson.toJson(answer);
 				Log.i("linshi", result);
-				ExerciseBookTool.writeFile(path + "/student_" + uid + ".json", result);
+				ExerciseBookTool.writeFile(path + "/student_" + uid + ".json",
+						result);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

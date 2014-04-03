@@ -74,9 +74,14 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	private boolean cancelUpdate;
 	private Dialog mDownloadDialog;
 	private int progress;
+	private String url;
 	private ProgressBar mProgress;
+	private String download_name;
+	private boolean download_type = false;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
+			Builder builder = new Builder(HomeWorkIngActivity.this);
+			builder.setTitle("提示");
 			switch (msg.what) {
 			case 0:
 				prodialog.dismiss();
@@ -111,20 +116,31 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 				mylayout.setVisibility(View.GONE);
 				break;
 			case 3:
-				Builder builder = new Builder(HomeWorkIngActivity.this);
-				builder.setTitle("提示");
 				builder.setMessage("需要下载数据包才可以完成任务,确认下载吗?");
 				builder.setPositiveButton("确定",
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog,
 									int which) {
+								downPath = url;
+								download_name = "resourse.zip";
 								showDownloadDialog();
 							}
 						});
 				builder.setNegativeButton("下次再说", null).show();
 				break;
+			case 4:
+				prodialog.setMessage("正在更新答题记录,请稍后...");
+				prodialog.setCanceledOnTouchOutside(false);
+				prodialog.show();
+				downPath = IP + work_list.get(0).getAnswer_url();
+				download_name = "student_" + eb.getUid() + ".json";
+				downloadApk();
+				break;
 			case 5:
 				mProgress.setProgress(progress);
+				break;
+			case 6:
+				prodialog.dismiss();
 				break;
 			}
 		};
@@ -276,15 +292,22 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 								+ "Exercisebook_app/" + eb.getUid() + "/"
 								+ eb.getClass_id() + "/" + eb.getWork_id();
 						eb.setPath(path);
-						downPath = IP
-								+ work_list.get(0).getQuestion_packages_url();
+						url = IP + work_list.get(0).getQuestion_packages_url();
 						getJsonPath();
-						if (work_list.get(0).getUpdated_at().equals("null")) {// 如果Updated_at等于null说明第一次做
-							ExerciseBookTool.initAnswer(path, eb.getWork_id(),
-									eb.getUid());// 初始化answer
-						} else {
-							
+						ExerciseBookTool.initAnswer(path, eb.getWork_id(),
+								eb.getUid());// 初始化answer
+						if (!work_list.get(0).getUpdated_at().equals("null")) {// 如果Updated_at等于null说明第一次做
+							Log.i("suanfa", "1111111");
+							String answer_time = ExerciseBookTool
+									.getAnswerTime(path + "/student_"
+											+ eb.getUid() + ".json");
+							Log.i("suanfa", "answertime:" + answer_time);
+							if (ExerciseBookTool.Comparison_Time(answer_time,
+									work_list.get(0).getUpdated_at())) {
+								download_type = true;
+							}
 						}
+						Log.i("suanfa", "555");
 					}
 					handler.sendEmptyMessage(0);
 				} else {
@@ -307,19 +330,23 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 
 	public void startDekaron(int i) {
 		if (ExerciseBookTool.FileExist(path)) {// 判断文件是否存在
-			eb.setActivity_item(0);
-			if (typeList.get(i)) {// 已完成
-				MyDialog(i);
+			if (download_type) {
+				handler.sendEmptyMessage(4);
 			} else {
-				if (cardType) {
-					status = 0;
-					Start_Acvivity(i);
+				eb.setActivity_item(0);
+				if (typeList.get(i)) {// 已完成
+					MyDialog(i);
 				} else {
-					Builder builder = new Builder(HomeWorkIngActivity.this);
-					builder.setTitle("提示");
-					builder.setMessage("您的卡包已满,先清除几张再回来答题吧");
-					builder.setNegativeButton("确定", null);
-					builder.show();
+					if (cardType) {// 卡包是否小于20
+						status = 0;
+						Start_Acvivity(i);
+					} else {
+						Builder builder = new Builder(HomeWorkIngActivity.this);
+						builder.setTitle("提示");
+						builder.setMessage("您的卡包已满,先清除几张再回来答题吧");
+						builder.setNegativeButton("确定", null);
+						builder.show();
+					}
 				}
 			}
 		} else {
@@ -469,25 +496,29 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 					int length = conn.getContentLength();
 					// 创建输入流
 					InputStream is = conn.getInputStream();
-
+					Log.i("suanfa", "1====");
 					File file = new File(path);
 					// 判断文件目录是否存在
 					if (!file.exists()) {
 						file.mkdir();
 					}
-					File apkFile = new File(path, "resourse.zip");
+					Log.i("suanfa", "2====");
+					File apkFile = new File(path, download_name);
 					FileOutputStream fos = new FileOutputStream(apkFile);
 					int count = 0;
 					// 缓存
 					byte buf[] = new byte[1024];
 					// 写入到文件中
+					Log.i("suanfa", "3====");
 					do {
 						int numread = is.read(buf);
 						count += numread;
 						// 计算进度条位置
-						progress = (int) (((float) count / length) * 100);
 						// 更新进度
-						handler.sendEmptyMessage(5);
+						if (download_name.equals("resourse.zip")) {
+							progress = (int) (((float) count / length) * 100);
+							handler.sendEmptyMessage(5);
+						}
 						if (numread <= 0) {
 							// 下载完成
 							// handler.sendEmptyMessage(5);
@@ -498,8 +529,13 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 					} while (!cancelUpdate);// 点击取消就停止下载.
 					fos.close();
 					is.close();
-					ExerciseBookTool.unZip(path + "/resourse.zip", path);
-					getJsonPath();
+					if (download_name.equals("resourse.zip")) {
+						ExerciseBookTool
+								.unZip(path + "/" + download_name, path);
+						getJsonPath();
+					} else {
+						handler.sendEmptyMessage(6);
+					}
 				}
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
@@ -510,8 +546,12 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 						Toast.LENGTH_SHORT).show();
 			}
 
-			// 取消下载对话框显示
-			mDownloadDialog.dismiss();
+			if (download_name.equals("resourse.zip")) {
+				// 取消下载对话框显示
+				mDownloadDialog.dismiss();
+			} else {
+				download_type = false;
+			}
 		}
 	};
 

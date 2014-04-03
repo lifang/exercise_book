@@ -56,6 +56,7 @@ public class WorkEndActivity extends Activity implements Urlinterface {
 		precision = intent.getIntExtra("precision", 0);
 		use_time = intent.getIntExtra("use_time", 0);
 		specified_time = intent.getIntExtra("specified_time", 0);
+		Log.i("suanfa", "specified_time:" + specified_time);
 		initialize();
 
 	}
@@ -74,10 +75,13 @@ public class WorkEndActivity extends Activity implements Urlinterface {
 			work_jz.setText(R.string.work_end_str4);
 		}
 		work_xs = (TextView) findViewById(R.id.work_xs);
-		if (use_time <= specified_time && precision >= 60) {
+		if (use_time <= specified_time) {
 			work_xs.setText(R.string.work_end_str7);
 		} else {
 			work_xs.setText(R.string.work_end_str6);
+		}
+		if (precision < 60) {
+			work_xs.setText(R.string.work_end_str12);
 		}
 		work_jiezu = (TextView) findViewById(R.id.work_jiezu);
 		String end_time = eb.getWork_end_dath();
@@ -90,10 +94,13 @@ public class WorkEndActivity extends Activity implements Urlinterface {
 		int zhi = 0;
 		// Log.i("aaa", zhi + "/" + Window_day.getTime() + "/"
 		// + ExerciseBookTool.getCalender_time(end_time).getTime());
-		if (zhi == 1 && precision >= 60) {
+		if (zhi == 1) {
 			work_jiezu.setText(R.string.work_end_str8);
 		} else {
 			work_jiezu.setText(R.string.work_end_str9);
+		}
+		if (precision < 60) {
+			work_jiezu.setText(R.string.work_end_str13);
 		}
 	}
 
