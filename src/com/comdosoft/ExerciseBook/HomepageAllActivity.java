@@ -301,7 +301,7 @@ public class HomepageAllActivity extends Activity implements
 		for (int j = 0; j < care.size(); j++) {
 			String a = (String) care.get(j);
 			if (a.equals(mic_id)) {
-				button2.setBackgroundResource(R.drawable.homepage_guanzhu2);
+//				imageView.setBackgroundResource(R.drawable.homepage_guanzhu2);
 			}
 		}
 		// 回复

@@ -77,6 +77,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 	private AnswerJson answerJson;
 	private String specified_time;
 	private int qid;
+	private Map<Integer, Integer> prop_number;
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			Intent intent = new Intent();
@@ -111,7 +112,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 		setContentView(R.layout.question_speak_begin);
 		findViewById(R.id.base_back_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
-		setTimePropEnd();// 禁用道具
+		findViewById(R.id.base_propTime).setOnClickListener(this);
 		setTruePropEnd();// 禁用道具
 		// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
 		super.mQuestionType = 1;
@@ -130,6 +131,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 		initialize();
 		SetTextView();
 		Display display = this.getWindowManager().getDefaultDisplay();
+		prop_number = eb.getProp_number();
 	}
 
 	// 初始化
@@ -560,6 +562,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 					} else {
 						type = Again();
 					}
+					calculateRatio(ratio);
 					Log.i("aaa", type + "-type");
 					switch (type) {// 0为下一小题 1为全部做完 2为本小题做完
 					case 0:
@@ -582,8 +585,17 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 				} catch (Exception e) {
 				}
 			} else {
-				Toast.makeText(SpeakBeginActivity.this, "请先打完本题",
+				Toast.makeText(SpeakBeginActivity.this, "请先答完本题",
 						Toast.LENGTH_SHORT).show();
+			}
+			break;
+		case R.id.base_propTime:
+			// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
+			if (prop_number.get(1) > 0) {
+				PropJson(1, branch_questions.get(index).getId(), 2);
+			} else {
+				Toast.makeText(SpeakBeginActivity.this,
+						R.string.prop_number_error, Toast.LENGTH_SHORT).show();
 			}
 			break;
 		}

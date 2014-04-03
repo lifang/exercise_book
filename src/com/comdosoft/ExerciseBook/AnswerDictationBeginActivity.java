@@ -24,8 +24,10 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -183,6 +185,8 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 				| InputType.TYPE_TEXT_FLAG_MULTI_LINE
 				| InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
 		et.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+		et.setId(R.id.aa);
+		et.setOnTouchListener(new MyTouch(i));
 		et.setOnEditorActionListener(new OnEditorActionListener() {
 			public boolean onEditorAction(TextView v, int actionId,
 					KeyEvent event) {
@@ -551,6 +555,30 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		}
 	}
 
+	class MyTouch implements OnTouchListener {
+		private int index = 0;
+
+		public MyTouch() {
+		}
+
+		public MyTouch(int index) {
+			super();
+			this.index = index;
+		}
+
+		@Override
+		public boolean onTouch(View v, MotionEvent event) {
+			switch (v.getId()) {
+			case R.id.aa:
+				testIndex = index;
+				move(index, 2);
+				break;
+			}
+			return false;
+		}
+
+	}
+
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -586,6 +614,12 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 			move(testIndex, 1);
 			moveList.get(testIndex).getLeftMove().setVisibility(View.GONE);
 			moveList.get(testIndex).getRightMove().setVisibility(View.GONE);
+			break;
+		case R.id.base_propTime:
+			super.onClick(v);
+			break;
+		case R.id.base_propTrue:
+			super.onClick(v);
 			break;
 		}
 	}

@@ -62,6 +62,7 @@ public class Table_TabHost extends Activity
 	private String uri;
 	private ProgressDialog prodialog;
 	static boolean active = false;
+	public static Table_TabHost instance = null;
 	ImageMemoryCache memoryCache;
 	Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -127,7 +128,7 @@ public class Table_TabHost extends Activity
 		avatar_url = preferences.getString("avatar_url", "");
 		nickName = preferences.getString("nickname", "");
 		id = preferences.getString("id", null);
-		
+		instance=this;
 		active=true;
 		img_tab_now=(LinearLayout) findViewById(R.id.img_tab_now);
 		img_tab_now.setOnClickListener(new OnClickListener(){

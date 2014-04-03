@@ -2,6 +2,7 @@ package com.comdosoft.ExerciseBook.tools;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import android.app.Activity;
 import android.app.Application;
@@ -42,6 +43,7 @@ public class ExerciseBook extends Application {
 	private List<knowledges_card> Allmap;
 	public List<tags> tagsList;
 	public List<Integer> Tagsarr;
+	private Map<Integer, Integer> prop_number;
 
 	public ExerciseBook() {
 		this.setMneu(true);
@@ -248,6 +250,14 @@ public class ExerciseBook extends Application {
 
 	public void setPropTime_Number(int propTime_Number) {
 		this.propTime_Number = propTime_Number;
+	}
+
+	public Map<Integer, Integer> getProp_number() {
+		return prop_number;
+	}
+
+	public void setProp_number(Map<Integer, Integer> prop_number) {
+		this.prop_number = prop_number;
 	}
 
 	public void onCreate() {

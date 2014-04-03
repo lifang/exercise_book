@@ -203,7 +203,7 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.base_check_linearlayout:
-			if (amp.getStatus() == 0) {
+			if (status != 2) {
 				if (checkMap.size() == 0) {
 					Toast.makeText(getApplicationContext(), "请选择答案!", 0).show();
 				} else {

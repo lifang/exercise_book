@@ -29,7 +29,7 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 
 	private int coordinateIndex = 0;
 	private int last = -1;
-	int height = 0;
+	private int height = 0;
 	// private String JSON =
 	// "{    \"lining\":{\"specified_time\": \"100\",  \"questions\":[ {\"id\": \"284\",  \"branch_questions\": [{\"id\": \"181\", \"content\": \"This is<=>an apple;||;A<=>B;||;ZhangDaCa<=>Dog\"}]},{\"id\": \"285\", \"branch_questions\": [{\"id\": \"182\", \"content\": \"C<=>D;||;Chen<=>Long;||;Gao<=>Shi\"}]}, {\"id\": \"285\", \"branch_questions\": [ {\"id\": \"182\", \"content\": \"Ma<=>Long;||;123<=>456;||;1111<=>2222\"} ]},  {\"id\": \"291\",\"branch_questions\": [ {\"id\": \"182\", \"content\": \"ZhangDaCa<=>ZXN;||;ChenLong<=>CL;||;MaLong<=>ML\"}]}] }}";
 	private StringBuffer sb = new StringBuffer();
@@ -68,7 +68,6 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 
 		DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
 		height = displayMetrics.heightPixels;
-		Toast.makeText(getApplicationContext(), height + "height", 0).show();
 		if (height == 1205 || height == 1216) {
 			lp.topMargin = 30;
 			xyArr = new int[][] { { 0, 100 }, { 200, 100 }, { 0, 330 },

@@ -1,9 +1,12 @@
 package com.comdosoft.ExerciseBook.tools;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.util.Log;
@@ -55,5 +58,23 @@ public class WorkJson {
 		}
 
 		return work_list;
+	}
+
+	public static Map<Integer, Integer> getProp(String json) {
+		Map<Integer, Integer> prop_map = new HashMap<Integer, Integer>();
+		JSONObject obj;
+		try {
+			obj = new JSONObject(json);
+			JSONArray arr = obj.getJSONArray("props");
+			if (arr.length() != 0) {
+				for (int j = 0; j < arr.length(); j++) {
+					JSONObject item = arr.getJSONObject(j);
+					prop_map.put(item.getInt("types"), item.getInt("number"));
+				}
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return prop_map;
 	}
 }

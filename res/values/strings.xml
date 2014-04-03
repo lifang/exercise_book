@@ -57,16 +57,16 @@
     <string name="xlistview_header_last_time">上次更新时间：</string>
     <string name="xlistview_footer_hint_normal">查看更多</string>
     <string name="xlistview_footer_hint_ready">松开载入更多</string>
-    <string name="homeworking_title">今日作業截至时间为</string>
+    <string name="homeworking_title">今日作作业至时间为</string>
     <string name="top">排行</string>
     <string name="work_null">还没有需要完成的作业！</string>
-	<string name="reson1">拼写错误</string>
-	<string name="reson2">朗读错误</string>
-	<string name="reson3">连线错误</string>
-	<string name="reson4">选择错误</string>
-	<string name="reson5">完型错误</string>
-	<string name="reson6">排序错误</string>
-	<string name="returntext">原题:</string>
+    <string name="reson1">拼写错误</string>
+    <string name="reson2">朗读错误</string>
+    <string name="reson3">连线错误</string>
+    <string name="reson4">选择错误</string>
+    <string name="reson5">完型错误</string>
+    <string name="reson6">排序错误</string>
+    <string name="returntext">原题:</string>
     <string name="work_end_str1">恭喜完成挑战！</string>
     <string name="work_end_str2">正确率：</string>
     <string name="work_end_str3">用时：</string>
@@ -78,5 +78,7 @@
     <string name="work_end_str9">恭喜你在截至时间前两小时完成作业,&lt;捷足>成就加10分!</string>
     <string name="work_end_str10">确认完成</string>
     <string name="work_end_str11">再次挑战</string>
-<string name="nulls"> </string>
+    <string name="prop_number_error">道具数量不足,无法使用道具</string>
+    <string name="nulls"></string>
+
 </resources>

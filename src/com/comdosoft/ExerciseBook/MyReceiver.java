@@ -87,6 +87,7 @@ public class MyReceiver extends BroadcastReceiver implements Urlinterface
 							Context.MODE_PRIVATE);
 					Editor editor = preferences.edit();
 					editor.putString("school_class_id", school_class_id+"");
+					editor.putString("school_class_name", school_class_name);
 					editor.commit();
 					switch (type) {
 					case 0:

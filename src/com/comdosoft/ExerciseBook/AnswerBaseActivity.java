@@ -4,12 +4,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -222,7 +224,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	}
 
 	public void startTimeFlash() {
-		base_time_flash.setVisibility(View.INVISIBLE);
+		base_time_flash.setVisibility(View.VISIBLE);
 		AlphaAnimation myAnimation_Alpha = new AlphaAnimation(1.0f, 0.0f);
 		myAnimation_Alpha.setFillAfter(true);
 		myAnimation_Alpha.setDuration(1000);
@@ -274,13 +276,13 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 
 	// 时间道具使用完
 	public void setTimePropEnd() {
-		propTime.setImageResource(R.drawable.base_prop4);
+		propTime.setImageResource(R.drawable.base_prop3);
 		propTime.setClickable(false);
 	}
 
 	// 正确道具使用完
 	public void setTruePropEnd() {
-		propTrue.setImageResource(R.drawable.base_prop3);
+		propTrue.setImageResource(R.drawable.base_prop4);
 		propTrue.setClickable(false);
 	}
 
@@ -351,9 +353,15 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 			close();
 			break;
 		case R.id.base_propTime:
-			second -= 5;
-			setUseTime(second < 0 ? 0 : second);
-			startTimeFlash();
+			if (true) {
+				setUseTime(second - 5 < 0 ? 0 : second - 5);
+				startTimeFlash();
+				// PropJson(1, mQuestList.get(mQindex).get(mBindex)
+				// .getBranch_questions_id(), mQuestionType);
+			}
+			break;
+		case R.id.base_propTrue:
+
 			break;
 		}
 	}
@@ -476,6 +484,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		if (status == 0) {
 			prodialog.show();
 			index = 1;
+			setPause();
 			setWork_Status();
 			Finish_Json();
 		} else {

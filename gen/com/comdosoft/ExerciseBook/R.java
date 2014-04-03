@@ -606,7 +606,8 @@ public final class R {
         public static final int main_class_oneTv2=0x7f0a002a;
         public static final int newwork_text=0x7f0a001d;
         public static final int nicheng=0x7f0a0003;
-        public static final int nulls=0x7f0a004d;
+        public static final int nulls=0x7f0a004e;
+        public static final int prop_number_error=0x7f0a004d;
         public static final int pull_to_refresh_footer_pull_label=0x7f0a0016;
         public static final int pull_to_refresh_footer_refreshing_label=0x7f0a0017;
         public static final int pull_to_refresh_footer_release_label=0x7f0a0015;
