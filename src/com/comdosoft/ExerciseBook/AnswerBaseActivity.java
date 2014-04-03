@@ -22,6 +22,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.AlphaAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -79,6 +80,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	private TextView useTimeText;
 	private TextView accuracyText;
 	private TextView base_answer_text;
+	private TextView base_time_flash;
 	private ImageView propTrue;
 	private ImageView propTime;
 	private boolean answer_boolean = false;
@@ -151,6 +153,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		accuracyText = (TextView) findViewById(R.id.base_accuracyText);
 		useTimeText = (TextView) findViewById(R.id.base_useTimeText);
 		base_answer_text = (TextView) findViewById(R.id.base_answer_text);
+		base_time_flash = (TextView) findViewById(R.id.base_timeFlash);
 
 		Intent intent = getIntent();
 		json = intent.getStringExtra("json");
@@ -216,6 +219,14 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 			setUseTime(0);
 			setStart();
 		}
+	}
+
+	public void startTimeFlash() {
+		base_time_flash.setVisibility(View.INVISIBLE);
+		AlphaAnimation myAnimation_Alpha = new AlphaAnimation(1.0f, 0.0f);
+		myAnimation_Alpha.setFillAfter(true);
+		myAnimation_Alpha.setDuration(1000);
+		base_time_flash.startAnimation(myAnimation_Alpha);
 	}
 
 	// 获取时间(秒)
@@ -339,6 +350,11 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		case R.id.base_back_linearlayout:
 			close();
 			break;
+		case R.id.base_propTime:
+			second -= 5;
+			setUseTime(second < 0 ? 0 : second);
+			startTimeFlash();
+			break;
 		}
 	}
 
@@ -415,13 +431,17 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		return answer_boolean;
 	}
 
-	// 计算索引&更新View
-	public void calculateIndexAndUpdateView() {
+	public void calculateRatio(int mRatio) {
 		if (status == 1) {
 			count++;
-			ratioSum = ratioSum + ratio;
+			ratioSum = ratioSum + mRatio;
 			ratio = 0;
 		}
+	}
+
+	// 计算索引&更新View
+	public void calculateIndexAndUpdateView() {
+		calculateRatio(ratio);
 		if (mQindex == mQuestList.size() - 1
 				&& mBindex == mQuestList.get(mQindex).size() - 1) {
 			// 最后一题
@@ -688,8 +708,9 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		if (player.isPlaying()) {
 			player.pause();
 		} else {
-			// String mp3URL = path+
-			// new MyMediaPlay().start();
+			int mp3_url = status ? R.raw.true_mp3 : R.raw.false_mp3;
+			player = MediaPlayer.create(this, mp3_url);
+			player.start();
 		}
 	}
 

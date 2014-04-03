@@ -210,16 +210,13 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 					switch (check()) {
 					case 0:
 						ratio = 100;
-						Toast.makeText(getApplicationContext(), "正确!", 0)
-								.show();
+						MyPlayer(true);
 						break;
 					case 1:
-						Toast.makeText(getApplicationContext(), "半对!", 0)
-								.show();
+						MyPlayer(false);
 						break;
 					case 2:
-						Toast.makeText(getApplicationContext(), "错误!", 0)
-								.show();
+						MyPlayer(false);
 						break;
 					}
 					if (status == 0) {
@@ -252,6 +249,9 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 			} else {
 				mediaPlayer.start();
 			}
+			break;
+		case R.id.base_propTime:
+			super.onClick(v);
 			break;
 		}
 	}
