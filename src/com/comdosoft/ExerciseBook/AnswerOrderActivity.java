@@ -56,7 +56,6 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 		answer_order_again = (TextView) findViewById(R.id.answer_order_again);
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(
 				new MyOnClick());
-		findViewById(R.id.base_propTrue).setOnClickListener(new MyOnClick());
 		answer_order_again.setOnClickListener(new MyOnClick());
 		answer_order_back.setOnClickListener(new MyOnClick());
 
@@ -313,9 +312,6 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 					nextRecord();
 					calculateIndexAndUpdateView();
 				}
-				break;
-			case R.id.base_propTrue:
-				rightAnswer();
 				break;
 			}
 		}
