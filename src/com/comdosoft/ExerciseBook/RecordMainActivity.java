@@ -259,14 +259,11 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 						.findViewById(R.id.mylayout);
 				linearList.clear();
 				linear_item = 0;
-				// Log.i("linshi", work_list.get(arg1).toString()+ "");
 				final List<Integer> questiontype_list = work_list.get(arg1)
 						.getQuestion_types();
 				finish_list = work_list.get(arg1).getFinish_types();
 				cardType = work_list.get(arg1).getNumber() < 20 ? true : false;
 				eb.setWork_id(work_list.get(arg1).getId() + "");
-				ExerciseBookTool
-						.initAnswer(pathList.get(arg1), eb.getWork_id());// 初始化answer
 				for (int i = 0; i < work_list.get(arg1).getQuestion_types()
 						.size(); i++) {
 					setlayout(i, mylayout, work_list.get(arg1),
@@ -402,7 +399,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 		Log.i("suanfa", json_list.get(questiontype_list.get(i)));
 		intent.putExtra("json", json_list.get(questiontype_list.get(i)));
 		intent.putExtra("path", pathList.get(pager.getCurrentItem())
-				+ "/answer.json");
+				+ "/student_" + eb.getUid() + ".json");
 		intent.putExtra("type", 0);// 0 今日任务列表跳转 1历史记录列表跳转
 		intent.putExtra("status", status);// 0表示第一次做 1表示重做 2历史
 		eb.setWork_end_dath(work_list.get(0).getEnd_time());
@@ -414,7 +411,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 	public void Start_History_Acvivity(int i, List<Integer> questiontype_list) {// 历史记录跳转
 		switch (questiontype_list.get(i)) {
 		case 0:
-			intent.setClass(this, SpeakPrepareActivity.class);
+			intent.setClass(this, AnswerDictationBeginActivity.class);
 			break;
 		case 1:
 			intent.setClass(this, SpeakPrepareActivity.class);
@@ -437,7 +434,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 		}
 		intent.putExtra("json", json_list.get(questiontype_list.get(i)));
 		intent.putExtra("path", pathList.get(pager.getCurrentItem())
-				+ "/answer.json");
+				+ "/student_" + eb.getUid() + ".json");
 		intent.putExtra("type", 0);// 0 今日任务列表跳转 1历史记录列表跳转
 		intent.putExtra("status", status);// 0表示第一次做 1表示重做 2历史
 		eb.setWork_end_dath(work_list.get(0).getEnd_time());
@@ -607,6 +604,10 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 								+ work_list.get(i).getQuestion_packages_url();
 						pathList.add(path);
 						downloadList.add(downPath);
+						if (work_list.get(i).getUpdated_at().equals("null")) {// 如果Updated_at等于null说明第一次做
+							ExerciseBookTool.initAnswer(pathList.get(i),
+									eb.getWork_id(), eb.getUid());// 初始化answer
+						}
 					}
 					handler.sendEmptyMessage(0);
 				} else {
@@ -635,6 +636,9 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 				JSONObject obj = new JSONObject(json);
 				if (obj.getString("status").equals("success")) {
 					work_list = WorkJson.json(json);
+					Map<Integer, Integer> number = WorkJson.getProp(json);
+					eb.setTrue_number(number.get(0));
+					eb.setTime_number(number.get(1));
 					for (int i = 0; i < work_list.size(); i++) {
 						String path = Environment.getExternalStorageDirectory()
 								+ "/" + "Exercisebook_app/" + eb.getUid() + "/"
@@ -644,6 +648,10 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 								+ work_list.get(i).getQuestion_packages_url();
 						pathList.add(path);
 						downloadList.add(downPath);
+						if (work_list.get(i).getUpdated_at().equals("null")) {// 如果Updated_at等于null说明第一次做
+							ExerciseBookTool.initAnswer(pathList.get(i),
+									eb.getWork_id(), eb.getUid());// 初始化answer
+						}
 					}
 					handler.sendEmptyMessage(0);
 				} else {

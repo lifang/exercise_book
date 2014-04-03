@@ -9,6 +9,8 @@ public class WorkPoJo {
 	private String start_time;
 	private String end_time;
 	private String question_packages_url;
+	private String updated_at;
+	private String answer_url;
 	private List<Integer> question_types;
 	private List<Integer> finish_types;
 	private int number;
@@ -17,14 +19,16 @@ public class WorkPoJo {
 	}
 
 	public WorkPoJo(int id, String name, String start_time, String end_time,
-			String question_packages_url, List<Integer> question_types,
-			List<Integer> finish_types, int number) {
+			String question_packages_url, String updated_at, String answer_url,
+			List<Integer> question_types, List<Integer> finish_types, int number) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.start_time = start_time;
 		this.end_time = end_time;
 		this.question_packages_url = question_packages_url;
+		this.updated_at = updated_at;
+		this.answer_url = answer_url;
 		this.question_types = question_types;
 		this.finish_types = finish_types;
 		this.number = number;
@@ -94,12 +98,19 @@ public class WorkPoJo {
 		this.finish_types = finish_types;
 	}
 
-	public String toString() {
-		return "WorkPoJo [id=" + id + ", name=" + name + ", start_time="
-				+ start_time + ", end_time=" + end_time
-				+ ", question_packages_url=" + question_packages_url
-				+ ", question_types=" + question_types + ", finish_types="
-				+ finish_types + "]";
+	public String getUpdated_at() {
+		return updated_at;
 	}
 
+	public void setUpdated_at(String updated_at) {
+		this.updated_at = updated_at;
+	}
+
+	public String getAnswer_url() {
+		return answer_url;
+	}
+
+	public void setAnswer_url(String answer_url) {
+		this.answer_url = answer_url;
+	}
 }

@@ -143,6 +143,7 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		mesLinearLayoutList.clear();
 		editLinearLayout.removeAllViews();
 		mesText.setVisibility(LinearLayout.GONE);
+		moveList.clear();
 
 		playFlag = false;
 
@@ -435,7 +436,6 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		} else {
 			// Next
 			setCheckText("检查");
-			errorMap.clear();
 			if (status == 0) {
 				AnswerBasePojo aop = mQuestList.get(mQindex).get(mBindex);
 				saveAnswerJson(getAnswer(), ratio, aop.getQuestions_id(),
@@ -443,6 +443,7 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 			} else {
 				calculateIndexAndUpdateView();
 			}
+			errorMap.clear();
 		}
 	}
 
@@ -616,9 +617,6 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 			moveList.get(testIndex).getRightMove().setVisibility(View.GONE);
 			break;
 		case R.id.base_propTime:
-			super.onClick(v);
-			break;
-		case R.id.base_propTrue:
 			super.onClick(v);
 			break;
 		}

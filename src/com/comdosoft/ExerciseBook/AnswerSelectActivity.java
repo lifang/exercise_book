@@ -54,7 +54,6 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 		super.setContentView(R.layout.answer_select);
 		findViewById(R.id.base_back_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
-		findViewById(R.id.base_propTrue).setOnClickListener(this);
 		listView = (ListView) findViewById(R.id.answer_select_listview);
 		answerImg = (ImageView) findViewById(R.id.answer_select_img);
 		answerLaba = (ImageView) findViewById(R.id.answer_select_laba);
@@ -237,9 +236,6 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 		case R.id.base_back_linearlayout:
 			super.onClick(v);
 			break;
-		case R.id.base_propTrue:
-			rightAnswer();
-			break;
 		case R.id.answer_select_laba:
 			if (!playFlag) {
 				new MyMediaPlay().start();
@@ -251,6 +247,9 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 			}
 			break;
 		case R.id.base_propTime:
+			super.onClick(v);
+			break;
+		case R.id.base_propTrue:
 			super.onClick(v);
 			break;
 		}
