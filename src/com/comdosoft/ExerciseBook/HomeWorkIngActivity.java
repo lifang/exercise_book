@@ -279,7 +279,12 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 						downPath = IP
 								+ work_list.get(0).getQuestion_packages_url();
 						getJsonPath();
-						ExerciseBookTool.initAnswer(path, eb.getWork_id());// 初始化answer
+						if (work_list.get(0).getUpdated_at().equals("null")) {// 如果Updated_at等于null说明第一次做
+							ExerciseBookTool.initAnswer(path, eb.getWork_id(),
+									eb.getUid());// 初始化answer
+						} else {
+							
+						}
 					}
 					handler.sendEmptyMessage(0);
 				} else {
@@ -347,7 +352,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 			break;
 		}
 		intent.putExtra("json", json_list.get(questiontype_list.get(i)));
-		intent.putExtra("path", path + "/answer.json");
+		intent.putExtra("path", path + "/student_" + eb.getUid() + ".json");
 		intent.putExtra("type", 0);// 0 今日任务列表跳转 1历史记录列表跳转
 		intent.putExtra("status", status);// 0表示第一次做 1表示重做 2历史
 		Log.i("aaa", json_list.get(questiontype_list.get(i)));
@@ -381,7 +386,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 			break;
 		}
 		intent.putExtra("json", json_list.get(questiontype_list.get(i)));
-		intent.putExtra("path", path + "/answer.json");
+		intent.putExtra("path", path + "/student_" + eb.getUid() + ".json");
 		intent.putExtra("type", 0);// 0 今日任务列表跳转 1历史记录列表跳转
 		intent.putExtra("status", status);// 0表示第一次做 1表示重做 2历史
 		Log.i("aaa", json_list.get(questiontype_list.get(i)));

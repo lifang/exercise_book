@@ -715,14 +715,9 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	}
 
 	public void MyPlayer(boolean status) {
-
-		if (player.isPlaying()) {
-			player.pause();
-		} else {
-			int mp3_url = status ? R.raw.true_mp3 : R.raw.false_mp3;
-			player = MediaPlayer.create(this, mp3_url);
-			player.start();
-		}
+		int mp3_url = status ? R.raw.true_mp3 : R.raw.false_mp3;
+		player = MediaPlayer.create(this, mp3_url);
+		player.start();
 	}
 
 	class MyMediaPlay extends Thread {

@@ -143,6 +143,7 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		mesLinearLayoutList.clear();
 		editLinearLayout.removeAllViews();
 		mesText.setVisibility(LinearLayout.GONE);
+		moveList.clear();
 
 		playFlag = false;
 
