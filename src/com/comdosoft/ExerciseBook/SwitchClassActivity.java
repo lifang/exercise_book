@@ -53,6 +53,7 @@ public class SwitchClassActivity extends Activity {
 		setContentView(R.layout.switchclass);
 
 		exerciseBook = (ExerciseBook) getApplication();
+		exerciseBook.getActivityList().add(this);
 		switchclassLv = (ListView) findViewById(R.id.switchclassLv);
 		layout = (LinearLayout) findViewById(R.id.switchclass);
 		add_newclass = (ImageView) findViewById(R.id.add_newclass);// 加入新班级
@@ -200,9 +201,9 @@ public class SwitchClassActivity extends Activity {
 							editor.commit();
 							exerciseBook.setMenu_num(0);
 							clearActivity();
-							UserInfoActivity.instance.finish();
+//							UserInfoActivity.instance.finish();
 							startActivity(intent);
-							SwitchClassActivity.this.finish();
+//							SwitchClassActivity.this.finish();
 						}
 					}.start();
 				}
@@ -254,12 +255,10 @@ public class SwitchClassActivity extends Activity {
 							exerciseBook.setRefresh(1);
 							clearActivity();
 							exerciseBook.setMenu_num(0);
-							UserInfoActivity.instance.finish();
 							Intent intent = new Intent(
 									SwitchClassActivity.this,
 									HomePageMainActivity.class);
 							startActivity(intent);
-							SwitchClassActivity.this.finish();
 						}
 
 					} catch (Exception e) {
