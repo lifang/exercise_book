@@ -2,22 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="22px"
+    android:layout_marginTop="32px"
     android:orientation="horizontal" >
 
     <ImageView
         android:id="@+id/bq_iteam_iv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="25px"
+        android:layout_marginLeft="37px"
         android:src="@drawable/biaoqiant" />
 
     <TextView
         android:id="@+id/bq_iteam_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="32px"
+        android:layout_marginLeft="47px"
         android:textColor="@color/white"
-        android:textSize="30px" />
+        android:textSize="32px" />
 
 </LinearLayout>

@@ -47,7 +47,7 @@ import com.comdosoft.ExerciseBook.tools.OpenInputMethod;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
 public class ReplyListViewActivity extends Table_TabHost implements
-		IXListViewListener, Urlinterface, OnGestureListener {
+IXListViewListener, Urlinterface, OnGestureListener {
 	private ReplyListView mListView;
 	private List<Reply> replyList = new ArrayList<Reply>();
 	private Handler mHandler;
@@ -182,26 +182,26 @@ public class ReplyListViewActivity extends Table_TabHost implements
 					JSONObject jsonobject2 = jsonarray.getJSONObject(i);
 					List<String> liststr = divisionStr(jsonobject2
 							.getString("content"));Log.i("aaa",  "getNewsJson----"+i);
-					String jsonstatus = liststr.get(0);
-					String content = liststr.get(1);
+							String jsonstatus = liststr.get(0);
+							String content = liststr.get(1);
 
-					String created_at = ExerciseBookTool.divisionTime2(jsonobject2
-							.getString("created_at"));
-					String id = jsonobject2.getString("id");
-					
-					String micropost_id = jsonobject2.getString("micropost_id");
-					String reciver_id = jsonobject2.getString("reciver_id");
-					String reciver_types = jsonobject2
-							.getString("reciver_types");
-					String sender_avatar_url = jsonobject2
-							.getString("sender_avatar_url");
-					String sender_name = jsonobject2.getString("sender_name");
-					String user_id = jsonobject2.getString("user_id");
-					listbool.add(false);
-					replyList.add(new Reply(id, micropost_id, user_id,
-							reciver_id, reciver_types, sender_avatar_url,
-							sender_name, jsonstatus, content, created_at));
-					
+							String created_at = ExerciseBookTool.divisionTime2(jsonobject2
+									.getString("created_at"));
+							String id = jsonobject2.getString("id");
+
+							String micropost_id = jsonobject2.getString("micropost_id");
+							String reciver_id = jsonobject2.getString("reciver_id");
+							String reciver_types = jsonobject2
+									.getString("reciver_types");
+							String sender_avatar_url = jsonobject2
+									.getString("sender_avatar_url");
+							String sender_name = jsonobject2.getString("sender_name");
+							String user_id = jsonobject2.getString("user_id");
+							listbool.add(false);
+							replyList.add(new Reply(id, micropost_id, user_id,
+									reciver_id, reciver_types, sender_avatar_url,
+									sender_name, jsonstatus, content, created_at));
+
 				}
 				return replyList.size();
 			} else {
@@ -266,18 +266,18 @@ public class ReplyListViewActivity extends Table_TabHost implements
 	// 分割content
 	public List<String> divisionStr(String str) {
 		// "content":"[[ding]]回复了您的消息：;||;we we"
-//"content":"[[ding]]回复了您的消息：沃尔沃","reciver_types":0,"sender_avatar_url":"\/avatars\/students\/2014-04\/student_17.jpg","reciver_id":115,"created_at":"2014-04-01T16:57:20+08:00","user_id":130,"sender_name":"ding","micropost_id":604}
+		//"content":"[[ding]]回复了您的消息：沃尔沃","reciver_types":0,"sender_avatar_url":"\/avatars\/students\/2014-04\/student_17.jpg","reciver_id":115,"created_at":"2014-04-01T16:57:20+08:00","user_id":130,"sender_name":"ding","micropost_id":604}
 		List<String> list = new ArrayList<String>();
 		int temp1 = str.indexOf("[[");
 		int temp2 = str.indexOf("]]");
 		int temp3 = str.indexOf("消息：");
-//		String st1 = str.substring(temp3 + 3, temp3 + 7);
-//		list.add(str.substring(temp2 + 2, temp3 + 2));
-//		if (";||;".equals(st1)) {
-//		list.add(str.substring(temp3 + 7, str.length()));
-//	} else {
-//		list.add(str.substring(temp3 + 3, str.length()));
-//	}
+		//		String st1 = str.substring(temp3 + 3, temp3 + 7);
+		//		list.add(str.substring(temp2 + 2, temp3 + 2));
+		//		if (";||;".equals(st1)) {
+		//		list.add(str.substring(temp3 + 7, str.length()));
+		//	} else {
+		//		list.add(str.substring(temp3 + 3, str.length()));
+		//	}
 		String st1 = str.substring(temp3 + 3, temp3 + 4);
 		list.add(str.substring(temp2 +5, temp3 + 2));
 		if (";".equals(st1)) {
@@ -299,11 +299,11 @@ public class ReplyListViewActivity extends Table_TabHost implements
 
 	@Override
 	public void onRefresh() {
-	
-//		SharedPreferences userInfo = getSharedPreferences("replyMenu", 0);
-//		Editor editor = userInfo.edit();// 获取编辑器
-//		editor.putBoolean("ReplyMenu", true);
-//		editor.commit();
+
+		//		SharedPreferences userInfo = getSharedPreferences("replyMenu", 0);
+		//		Editor editor = userInfo.edit();// 获取编辑器
+		//		editor.putBoolean("ReplyMenu", true);
+		//		editor.commit();
 		page = 1;
 		if (ExerciseBookTool.isConnect(ReplyListViewActivity.this)) {
 
@@ -499,7 +499,7 @@ public class ReplyListViewActivity extends Table_TabHost implements
 				} else {
 
 					holder.use_face
-							.setImageDrawable(new BitmapDrawable(result));
+					.setImageDrawable(new BitmapDrawable(result));
 				}
 			}
 			holder.imgbtn1.setOnClickListener(new OnClickListener() {
