@@ -96,7 +96,7 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 			initRightView(i + 1);
 		}
 
-		if (amp.getStatus() == 1 && status > 1) {
+		if (status == 2) {
 			coordinate = trueList;
 			for (int j = 0; j < answerList.size(); j++) {
 				setCheckStatusForIndex(j);
