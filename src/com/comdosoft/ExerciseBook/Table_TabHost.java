@@ -133,15 +133,16 @@ public class Table_TabHost extends Activity
 		img_tab_now=(LinearLayout) findViewById(R.id.img_tab_now);
 		img_tab_now.setOnClickListener(new OnClickListener(){
 			public void onClick(View v) {
-				if(eb.isMneu())
-				{
+//				if(eb.isMneu())
+//				{
 					
 					Intent  intent = new Intent(Table_TabHost.this,LeftMenu.class);
 					startActivity(intent);
-					eb.setMneu(false);
+//					eb.setMneu(false);
 					overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right); 
-				}
-			}});
+//				}
+			}
+	});
 		middleLayout = (LinearLayout)findViewById(R.id.middle_layout);
 		userName = (TextView) findViewById(R.id.user_name);
 		userName.setText(nickName);

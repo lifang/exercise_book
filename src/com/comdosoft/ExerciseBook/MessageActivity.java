@@ -8,16 +8,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.comdosoft.ExerciseBook.ReplyListView.IXListViewListener;
-import com.comdosoft.ExerciseBook.ReplyListViewActivity.get_news;
-import com.comdosoft.ExerciseBook.ReplyListViewActivity.get_news2;
-import com.comdosoft.ExerciseBook.pojo.Reply;
-import com.comdosoft.ExerciseBook.pojo.SysMessage;
-import com.comdosoft.ExerciseBook.tools.ExerciseBook;
-import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
-import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
-import com.comdosoft.ExerciseBook.tools.Urlinterface;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -39,8 +29,16 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.comdosoft.ExerciseBook.ReplyListView.IXListViewListener;
+import com.comdosoft.ExerciseBook.pojo.SysMessage;
+import com.comdosoft.ExerciseBook.tools.ExerciseBook;
+import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
+import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
+import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
 
 public class MessageActivity extends Table_TabHost implements
@@ -319,13 +317,7 @@ IXListViewListener, Urlinterface, OnGestureListener {
 			if (convertView == null) {
 				convertView = inflater.inflate(R.layout.message_layout_iteam,
 						null);
-				View vew = convertView.findViewById(R.id.child_user_left);
-
-				if (position % 2 == 0) {
-					vew.setBackgroundResource(R.color.before_click);
-				} else {
-					vew.setBackgroundResource(R.color.huse);
-				}
+				
 				holder = new ViewHolder();
 				holder.hSView = (HorizontalScrollView) convertView
 						.findViewById(R.id.hsv2);
@@ -341,6 +333,7 @@ IXListViewListener, Urlinterface, OnGestureListener {
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 			}
+
 			holder.imgbtn2.setOnClickListener(new OnClickListener() {
 
 				public void onClick(View v) {
@@ -415,6 +408,13 @@ IXListViewListener, Urlinterface, OnGestureListener {
 			}
 			holder.content.setText(replyList.get(position).getContent());
 			holder.date.setText(replyList.get(position).getCreated_at());
+			RelativeLayout vew = (RelativeLayout) convertView.findViewById(R.id.child_user_left);
+
+			if (position % 2 == 0) {
+				vew.setBackgroundResource(R.color.before_click);
+			} else {
+				vew.setBackgroundResource(R.color.huse);
+			}
 			return convertView;
 		}
 		
