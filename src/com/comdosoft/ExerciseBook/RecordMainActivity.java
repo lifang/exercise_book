@@ -147,7 +147,8 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog,
 									int which) {
-								downPath = pathList.get(pager.getCurrentItem());
+								downPath = downloadList.get(pager
+										.getCurrentItem());
 								download_name = "resourse.zip";
 								showDownloadDialog();
 							}
@@ -559,13 +560,14 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 					// 创建输入流
 					InputStream is = conn.getInputStream();
 					Log.i("suanfa", "1====");
-					File file = new File(path);
+					File file = new File(pathList.get(pager.getCurrentItem()));
 					// 判断文件目录是否存在
 					if (!file.exists()) {
 						file.mkdir();
 					}
 					Log.i("suanfa", "2====");
-					File apkFile = new File(path, download_name);
+					File apkFile = new File(
+							pathList.get(pager.getCurrentItem()), download_name);
 					FileOutputStream fos = new FileOutputStream(apkFile);
 					int count = 0;
 					// 缓存
@@ -592,8 +594,10 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 					fos.close();
 					is.close();
 					if (download_name.equals("resourse.zip")) {
-						ExerciseBookTool
-								.unZip(path + "/" + download_name, path);
+						ExerciseBookTool.unZip(
+								pathList.get(pager.getCurrentItem()) + "/"
+										+ download_name,
+								pathList.get(pager.getCurrentItem()));
 						getJsonPath();
 					} else {
 						handler.sendEmptyMessage(6);
@@ -604,15 +608,13 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (Exception e) {
-				Toast.makeText(HomeWorkIngActivity.this, "解压文件发生异常",
+				Toast.makeText(RecordMainActivity.this, "解压文件发生异常",
 						Toast.LENGTH_SHORT).show();
 			}
 
 			if (download_name.equals("resourse.zip")) {
 				// 取消下载对话框显示
 				mDownloadDialog.dismiss();
-			} else {
-				download_type = false;
 			}
 		}
 	};

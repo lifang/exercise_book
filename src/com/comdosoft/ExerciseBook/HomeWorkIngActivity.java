@@ -77,7 +77,6 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	private String url;
 	private ProgressBar mProgress;
 	private String download_name;
-	private boolean download_type = false;
 	private boolean out_time;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -221,7 +220,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 				out_time = ExerciseBookTool.Comparison_Time(ExerciseBookTool
 						.getTimeIng(), work_list.get(0).getEnd_time());
 				Log.i("suanfa", ExerciseBookTool.getTimeIng() + "/"
-						+ work_list.get(0).getEnd_time());
+						+ work_list.get(0).getEnd_time() + "/" + out_time);
 				startDekaron(i);// 跳转到答题页面
 			}
 		});
@@ -329,7 +328,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 				handler.sendEmptyMessage(4);
 			} else {
 				eb.setActivity_item(0);
-				if (typeList.get(i) || out_time) {// 已完成
+				if (typeList.get(i) || out_time == false) {// 已完成
 					MyDialog(i);
 				} else {
 					if (cardType) {// 卡包是否小于20
@@ -556,8 +555,6 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 			if (download_name.equals("resourse.zip")) {
 				// 取消下载对话框显示
 				mDownloadDialog.dismiss();
-			} else {
-				download_type = false;
 			}
 		}
 	};

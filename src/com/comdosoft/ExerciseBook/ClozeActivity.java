@@ -94,7 +94,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		eb = (ExerciseBook) getApplication();
 		// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
 		super.mQuestionType = 5;
-		super.type = 0;
+		// super.type = 0;
 		findViewById(R.id.base_back_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_propTrue).setOnClickListener(this);
