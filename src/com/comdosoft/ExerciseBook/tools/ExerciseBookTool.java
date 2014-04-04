@@ -102,7 +102,7 @@ public class ExerciseBookTool implements Urlinterface {
 
 	public static String getTimeIng() {// 获取当前时间
 		SimpleDateFormat sDateFormat = new SimpleDateFormat(
-				"yyyy-MM-dd hh:mm:ss");
+				"yyyy-MM-dd HH:mm:ss");
 		String date = sDateFormat.format(new java.util.Date());
 		return date;
 	}
@@ -333,12 +333,12 @@ public class ExerciseBookTool implements Urlinterface {
 	}
 
 	// 下载路径判断
-	public static boolean FileExist(String path) {
+	public static boolean FileExist(String path, String filename) {
 		File file = new File(path);
 		if (!file.exists()) {
 			file.mkdirs();
 		}
-		File file2 = new File(path + "/questions.json");
+		File file2 = new File(path + "/" + filename);
 		if (!file2.exists()) {
 			return false;
 		}

@@ -323,10 +323,12 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	 */
 
 	public void startDekaron(int i) {
-		if (ExerciseBookTool.FileExist(path)) {// 判断文件是否存在
-			if (getUpdateTime()) {
-				handler.sendEmptyMessage(4);
-			} else {
+		if (ExerciseBookTool.FileExist(path, "questions.json")) {// 判断question文件是否存在
+			if (ExerciseBookTool.FileExist(path, "student_" + eb.getUid()
+					+ ".json")) {// 判断answer文件是否存在
+			// if (getUpdateTime()) {// 判断更新时间
+			// handler.sendEmptyMessage(4);
+			// } else {
 				eb.setActivity_item(0);
 				if (typeList.get(i) || out_time == false) {// 已完成
 					MyDialog(i);
@@ -342,6 +344,9 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 						builder.show();
 					}
 				}
+				// }
+			} else {
+				handler.sendEmptyMessage(4);
 			}
 		} else {
 			handler.sendEmptyMessage(3);

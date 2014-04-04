@@ -252,7 +252,6 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 		case R.id.base_check_linearlayout:
 			if (img_index >= 0) {
 				if (Check) {
-
 					Check = false;
 					setCheckText("检查");
 					img_index -= 1;
