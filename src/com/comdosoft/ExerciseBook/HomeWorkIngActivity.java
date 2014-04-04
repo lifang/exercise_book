@@ -323,30 +323,34 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	 */
 
 	public void startDekaron(int i) {
-		MyDialog(i);
-		// if (ExerciseBookTool.FileExist(path)) {// 判断文件是否存在
-		// if (getUpdateTime()) {
-		// handler.sendEmptyMessage(4);
-		// } else {
-		// eb.setActivity_item(0);
-		// if (typeList.get(i) || out_time == false) {// 已完成
-		// MyDialog(i);
-		// } else {
-		// if (cardType) {// 卡包是否小于20
-		// status = 0;
-		// Start_Acvivity(i);
-		// } else {
-		// Builder builder = new Builder(HomeWorkIngActivity.this);
-		// builder.setTitle("提示");
-		// builder.setMessage("您的卡包已满,先清除几张再回来答题吧");
-		// builder.setNegativeButton("确定", null);
-		// builder.show();
-		// }
-		// }
-		// }
-		// } else {
-		// handler.sendEmptyMessage(3);
-		// }
+		if (ExerciseBookTool.FileExist(path, "questions.json")) {// 判断question文件是否存在
+			if (ExerciseBookTool.FileExist(path, "student_" + eb.getUid()
+					+ ".json")) {// 判断answer文件是否存在
+				// if (getUpdateTime()) {// 判断更新时间
+				// handler.sendEmptyMessage(4);
+				// } else {
+				eb.setActivity_item(0);
+				if (typeList.get(i) || out_time == false) {// 已完成
+					MyDialog(i);
+				} else {
+					if (cardType) {// 卡包是否小于20
+						status = 0;
+						Start_Acvivity(i);
+					} else {
+						Builder builder = new Builder(HomeWorkIngActivity.this);
+						builder.setTitle("提示");
+						builder.setMessage("您的卡包已满,先清除几张再回来答题吧");
+						builder.setNegativeButton("确定", null);
+						builder.show();
+					}
+				}
+				// }
+			} else {
+				handler.sendEmptyMessage(4);
+			}
+		} else {
+			handler.sendEmptyMessage(3);
+		}
 	}
 
 	public boolean getUpdateTime() {

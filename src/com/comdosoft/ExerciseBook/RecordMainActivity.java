@@ -167,6 +167,9 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 				download_name = "student_" + eb.getUid() + ".json";
 				downloadApk();
 				break;
+			case 7:
+				prodialog.dismiss();
+				break;
 			}
 		};
 	};
@@ -328,27 +331,34 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 				out_time = ExerciseBookTool.Comparison_Time(
 						ExerciseBookTool.getTimeIng(),
 						work_list.get(pager.getCurrentItem()).getEnd_time());
-				if (ExerciseBookTool.FileExist(pathList.get(pager
-						.getCurrentItem()))) {// 判断文件是否存在
+				if (ExerciseBookTool.FileExist(
+						pathList.get(pager.getCurrentItem()), "questions.json")) {// 判断question文件是否存在
 					getJsonPath();
-					if (getUpdateTime()) {
-						handler.sendEmptyMessage(6);
-					} else {
-						if (typeList.get(i) || out_time) {// 已完成
-							MyDialog(i, questiontype_list);
+					if (ExerciseBookTool.FileExist(
+							pathList.get(pager.getCurrentItem()), "student_"
+									+ eb.getUid() + ".json")) {// 判断answer文件是否存在
+						if (getUpdateTime()) {
+							handler.sendEmptyMessage(6);
 						} else {
-							if (cardType) {
-								status = 0;
-								Start_Acvivity(i, questiontype_list);
+							if (typeList.get(i) || out_time == false) {// 已完成
+								MyDialog(i, questiontype_list);
 							} else {
-								Builder builder = new Builder(
-										RecordMainActivity.this);
-								builder.setTitle("提示");
-								builder.setMessage("您的卡包已满,先清除几张再回来答题吧");
-								builder.setNegativeButton("确定", null);
-								builder.show();
+								if (cardType) {
+									status = 0;
+									Start_Acvivity(i, questiontype_list);
+								} else {
+									Builder builder = new Builder(
+											RecordMainActivity.this);
+									builder.setTitle("提示");
+									builder.setMessage("您的卡包已满,先清除几张再回来答题吧");
+									builder.setNegativeButton("确定", null);
+									builder.show();
+								}
 							}
 						}
+					} else {
+						Log.i("suanfa", "answer文件不存在,正在下载");
+						handler.sendEmptyMessage(6);
 					}
 				} else {
 					handler.sendEmptyMessage(4);
@@ -600,7 +610,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 								pathList.get(pager.getCurrentItem()));
 						getJsonPath();
 					} else {
-						handler.sendEmptyMessage(6);
+						handler.sendEmptyMessage(7);
 					}
 				}
 			} catch (MalformedURLException e) {
