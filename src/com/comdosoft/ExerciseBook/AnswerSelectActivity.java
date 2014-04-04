@@ -66,7 +66,7 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 
 		answerOption = mQuestList.get(mQindex).get(mBindex).getOption();
 		selectAdapter = new AnswerSelectAdapter(this, answerOption);
-		if (amp.getStatus() == 0 || status == 1) {
+		if (status != 2) {
 			listView.setOnItemClickListener(this);
 		}
 		// if (amp.getStatus() == 1 && status > 1) {
@@ -188,21 +188,25 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 			selectAdapter.setOptionAndAnswerList(1, sp.getOption(),
 					sp.getAnswer());
 			List<String> arr = sp.getOption();
-			if (mRecordIndex < mRecoirdAnswer.size()) {
-				String[] mArr = mRecoirdAnswer.get(mRecordIndex).split(
-						";\\|\\|;");
-				StringBuffer sb = new StringBuffer();
-				for (int i = 0; i < arr.size(); i++) {
-					for (int j = 0; j < mArr.length; j++) {
-						if (arr.get(i).equals(mArr[j])) {
-							sb.append(letterArr[i]).append(" ");
+			if (mRecoirdAnswer != null) {
+				if (mRecordIndex < mRecoirdAnswer.size()) {
+					String[] mArr = mRecoirdAnswer.get(mRecordIndex).split(
+							";\\|\\|;");
+					StringBuffer sb = new StringBuffer();
+					for (int i = 0; i < arr.size(); i++) {
+						for (int j = 0; j < mArr.length; j++) {
+							if (arr.get(i).equals(mArr[j])) {
+								sb.append(letterArr[i]).append(" ");
+							}
 						}
 					}
+					if (sb.length() > 0) {
+						sb.delete(sb.length() - 1, sb.length());
+					}
+					setMyAnswer(sb.toString());
+				} else {
+					setMyAnswer("");
 				}
-				if (sb.length() > 0) {
-					sb.delete(sb.length() - 1, sb.length());
-				}
-				setMyAnswer(sb.toString());
 			} else {
 				setMyAnswer("");
 			}

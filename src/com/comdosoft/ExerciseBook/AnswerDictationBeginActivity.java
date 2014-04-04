@@ -167,7 +167,7 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		}
 
 		setPage(mBindex + 1, mQuestList.get(mQindex).size());
-		if (amp.getStatus() == 1 && status > 1) {
+		if (status == 2) {
 			setRecordMes();
 		}
 	}
@@ -176,7 +176,7 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 	public void initView(final int i) {
 		String value = dictationList.get(i).getValue();
 		EditText et = new EditText(this);
-		if (amp.getStatus() == 1 && status > 1) {
+		if (status == 2) {
 			et.setFocusable(false);
 			et.setFocusableInTouchMode(false);
 			et.setText(filterString(value));

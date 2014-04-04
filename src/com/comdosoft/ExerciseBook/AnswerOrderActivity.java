@@ -82,7 +82,7 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 			TextView tv = mOptionTextList.get(i);
 			tv.setBackgroundResource(R.drawable.answer_order_item_check_style);
 
-			if (amp.getStatus() == 0) {
+			if (status != 2) {
 				mOptionOrderTextList.add(tv);
 				mAnswerList.add(answerArr[i]);
 			} else {

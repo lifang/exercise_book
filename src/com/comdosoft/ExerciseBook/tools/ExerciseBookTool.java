@@ -302,35 +302,6 @@ public class ExerciseBookTool implements Urlinterface {
 		return size / ratio.size();
 	}
 
-	// 计算正确率
-	public static int getRatio(String path, String key, int mRatio) {
-		List<Integer> ratio = new ArrayList<Integer>();
-		String answer_history = getJson(path);
-		try {
-			JSONObject obj = new JSONObject(answer_history);
-			JSONObject js = obj.getJSONObject(key);
-			Log.i("aaa", js.toString());
-			JSONArray arr = js.getJSONArray("questions");
-			for (int i = 0; i < arr.length(); i++) {
-				JSONObject item = arr.getJSONObject(i);
-				JSONArray ar = item.getJSONArray("branch_questions");
-				Log.i("aaa", ar.length() + "-ar");
-				for (int j = 0; j < ar.length(); j++) {
-					JSONObject o = ar.getJSONObject(j);
-					ratio.add(o.getInt("ratio"));
-				}
-			}
-			ratio.add(mRatio);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		int size = 0;
-		Log.i("aaa", ratio.size() + "-ratio");
-		for (int i = 0; i < ratio.size(); i++) {
-			size += ratio.get(i);
-		}
-		return size / ratio.size();
-	}
 
 	// 下载路径判断
 	public static boolean FileExist(String path, String filename) {
