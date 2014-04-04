@@ -305,18 +305,6 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 						getJsonPath();
 						ExerciseBookTool.initAnswer(path, eb.getWork_id(),
 								eb.getUid());// 初始化answer
-						if (!work_list.get(0).getUpdated_at().equals("null")) {// 如果Updated_at等于null说明第一次做
-							Log.i("suanfa", "1111111");
-							String answer_time = ExerciseBookTool
-									.getAnswerTime(path + "/student_"
-											+ eb.getUid() + ".json");
-							Log.i("suanfa", "answertime:" + answer_time);
-							if (ExerciseBookTool.Comparison_Time(answer_time,
-									work_list.get(0).getUpdated_at())) {
-								download_type = true;
-							}
-						}
-						Log.i("suanfa", "555");
 					}
 					handler.sendEmptyMessage(0);
 				} else {
@@ -339,7 +327,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 
 	public void startDekaron(int i) {
 		if (ExerciseBookTool.FileExist(path)) {// 判断文件是否存在
-			if (download_type) {
+			if (getUpdateTime()) {
 				handler.sendEmptyMessage(4);
 			} else {
 				eb.setActivity_item(0);
@@ -361,6 +349,22 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 		} else {
 			handler.sendEmptyMessage(3);
 		}
+	}
+
+	public boolean getUpdateTime() {
+		if (!work_list.get(0).getUpdated_at().equals("null")) {// 如果Updated_at等于null说明第一次做
+			Log.i("suanfa", "1111111");
+			String answer_time = ExerciseBookTool.getAnswerTime(path
+					+ "/student_" + eb.getUid() + ".json");
+			Log.i("suanfa", "answertime:" + answer_time);
+			if (ExerciseBookTool.Comparison_Time(answer_time, work_list.get(0)
+					.getUpdated_at())) {
+				Log.i("suanfa", "更新：" + answer_time + "/"
+						+ work_list.get(0).getUpdated_at());
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public void Start_Acvivity(int i) {// 做题跳转
