@@ -310,8 +310,9 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 						+ pojo.getQuestion_types().size() + "/"
 						+ pojo.getQuestion_types().get(i));
 				Log.i("suanfa", "Finish_types:" + pojo.getFinish_types().size());
-				if (ExerciseBookTool.Comparison_Time(ExerciseBookTool
-						.getTimeIng(), work_list.get(i).getEnd_time())) {
+				if (ExerciseBookTool.Comparison_Time(
+						ExerciseBookTool.getTimeIng(),
+						work_list.get(pager.getCurrentItem()).getEnd_time())) {
 					out_time = false;
 				} else {
 					out_time = true;
