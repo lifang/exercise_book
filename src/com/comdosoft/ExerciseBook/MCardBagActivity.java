@@ -10,7 +10,6 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -34,10 +33,8 @@ import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.AccelerateInterpolator;
@@ -51,11 +48,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cn.jpush.android.api.JPushInterface;
 
-import com.comdosoft.ExerciseBook.HomePageMainActivity.mod_avatar;
 import com.comdosoft.ExerciseBook.pojo.knowledges_card;
 import com.comdosoft.ExerciseBook.pojo.tags;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
-import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
@@ -626,6 +621,9 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 			wronganswer.setText(checkAns(card.getYour_answer(), // 你的错误
 					card.getTypes()));
 			fontIv.setOnClickListener(new OnClickListener() { // 标签按钮监听
+//					Integer.valueOf((card.getTypes() == null || card.getTypes()
+//							.equals("null")) ? "0" : card.getTypes())));
+//			fontIv.setOnClickListener(new OnClickListener() {
 				public void onClick(View arg0) {
 					Log.i("asd", "page:" + page + "index:" + index);
 					Intent intent = new Intent(MCardBagActivity.this,

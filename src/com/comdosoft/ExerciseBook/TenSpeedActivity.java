@@ -205,6 +205,7 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 		int type = 0;
 		AnswerJson answerJson = gson.fromJson(answer_history, AnswerJson.class);
 		answerJson.time_limit.setUpdate_time(ExerciseBookTool.getTimeIng());
+		answerJson.update = ExerciseBookTool.getTimeIng();
 		int q_item = Integer.valueOf(answerJson.time_limit.getQuestions_item());
 		int b_item = Integer.valueOf(answerJson.time_limit.getBranch_item());
 
@@ -251,7 +252,6 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 		case R.id.base_check_linearlayout:
 			if (img_index >= 0) {
 				if (Check) {
-
 					Check = false;
 					setCheckText("检查");
 					img_index -= 1;

@@ -107,26 +107,23 @@ public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 	}
 
 	private void setTextView() {
-		str = content.split("\\[\\[sign\\]\\]");
+		str = content.split(" ");
 		for (int i = 0; i < str.length; i++) {
 			View view1 = View.inflate(this, R.layout.cloze_view, null);
-			TextView text = (TextView) view1.findViewById(R.id.tv);
-			text.setText(str[i].toString());
 			spinner = (TextView) view1.findViewById(R.id.spinner);
 
-			if (i != str.length - 1) {
+			if (str[i].equals("[[sign]]")) {
 				String Opption = cloze.getList().get(i).getOpption();
 				final String[] Opption_str = Opption.split(";\\|\\|;");
 				spinner.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {
-						Log.i("aaa", "---");
 						showWindow(spinner, Opption_str);
 					}
 				});
 				spinner.setText(cloze.getList().get(i).getAnswer());
-			}
-			if (i == str.length - 1) {
-				spinner.setVisibility(View.GONE);
+			} else {
+				TextView text = (TextView) view1.findViewById(R.id.tv);
+				text.setText(str[i].toString());
 			}
 			myLayout.addView(view1);
 		}

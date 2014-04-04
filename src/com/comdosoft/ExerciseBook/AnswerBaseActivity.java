@@ -187,13 +187,12 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 			setUseTime(amp.getUse_time());
 			setType(amp.getStatus());
 
-			if (amp.getStatus() == 1) {
+			if (status == 2) {
 				mRecoirdAnswer = amp.getAnswer();
 				mRecoirdRatio = amp.getRatio();
 				nextRecord();
 			}
 		}
-
 	}
 
 	public void setTimeGone() {
@@ -203,14 +202,14 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	// 设置答题|记录 type 0答题 1历史
 	public void setType(int type) {
 		this.type = type;
-		if (type == 0) {
+		if (type == 0 && status < 2) {
 			if (mQuestionType != 7) {
 				setStart();
 			}
 			base_time_linearlayout.setVisibility(View.VISIBLE);
 			base_history_linearlayout.setVisibility(View.GONE);
 			base_answer_linearlayout.setVisibility(View.GONE);
-		} else if (type == 1 && status > 1) {
+		} else if (status == 2) {
 			setCheckText("下一个");
 			propTrue.setImageResource(R.drawable.base_prop3);
 			propTime.setImageResource(R.drawable.base_prop4);
@@ -271,6 +270,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	public void setMyAnswer(String s) {
 		if (s == null || s.equals("")) {
 			base_answer_text.setText("没有答题记录!");
+			setAccuracyAndUseTime(0, 0);
 		} else {
 			base_answer_text.setText(answerArr[mQuestionType] + s);
 		}
@@ -378,37 +378,61 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		index = 0;
 		if (status == 0) {// status:0表示答题 1重做 2表示历史
 			prodialog.show();
+			setUpdateJson();
 			Finish_Json();
 		} else {
 			mHandler.sendEmptyMessage(5);
 		}
 	}
 
+	public void setUpdateJson() {
+		String answer_history = ExerciseBookTool.getAnswer_Json_history(path);
+		answerJson = gson.fromJson(answer_history, AnswerJson.class);
+		AnswerPojo ap = getAnswerPojo();
+		answerJson.update = ExerciseBookTool.getTimeIng();
+		String str = gson.toJson(answerJson);
+		try {
+			ExerciseBookTool.writeFile(path, str);
+			uploadJSON(ap.getStatus());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	// 切换下一历史记录
 	public void nextRecord() {
-		setAccuracyAndUseTime(mRecoirdRatio.get(mRecordIndex),
-				amp.getUse_time());
-		setMyAnswer(mRecoirdAnswer.get(mRecordIndex));
-		if (mRecoirdRatio.size() > 0 && mRecoirdAnswer.size() > 0) {
-			setAccuracyAndUseTime(mRecoirdRatio.get(mRecordIndex),
-					amp.getUse_time());
-			if (mQuestionType == 0) {
-				recordMes = null;
-				String s[] = mRecoirdAnswer.get(mRecordIndex).split(";&&;");
-				if (s.length > 1) {
-					recordMes = s[1];
-				}
-				setMyAnswer(s[0].replaceAll(";\\|\\|;", " "));
-			} else {
+		if (mRecoirdRatio != null && mRecoirdAnswer != null) {
+			if (mRecordIndex < mRecoirdRatio.size()
+					&& mRecordIndex < mRecoirdAnswer.size()) {
+				setAccuracyAndUseTime(mRecoirdRatio.get(mRecordIndex),
+						amp.getUse_time());
 				setMyAnswer(mRecoirdAnswer.get(mRecordIndex));
+				setAccuracyAndUseTime(mRecoirdRatio.get(mRecordIndex),
+						amp.getUse_time());
+				if (mQuestionType == 0) {
+					recordMes = null;
+					String s[] = mRecoirdAnswer.get(mRecordIndex).split(";&&;");
+					if (s.length > 1) {
+						recordMes = s[1];
+					}
+					setMyAnswer(s[0].replaceAll(";\\|\\|;", " "));
+				} else if (mQuestionType == 4) {
+					setMyAnswer(mRecoirdAnswer.get(mRecordIndex)
+							.replaceAll(";\\|\\|;", "    ")
+							.replaceAll("<=>", " "));
+				} else {
+					setMyAnswer(mRecoirdAnswer.get(mRecordIndex).replaceAll(
+							";\\|\\|;", " "));
+				}
+
+				if (mRecordIndex < mRecoirdAnswer.size() - 1) {
+					mRecordIndex++;
+				}
+			} else {
+				setMyAnswer("");
 			}
 		} else {
-			setAccuracyAndUseTime(0, 0);
 			setMyAnswer("");
-		}
-
-		if (mRecordIndex < mRecoirdAnswer.size() - 1) {
-			mRecordIndex++;
 		}
 	}
 
@@ -461,7 +485,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		if (mQindex == mQuestList.size() - 1
 				&& mBindex == mQuestList.get(mQindex).size() - 1) {
 			// 最后一题
-			if (amp.getStatus() == 1 && status > 1) {
+			if (status == 2) {
 				// 历史记录
 				MyDialog("没有更多历史记录了,点击确定退出!", 1);
 			} else {
@@ -528,7 +552,8 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		String answer_history = ExerciseBookTool.getAnswer_Json_history(path);
 		answerJson = gson.fromJson(answer_history, AnswerJson.class);
 		AnswerPojo ap = getAnswerPojo();
-		ap.setUpdate_time("2014-03-17 08:00:00");
+		answerJson.update = ExerciseBookTool.getTimeIng();
+		ap.setUpdate_time(ExerciseBookTool.getTimeIng());
 		ap.setUse_time(getUseTime() + "");
 
 		if (ap.getQuestions().size() == 0) {

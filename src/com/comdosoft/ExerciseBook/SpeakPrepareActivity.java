@@ -271,6 +271,7 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 				questions_item = time_limit.getInt("questions_item");
 				branch_item = time_limit.getInt("branch_item");
 				use_time = time_limit.getInt("use_time");
+				specified_time = time_limit.getInt("specified_time");
 				setStart();
 				Log.i("aaa", specified_time + "--" + branch_item);
 				JSONArray questions = time_limit.getJSONArray("questions");

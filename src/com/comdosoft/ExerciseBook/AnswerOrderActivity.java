@@ -82,7 +82,7 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 			TextView tv = mOptionTextList.get(i);
 			tv.setBackgroundResource(R.drawable.answer_order_item_check_style);
 
-			if (amp.getStatus() == 0) {
+			if (status != 2) {
 				mOptionOrderTextList.add(tv);
 				mAnswerList.add(answerArr[i]);
 			} else {
@@ -179,7 +179,7 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 		mSubjectIndex = 0;
 		mOptionIndex = 0;
 
-		if (amp.getStatus() == 1 && status > 1) {
+		if (status == 2) {
 			answer_order_back.setVisibility(View.GONE);
 			answer_order_again.setVisibility(View.GONE);
 		}
@@ -211,7 +211,7 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 			mOptionLinearLayout.addView(mOptionList.get(i));
 		}
 
-		if (amp.getStatus() == 1 && status > 1) {
+		if (status == 2) {
 			rightAnswer();
 		}
 	}
@@ -220,11 +220,11 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 		StringBuffer sb = new StringBuffer();
 		StringBuffer mSb = new StringBuffer();
 		for (int i = 0; i < mAnswerList.size(); i++) {
-			sb.append(mAnswerList.get(i)).append(" ");
+			sb.append(mAnswerList.get(i)).append(";||;");
 			mSb.append(mAnswerList.get(i));
 		}
 		mAnswerStr = sb.toString();
-		mAnswerStr = mAnswerStr.substring(0, mAnswerStr.length() - 1);
+		mAnswerStr = mAnswerStr.substring(0, mAnswerStr.length() - 4);
 		if (mAnswer.toString().equals(mSb.toString())) {
 			ratio = 100;
 			MyPlayer(true);

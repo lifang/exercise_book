@@ -77,7 +77,6 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	private String url;
 	private ProgressBar mProgress;
 	private String download_name;
-	private boolean download_type = false;
 	private boolean out_time;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -218,14 +217,10 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 		work_name.setText(namearr[questiontype_list.get(i)].toString());
 		layout.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View arg0) {
-				if (ExerciseBookTool.Comparison_Time(ExerciseBookTool
-						.getTimeIng(), work_list.get(0).getEnd_time())) {
-					out_time = false;
-				} else {
-					out_time = true;
-				}
+				out_time = ExerciseBookTool.Comparison_Time(ExerciseBookTool
+						.getTimeIng(), work_list.get(0).getEnd_time());
 				Log.i("suanfa", ExerciseBookTool.getTimeIng() + "/"
-						+ work_list.get(0).getEnd_time());
+						+ work_list.get(0).getEnd_time() + "/" + out_time);
 				startDekaron(i);// 跳转到答题页面
 			}
 		});
@@ -305,17 +300,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 						getJsonPath();
 						ExerciseBookTool.initAnswer(path, eb.getWork_id(),
 								eb.getUid());// 初始化answer
-						if (!work_list.get(0).getUpdated_at().equals("null")) {// 如果Updated_at等于null说明第一次做
-							Log.i("suanfa", "1111111");
-							String answer_time = ExerciseBookTool
-									.getAnswerTime(path + "/student_"
-											+ eb.getUid() + ".json");
-							Log.i("suanfa", "answertime:" + answer_time);
-							if (ExerciseBookTool.Comparison_Time(answer_time,
-									work_list.get(0).getUpdated_at())) {
-								download_type = true;
-							}
-						}
+
 						Log.i("suanfa", "555");
 					}
 					handler.sendEmptyMessage(0);
@@ -338,29 +323,47 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	 */
 
 	public void startDekaron(int i) {
-		if (ExerciseBookTool.FileExist(path)) {// 判断文件是否存在
-			if (download_type) {
-				handler.sendEmptyMessage(4);
-			} else {
-				eb.setActivity_item(0);
-				if (typeList.get(i) || out_time) {// 已完成
-					MyDialog(i);
+		if (ExerciseBookTool.FileExist(path, "questions.json")) {// 判断question文件是否存在
+			if (ExerciseBookTool.FileExist(path, "student_" + eb.getUid()
+					+ ".json")) {// 判断answer文件是否存在
+				if (getUpdateTime()) {// 判断更新时间
+					handler.sendEmptyMessage(4);
 				} else {
-					if (cardType) {// 卡包是否小于20
-						status = 0;
-						Start_Acvivity(i);
+					eb.setActivity_item(0);
+					if (typeList.get(i) || out_time == false) {// 已完成
+						MyDialog(i);
 					} else {
-						Builder builder = new Builder(HomeWorkIngActivity.this);
-						builder.setTitle("提示");
-						builder.setMessage("您的卡包已满,先清除几张再回来答题吧");
-						builder.setNegativeButton("确定", null);
-						builder.show();
+						if (cardType) {// 卡包是否小于20
+							status = 0;
+							Start_Acvivity(i);
+						} else {
+							Builder builder = new Builder(
+									HomeWorkIngActivity.this);
+							builder.setTitle("提示");
+							builder.setMessage("您的卡包已满,先清除几张再回来答题吧");
+							builder.setNegativeButton("确定", null);
+							builder.show();
+						}
 					}
 				}
+			} else {
+				handler.sendEmptyMessage(4);
 			}
 		} else {
 			handler.sendEmptyMessage(3);
 		}
+	}
+
+	public boolean getUpdateTime() {
+		if (!work_list.get(0).getUpdated_at().equals("null")) {// 如果Updated_at等于null说明第一次做
+			String answer_time = ExerciseBookTool.getAnswerTime(path
+					+ "/student_" + eb.getUid() + ".json");
+			Log.i("suanfa", "answertime:" + answer_time + "/"
+					+ work_list.get(0).getUpdated_at());
+			return ExerciseBookTool.Comparison_Time(answer_time,
+					work_list.get(0).getUpdated_at());
+		}
+		return false;
 	}
 
 	public void Start_Acvivity(int i) {// 做题跳转
@@ -558,8 +561,6 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 			if (download_name.equals("resourse.zip")) {
 				// 取消下载对话框显示
 				mDownloadDialog.dismiss();
-			} else {
-				download_type = false;
 			}
 		}
 	};

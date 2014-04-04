@@ -96,7 +96,7 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 			initRightView(i + 1);
 		}
 
-		if (amp.getStatus() == 1 && status > 1) {
+		if (status == 2) {
 			coordinate = trueList;
 			for (int j = 0; j < answerList.size(); j++) {
 				setCheckStatusForIndex(j);
@@ -203,6 +203,9 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 		leftText.setOnClickListener(new MyClick(i));
 		leftText.setText(orderAnswerList.get(i));
 		left.setLayoutParams(lp);
+		if (status == 2) {
+			left.setClickable(false);
+		}
 		leftLinearLayout.addView(left);
 		wireList.add(new AnswerWirePojo(leftText, 0));
 	}
@@ -216,6 +219,9 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 		rightText.setOnClickListener(new MyClick(i));
 		rightText.setText(orderAnswerList.get(i));
 		right.setLayoutParams(lp);
+		if (status == 2) {
+			right.setClickable(false);
+		}
 		rightLinearLayout.addView(right);
 		wireList.add(new AnswerWirePojo(rightText, 0));
 	}
@@ -261,8 +267,8 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 					}
 				}
 
-				sb.append(orderAnswerList.get(left)).append(" ")
-						.append(orderAnswerList.get(right)).append("    ");
+				sb.append(orderAnswerList.get(left)).append("<=>")
+						.append(orderAnswerList.get(right)).append(";||;");
 
 				for (int j = 0; j < intList.size(); j++) {
 					if (left == intList.get(j)[0] && right == intList.get(j)[1]) {
