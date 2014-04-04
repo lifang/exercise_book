@@ -220,11 +220,11 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 		StringBuffer sb = new StringBuffer();
 		StringBuffer mSb = new StringBuffer();
 		for (int i = 0; i < mAnswerList.size(); i++) {
-			sb.append(mAnswerList.get(i)).append(" ");
+			sb.append(mAnswerList.get(i)).append(";||;");
 			mSb.append(mAnswerList.get(i));
 		}
 		mAnswerStr = sb.toString();
-		mAnswerStr = mAnswerStr.substring(0, mAnswerStr.length() - 1);
+		mAnswerStr = mAnswerStr.substring(0, mAnswerStr.length() - 4);
 		if (mAnswer.toString().equals(mSb.toString())) {
 			ratio = 100;
 			MyPlayer(true);

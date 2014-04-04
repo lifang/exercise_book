@@ -193,7 +193,6 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 				nextRecord();
 			}
 		}
-
 	}
 
 	public void setTimeGone() {
@@ -399,8 +398,12 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 					recordMes = s[1];
 				}
 				setMyAnswer(s[0].replaceAll(";\\|\\|;", " "));
+			} else if (mQuestionType == 4) {
+				setMyAnswer(mRecoirdAnswer.get(mRecordIndex)
+						.replaceAll(";\\|\\|;", "    ").replaceAll("<=>", " "));
 			} else {
-				setMyAnswer(mRecoirdAnswer.get(mRecordIndex));
+				setMyAnswer(mRecoirdAnswer.get(mRecordIndex).replaceAll(
+						";\\|\\|;", " "));
 			}
 		} else {
 			setAccuracyAndUseTime(0, 0);

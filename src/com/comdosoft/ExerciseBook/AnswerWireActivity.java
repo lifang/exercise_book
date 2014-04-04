@@ -261,8 +261,8 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 					}
 				}
 
-				sb.append(orderAnswerList.get(left)).append(" ")
-						.append(orderAnswerList.get(right)).append("    ");
+				sb.append(orderAnswerList.get(left)).append("<=>")
+						.append(orderAnswerList.get(right)).append(";||;");
 
 				for (int j = 0; j < intList.size(); j++) {
 					if (left == intList.get(j)[0] && right == intList.get(j)[1]) {
