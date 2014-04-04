@@ -218,12 +218,8 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 		work_name.setText(namearr[questiontype_list.get(i)].toString());
 		layout.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View arg0) {
-				if (ExerciseBookTool.Comparison_Time(ExerciseBookTool
-						.getTimeIng(), work_list.get(0).getEnd_time())) {
-					out_time = false;
-				} else {
-					out_time = true;
-				}
+				out_time = ExerciseBookTool.Comparison_Time(ExerciseBookTool
+						.getTimeIng(), work_list.get(0).getEnd_time());
 				Log.i("suanfa", ExerciseBookTool.getTimeIng() + "/"
 						+ work_list.get(0).getEnd_time());
 				startDekaron(i);// 跳转到答题页面
@@ -305,6 +301,8 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 						getJsonPath();
 						ExerciseBookTool.initAnswer(path, eb.getWork_id(),
 								eb.getUid());// 初始化answer
+
+						Log.i("suanfa", "555");
 					}
 					handler.sendEmptyMessage(0);
 				} else {
@@ -353,16 +351,12 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 
 	public boolean getUpdateTime() {
 		if (!work_list.get(0).getUpdated_at().equals("null")) {// 如果Updated_at等于null说明第一次做
-			Log.i("suanfa", "1111111");
 			String answer_time = ExerciseBookTool.getAnswerTime(path
 					+ "/student_" + eb.getUid() + ".json");
-			Log.i("suanfa", "answertime:" + answer_time);
-			if (ExerciseBookTool.Comparison_Time(answer_time, work_list.get(0)
-					.getUpdated_at())) {
-				Log.i("suanfa", "更新：" + answer_time + "/"
-						+ work_list.get(0).getUpdated_at());
-				return true;
-			}
+			Log.i("suanfa", "answertime:" + answer_time + "/"
+					+ work_list.get(0).getUpdated_at());
+			return ExerciseBookTool.Comparison_Time(answer_time,
+					work_list.get(0).getUpdated_at());
 		}
 		return false;
 	}

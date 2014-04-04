@@ -127,6 +127,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 		int time = intent.getIntExtra("time", 0);
 		setUseTime(time);
 		specified_time = intent.getStringExtra("specified_time");
+		super.specified_time = intent.getIntExtra("specified_time", 0);
 		initialize();
 		SetTextView();
 		Display display = this.getWindowManager().getDefaultDisplay();
@@ -496,6 +497,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 
 		int type = 0;
 		answerJson = gson.fromJson(answer_history, AnswerJson.class);
+		answerJson.update = ExerciseBookTool.getTimeIng();
 		answerJson.reading.setUpdate_time(ExerciseBookTool.getTimeIng());
 		int q_item = Integer.valueOf(answerJson.reading.getQuestions_item());
 		int b_item = Integer.valueOf(answerJson.reading.getBranch_item());

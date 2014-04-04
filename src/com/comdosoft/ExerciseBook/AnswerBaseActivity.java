@@ -531,7 +531,8 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		String answer_history = ExerciseBookTool.getAnswer_Json_history(path);
 		answerJson = gson.fromJson(answer_history, AnswerJson.class);
 		AnswerPojo ap = getAnswerPojo();
-		ap.setUpdate_time("2014-03-17 08:00:00");
+		answerJson.update = ExerciseBookTool.getTimeIng();
+		ap.setUpdate_time(ExerciseBookTool.getTimeIng());
 		ap.setUse_time(getUseTime() + "");
 
 		if (ap.getQuestions().size() == 0) {
