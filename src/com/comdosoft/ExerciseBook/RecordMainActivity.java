@@ -107,7 +107,10 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 	private List<String> pathList;
 	private List<String> downloadList;
 	private boolean out_time;// 是否超时
+	private String downPath;
+	private String download_name;
 	private Handler handler = new Handler() {
+
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case 0:
@@ -144,6 +147,9 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog,
 									int which) {
+								downPath = downloadList.get(pager
+										.getCurrentItem());
+								download_name = "resourse.zip";
 								showDownloadDialog();
 							}
 						});
@@ -151,6 +157,15 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 				break;
 			case 5:
 				mProgress.setProgress(progress);
+				break;
+			case 6:
+				prodialog.setMessage("正在更新答题记录,请稍后...");
+				prodialog.setCanceledOnTouchOutside(false);
+				prodialog.show();
+				downPath = IP
+						+ work_list.get(pager.getCurrentItem()).getAnswer_url();
+				download_name = "student_" + eb.getUid() + ".json";
+				downloadApk();
 				break;
 			}
 		};
@@ -310,29 +325,29 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 						+ pojo.getQuestion_types().size() + "/"
 						+ pojo.getQuestion_types().get(i));
 				Log.i("suanfa", "Finish_types:" + pojo.getFinish_types().size());
-				if (ExerciseBookTool.Comparison_Time(
+				out_time = ExerciseBookTool.Comparison_Time(
 						ExerciseBookTool.getTimeIng(),
-						work_list.get(pager.getCurrentItem()).getEnd_time())) {
-					out_time = false;
-				} else {
-					out_time = true;
-				}
+						work_list.get(pager.getCurrentItem()).getEnd_time());
 				if (ExerciseBookTool.FileExist(pathList.get(pager
 						.getCurrentItem()))) {// 判断文件是否存在
 					getJsonPath();
-					if (typeList.get(i) || out_time) {// 已完成
-						MyDialog(i, questiontype_list);
+					if (getUpdateTime()) {
+						handler.sendEmptyMessage(6);
 					} else {
-						if (cardType) {
-							status = 0;
-							Start_Acvivity(i, questiontype_list);
+						if (typeList.get(i) || out_time) {// 已完成
+							MyDialog(i, questiontype_list);
 						} else {
-							Builder builder = new Builder(
-									RecordMainActivity.this);
-							builder.setTitle("提示");
-							builder.setMessage("您的卡包已满,先清除几张再回来答题吧");
-							builder.setNegativeButton("确定", null);
-							builder.show();
+							if (cardType) {
+								status = 0;
+								Start_Acvivity(i, questiontype_list);
+							} else {
+								Builder builder = new Builder(
+										RecordMainActivity.this);
+								builder.setTitle("提示");
+								builder.setMessage("您的卡包已满,先清除几张再回来答题吧");
+								builder.setNegativeButton("确定", null);
+								builder.show();
+							}
 						}
 					}
 				} else {
@@ -340,7 +355,6 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 				}
 				Log.i("linshi", IP + pojo.getQuestion_packages_url());
 			}
-
 		});
 
 		int imgid = 0;
@@ -378,6 +392,26 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 			}
 		}
 		linearList.get(linear_item).addView(view);
+	}
+
+	public boolean getUpdateTime() {
+		if (!work_list.get(pager.getCurrentItem()).getUpdated_at()
+				.equals("null")) {// 如果Updated_at等于null说明第一次做
+			String answer_time = ExerciseBookTool.getAnswerTime(pathList
+					.get(pager.getCurrentItem())
+					+ "/student_"
+					+ eb.getUid()
+					+ ".json");
+			Log.i("suanfa",
+					"answertime:"
+							+ answer_time
+							+ "/"
+							+ work_list.get(pager.getCurrentItem())
+									.getUpdated_at());
+			return ExerciseBookTool.Comparison_Time(answer_time,
+					work_list.get(pager.getCurrentItem()).getUpdated_at());
+		}
+		return false;
 	}
 
 	public void Start_Acvivity(int i, List<Integer> questiontype_list) {// 做题跳转
@@ -515,9 +549,8 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 				// 判断SD卡是否存在，并且是否具有读写权限
 				if (Environment.getExternalStorageState().equals(
 						Environment.MEDIA_MOUNTED)) {
-					Log.i("suanfa",
-							IP + downloadList.get(pager.getCurrentItem()));
-					URL url = new URL(downloadList.get(pager.getCurrentItem()));
+					Log.i("suanfa", downPath);
+					URL url = new URL(downPath);
 					// 创建连接
 					HttpURLConnection conn = (HttpURLConnection) url
 							.openConnection();
@@ -526,27 +559,30 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 					int length = conn.getContentLength();
 					// 创建输入流
 					InputStream is = conn.getInputStream();
-
+					Log.i("suanfa", "1====");
 					File file = new File(pathList.get(pager.getCurrentItem()));
 					// 判断文件目录是否存在
 					if (!file.exists()) {
 						file.mkdir();
 					}
+					Log.i("suanfa", "2====");
 					File apkFile = new File(
-							pathList.get(pager.getCurrentItem()),
-							"resourse.zip");
+							pathList.get(pager.getCurrentItem()), download_name);
 					FileOutputStream fos = new FileOutputStream(apkFile);
 					int count = 0;
 					// 缓存
 					byte buf[] = new byte[1024];
 					// 写入到文件中
+					Log.i("suanfa", "3====");
 					do {
 						int numread = is.read(buf);
 						count += numread;
 						// 计算进度条位置
-						progress = (int) (((float) count / length) * 100);
 						// 更新进度
-						handler.sendEmptyMessage(5);
+						if (download_name.equals("resourse.zip")) {
+							progress = (int) (((float) count / length) * 100);
+							handler.sendEmptyMessage(5);
+						}
 						if (numread <= 0) {
 							// 下载完成
 							// handler.sendEmptyMessage(5);
@@ -557,10 +593,15 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 					} while (!cancelUpdate);// 点击取消就停止下载.
 					fos.close();
 					is.close();
-					ExerciseBookTool.unZip(pathList.get(pager.getCurrentItem())
-							+ "/resourse.zip",
-							pathList.get(pager.getCurrentItem()));
-					getJsonPath();
+					if (download_name.equals("resourse.zip")) {
+						ExerciseBookTool.unZip(
+								pathList.get(pager.getCurrentItem()) + "/"
+										+ download_name,
+								pathList.get(pager.getCurrentItem()));
+						getJsonPath();
+					} else {
+						handler.sendEmptyMessage(6);
+					}
 				}
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
@@ -570,8 +611,11 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 				Toast.makeText(RecordMainActivity.this, "解压文件发生异常",
 						Toast.LENGTH_SHORT).show();
 			}
-			// 取消下载对话框显示
-			mDownloadDialog.dismiss();
+
+			if (download_name.equals("resourse.zip")) {
+				// 取消下载对话框显示
+				mDownloadDialog.dismiss();
+			}
 		}
 	};
 

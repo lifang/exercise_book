@@ -94,7 +94,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		eb = (ExerciseBook) getApplication();
 		// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
 		super.mQuestionType = 5;
-		super.type = 0;
+		// super.type = 0;
 		findViewById(R.id.base_back_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_propTrue).setOnClickListener(this);
@@ -176,6 +176,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 				JSONObject obj = new JSONObject(json);
 				JSONObject cloze = obj.getJSONObject("cloze");
 				questions_item = cloze.getInt("questions_item");
+				specified_time = cloze.getInt("specified_time");
 				int use_time = cloze.getInt("use_time");
 				setUseTime(use_time);
 				setStart();
@@ -228,6 +229,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 			Map<Integer, String> answer, int id) {
 		int type = 0;
 		answerJson = gson.fromJson(answer_history, AnswerJson.class);
+		answerJson.update = ExerciseBookTool.getTimeIng();
 		answerJson.cloze.setUpdate_time(ExerciseBookTool.getTimeIng());
 		int q_item = Integer.valueOf(answerJson.cloze.getQuestions_item());
 		int b_item = Integer.valueOf(answerJson.cloze.getBranch_item());
