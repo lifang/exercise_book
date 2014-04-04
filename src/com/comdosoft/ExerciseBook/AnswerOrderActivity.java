@@ -179,7 +179,7 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 		mSubjectIndex = 0;
 		mOptionIndex = 0;
 
-		if (amp.getStatus() == 1 && status > 1) {
+		if (status == 2) {
 			answer_order_back.setVisibility(View.GONE);
 			answer_order_again.setVisibility(View.GONE);
 		}
@@ -211,7 +211,7 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 			mOptionLinearLayout.addView(mOptionList.get(i));
 		}
 
-		if (amp.getStatus() == 1 && status > 1) {
+		if (status == 2) {
 			rightAnswer();
 		}
 	}

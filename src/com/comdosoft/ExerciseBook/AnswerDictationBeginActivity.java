@@ -321,6 +321,17 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		return s;
 	}
 
+	// 是否包含数字
+	public static boolean hasDigit(String content) {
+		Pattern p = Pattern.compile(".*\\d+.*");
+		Matcher m = p.matcher(content);
+		if (m.matches()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	public void analysisJSON(String json) {
 		try {
 			JSONObject jsonObject = new JSONObject(json);
@@ -363,29 +374,43 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 						tvList.get(i).setVisibility(View.INVISIBLE);
 						etList.get(i).setTextColor(Color.rgb(255, 0, 0));
 					}
-
-					int value = Soundex_Levenshtein.dragonEngine(
-							filterString(s), filterString(dictationList.get(i)
-									.getValue()));
-					if (filterString(dictationList.get(i).getValue()).equals(
-							filterString(s))) {
-						// 全对
-						rightCount++;
-						dictationList.get(i).setFlag(1);
-						tvList.get(i).setVisibility(View.INVISIBLE);
-						etList.get(i).setTextColor(Color.rgb(53, 207, 143));
-					} else if (value > 6) {
-						// 半对
-						mesFlag = true;
-						dictationList.get(i).setFlag(1);
-						etList.get(i).setTextColor(Color.rgb(00, 00, 00));
-						tvList.get(i).setVisibility(View.VISIBLE);
+					String answerStr = filterString(dictationList.get(i)
+							.getValue());
+					if (hasDigit(answerStr)) {
+						if (answerStr.equals(filterString(s))) {
+							dictationList.get(i).setFlag(1);
+							tvList.get(i).setVisibility(View.INVISIBLE);
+							etList.get(i).setTextColor(Color.rgb(146, 184, 27));
+						} else {
+							errorMap.put(dictationList.get(i).getValue(), 1);
+							dictationList.get(i).setFlag(0);
+							tvList.get(i).setVisibility(View.INVISIBLE);
+							etList.get(i).setTextColor(Color.rgb(255, 0, 0));
+						}
 					} else {
-						// 错误
-						errorMap.put(dictationList.get(i).getValue(), 1);
-						dictationList.get(i).setFlag(0);
-						tvList.get(i).setVisibility(View.INVISIBLE);
-						etList.get(i).setTextColor(Color.rgb(245, 21, 58));
+						int value = Soundex_Levenshtein.dragonEngine(
+								filterString(s), filterString(dictationList
+										.get(i).getValue()));
+						if (filterString(dictationList.get(i).getValue())
+								.equals(filterString(s))) {
+							// 全对
+							rightCount++;
+							dictationList.get(i).setFlag(1);
+							tvList.get(i).setVisibility(View.INVISIBLE);
+							etList.get(i).setTextColor(Color.rgb(53, 207, 143));
+						} else if (value > 6) {
+							// 半对
+							mesFlag = true;
+							dictationList.get(i).setFlag(1);
+							etList.get(i).setTextColor(Color.rgb(00, 00, 00));
+							tvList.get(i).setVisibility(View.VISIBLE);
+						} else {
+							// 错误
+							errorMap.put(dictationList.get(i).getValue(), 1);
+							dictationList.get(i).setFlag(0);
+							tvList.get(i).setVisibility(View.INVISIBLE);
+							etList.get(i).setTextColor(Color.rgb(245, 21, 58));
+						}
 					}
 				} else {
 					dictationList.get(i).setFlag(0);

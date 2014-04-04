@@ -28,7 +28,7 @@ import com.comdosoft.ExerciseBook.pojo.AnswerBasePojo;
 import com.comdosoft.ExerciseBook.pojo.AnswerSelectItemPojo;
 import com.comdosoft.ExerciseBook.tools.AnswerTools;
 
-//2014年4月1日 10:45:06
+//2014年4月4日 10:16:16
 public class AnswerSelectActivity extends AnswerBaseActivity implements
 		OnItemClickListener, OnClickListener, OnPreparedListener {
 
@@ -184,23 +184,28 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 		AnswerBasePojo sp = mQuestList.get(mQindex).get(mBindex);
 		answerOption = sp.getOption();
 
-		if (amp.getStatus() == 1 && status > 1) {
+		if (status > 1) {
 			selectAdapter.setOptionAndAnswerList(1, sp.getOption(),
 					sp.getAnswer());
 			List<String> arr = sp.getOption();
-			String[] mArr = mRecoirdAnswer.get(mRecordIndex).split(";\\|\\|;");
-			StringBuffer sb = new StringBuffer();
-			for (int i = 0; i < arr.size(); i++) {
-				for (int j = 0; j < mArr.length; j++) {
-					if (arr.get(i).equals(mArr[j])) {
-						sb.append(letterArr[i]).append(" ");
+			if (mRecordIndex < mRecoirdAnswer.size()) {
+				String[] mArr = mRecoirdAnswer.get(mRecordIndex).split(
+						";\\|\\|;");
+				StringBuffer sb = new StringBuffer();
+				for (int i = 0; i < arr.size(); i++) {
+					for (int j = 0; j < mArr.length; j++) {
+						if (arr.get(i).equals(mArr[j])) {
+							sb.append(letterArr[i]).append(" ");
+						}
 					}
 				}
+				if (sb.length() > 0) {
+					sb.delete(sb.length() - 1, sb.length());
+				}
+				setMyAnswer(sb.toString());
+			} else {
+				setMyAnswer("");
 			}
-			if (sb.length() > 0) {
-				sb.delete(sb.length() - 1, sb.length());
-			}
-			setMyAnswer(sb.toString());
 		} else {
 			selectAdapter.setOptionList(answerOption);
 		}
