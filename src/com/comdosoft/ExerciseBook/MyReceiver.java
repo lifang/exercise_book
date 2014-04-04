@@ -5,10 +5,6 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.comdosoft.ExerciseBook.tools.ExerciseBook;
-import com.comdosoft.ExerciseBook.tools.Urlinterface;
-
-import cn.jpush.android.api.JPushInterface;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -16,9 +12,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.sax.StartElementListener;
 import android.util.Log;
 import android.widget.Toast;
+import cn.jpush.android.api.JPushInterface;
+
+import com.comdosoft.ExerciseBook.tools.ExerciseBook;
+import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
 public class MyReceiver extends BroadcastReceiver implements Urlinterface {
 	private int type;

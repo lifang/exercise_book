@@ -46,15 +46,26 @@ public class WorkJson {
 				} else {
 					number = obj.getInt("knowledges_cards_count");
 				}
+				String updated_at;
+				if (item.get("updated_at").equals(JSONObject.NULL)) {
+					updated_at = "null";
+				} else {
+					updated_at = item.getString("updated_at");
+				}
+				String answer_url;
+				if (item.get("answer_url").equals(JSONObject.NULL)) {
+					answer_url = "null";
+				} else {
+					answer_url = item.getString("answer_url");
+				}
 				WorkPoJo work = new WorkPoJo(item.getInt("id"),
 						item.getString("name"), startstr, endstr,
-						item.getString("question_packages_url"),
-						questiontype_list, finish_list, number);
+						item.getString("question_packages_url"), updated_at,
+						answer_url, questiontype_list, finish_list, number);
 				work_list.add(work);
 				Log.i("linshi", questiontype_list.size() + "<-");
 			}
 		}
-
 		return work_list;
 	}
 

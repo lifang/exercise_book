@@ -17,6 +17,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -63,6 +64,10 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 		Bundle extras = getIntent().getExtras();
 		id = extras.getString("getid");
 		index = extras.getInt("index");
+		SharedPreferences preferences = getSharedPreferences(SHARED,
+				Context.MODE_PRIVATE);
+		student_id = preferences.getString("id", "70");
+		school_class_id = preferences.getString("school_class_id", "109");
 		tagll = (RelativeLayout) findViewById(R.id.tagrl);
 		biaoqian = (LinearLayout) findViewById(R.id.biaoqian);
 		biaoqianlv = (ListView) findViewById(R.id.biaoqianlv);
@@ -74,6 +79,7 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 		biaoqianlv.setAdapter(adapter);
 		biaoqian.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
+
 			}
 		});
 		show();
@@ -115,19 +121,19 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 			switch (index) {
 			case 0:
 				tagll.setGravity(Gravity.LEFT);
-				tagll.setPadding(53, 280, 0, 0);
+				tagll.setPadding(53, 450, 0, 0);
 				break;
 			case 1:
 				tagll.setGravity(Gravity.RIGHT);
-				tagll.setPadding(0, 280, 53, 0);
+				tagll.setPadding(0, 450, 45, 0);
 				break;
 			case 2:
 				tagll.setGravity(Gravity.LEFT);
-				tagll.setPadding(53, 600, 0, 0);
+				tagll.setPadding(53, 1000, 0, 0);
 				break;
 			case 3:
 				tagll.setGravity(Gravity.RIGHT);
-				tagll.setPadding(0, 600, 53, 0);
+				tagll.setPadding(0, 1000, 45, 0);
 				break;
 			}
 		}
@@ -169,7 +175,6 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 						public void onClick(View v) {
 							Thread thread = new Thread() {
 								String json;
-
 								public void run() {
 									try {
 										// viewPager = (ViewPager)
@@ -231,23 +236,5 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 			}
 		});
 	}
-	public void addCard(String json) {
-		JSONObject jsonobject2;
-		try {
-			jsonobject2 = new JSONObject(json);
-			if (jsonobject2.getString("status").equals("success")) {
-				JSONObject jsonobject3 = jsonobject2.getJSONObject("cardtag");
-				String card_bag_id = jsonobject3.getString("card_bag_id");
-				String created_at = jsonobject3.getString("created_at");
-				String id = jsonobject3.getString("id");
-				String name = jsonobject3.getString("name");
-				String update_at = jsonobject3.getString("updated_at");
-				tagsList.add(new tags(card_bag_id, created_at, id, name,
-						update_at));
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
 
-	}
 }

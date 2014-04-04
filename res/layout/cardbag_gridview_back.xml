@@ -24,11 +24,19 @@
                 android:textColor="@color/quesreson"
                 android:textSize="21px" />
 
+            <ImageView
+                android:id="@+id/rightIv"
+                android:layout_width="80px"
+                android:layout_height="80px"
+                android:layout_below="@id/backreson"
+                android:layout_marginLeft="25.46px"
+                android:visibility="gone" />
+
             <TextView
                 android:id="@+id/rightanswerb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/backreson"
+                android:layout_below="@id/rightIv"
                 android:layout_marginLeft="25.64px"
                 android:layout_marginTop="20.1px"
                 android:text="We can watch it together!Good!"

@@ -280,7 +280,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 									.contains(ok_arr[code_list.get(i)[0]])) {
 								Log.i("aaa", "1");
 								error_str += ok_arr[code_list.get(i)[0]]
-										+ "-!-";
+										+ ";||;";
 							}
 							Log.i("aaa", "1");
 							text_list.get(code_list.get(i)[0]).setTextColor(

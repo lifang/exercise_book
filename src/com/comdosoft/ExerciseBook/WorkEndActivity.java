@@ -56,6 +56,7 @@ public class WorkEndActivity extends Activity implements Urlinterface {
 		precision = intent.getIntExtra("precision", 0);
 		use_time = intent.getIntExtra("use_time", 0);
 		specified_time = intent.getIntExtra("specified_time", 0);
+		Log.i("suanfa", "specified_time:" + specified_time);
 		initialize();
 
 	}
@@ -79,6 +80,9 @@ public class WorkEndActivity extends Activity implements Urlinterface {
 		} else {
 			work_xs.setText(R.string.work_end_str6);
 		}
+		if (precision < 60) {
+			work_xs.setText(R.string.work_end_str12);
+		}
 		work_jiezu = (TextView) findViewById(R.id.work_jiezu);
 		String end_time = eb.getWork_end_dath();
 		Window_day.add(Calendar.HOUR, 2); // 目前時間加2小時
@@ -94,6 +98,9 @@ public class WorkEndActivity extends Activity implements Urlinterface {
 			work_jiezu.setText(R.string.work_end_str8);
 		} else {
 			work_jiezu.setText(R.string.work_end_str9);
+		}
+		if (precision < 60) {
+			work_jiezu.setText(R.string.work_end_str13);
 		}
 	}
 
