@@ -51,14 +51,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cn.jpush.android.api.JPushInterface;
 
+import com.comdosoft.ExerciseBook.HomePageMainActivity.mod_avatar;
 import com.comdosoft.ExerciseBook.pojo.knowledges_card;
 import com.comdosoft.ExerciseBook.pojo.tags;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
+import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
 public class MCardBagActivity extends Table_TabHost implements Urlinterface,
-Serializable {
+		Serializable {
 	public List<tags> tagsList;
 	public Map<Integer, List<knowledges_card>> Allmap;
 	public Map<Integer, List<View>> FontCard;
@@ -92,6 +94,7 @@ Serializable {
 	ViewGroup viewgroup;
 	List<View> visList;
 	int width;
+	int num = 0;
 
 	@Override
 	@SuppressWarnings("rawtypes")
@@ -218,7 +221,12 @@ Serializable {
 					String json = ExerciseBookTool.sendGETRequest(
 							get_knowledges_card, map);
 					pageAdapter = new GuidePageAdapter();
-					parsejson(json, true);
+					if (json==null||"".equals(json)) {
+						
+					}else {
+						parsejson(json, true);
+					}
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -234,6 +242,7 @@ Serializable {
 		tagsList.clear();
 		try {
 			JSONObject jsonobject = new JSONObject(json);
+//			{"tags":[{"id":1,"created_at":"2014-03-09T17:06:53+08:00","updated_at":"2014-03-17T17:06:59+08:00","card_bag_id":1,"name":"bag1"},{"id":2,"created_at":"2014-03-12T09:29:40+08:00","updated_at":"2014-03-12T09:29:40+08:00","card_bag_id":1,"name":"第一个"},{"id":3,"created_at":"2014-03-12T09:48:53+08:00","updated_at":"2014-03-12T09:48:53+08:00","card_bag_id":1,"name":null},{"id":4,"created_at":"2014-03-12T10:04:52+08:00","updated_at":"2014-03-12T10:04:52+08:00","card_bag_id":1,"name":"一饿的"},{"id":5,"created_at":"2014-03-12T10:05:19+08:00","updated_at":"2014-03-12T10:05:19+08:00","card_bag_id":1,"name":"一饿的地方 "},{"id":6,"created_at":"2014-03-12T10:07:33+08:00","updated_at":"2014-03-12T10:07:33+08:00","card_bag_id":1,"name":"似懂非懂分"},{"id":7,"created_at":"2014-03-12T10:09:25+08:00","updated_at":"2014-03-12T10:09:25+08:00","card_bag_id":1,"name":"就看看"},{"id":8,"created_at":"2014-03-12T10:15:23+08:00","updated_at":"2014-03-12T10:15:23+08:00","card_bag_id":1,"name":"第er个"},{"id":9,"created_at":"2014-03-12T10:16:08+08:00","updated_at":"2014-03-12T10:16:08+08:00","card_bag_id":1,"name":"第x个"},{"id":10,"created_at":"2014-03-12T10:18:05+08:00","updated_at":"2014-03-12T10:18:05+08:00","card_bag_id":1,"name":"第y个"},{"id":11,"created_at":"2014-03-12T10:20:55+08:00","updated_at":"2014-03-12T10:20:55+08:00","card_bag_id":1,"name":"hh"},{"id":12,"created_at":"2014-03-19T10:51:54+08:00","updated_at":"2014-03-19T10:51:54+08:00","card_bag_id":1,"name":"??"},{"id":13,"created_at":"2014-03-19T10:55:14+08:00","updated_at":"2014-03-19T10:55:14+08:00","card_bag_id":1,"name":"???"},{"id":14,"created_at":"2014-03-19T11:02:20+08:00","updated_at":"2014-03-19T11:02:20+08:00","card_bag_id":1,"name":"????"},{"id":15,"created_at":"2014-03-19T11:09:21+08:00","updated_at":"2014-03-19T11:09:21+08:00","card_bag_id":1,"name":"fghhg"},{"id":16,"created_at":"2014-03-19T11:11:30+08:00","updated_at":"2014-03-19T11:11:30+08:00","card_bag_id":1,"name":"fghh"},{"id":17,"created_at":"2014-03-19T11:12:38+08:00","updated_at":"2014-03-19T11:12:38+08:00","card_bag_id":1,"name":"a"},{"id":18,"created_at":"2014-03-19T11:14:17+08:00","updated_at":"2014-03-19T11:14:17+08:00","card_bag_id":1,"name":"b"},{"id":19,"created_at":"2014-03-19T11:15:32+08:00","updated_at":"2014-03-19T11:15:32+08:00","card_bag_id":1,"name":"c"},{"id":20,"created_at":"2014-03-19T11:17:51+08:00","updated_at":"2014-03-19T11:17:51+08:00","card_bag_id":1,"name":"d"},{"id":21,"created_at":"2014-03-19T11:19:27+08:00","updated_at":"2014-03-19T11:19:27+08:00","card_bag_id":1,"name":"e"},{"id":22,"created_at":"2014-03-19T11:20:38+08:00","updated_at":"2014-03-19T11:20:38+08:00","card_bag_id":1,"name":"f"},{"id":23,"created_at":"2014-03-19T11:23:13+08:00","updated_at":"2014-03-19T11:23:13+08:00","card_bag_id":1,"name":"g"},{"id":24,"created_at":"2014-03-19T11:25:36+08:00","updated_at":"2014-03-19T11:25:36+08:00","card_bag_id":1,"name":"h"},{"id":25,"created_at":"2014-03-19T11:33:26+08:00","updated_at":"2014-03-19T11:33:26+08:00","card_bag_id":1,"name":"j"},{"id":26,"created_at":"2014-03-19T11:34:05+08:00","updated_at":"2014-03-19T11:34:05+08:00","card_bag_id":1,"name":"k"},{"id":27,"created_at":"2014-03-19T11:39:44+08:00","updated_at":"2014-03-19T11:39:44+08:00","card_bag_id":1,"name":"l"},{"id":28,"created_at":"2014-03-19T11:42:02+08:00","updated_at":"2014-03-19T11:42:02+08:00","card_bag_id":1,"name":"o"},{"id":29,"created_at":"2014-03-19T11:49:29+08:00","updated_at":"2014-03-19T11:49:29+08:00","card_bag_id":1,"name":"第sdfds"},{"id":30,"created_at":"2014-03-19T11:49:49+08:00","updated_at":"2014-03-19T11:49:49+08:00","card_bag_id":1,"name":"第三四十"},{"id":31,"created_at":"2014-03-19T11:50:34+08:00","updated_at":"2014-03-19T11:50:34+08:00","card_bag_id":1,"name":"??????"},{"id":32,"created_at":"2014-03-19T11:50:55+08:00","updated_at":"2014-03-19T11:50:55+08:00","card_bag_id":1,"name":"共用回家"},{"id":33,"created_at":"2014-03-19T13:55:15+08:00","updated_at":"2014-03-19T13:55:15+08:00","card_bag_id":1,"name":"tty"},{"id":34,"created_at":"2014-03-19T13:56:03+08:00","updated_at":"2014-03-19T13:56:03+08:00","card_bag_id":1,"name":"fas"},{"id":35,"created_at":"2014-03-19T13:57:28+08:00","updated_at":"2014-03-19T13:57:28+08:00","card_bag_id":1,"name":"iyt"},{"id":36,"created_at":"2014-03-19T14:00:53+08:00","updated_at":"2014-03-19T14:00:53+08:00","card_bag_id":1,"name":"uuiiy"},{"id":37,"created_at":"2014-03-19T14:05:51+08:00","updated_at":"2014-03-19T14:05:51+08:00","card_bag_id":1,"name":"rty"},{"id":38,"created_at":"2014-03-19T14:08:49+08:00","updated_at":"2014-03-19T14:08:49+08:00","card_bag_id":1,"name":"rtyu"},{"id":39,"created_at":"2014-03-19T14:09:57+08:00","updated_at":"2014-03-19T14:09:57+08:00","card_bag_id":1,"name":"jh"},{"id":40,"created_at":"2014-03-19T14:12:59+08:00","updated_at":"2014-03-19T14:12:59+08:00","card_bag_id":1,"name":"dfgt"},{"id":41,"created_at":"2014-03-19T14:17:05+08:00","updated_at":"2014-03-19T14:17:05+08:00","card_bag_id":1,"name":"errt"},{"id":42,"created_at":"2014-03-19T14:18:31+08:00","updated_at":"2014-03-19T14:18:31+08:00","card_bag_id":1,"name":"uhnk"},{"id":43,"created_at":"2014-03-19T14:20:19+08:00","updated_at":"2014-03-19T14:20:19+08:00","card_bag_id":1,"name":"bgjnf"},{"id":44,"created_at":"2014-03-19T14:21:37+08:00","updated_at":"2014-03-19T14:21:37+08:00","card_bag_id":1,"name":"xxdfv"},{"id":45,"created_at":"2014-03-19T14:22:47+08:00","updated_at":"2014-03-19T14:22:47+08:00","card_bag_id":1,"name":"bcxzs"},{"id":46,"created_at":"2014-03-19T14:28:52+08:00","updated_at":"2014-03-19T14:28:52+08:00","card_bag_id":1,"name":"rtyy"},{"id":47,"created_at":"2014-03-25T17:14:46+08:00","updated_at":"2014-03-25T17:14:46+08:00","card_bag_id":1,"name":"秋雨鱼"},{"id":48,"created_at":"2014-03-25T17:16:14+08:00","updated_at":"2014-03-25T17:16:14+08:00","card_bag_id":1,"name":"秋"},{"id":49,"created_at":"2014-03-28T10:47:46+08:00","updated_at":"2014-03-28T10:47:46+08:00","card_bag_id":1,"name":"ffff"}],"notice":"获取成功！！","status":"success","knowledges_card":[{"card_bag_id":1,"answer":null,"branch_question_id":556,"mistake_types":2,"content":"This is an apple!","id":2,"card_tags_id":[3],"updated_at":"2014-03-12T15:58:49+08:00","your_answer":"ww","created_at":"2014-03-12T15:58:49+08:00","types":null,"resource_url":"\/question_packages\/201402\/questions_package_222\/media_186.mp3","question_id":357,"full_text":null,"options":null},{"card_bag_id":1,"answer":null,"branch_question_id":554,"mistake_types":1,"content":"This is an apple4!","id":3,"card_tags_id":[1,1,1,29,30],"updated_at":"2014-03-12T15:58:49+08:00","your_answer":"ww","created_at":"2014-03-12T15:58:49+08:00","types":null,"resource_url":"\/question_packages\/201402\/questions_package_222\/media_184.mp3","question_id":356,"full_text":null,"options":null},{"card_bag_id":1,"answer":null,"branch_question_id":551,"mistake_types":1,"content":"This is an apple1!","id":4,"card_tags_id":[1,3,6,10,11,5,7,8,12,13,14,15,16,17,18,19,20,21,23,24,25,26,27,28,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46],"updated_at":"2014-03-12T15:58:49+08:00","your_answer":"qq","created_at":"2014-03-12T15:58:49+08:00","types":null,"resource_url":"\/question_packages\/201402\/questions_package_222\/media_181.mp3","question_id":356,"full_text":null,"options":null},{"card_bag_id":1,"answer":null,"branch_question_id":536,"mistake_types":2,"content":"I write very hard","id":5,"card_tags_id":[1,2,3,5],"updated_at":"2014-03-12T15:58:49+08:00","your_answer":"qq","created_at":"2014-03-12T15:58:49+08:00","types":null,"resource_url":"\/question_packages\/62\/questions_package_275\/media_536.wav","question_id":351,"full_text":null,"options":null},{"card_bag_id":1,"answer":null,"branch_question_id":538,"mistake_types":2,"content":"I write you a work","id":6,"card_tags_id":[7,4,1,5],"updated_at":"2014-03-12T15:58:49+08:00","your_answer":"ww","created_at":"2014-03-12T15:58:49+08:00","types":null,"resource_url":"\/question_packages\/62\/questions_package_274\/media_538.wav","question_id":352,"full_text":null,"options":null},{"card_bag_id":1,"answer":"apple","branch_question_id":558,"mistake_types":3,"content":"<file>apple.jpg<\/file>","id":7,"card_tags_id":[11,1,4],"updated_at":"2014-03-12T15:58:49+08:00","your_answer":"ee","created_at":"2014-03-12T15:58:49+08:00","types":null,"resource_url":null,"question_id":358,"full_text":null,"options":"apple;||;banana;||;orange"},{"card_bag_id":1,"answer":"apple","branch_question_id":559,"mistake_types":3,"content":"<file>apple.wav<\/file>","id":8,"card_tags_id":[],"updated_at":"2014-03-12T15:58:49+08:00","your_answer":"ee","created_at":"2014-03-12T15:58:49+08:00","types":null,"resource_url":null,"question_id":358,"full_text":null,"options":"apple;||;banana;||;orange"},{"card_bag_id":1,"answer":null,"branch_question_id":553,"mistake_types":1,"content":"This is an apple3!","id":9,"card_tags_id":[],"updated_at":"2014-03-12T15:58:49+08:00","your_answer":"ee","created_at":"2014-03-12T15:58:49+08:00","types":null,"resource_url":"\/question_packages\/201402\/questions_package_222\/media_183.mp3","question_id":356,"full_text":null,"options":null},{"card_bag_id":1,"answer":null,"branch_question_id":552,"mistake_types":1,"content":"This is an apple2!","id":10,"card_tags_id":[],"updated_at":"2014-03-12T15:58:49+08:00","your_answer":"e","created_at":"2014-03-12T15:58:49+08:00","types":null,"resource_url":"\/question_packages\/201402\/questions_package_222\/media_182.mp3","question_id":356,"full_text":null,"options":null}]}
 			if (jsonobject.getString("status").equals("success")) {
 				JSONArray jsonarray = jsonobject
 						.getJSONArray("knowledges_card");
@@ -256,12 +265,13 @@ Serializable {
 					String answer = jsonobject2.getString("answer");
 					String options = jsonobject2.getString("options");
 					String full_text = jsonobject2.getString("full_text");
-					JSONArray tagsarray = jsonobject2
+					JSONArray tagsarray = jsonobject2 // 当前卡片 已选中的 标签 id
 							.getJSONArray("card_tags_id");
 					List<Integer> intlist = new ArrayList<Integer>();
 					for (int j = 0; j < tagsarray.length(); j++) {
 						intlist.add(tagsarray.getInt(j));
 					}
+
 					cardList.add(new knowledges_card(id, card_bag_id,
 							mistake_types, branch_question_id, your_answer,
 							created_at, updated_at, content, question_id,
@@ -272,13 +282,16 @@ Serializable {
 						Allmap.put(count1, cardList);
 						cardList = new ArrayList<knowledges_card>();
 					}
+					
+					
 				}
 				if (cardList.size() != 0) {
 					count1++;
 					Allmap.put(count1, cardList);
 				}
-				JSONArray tags = jsonobject.getJSONArray("tags");
+				JSONArray tags = jsonobject.getJSONArray("tags");// 全部标签
 				for (int i = 0; i < tags.length(); i++) {
+					Log.i("2222222222222222222",i+"");
 					JSONObject jsonobject2 = tags.getJSONObject(i);
 					String card_bag_id = jsonobject2.getString("card_bag_id");
 					String created_at = jsonobject2.getString("created_at");
@@ -287,7 +300,9 @@ Serializable {
 					String update_at = jsonobject2.getString("updated_at");
 					tagsList.add(new tags(card_bag_id, created_at, id, name,
 							update_at));
+					Log.i("22----------",i+"");
 				}
+				eb.setTagsList(tagsList);
 				if (flag) {
 					handler.sendEmptyMessage(1);
 				}
@@ -318,14 +333,14 @@ Serializable {
 				GuidePageAdapter gpa = new GuidePageAdapter();
 				viewPager.setAdapter(gpa);
 				viewPager
-				.setOnPageChangeListener(new GuidePageChangeListener());
+						.setOnPageChangeListener(new GuidePageChangeListener());
 				break;
 			case 2:
 				setViewPager();
 				viewPager.setAdapter(new GuidePageAdapter());
 				viewPager.setCurrentItem(page);
 				viewPager
-				.setOnPageChangeListener(new GuidePageChangeListener());
+						.setOnPageChangeListener(new GuidePageChangeListener());
 				break;
 			default:
 				break;
@@ -363,7 +378,7 @@ Serializable {
 					imageView.setBackgroundResource(R.drawable.page_indicator);
 				} else {
 					imageView
-					.setBackgroundResource(R.drawable.page_inicator_focused);
+							.setBackgroundResource(R.drawable.page_inicator_focused);
 				}
 				imageL.addView(imageView);
 				group.addView(imageL);
@@ -400,6 +415,7 @@ Serializable {
 				setFontCard(fontview, list1.get(j), j, i);
 			}
 			FontCard.put(i, fontlist);
+			eb.setFontCard(FontCard);
 			viewList.add(view);
 			oneClick();
 		}
@@ -427,17 +443,23 @@ Serializable {
 	// TYPES_NAME = {0 => "听力", 1 => "朗读", 2 => "十速挑战", 3 => "选择", 4 => "连线", 5
 	// => "完型填空", 6 => "排序"}
 	// 根据错误类型，卡包正面分割 content
-	public String checkAns(String str, int types) {
+	public String checkAns(String str, String types) {
 		String content = null;
+		int types2=0;
+		if ("null".equals(types)) {
+			types2=-1;
+		}else {
+			types2= Integer.parseInt(types);
+		}
 		String[] strarr;
-		switch (types) {
+		switch (types2) {
 		case 0:
 			if (str.indexOf(";||;") != -1) {
 				strarr = str.split(";\\|\\|;");
-				for (int i = 0; i < strarr.length ; i++) {
+				for (int i = 0; i < strarr.length; i++) {
 					content += strarr[i] + " ";
 				}
-				content = content.substring(4, content.length()-5);
+				content = content.substring(4, content.length() - 5);
 			} else {
 				content = str.substring(0, str.lastIndexOf(";&&;"));
 			}
@@ -504,10 +526,17 @@ Serializable {
 	// TYPES_NAME = {0 => "听力", 1 => "朗读", 2 => "十速挑战", 3 => "选择", 4 => "连线", 5
 	// => "完型填空", 6 => "排序"}
 	// 背面
-	public String setback(String str, int types) {
+	public String setback(String str, String types) {
 		String content = null;
+		int types2=0;
+		if ("null".equals(types)) {
+			types2=-1;
+		}else {
+			types2= Integer.parseInt(types);
+		}
+//		String content = null;
 		String[] strarr;
-		switch (types) {
+		switch (types2) {
 		case 0:
 			return str;
 		case 1:
@@ -515,10 +544,9 @@ Serializable {
 		case 2:
 			return str;
 		case 3:
-			strarr=str.split(";\\|\\|;");
-			for(int i=0;i<strarr.length;i++)
-			{
-				content+=strarr[i]+"\n";
+			strarr = str.split(";\\|\\|;");
+			for (int i = 0; i < strarr.length; i++) {
+				content += strarr[i] + "\n";
 			}
 			return content.substring(4, content.length());
 		case 4:
@@ -541,13 +569,12 @@ Serializable {
 	public void settypes5(String full_text, String options) {
 		String content = null;
 		String[] arrs = options.split(";\\|\\|;");
-		full_text=ExerciseBookTool.del_tag(full_text);
-		String[] textarr=full_text.split("[[sign]]");
-		for(int i=0;i<textarr.length;i++)
-		{
-			content+=textarr[i];
+		full_text = ExerciseBookTool.del_tag(full_text);
+		String[] textarr = full_text.split("[[sign]]");
+		for (int i = 0; i < textarr.length; i++) {
+			content += textarr[i];
 			for (int j = 0; j < arrs.length; j++) {
-				content+=(Html.fromHtml("<u>"+arrs[j]+"</u>"));
+				content += (Html.fromHtml("<u>" + arrs[j] + "</u>"));
 			}
 		}
 	}
@@ -561,20 +588,26 @@ Serializable {
 		TextView youranswer;
 		TextView rightanswers;
 		ViewGroup v = v1;
-		TextView bqtv;
+		TextView bqtv; // 显示已添加的标签
 		ImageView rightIv;
 		if (PageBool[page][index]) {
-			bqtv = (TextView) v.findViewById(R.id.bqtv);
-			Ok: for (int i = 0; i < tagsList.size(); i++) {
+			bqtv = (TextView) v.findViewById(R.id.bqtv1);
+			String bqtvStr = "v.";
+			for (int i = 0; i < tagsList.size(); i++) {
 				for (int j = 0; j < card.getTagsarr().size(); j++) {
 					if (card.getTagsarr().get(j) == Integer.valueOf(tagsList
 							.get(i).getId())) {
-						bqtv.setVisibility(View.VISIBLE);
-						bqtv.setText(tagsList.get(i).getName() + "...");
-						break Ok;
+						bqtvStr = bqtvStr + tagsList.get(i).getName() + ",";
 					}
 				}
 			}
+
+			if (bqtvStr.length() > 2) {
+				bqtvStr = bqtvStr.substring(0, bqtvStr.length() - 1);
+				bqtv.setVisibility(View.VISIBLE);
+				bqtv.setText(bqtvStr);
+			}
+
 			reson = (TextView) v.findViewById(R.id.reson);
 			wronganswer = (TextView) v.findViewById(R.id.youranswer);
 			fontIv = (ImageView) v.findViewById(R.id.fontIv);
@@ -589,22 +622,24 @@ Serializable {
 				rightanswer.setText("正确答案");
 				youranswer.setText(card.getAnswer());
 			}
+
 			wronganswer.setText(checkAns(card.getYour_answer(), // 你的错误
-					Integer.valueOf(card.getTypes())));
-			fontIv.setOnClickListener(new OnClickListener() {
+					card.getTypes()));
+			fontIv.setOnClickListener(new OnClickListener() { // 标签按钮监听
 				public void onClick(View arg0) {
-					Log.i("asd", "page:"+page+"index:"+index);
+					Log.i("asd", "page:" + page + "index:" + index);
 					Intent intent = new Intent(MCardBagActivity.this,
 							MCardTag.class);
 					Bundle mBundle = new Bundle();
 					eb.setAllmap(Allmap.get(page + 1));
-					eb.setTagsList(tagsList);
+					tagsList = eb.getTagsList();
 					eb.setTagsarr(card.getTagsarr());
+					num = index;
 					mBundle.putInt("page", page);
 					mBundle.putInt("index", index);
 					mBundle.putString("getid", card.getId());
 					intent.putExtras(mBundle);
-					startActivity(intent);
+					startActivityForResult(intent, 1);
 				}
 			});
 		} else {
@@ -618,26 +653,29 @@ Serializable {
 			String playerIP = IP + card.getResource_url();
 			reson.setText("原题:");
 			rightanswers.setText(setback(card.getContent(),
-					Integer.valueOf(card.getTypes())));
+					card.getTypes()));
 			if (card.getTypes().equals("0") || card.getTypes().equals("1")
 					|| card.getTypes().equals("3")) {
 				cardbatread.setVisibility(View.GONE);
 			}
 			if (card.getTypes().equals("3")) {
-				if((card.getContent().indexOf("<file>") != -1))
-				{
+				if ((card.getContent().indexOf("<file>") != -1)) {
 					if ((card.getContent().indexOf(".mp3") != -1)
 							|| (card.getContent().indexOf(".amr") != -1)
 							|| (card.getContent().indexOf(".wav") != -1)) {
 						playerIP = IP
-								+ card.getContent().substring("<file>".length(),
-										card.getContent().lastIndexOf("</file>"));
+								+ card.getContent().substring(
+										"<file>".length(),
+										card.getContent()
+												.lastIndexOf("</file>"));
 					} else if ((card.getContent().indexOf(".png") != -1)
 							|| (card.getContent().indexOf(".jpg") != -1)) {
 						rightIv.setVisibility(View.VISIBLE);
 						String url = IP
-								+ card.getContent().substring("<file>".length(),
-										card.getContent().lastIndexOf("</file>"));
+								+ card.getContent().substring(
+										"<file>".length(),
+										card.getContent()
+												.lastIndexOf("</file>"));
 						Bitmap result = memoryCache.getBitmapFromCache(url);
 						if (result == null) {
 							ExerciseBookTool.set_bk(url, rightIv, memoryCache);
@@ -648,21 +686,19 @@ Serializable {
 					}
 					rightanswers.setText(card.getContent().substring(
 							card.getContent().lastIndexOf("</file>")
-							+ "</file>".length(),
+									+ "</file>".length(),
 							card.getContent().length())
 							+ setback(card.getOptions(),
-									Integer.valueOf(card.getTypes())));
-				}
-				else
-				{
-					rightanswers.setText(card.getContent()+"\n"+ 
-							setback(card.getOptions(),
-									Integer.valueOf(card.getTypes())));
+									card.getTypes()));
+				} else {
+					rightanswers.setText(card.getContent()
+							+ "\n"
+							+ setback(card.getOptions(),
+									card.getTypes()));
 				}
 			} else if (card.getResource_url().equals(""))
 				cardbatread.setVisibility(View.GONE);
-			if(card.getTypes().equals("5"))
-			{
+			if (card.getTypes().equals("5")) {
 				settypes5(card.getFull_text(), card.getOptions());
 			}
 			final String IP2 = playerIP;
@@ -673,11 +709,11 @@ Serializable {
 						mediaplay.prepare();
 						mediaplay.start();
 						mediaplay
-						.setOnCompletionListener(new OnCompletionListener() {
-							public void onCompletion(MediaPlayer mp) {
-								mediaplay.release();
-							}
-						});
+								.setOnCompletionListener(new OnCompletionListener() {
+									public void onCompletion(MediaPlayer mp) {
+										mediaplay.release();
+									}
+								});
 					} catch (IllegalArgumentException e) {
 						e.printStackTrace();
 					} catch (SecurityException e) {
@@ -693,68 +729,68 @@ Serializable {
 				public void onClick(View v) {
 					Dialog dialog = new AlertDialog.Builder(
 							MCardBagActivity.this)
-					.setTitle("提示")
-					.setMessage("您确认要删除么?")
-					.setPositiveButton("确认",
-							new DialogInterface.OnClickListener() {
-						public void onClick(
-								DialogInterface dialog,
-								int which) {
-							Thread thread = new Thread() {
-								public void run() {
-									try {
-										Map<String, String> map = new HashMap<String, String>();
-										map.put("knowledges_card_id",
-												card.getId());
-										String json = ExerciseBookTool
-												.sendGETRequest(
-														delete_knowledges_card,
-														map);
-										JSONObject jsonobj = new JSONObject(
-												json);
-										String notice = jsonobj
-												.getString("notice");
-										Message msg = new Message();
-										if (jsonobj
-												.getString(
-														"status")
-														.equals("success")) {
-											Map<String, String> map1 = new HashMap<String, String>();
-											map1.put(
-													"student_id",
-													student_id);
-											map1.put(
-													"school_class_id",
-													school_class_id);
-											json = ExerciseBookTool
-													.sendGETRequest(
-															get_knowledges_card,
-															map1);
-											parsejson(json,
-													false);
-											handler.sendEmptyMessage(2);
-										} else {
-											msg.what = 0;
-											msg.obj = notice;
-											handler.sendMessage(msg);
-										}
-									} catch (Exception e) {
-										e.printStackTrace();
-									}
-								}
+							.setTitle("提示")
+							.setMessage("您确认要删除么?")
+							.setPositiveButton("确认",
+									new DialogInterface.OnClickListener() {
+										public void onClick(
+												DialogInterface dialog,
+												int which) {
+											Thread thread = new Thread() {
+												public void run() {
+													try {
+														Map<String, String> map = new HashMap<String, String>();
+														map.put("knowledges_card_id",
+																card.getId());
+														String json = ExerciseBookTool
+																.sendGETRequest(
+																		delete_knowledges_card,
+																		map);
+														JSONObject jsonobj = new JSONObject(
+																json);
+														String notice = jsonobj
+																.getString("notice");
+														Message msg = new Message();
+														if (jsonobj
+																.getString(
+																		"status")
+																.equals("success")) {
+															Map<String, String> map1 = new HashMap<String, String>();
+															map1.put(
+																	"student_id",
+																	student_id);
+															map1.put(
+																	"school_class_id",
+																	school_class_id);
+															json = ExerciseBookTool
+																	.sendGETRequest(
+																			get_knowledges_card,
+																			map1);
+															parsejson(json,
+																	false);
+															handler.sendEmptyMessage(2);
+														} else {
+															msg.what = 0;
+															msg.obj = notice;
+															handler.sendMessage(msg);
+														}
+													} catch (Exception e) {
+														e.printStackTrace();
+													}
+												}
 
-							};
-							thread.start();
-						}
-					})
-					.setNegativeButton("取消",
-							new DialogInterface.OnClickListener() {
-						public void onClick(
-								DialogInterface dialog,
-								int which) {
-							dialog.dismiss();
-						}
-					}).create();
+											};
+											thread.start();
+										}
+									})
+							.setNegativeButton("取消",
+									new DialogInterface.OnClickListener() {
+										public void onClick(
+												DialogInterface dialog,
+												int which) {
+											dialog.dismiss();
+										}
+									}).create();
 					dialog.show();
 
 				}
@@ -888,5 +924,39 @@ Serializable {
 			// TODO Auto-generated method stub
 
 		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+		switch (resultCode) {
+		case -12:
+			List<tags> tagsList2 = eb.getTagsList();
+			TextView tv = (TextView) FontCard.get(page).get(num)
+					.findViewById(R.id.bqtv1);
+			tv.setVisibility(View.VISIBLE);
+			String bqtvStr = "v.";
+
+			for (int i = 0; i < tagsList2.size(); i++) {
+				for (int j = 0; j < eb.getTagsarr().size(); j++) {
+					if (eb.getTagsarr().get(j) == Integer.valueOf(tagsList.get(
+							i).getId())) {
+						bqtvStr = bqtvStr + tagsList.get(i).getName() + ",";
+					}
+				}
+			}
+
+			if (bqtvStr.length() > 2) {
+				bqtvStr = bqtvStr.substring(0, bqtvStr.length() - 1);
+				tv.setVisibility(View.VISIBLE);
+				tv.setText(bqtvStr);
+			}
+			break;
+		default:
+			break;
+
+		}
+		super.onActivityResult(requestCode, resultCode, data);
+
 	}
 }
