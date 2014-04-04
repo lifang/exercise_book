@@ -3,7 +3,6 @@ package com.comdosoft.ExerciseBook;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,7 +15,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -33,12 +31,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.comdosoft.ExerciseBook.HomepageAllActivity.get_class_info;
 import com.comdosoft.ExerciseBook.ReplyListView.IXListViewListener;
-import com.comdosoft.ExerciseBook.pojo.Micropost;
 import com.comdosoft.ExerciseBook.pojo.Reply;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
@@ -411,17 +408,12 @@ public class ReplyListViewActivity extends Table_TabHost implements
 					.from(getApplicationContext());
 			final int showPosition = position;
 			ViewHolder holder = null;
+			final Reply rep = replyList.get(position);
 			if (convertView == null) {
 				convertView = inflater.inflate(R.layout.reply_layout_iteam,
 						null);
 				holder = new ViewHolder();
-				View vew = convertView.findViewById(R.id.child_user_left);
-
-				if (position % 2 == 0) {
-					vew.setBackgroundResource(R.color.before_click);
-				} else {
-					vew.setBackgroundResource(R.color.huse);
-				}
+	
 				holder.hSView = (HorizontalScrollView) convertView
 						.findViewById(R.id.hsv2);
 
@@ -445,7 +437,7 @@ public class ReplyListViewActivity extends Table_TabHost implements
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 			}
-
+			
 			convertView.setOnTouchListener(new View.OnTouchListener() {
 				final int showPosition = position;
 
@@ -486,12 +478,12 @@ public class ReplyListViewActivity extends Table_TabHost implements
 			if (holder.hSView.getScrollX() != 0) {
 				holder.hSView.scrollTo(0, 0);
 			}
-			if (replyList.get(position).getSender_avatar_url().length() > 4) {
+			if (rep.getSender_avatar_url().length() > 4) {
 				// ExerciseBookTool.set_background(Urlinterface.IP
 				// + replyList.get(position).getSender_avatar_url(),
 				// holder.use_face);
 				String url = IP
-						+ replyList.get(position).getSender_avatar_url();
+						+ rep.getSender_avatar_url();
 				// ExerciseBookTool.set_background(url, face);
 				Bitmap result = memoryCache.getBitmapFromCache(url);
 				if (result == null) {
@@ -504,9 +496,9 @@ public class ReplyListViewActivity extends Table_TabHost implements
 			}
 			holder.imgbtn1.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
-					micropost_id = replyList.get(position).getMicropost_id();
-					reciver_id = replyList.get(position).getReciver_id();
-					reciver_types = replyList.get(position).getReciver_types();
+					micropost_id = rep.getMicropost_id();
+					reciver_id = rep.getReciver_id();
+					reciver_types = rep.getReciver_types();
 					Intent intent = new Intent(ReplyListViewActivity.this,
 							OpenInputMethod.class);
 					startActivityForResult(intent, 0);
@@ -541,11 +533,17 @@ public class ReplyListViewActivity extends Table_TabHost implements
 					
 				}
 			});
-			holder.sender.setText(replyList.get(position).getSender_name());
-			holder.reciver.setText(replyList.get(position).getStatus());
-			holder.content.setText(replyList.get(position).getContent());
-			holder.date.setText(replyList.get(position).getCreated_at());
+			holder.sender.setText(rep.getSender_name());
+			holder.reciver.setText(rep.getStatus());
+			holder.content.setText(rep.getContent());
+			holder.date.setText(rep.getCreated_at());
+			RelativeLayout vew = (RelativeLayout) convertView.findViewById(R.id.child_user_left);
 
+			if (position % 2 == 0) {
+				vew.setBackgroundResource(R.color.before_click);
+			} else {
+				vew.setBackgroundResource(R.color.huse);
+			}
 			return convertView;
 		}
 		public void del(final int position){
