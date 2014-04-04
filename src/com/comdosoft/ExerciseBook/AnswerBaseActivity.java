@@ -378,9 +378,24 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		index = 0;
 		if (status == 0) {// status:0表示答题 1重做 2表示历史
 			prodialog.show();
+			setUpdateJson();
 			Finish_Json();
 		} else {
 			mHandler.sendEmptyMessage(5);
+		}
+	}
+
+	public void setUpdateJson() {
+		String answer_history = ExerciseBookTool.getAnswer_Json_history(path);
+		answerJson = gson.fromJson(answer_history, AnswerJson.class);
+		AnswerPojo ap = getAnswerPojo();
+		answerJson.update = ExerciseBookTool.getTimeIng();
+		String str = gson.toJson(answerJson);
+		try {
+			ExerciseBookTool.writeFile(path, str);
+			uploadJSON(ap.getStatus());
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 

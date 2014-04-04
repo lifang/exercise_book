@@ -67,6 +67,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 	private List<TextView> tv_list;
 	private boolean Check = false;
 	private PopupWindow popupWindow;
+	private int select_item = 0;
 	private static final String regEx_html = "<[^>]+>";
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -94,6 +95,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		eb = (ExerciseBook) getApplication();
 		// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
 		super.mQuestionType = 5;
+		setStart();
 		// super.type = 0;
 		findViewById(R.id.base_back_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
@@ -141,29 +143,32 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 	}
 
 	private void setTextView() {
-		str = content.split("\\[\\[sign\\]\\]");
+		// str = content.split("\\[\\[sign\\]\\]");
+		str = content.split(" ");
 		user_select = new HashMap<Integer, String>();
 		tv_list = new ArrayList<TextView>();
 		for (int i = 0; i < str.length; i++) {
 			View view1 = View.inflate(this, R.layout.cloze_view, null);
-			TextView text = (TextView) view1.findViewById(R.id.tv);
-			text.setText(str[i].toString());
 			final TextView spinner = (TextView) view1
 					.findViewById(R.id.spinner);
-			final int item = i;
-			if (i != str.length - 1) {
-				String Opption = cloze.getList().get(i).getOpption();
+			if (str[i].equals("[[sign]]")) {
+				String Opption = cloze.getList().get(select_item).getOpption();
 				final String[] Opption_str = Opption.split(";\\|\\|;");
+				final int item = select_item;
 				spinner.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {
+						Log.i("suanfa", "item:" + item);
 						showWindow(spinner, Opption_str, item);
 					}
 				});
-			}
-			if (i == str.length - 1) {
-				spinner.setVisibility(View.GONE);
+				spinner.setVisibility(View.VISIBLE);
+				if (select_item + 1 < cloze.getList().size()) {
+					select_item += 1;
+				}
 			} else {
-				tv_list.add(spinner);
+				spinner.setVisibility(View.GONE);
+				TextView text = (TextView) view1.findViewById(R.id.tv);
+				text.setText(str[i].toString());
 			}
 			myLayout.addView(view1);
 		}
@@ -233,7 +238,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		answerJson.cloze.setUpdate_time(ExerciseBookTool.getTimeIng());
 		int q_item = Integer.valueOf(answerJson.cloze.getQuestions_item());
 		int b_item = Integer.valueOf(answerJson.cloze.getBranch_item());
-		Log.i("aaa", b_item + "/" + q_item);
+		Log.i("aaa", "--");
 
 		b_item += 1;
 		answerJson.cloze.setBranch_item(b_item + "");
@@ -261,7 +266,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 							+ "", entry.getValue(), ratio + ""));
 			calculateRatio(ratio);
 		}
-		Log.i("aaa", q_item + "/" + list.size());
+		Log.i("aaa", "an:" + q_item + "/" + list.size());
 		if (true_number == answer.size()) {
 			MyPlayer(true);
 		} else {
@@ -287,6 +292,9 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		}
 		for (Map.Entry<Integer, String> entry : user_select.entrySet()) {
 			int ratio = 0;
+			Log.i("suanfa",
+					entry.getValue() + "-"
+							+ cloze.getList().get(entry.getKey()).getAnswer());
 			if (entry.getValue().equals(
 					cloze.getList().get(entry.getKey()).getAnswer())) {
 				ratio = 100;
@@ -353,13 +361,16 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 					int type = 0;
 					String answer_history = ExerciseBookTool
 							.getAnswer_Json_history(path);
+					Log.i("aaa", 1 + "-error");
 					try {
 						if (status == 0) {
 							Log.i("aaa", question_id + "");
 							type = setAnswerJson(answer_history, user_select,
 									question_id);
 						} else {
+							Log.i("aaa", 2 + "-error");
 							type = Again();
+							Log.i("aaa", type + "error-type");
 						}
 						Log.i("aaa", type + "-type");
 						switch (type) {// 0为下一小题 1为全部做完 2为本小题做完
