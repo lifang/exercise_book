@@ -203,6 +203,9 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 		leftText.setOnClickListener(new MyClick(i));
 		leftText.setText(orderAnswerList.get(i));
 		left.setLayoutParams(lp);
+		if (status == 2) {
+			left.setClickable(false);
+		}
 		leftLinearLayout.addView(left);
 		wireList.add(new AnswerWirePojo(leftText, 0));
 	}
@@ -216,6 +219,9 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 		rightText.setOnClickListener(new MyClick(i));
 		rightText.setText(orderAnswerList.get(i));
 		right.setLayoutParams(lp);
+		if (status == 2) {
+			right.setClickable(false);
+		}
 		rightLinearLayout.addView(right);
 		wireList.add(new AnswerWirePojo(rightText, 0));
 	}

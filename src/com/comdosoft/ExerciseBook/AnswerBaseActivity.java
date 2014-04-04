@@ -409,15 +409,15 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 					setMyAnswer(mRecoirdAnswer.get(mRecordIndex).replaceAll(
 							";\\|\\|;", " "));
 				}
+
+				if (mRecordIndex < mRecoirdAnswer.size() - 1) {
+					mRecordIndex++;
+				}
 			} else {
 				setMyAnswer("");
 			}
 		} else {
 			setMyAnswer("");
-		}
-
-		if (mRecordIndex < mRecoirdAnswer.size() - 1) {
-			mRecordIndex++;
 		}
 	}
 
@@ -470,7 +470,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		if (mQindex == mQuestList.size() - 1
 				&& mBindex == mQuestList.get(mQindex).size() - 1) {
 			// 最后一题
-			if (amp.getStatus() == 1 && status > 1) {
+			if (status == 2) {
 				// 历史记录
 				MyDialog("没有更多历史记录了,点击确定退出!", 1);
 			} else {

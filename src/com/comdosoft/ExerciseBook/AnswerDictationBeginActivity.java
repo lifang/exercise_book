@@ -167,7 +167,7 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		}
 
 		setPage(mBindex + 1, mQuestList.get(mQindex).size());
-		if (amp.getStatus() == 1 && status > 1) {
+		if (status == 1) {
 			setRecordMes();
 		}
 	}
