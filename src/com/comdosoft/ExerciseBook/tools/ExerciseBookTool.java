@@ -15,9 +15,11 @@ import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -68,6 +70,35 @@ public class ExerciseBookTool implements Urlinterface {
 	private static int connectTimeOut = 5000;
 	private static int readTimeOut = 10000;
 	private static String requestEncoding = "UTF-8";
+
+	// 过去answer中的时间
+	public static String getAnswerTime(String path) {
+		Gson gson = new Gson();
+		Log.i("linshi", "---1");
+		String answer_history = ExerciseBookTool.getAnswer_Json_history(path);
+		AnswerJson answerJson = gson.fromJson(answer_history, AnswerJson.class);
+		Log.i("linshi", "---2");
+		return answerJson.update;
+	}
+
+	// 比较时间大小
+	public static boolean Comparison_Time(String date1, String date2) {
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+		try {
+			Date dt1 = df.parse(date1);
+			Date dt2 = df.parse(date2);
+			if (dt1.getTime() >= dt2.getTime()) {
+				Log.i("suanfa", "a比b大");
+				return false;
+			} else {
+				Log.i("suanfa", "a比b小");
+				return true;
+			}
+		} catch (Exception exception) {
+			exception.printStackTrace();
+		}
+		return false;
+	}
 
 	public static String getTimeIng() {// 获取当前时间
 		SimpleDateFormat sDateFormat = new SimpleDateFormat(
@@ -124,7 +155,7 @@ public class ExerciseBookTool implements Urlinterface {
 	}
 
 	// 初始化answer文件
-	public static void initAnswer(String path, String id) {
+	public static void initAnswer(String path, String id, String uid) {
 		List<PropPojo> propList = new ArrayList<PropPojo>();
 		for (int i = 0; i < 2; i++) {
 			propList.add(new PropPojo(i + "", new ArrayList<Integer>()));
@@ -134,10 +165,10 @@ public class ExerciseBookTool implements Urlinterface {
 			if (!file.exists()) {
 				file.mkdirs();
 			}
-			file = new File(path + "/answer.json");
+			file = new File(path + "/student_" + uid + ".json");
 			if (!file.exists()) {
 				file.createNewFile();
-				Log.i("linshi", path + "/answer.json");
+				Log.i("linshi", path + "/student_" + uid + ".json");
 				AnswerJson answer = new AnswerJson(id, "0",
 						"0000-00-00 00:00:00", propList, new AnswerPojo("0",
 								"", "-1", "-1", "0",
@@ -158,7 +189,8 @@ public class ExerciseBookTool implements Urlinterface {
 				Gson gson = new Gson();
 				String result = gson.toJson(answer);
 				Log.i("linshi", result);
-				ExerciseBookTool.writeFile(path + "/answer.json", result);
+				ExerciseBookTool.writeFile(path + "/student_" + uid + ".json",
+						result);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -352,7 +384,7 @@ public class ExerciseBookTool implements Urlinterface {
 		return stringBuilder.toString();
 	}
 
-	// 分割时间 带时分秒  2014-03-21  13:14:15
+	// 分割时间 带时分秒 2014-03-21 13:14:15
 	public static String divisionTime(String timeStr) {
 		int temp1 = timeStr.indexOf("T");
 		int temp2 = timeStr.lastIndexOf("+");
@@ -846,10 +878,9 @@ public class ExerciseBookTool implements Urlinterface {
 		thread.start();
 
 	}
-	
-	
+
 	/*
-	 * 分割时间   2014/03/21  13:14:15
+	 * 分割时间 2014/03/21 13:14:15
 	 */
 	public static String divisionTime2(String timeStr) {
 		timeStr = timeStr.replace("-", "/");

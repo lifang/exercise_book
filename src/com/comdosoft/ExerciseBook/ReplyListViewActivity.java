@@ -3,17 +3,18 @@ package com.comdosoft.ExerciseBook;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -30,12 +31,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.comdosoft.ExerciseBook.HomepageAllActivity.get_class_info;
 import com.comdosoft.ExerciseBook.ReplyListView.IXListViewListener;
-import com.comdosoft.ExerciseBook.pojo.Micropost;
 import com.comdosoft.ExerciseBook.pojo.Reply;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
@@ -44,7 +44,7 @@ import com.comdosoft.ExerciseBook.tools.OpenInputMethod;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
 public class ReplyListViewActivity extends Table_TabHost implements
-		IXListViewListener, Urlinterface, OnGestureListener {
+IXListViewListener, Urlinterface, OnGestureListener {
 	private ReplyListView mListView;
 	private List<Reply> replyList = new ArrayList<Reply>();
 	private Handler mHandler;
@@ -131,7 +131,12 @@ public class ReplyListViewActivity extends Table_TabHost implements
 					getNewsJson(json_all2);
 				}
 				int a = replyList.size();
-				mListView.setAdapter(madapter);
+				if (a==0) {
+					Toast.makeText(ReplyListViewActivity.this, "暂无任何通知",
+							Toast.LENGTH_SHORT).show();
+				}else {
+					mListView.setAdapter(madapter);
+				}
 				onLoad();
 
 				break;
@@ -139,13 +144,12 @@ public class ReplyListViewActivity extends Table_TabHost implements
 				Toast.makeText(ReplyListViewActivity.this, "未开启网络",
 						Toast.LENGTH_SHORT).show();
 				break;
-			case 2:
-//				mListView.setAdapter(new ReplyAdapter());
+			case 3:
+				prodialog.dismiss();
+//				madapter.notifyDataSetChanged();
+				mListView.setAdapter(madapter);
 				Toast.makeText(ReplyListViewActivity.this,
 						String.valueOf(msg.obj), Toast.LENGTH_SHORT).show();
-				break;
-			case 3:
-				madapter.notifyDataSetChanged();
 				break;
 			case 4:
 				final String json4 = (String) msg.obj;
@@ -175,26 +179,26 @@ public class ReplyListViewActivity extends Table_TabHost implements
 					JSONObject jsonobject2 = jsonarray.getJSONObject(i);
 					List<String> liststr = divisionStr(jsonobject2
 							.getString("content"));Log.i("aaa",  "getNewsJson----"+i);
-					String jsonstatus = liststr.get(0);
-					String content = liststr.get(1);
+							String jsonstatus = liststr.get(0);
+							String content = liststr.get(1);
 
-					String created_at = ExerciseBookTool.divisionTime2(jsonobject2
-							.getString("created_at"));
-					String id = jsonobject2.getString("id");
-					
-					String micropost_id = jsonobject2.getString("micropost_id");
-					String reciver_id = jsonobject2.getString("reciver_id");
-					String reciver_types = jsonobject2
-							.getString("reciver_types");
-					String sender_avatar_url = jsonobject2
-							.getString("sender_avatar_url");
-					String sender_name = jsonobject2.getString("sender_name");
-					String user_id = jsonobject2.getString("user_id");
-					listbool.add(false);
-					replyList.add(new Reply(id, micropost_id, user_id,
-							reciver_id, reciver_types, sender_avatar_url,
-							sender_name, jsonstatus, content, created_at));
-					
+							String created_at = ExerciseBookTool.divisionTime2(jsonobject2
+									.getString("created_at"));
+							String id = jsonobject2.getString("id");
+
+							String micropost_id = jsonobject2.getString("micropost_id");
+							String reciver_id = jsonobject2.getString("reciver_id");
+							String reciver_types = jsonobject2
+									.getString("reciver_types");
+							String sender_avatar_url = jsonobject2
+									.getString("sender_avatar_url");
+							String sender_name = jsonobject2.getString("sender_name");
+							String user_id = jsonobject2.getString("user_id");
+							listbool.add(false);
+							replyList.add(new Reply(id, micropost_id, user_id,
+									reciver_id, reciver_types, sender_avatar_url,
+									sender_name, jsonstatus, content, created_at));
+
 				}
 				return replyList.size();
 			} else {
@@ -259,18 +263,18 @@ public class ReplyListViewActivity extends Table_TabHost implements
 	// 分割content
 	public List<String> divisionStr(String str) {
 		// "content":"[[ding]]回复了您的消息：;||;we we"
-//"content":"[[ding]]回复了您的消息：沃尔沃","reciver_types":0,"sender_avatar_url":"\/avatars\/students\/2014-04\/student_17.jpg","reciver_id":115,"created_at":"2014-04-01T16:57:20+08:00","user_id":130,"sender_name":"ding","micropost_id":604}
+		//"content":"[[ding]]回复了您的消息：沃尔沃","reciver_types":0,"sender_avatar_url":"\/avatars\/students\/2014-04\/student_17.jpg","reciver_id":115,"created_at":"2014-04-01T16:57:20+08:00","user_id":130,"sender_name":"ding","micropost_id":604}
 		List<String> list = new ArrayList<String>();
 		int temp1 = str.indexOf("[[");
 		int temp2 = str.indexOf("]]");
 		int temp3 = str.indexOf("消息：");
-//		String st1 = str.substring(temp3 + 3, temp3 + 7);
-//		list.add(str.substring(temp2 + 2, temp3 + 2));
-//		if (";||;".equals(st1)) {
-//		list.add(str.substring(temp3 + 7, str.length()));
-//	} else {
-//		list.add(str.substring(temp3 + 3, str.length()));
-//	}
+		//		String st1 = str.substring(temp3 + 3, temp3 + 7);
+		//		list.add(str.substring(temp2 + 2, temp3 + 2));
+		//		if (";||;".equals(st1)) {
+		//		list.add(str.substring(temp3 + 7, str.length()));
+		//	} else {
+		//		list.add(str.substring(temp3 + 3, str.length()));
+		//	}
 		String st1 = str.substring(temp3 + 3, temp3 + 4);
 		list.add(str.substring(temp2 +5, temp3 + 2));
 		if (";".equals(st1)) {
@@ -292,11 +296,11 @@ public class ReplyListViewActivity extends Table_TabHost implements
 
 	@Override
 	public void onRefresh() {
-	
-//		SharedPreferences userInfo = getSharedPreferences("replyMenu", 0);
-//		Editor editor = userInfo.edit();// 获取编辑器
-//		editor.putBoolean("ReplyMenu", true);
-//		editor.commit();
+
+		//		SharedPreferences userInfo = getSharedPreferences("replyMenu", 0);
+		//		Editor editor = userInfo.edit();// 获取编辑器
+		//		editor.putBoolean("ReplyMenu", true);
+		//		editor.commit();
 		page = 1;
 		if (ExerciseBookTool.isConnect(ReplyListViewActivity.this)) {
 
@@ -404,10 +408,12 @@ public class ReplyListViewActivity extends Table_TabHost implements
 					.from(getApplicationContext());
 			final int showPosition = position;
 			ViewHolder holder = null;
+			final Reply rep = replyList.get(position);
 			if (convertView == null) {
 				convertView = inflater.inflate(R.layout.reply_layout_iteam,
 						null);
 				holder = new ViewHolder();
+	
 				holder.hSView = (HorizontalScrollView) convertView
 						.findViewById(R.id.hsv2);
 
@@ -426,18 +432,12 @@ public class ReplyListViewActivity extends Table_TabHost implements
 				holder.imgbtn2 = (ImageView) convertView
 						.findViewById(R.id.child_micropost_delete);
 				holder.ll_action2 = convertView.findViewById(R.id.ll_action2);
-				View vew = convertView.findViewById(R.id.child_user_left);
-
-				if (position % 2 == 0) {
-					vew.setBackgroundResource(R.color.before_click);
-				} else {
-					vew.setBackgroundResource(R.color.huse);
-				}
+				
 				convertView.setTag(holder);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 			}
-
+			
 			convertView.setOnTouchListener(new View.OnTouchListener() {
 				final int showPosition = position;
 
@@ -478,12 +478,12 @@ public class ReplyListViewActivity extends Table_TabHost implements
 			if (holder.hSView.getScrollX() != 0) {
 				holder.hSView.scrollTo(0, 0);
 			}
-			if (replyList.get(position).getSender_avatar_url().length() > 4) {
+			if (rep.getSender_avatar_url().length() > 4) {
 				// ExerciseBookTool.set_background(Urlinterface.IP
 				// + replyList.get(position).getSender_avatar_url(),
 				// holder.use_face);
 				String url = IP
-						+ replyList.get(position).getSender_avatar_url();
+						+ rep.getSender_avatar_url();
 				// ExerciseBookTool.set_background(url, face);
 				Bitmap result = memoryCache.getBitmapFromCache(url);
 				if (result == null) {
@@ -491,14 +491,14 @@ public class ReplyListViewActivity extends Table_TabHost implements
 				} else {
 
 					holder.use_face
-							.setImageDrawable(new BitmapDrawable(result));
+					.setImageDrawable(new BitmapDrawable(result));
 				}
 			}
 			holder.imgbtn1.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
-					micropost_id = replyList.get(position).getMicropost_id();
-					reciver_id = replyList.get(position).getReciver_id();
-					reciver_types = replyList.get(position).getReciver_types();
+					micropost_id = rep.getMicropost_id();
+					reciver_id = rep.getReciver_id();
+					reciver_types = rep.getReciver_types();
 					Intent intent = new Intent(ReplyListViewActivity.this,
 							OpenInputMethod.class);
 					startActivityForResult(intent, 0);
@@ -506,45 +506,88 @@ public class ReplyListViewActivity extends Table_TabHost implements
 			});
 			holder.imgbtn2.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
-					Thread thread = new Thread() {
-						public void run() {
-							try {
-								HashMap<String, String> mp = new HashMap<String, String>();
-								mp.put("user_id", user_id);
-								mp.put("school_class_id", school_class_id);
-								mp.put("message_id", replyList.get(position)
-										.getId());
-								String json = ExerciseBookTool.sendGETRequest(
-										delete_message, mp);
-								JSONObject jsonobject = new JSONObject(json);
-								String notice = jsonobject.getString("notice");
-								if (jsonobject.getString("status").equals(
-										"success")) {
-									replyList.remove(position);
-								}
-								Message msg = new Message();
-								msg.obj = notice;
-								msg.what = 2;
-								handler1.sendMessage(msg);
-							} catch (JSONException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							} catch (Exception e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
+					
+					Dialog dialog = new AlertDialog.Builder(
+							ReplyListViewActivity.this)
+							.setTitle("提示")
+							.setMessage("您确认要删除么?")
+							.setPositiveButton("确认",
+									new DialogInterface.OnClickListener() {
+										@Override
+										public void onClick(DialogInterface dialog,
+												int which) {
+											del(position);
+										}
+									})
+							.setNegativeButton("取消",
+									new DialogInterface.OnClickListener() {
 
-						}
-					};
-					thread.start();
+										@Override
+										public void onClick(DialogInterface dialog,
+												int which) {
+											dialog.dismiss();
+										}
+									}).create();
+					dialog.show();
+					
+					
 				}
 			});
-			holder.sender.setText(replyList.get(position).getSender_name());
-			holder.reciver.setText(replyList.get(position).getStatus());
-			holder.content.setText(replyList.get(position).getContent());
-			holder.date.setText(replyList.get(position).getCreated_at());
+			holder.sender.setText(rep.getSender_name());
+			holder.reciver.setText(rep.getStatus());
+			holder.content.setText(rep.getContent());
+			holder.date.setText(rep.getCreated_at());
+			RelativeLayout vew = (RelativeLayout) convertView.findViewById(R.id.child_user_left);
 
+			if (position % 2 == 0) {
+				vew.setBackgroundResource(R.color.before_click);
+			} else {
+				vew.setBackgroundResource(R.color.huse);
+			}
 			return convertView;
+		}
+		public void del(final int position){
+			
+			
+			Thread thread = new Thread() {
+				public void run() {
+					try {
+						HashMap<String, String> mp = new HashMap<String, String>();
+						mp.put("user_id", user_id);
+						mp.put("school_class_id", school_class_id);
+						mp.put("message_id", replyList.get(position)
+								.getId());
+						String json = ExerciseBookTool.sendGETRequest(
+								delete_message, mp);
+						JSONObject jsonobject = new JSONObject(json);
+						String notice = jsonobject.getString("notice");
+						if (jsonobject.getString("status").equals(
+								"success")) {
+							replyList.remove(position);
+						}
+						Message msg = new Message();
+						msg.obj = notice;
+						msg.what = 3;
+						handler1.sendMessage(msg);
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+				}
+			};
+			if (ExerciseBookTool.isConnect(ReplyListViewActivity.this)) {
+				prodialog = new ProgressDialog(ReplyListViewActivity.this);
+				prodialog.setMessage("正在删除消息");
+				prodialog.setCanceledOnTouchOutside(false);
+				prodialog.show();
+			thread.start();	
+			}else {
+				handler1.sendEmptyMessage(1);
+			}
 		}
 
 	}

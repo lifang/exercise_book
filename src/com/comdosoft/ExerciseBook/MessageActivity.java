@@ -8,16 +8,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.comdosoft.ExerciseBook.ReplyListView.IXListViewListener;
-import com.comdosoft.ExerciseBook.ReplyListViewActivity.get_news;
-import com.comdosoft.ExerciseBook.ReplyListViewActivity.get_news2;
-import com.comdosoft.ExerciseBook.pojo.Reply;
-import com.comdosoft.ExerciseBook.pojo.SysMessage;
-import com.comdosoft.ExerciseBook.tools.ExerciseBook;
-import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
-import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
-import com.comdosoft.ExerciseBook.tools.Urlinterface;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -39,8 +29,16 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.comdosoft.ExerciseBook.ReplyListView.IXListViewListener;
+import com.comdosoft.ExerciseBook.pojo.SysMessage;
+import com.comdosoft.ExerciseBook.tools.ExerciseBook;
+import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
+import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
+import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
 
 public class MessageActivity extends Table_TabHost implements
@@ -115,17 +113,6 @@ IXListViewListener, Urlinterface, OnGestureListener {
 	Handler handler1 = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
-//			case 0:
-//				mListView.setAdapter(madapter);
-//				break;
-//			case 1:
-//				Toast.makeText(getApplicationContext(), "未开启网络",
-//						Toast.LENGTH_SHORT).show();
-//				break;
-//			case 2:
-//				mListView.setAdapter(new ReplyAdapter());
-//				Toast.makeText(MessageActivity.this, String.valueOf(msg.obj), Toast.LENGTH_SHORT).show();
-//				break;
 			case 0:
 				prodialog.dismiss();
 				final String json_all2 = (String) msg.obj;
@@ -136,7 +123,13 @@ IXListViewListener, Urlinterface, OnGestureListener {
 					getNewsJson(json_all2);
 				}
 				int a = replyList.size();
-				mListView.setAdapter(madapter);
+				if (a==0) {
+					Toast.makeText(MessageActivity.this, "暂无任何通知",
+							Toast.LENGTH_SHORT).show();
+				}else {
+					mListView.setAdapter(madapter);
+				}
+				
 				onLoad();
 
 				break;
@@ -144,13 +137,12 @@ IXListViewListener, Urlinterface, OnGestureListener {
 				Toast.makeText(MessageActivity.this, "未开启网络",
 						Toast.LENGTH_SHORT).show();
 				break;
-			case 2:
-//				mListView.setAdapter(new ReplyAdapter());
+			case 3:
+				prodialog.dismiss();
+//				madapter.notifyDataSetChanged();
+				mListView.setAdapter(madapter);
 				Toast.makeText(MessageActivity.this,
 						String.valueOf(msg.obj), Toast.LENGTH_SHORT).show();
-				break;
-			case 3:
-				madapter.notifyDataSetChanged();
 				break;
 			case 4:
 				final String json4 = (String) msg.obj;
@@ -186,6 +178,7 @@ IXListViewListener, Urlinterface, OnGestureListener {
 					String class_id = jsonobject2.getString("student_id");
 					replyList.add(new SysMessage(content, created_at, id,
 							class_id));
+				
 				}
 				return replyList.size();
 			} else {
@@ -324,6 +317,7 @@ IXListViewListener, Urlinterface, OnGestureListener {
 			if (convertView == null) {
 				convertView = inflater.inflate(R.layout.message_layout_iteam,
 						null);
+				
 				holder = new ViewHolder();
 				holder.hSView = (HorizontalScrollView) convertView
 						.findViewById(R.id.hsv2);
@@ -334,17 +328,12 @@ IXListViewListener, Urlinterface, OnGestureListener {
 				holder.imgbtn2 = (ImageView) convertView
 						.findViewById(R.id.child_micropost_delete);
 				holder.ll_action2 = convertView.findViewById(R.id.ll_action2);
-				View vew = convertView.findViewById(R.id.child_user_left);
-
-				if (position % 2 == 0) {
-					vew.setBackgroundResource(R.color.before_click);
-				} else {
-					vew.setBackgroundResource(R.color.huse);
-				}
+				
 				convertView.setTag(holder);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 			}
+
 			holder.imgbtn2.setOnClickListener(new OnClickListener() {
 
 				public void onClick(View v) {
@@ -419,6 +408,13 @@ IXListViewListener, Urlinterface, OnGestureListener {
 			}
 			holder.content.setText(replyList.get(position).getContent());
 			holder.date.setText(replyList.get(position).getCreated_at());
+			RelativeLayout vew = (RelativeLayout) convertView.findViewById(R.id.child_user_left);
+
+			if (position % 2 == 0) {
+				vew.setBackgroundResource(R.color.before_click);
+			} else {
+				vew.setBackgroundResource(R.color.huse);
+			}
 			return convertView;
 		}
 		
@@ -427,43 +423,7 @@ IXListViewListener, Urlinterface, OnGestureListener {
 
 		public void del(final int position){
 			
-			final Handler mHandler = new Handler() {
-				public void handleMessage(android.os.Message msg) {
-					switch (msg.what) {
-					case 0:
-						final String json5 = (String) msg.obj;
-						prodialog.dismiss();
-						if (json5.equals("error")) {
-						} else {
-							JSONObject jsonobejct;
-							try {
-								jsonobejct = new JSONObject(json5);
-								String status = jsonobejct.getString("status");
-								String notice = jsonobejct.getString("notice");
-								if (status.equals("success")) {
-									Toast.makeText(getApplicationContext(),
-											notice, Toast.LENGTH_SHORT)
-											.show();
-									replyList.remove(position);
-									madapter.notifyDataSetChanged();
-								} else {
-									Toast.makeText(getApplicationContext(),
-											notice, Toast.LENGTH_SHORT)
-											.show();
-								}
-							} catch (JSONException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-							
-							
-						}
-						break;
-					default:
-						break;
-					}
-				}
-			};
+			
 			Thread thread = new Thread() {
 				public void run() {
 					try {
@@ -471,21 +431,22 @@ IXListViewListener, Urlinterface, OnGestureListener {
 						mp.put("user_id", user_id);
 						mp.put("sys_message_id",
 								replyList.get(position).getId());
-						mp.put("school_class_id",
-								replyList.get(position)
-								.getClass_id());
+						mp.put("school_class_id",school_class_id);
 						String json = ExerciseBookTool
 								.doPost(Urlinterface.delete_sys_message,
 										mp);
-						Message msg = new Message();// 创建Message 对象
-						msg.what = 0;
-						msg.obj = json;
-						mHandler.sendMessage(msg);
-						
-//						Message msg=new Message();
-//						msg.obj=notice;
-//						msg.what=2;
-//						handler1.sendMessage(msg);
+						JSONObject jsonobejct;
+						jsonobejct = new JSONObject(json);
+						String status = jsonobejct.getString("status");
+						String notice = jsonobejct.getString("notice");
+						if (status.equals("success")) {
+							replyList.remove(position);
+							
+						} 
+						Message msg=new Message();
+						msg.obj=notice;
+						msg.what=3;
+						handler1.sendMessage(msg);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

@@ -188,7 +188,7 @@ public class LeftMenu extends Activity implements Urlinterface {
 				startActivity(intent);
 				eb.setMneu(true);
 				Editor editor = userInfo.edit();// 获取编辑器
-				editor.putBoolean("ReplyMenu", true);
+//				editor.putBoolean("ReplyMenu", true);
 				editor.putString(school_class_id + "ReplyMenu", "none");
 				editor.commit();
 			}
@@ -220,6 +220,7 @@ public class LeftMenu extends Activity implements Urlinterface {
 						Context.MODE_PRIVATE);
 				Editor editor = preferences.edit();
 				editor.putString("user_id", "");
+				editor.putString("student_id", "");
 				editor.putString("school_class_id", "");
 				editor.putString("id", "");
 				editor.commit();
