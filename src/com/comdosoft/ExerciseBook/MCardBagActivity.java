@@ -58,7 +58,7 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
 public class MCardBagActivity extends Table_TabHost implements Urlinterface,
-Serializable {
+		Serializable {
 	public List<tags> tagsList;
 	public Map<Integer, List<knowledges_card>> Allmap;
 	public Map<Integer, List<View>> FontCard;
@@ -318,14 +318,14 @@ Serializable {
 				GuidePageAdapter gpa = new GuidePageAdapter();
 				viewPager.setAdapter(gpa);
 				viewPager
-				.setOnPageChangeListener(new GuidePageChangeListener());
+						.setOnPageChangeListener(new GuidePageChangeListener());
 				break;
 			case 2:
 				setViewPager();
 				viewPager.setAdapter(new GuidePageAdapter());
 				viewPager.setCurrentItem(page);
 				viewPager
-				.setOnPageChangeListener(new GuidePageChangeListener());
+						.setOnPageChangeListener(new GuidePageChangeListener());
 				break;
 			default:
 				break;
@@ -363,7 +363,7 @@ Serializable {
 					imageView.setBackgroundResource(R.drawable.page_indicator);
 				} else {
 					imageView
-					.setBackgroundResource(R.drawable.page_inicator_focused);
+							.setBackgroundResource(R.drawable.page_inicator_focused);
 				}
 				imageL.addView(imageView);
 				group.addView(imageL);
@@ -434,10 +434,10 @@ Serializable {
 		case 0:
 			if (str.indexOf(";||;") != -1) {
 				strarr = str.split(";\\|\\|;");
-				for (int i = 0; i < strarr.length ; i++) {
+				for (int i = 0; i < strarr.length; i++) {
 					content += strarr[i] + " ";
 				}
-				content = content.substring(4, content.length()-5);
+				content = content.substring(4, content.length() - 5);
 			} else {
 				content = str.substring(0, str.lastIndexOf(";&&;"));
 			}
@@ -515,10 +515,9 @@ Serializable {
 		case 2:
 			return str;
 		case 3:
-			strarr=str.split(";\\|\\|;");
-			for(int i=0;i<strarr.length;i++)
-			{
-				content+=strarr[i]+"\n";
+			strarr = str.split(";\\|\\|;");
+			for (int i = 0; i < strarr.length; i++) {
+				content += strarr[i] + "\n";
 			}
 			return content.substring(4, content.length());
 		case 4:
@@ -541,13 +540,12 @@ Serializable {
 	public void settypes5(String full_text, String options) {
 		String content = null;
 		String[] arrs = options.split(";\\|\\|;");
-		full_text=ExerciseBookTool.del_tag(full_text);
-		String[] textarr=full_text.split("[[sign]]");
-		for(int i=0;i<textarr.length;i++)
-		{
-			content+=textarr[i];
+		full_text = ExerciseBookTool.del_tag(full_text);
+		String[] textarr = full_text.split("[[sign]]");
+		for (int i = 0; i < textarr.length; i++) {
+			content += textarr[i];
 			for (int j = 0; j < arrs.length; j++) {
-				content+=(Html.fromHtml("<u>"+arrs[j]+"</u>"));
+				content += (Html.fromHtml("<u>" + arrs[j] + "</u>"));
 			}
 		}
 	}
@@ -590,10 +588,11 @@ Serializable {
 				youranswer.setText(card.getAnswer());
 			}
 			wronganswer.setText(checkAns(card.getYour_answer(), // 你的错误
-					Integer.valueOf(card.getTypes())));
+					Integer.valueOf((card.getTypes() == null || card.getTypes()
+							.equals("null")) ? "0" : card.getTypes())));
 			fontIv.setOnClickListener(new OnClickListener() {
 				public void onClick(View arg0) {
-					Log.i("asd", "page:"+page+"index:"+index);
+					Log.i("asd", "page:" + page + "index:" + index);
 					Intent intent = new Intent(MCardBagActivity.this,
 							MCardTag.class);
 					Bundle mBundle = new Bundle();
@@ -624,20 +623,23 @@ Serializable {
 				cardbatread.setVisibility(View.GONE);
 			}
 			if (card.getTypes().equals("3")) {
-				if((card.getContent().indexOf("<file>") != -1))
-				{
+				if ((card.getContent().indexOf("<file>") != -1)) {
 					if ((card.getContent().indexOf(".mp3") != -1)
 							|| (card.getContent().indexOf(".amr") != -1)
 							|| (card.getContent().indexOf(".wav") != -1)) {
 						playerIP = IP
-								+ card.getContent().substring("<file>".length(),
-										card.getContent().lastIndexOf("</file>"));
+								+ card.getContent().substring(
+										"<file>".length(),
+										card.getContent()
+												.lastIndexOf("</file>"));
 					} else if ((card.getContent().indexOf(".png") != -1)
 							|| (card.getContent().indexOf(".jpg") != -1)) {
 						rightIv.setVisibility(View.VISIBLE);
 						String url = IP
-								+ card.getContent().substring("<file>".length(),
-										card.getContent().lastIndexOf("</file>"));
+								+ card.getContent().substring(
+										"<file>".length(),
+										card.getContent()
+												.lastIndexOf("</file>"));
 						Bitmap result = memoryCache.getBitmapFromCache(url);
 						if (result == null) {
 							ExerciseBookTool.set_bk(url, rightIv, memoryCache);
@@ -648,21 +650,19 @@ Serializable {
 					}
 					rightanswers.setText(card.getContent().substring(
 							card.getContent().lastIndexOf("</file>")
-							+ "</file>".length(),
+									+ "</file>".length(),
 							card.getContent().length())
 							+ setback(card.getOptions(),
 									Integer.valueOf(card.getTypes())));
-				}
-				else
-				{
-					rightanswers.setText(card.getContent()+"\n"+ 
-							setback(card.getOptions(),
+				} else {
+					rightanswers.setText(card.getContent()
+							+ "\n"
+							+ setback(card.getOptions(),
 									Integer.valueOf(card.getTypes())));
 				}
 			} else if (card.getResource_url().equals(""))
 				cardbatread.setVisibility(View.GONE);
-			if(card.getTypes().equals("5"))
-			{
+			if (card.getTypes().equals("5")) {
 				settypes5(card.getFull_text(), card.getOptions());
 			}
 			final String IP2 = playerIP;
@@ -673,11 +673,11 @@ Serializable {
 						mediaplay.prepare();
 						mediaplay.start();
 						mediaplay
-						.setOnCompletionListener(new OnCompletionListener() {
-							public void onCompletion(MediaPlayer mp) {
-								mediaplay.release();
-							}
-						});
+								.setOnCompletionListener(new OnCompletionListener() {
+									public void onCompletion(MediaPlayer mp) {
+										mediaplay.release();
+									}
+								});
 					} catch (IllegalArgumentException e) {
 						e.printStackTrace();
 					} catch (SecurityException e) {
@@ -693,68 +693,68 @@ Serializable {
 				public void onClick(View v) {
 					Dialog dialog = new AlertDialog.Builder(
 							MCardBagActivity.this)
-					.setTitle("提示")
-					.setMessage("您确认要删除么?")
-					.setPositiveButton("确认",
-							new DialogInterface.OnClickListener() {
-						public void onClick(
-								DialogInterface dialog,
-								int which) {
-							Thread thread = new Thread() {
-								public void run() {
-									try {
-										Map<String, String> map = new HashMap<String, String>();
-										map.put("knowledges_card_id",
-												card.getId());
-										String json = ExerciseBookTool
-												.sendGETRequest(
-														delete_knowledges_card,
-														map);
-										JSONObject jsonobj = new JSONObject(
-												json);
-										String notice = jsonobj
-												.getString("notice");
-										Message msg = new Message();
-										if (jsonobj
-												.getString(
-														"status")
-														.equals("success")) {
-											Map<String, String> map1 = new HashMap<String, String>();
-											map1.put(
-													"student_id",
-													student_id);
-											map1.put(
-													"school_class_id",
-													school_class_id);
-											json = ExerciseBookTool
-													.sendGETRequest(
-															get_knowledges_card,
-															map1);
-											parsejson(json,
-													false);
-											handler.sendEmptyMessage(2);
-										} else {
-											msg.what = 0;
-											msg.obj = notice;
-											handler.sendMessage(msg);
-										}
-									} catch (Exception e) {
-										e.printStackTrace();
-									}
-								}
+							.setTitle("提示")
+							.setMessage("您确认要删除么?")
+							.setPositiveButton("确认",
+									new DialogInterface.OnClickListener() {
+										public void onClick(
+												DialogInterface dialog,
+												int which) {
+											Thread thread = new Thread() {
+												public void run() {
+													try {
+														Map<String, String> map = new HashMap<String, String>();
+														map.put("knowledges_card_id",
+																card.getId());
+														String json = ExerciseBookTool
+																.sendGETRequest(
+																		delete_knowledges_card,
+																		map);
+														JSONObject jsonobj = new JSONObject(
+																json);
+														String notice = jsonobj
+																.getString("notice");
+														Message msg = new Message();
+														if (jsonobj
+																.getString(
+																		"status")
+																.equals("success")) {
+															Map<String, String> map1 = new HashMap<String, String>();
+															map1.put(
+																	"student_id",
+																	student_id);
+															map1.put(
+																	"school_class_id",
+																	school_class_id);
+															json = ExerciseBookTool
+																	.sendGETRequest(
+																			get_knowledges_card,
+																			map1);
+															parsejson(json,
+																	false);
+															handler.sendEmptyMessage(2);
+														} else {
+															msg.what = 0;
+															msg.obj = notice;
+															handler.sendMessage(msg);
+														}
+													} catch (Exception e) {
+														e.printStackTrace();
+													}
+												}
 
-							};
-							thread.start();
-						}
-					})
-					.setNegativeButton("取消",
-							new DialogInterface.OnClickListener() {
-						public void onClick(
-								DialogInterface dialog,
-								int which) {
-							dialog.dismiss();
-						}
-					}).create();
+											};
+											thread.start();
+										}
+									})
+							.setNegativeButton("取消",
+									new DialogInterface.OnClickListener() {
+										public void onClick(
+												DialogInterface dialog,
+												int which) {
+											dialog.dismiss();
+										}
+									}).create();
 					dialog.show();
 
 				}

@@ -68,7 +68,9 @@ public class AnswerDictationPrepareActivity extends AnswerBaseActivity
 
 		analysisJSON(json);
 
-		if (amp.getStatus() == 1) {
+		setCheckText("开始");
+
+		if (status == 2) {
 			TextView t = (TextView) findViewById(R.id.question_prepare_mes);
 			t.setText("重听");
 		}
