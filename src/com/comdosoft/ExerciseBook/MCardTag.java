@@ -167,6 +167,7 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 					biaoqianlv.setAdapter(adapter);
 					break;
 				case 1:
+					prodialog.dismiss();
 					biaoqianet.setText("");
 					LabelAdapter adapter2 = new LabelAdapter(
 							getApplicationContext(), index, add_tagsList, mytags,
@@ -231,12 +232,16 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 											.add(Integer.valueOf(id));
 											mytags.add(Integer.valueOf(id));
 											eb.setTagsarr(mytags);
+											Intent intent3 = new Intent();
+											eb.setTagsarr(mytags);
+											// 通过调用setResult方法返回结果给前一个activity。
+											MCardTag.this.setResult(-12, intent3);
 										} else {
 
 										}
 										handler1.sendEmptyMessage(1);
 									} catch (Exception e) {
-										e.printStackTrace();
+										prodialog.dismiss();
 									}
 								}
 							};
@@ -246,7 +251,16 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 								Toast.makeText(getApplicationContext(), R.string.edit_null,
 										Toast.LENGTH_SHORT).show();
 							} else {
-							thread.start();
+								if (ExerciseBookTool.isConnect(MCardTag.this)) {
+									prodialog = new ProgressDialog(MCardTag.this);
+									prodialog.setMessage("新建标签...");
+									prodialog.setCanceledOnTouchOutside(false);
+									prodialog.show();
+									thread.start();
+								} else {
+									Toast.makeText(getApplicationContext(),
+											ExerciseBookParams.INTERNET, 0).show();
+								}
 							}
 						}
 					});
