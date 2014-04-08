@@ -376,7 +376,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 							Log.i("aaa", type + "error-type");
 						}
 						Log.i("aaa", type + "-type");
-						switch (type) {// 0为下一小题 1为全部做完 2为本小题做完
+						switch (type) {// 0为下一小题    1为全部做完    2为本小题做完
 						case 0:
 							index += 1;
 							SetAnswer();
