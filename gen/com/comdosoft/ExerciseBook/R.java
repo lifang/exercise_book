@@ -283,7 +283,7 @@ public final class R {
         public static final int biaoqianlv=0x7f0c0041;
         public static final int bq_iteam_iv=0x7f0c002a;
         public static final int bq_iteam_tv=0x7f0c002b;
-        public static final int bqtv=0x7f0c003d;
+        public static final int bqtv1=0x7f0c003d;
         public static final int btn_next_month=0x7f0c00d7;
         public static final int btn_prev_month=0x7f0c00d5;
         public static final int button1=0x7f0c0030;
@@ -293,9 +293,9 @@ public final class R {
         public static final int button_error=0x7f0c007c;
         public static final int cardbagEt=0x7f0c002e;
         public static final int cardbatFind=0x7f0c002f;
-        public static final int cardbatdel=0x7f0c0048;
+        public static final int cardbatdel=0x7f0c0047;
         public static final int cardbatll1=0x7f0c002d;
-        public static final int cardbatread=0x7f0c0047;
+        public static final int cardbatread=0x7f0c0048;
         public static final int child_jiantou=0x7f0c004f;
         public static final int child_message=0x7f0c0051;
         public static final int child_message_date=0x7f0c0054;
