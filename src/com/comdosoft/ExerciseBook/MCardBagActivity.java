@@ -322,11 +322,13 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 						Toast.LENGTH_SHORT).show();
 				break;
 			case 1:
-				page = 0;
+//				page = 0;
 				setViewPager();
 				progressDialog.dismiss();
 				GuidePageAdapter gpa = new GuidePageAdapter();
 				viewPager.setAdapter(gpa);
+				
+				viewPager.setCurrentItem(page);
 				viewPager
 						.setOnPageChangeListener(new GuidePageChangeListener());
 				break;
@@ -929,26 +931,29 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 
 		switch (resultCode) {
 		case -12:
-			List<tags> tagsList2 = eb.getTagsList();
-			TextView tv = (TextView) FontCard.get(page).get(num)
-					.findViewById(R.id.bqtv1);
-			tv.setVisibility(View.VISIBLE);
-			String bqtvStr = "v.";
-
-			for (int i = 0; i < tagsList2.size(); i++) {
-				for (int j = 0; j < eb.getTagsarr().size(); j++) {
-					if (eb.getTagsarr().get(j) == Integer.valueOf(tagsList.get(
-							i).getId())) {
-						bqtvStr = bqtvStr + tagsList.get(i).getName() + ",";
-					}
-				}
-			}
-
-			if (bqtvStr.length() > 2) {
-				bqtvStr = bqtvStr.substring(0, bqtvStr.length() - 1);
-				tv.setVisibility(View.VISIBLE);
-				tv.setText(bqtvStr);
-			}
+//			List<tags> tagsList2 = eb.getTagsList();
+//			TextView tv = (TextView) FontCard.get(page).get(num)
+//					.findViewById(R.id.bqtv1);
+//			tv.setVisibility(View.VISIBLE);
+//			String bqtvStr = "v.";
+////			Allmap.get(page + 1).get(mindex).setTagsarr(eb.getTagsarr());
+//			for (int i = 0; i < tagsList2.size(); i++) {
+//				for (int j = 0; j < eb.getTagsarr().size(); j++) {
+//					if (eb.getTagsarr().get(j) == Integer.valueOf(tagsList.get(
+//							i).getId())) {
+//						bqtvStr = bqtvStr + tagsList.get(i).getName() + ",";
+//					}
+//				}
+//			}
+//
+//			if (bqtvStr.length() > 2) {
+//				bqtvStr = bqtvStr.substring(0, bqtvStr.length() - 1);
+//				tv.setVisibility(View.VISIBLE);
+//				tv.setText(bqtvStr);
+//			}
+			initbtn();
+			getKonwledges();
+			btnlistClick();
 			break;
 		default:
 			break;

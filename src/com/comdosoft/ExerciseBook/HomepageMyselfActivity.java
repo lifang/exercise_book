@@ -706,7 +706,7 @@ public class HomepageMyselfActivity extends Activity implements
 				String name = o.getString("name");
 				String content = o.getString("content");
 				String avatar_url = o.getString("avatar_url");
-				String created_at = o.getString("created_at");
+				String created_at = o.getString("new_created_at");
 				String careCount = o.getString("follow_microposts_count"); // 关注数
 				if (careCount.equals("null")) {
 					careCount = "0";
@@ -756,7 +756,7 @@ public class HomepageMyselfActivity extends Activity implements
 						String reciver_name = o.getString("reciver_name");
 						// String reciver_avatar_url = o
 						// .getString("reciver_avatar_url");
-						String created_at = o.getString("created_at");
+						String created_at = o.getString("new_created_at");
 						Child_Micropost child = new Child_Micropost(id,
 								sender_id, sender_types, sender_name,
 								sender_avatar_url, content, reciver_name,
@@ -878,7 +878,7 @@ public class HomepageMyselfActivity extends Activity implements
 									String reciver_name = o
 											.getString("reciver_name");
 									String created_at = o
-											.getString("created_at");
+											.getString("new_created_at");
 									Child_Micropost child = new Child_Micropost(
 											id, sender_id, sender_types,
 											sender_name, sender_avatar_url,

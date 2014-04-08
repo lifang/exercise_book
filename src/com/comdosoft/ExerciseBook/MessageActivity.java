@@ -173,7 +173,7 @@ IXListViewListener, Urlinterface, OnGestureListener {
 
 					String content = jsonobject2.getString("content");
 					String created_at = ExerciseBookTool.divisionTime2(jsonobject2
-							.getString("created_at"));
+							.getString("new_created_at"));
 					String id = jsonobject2.getString("id");
 					String class_id = jsonobject2.getString("student_id");
 					replyList.add(new SysMessage(content, created_at, id,

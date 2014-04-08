@@ -302,7 +302,6 @@ public class ExerciseBookTool implements Urlinterface {
 		return size / ratio.size();
 	}
 
-
 	// 下载路径判断
 	public static boolean FileExist(String path, String filename) {
 		File file = new File(path);
@@ -854,11 +853,16 @@ public class ExerciseBookTool implements Urlinterface {
 	 */
 	public static String divisionTime2(String timeStr) {
 		timeStr = timeStr.replace("-", "/");
-		int temp1 = timeStr.indexOf("T");
-		int temp2 = timeStr.lastIndexOf("+");
-		String s = timeStr.substring(temp1 + 1, temp2);
-		int temp3 = s.lastIndexOf(":");
-		return timeStr.substring(0, temp1) + "  " + s.substring(0, temp3);
+		if (timeStr.length() < 22) {
+			return timeStr;
+		} else {
+			int temp1 = timeStr.indexOf("T");
+			int temp2 = timeStr.lastIndexOf("+");
+			String s = timeStr.substring(temp1 + 1, temp2);
+			int temp3 = s.lastIndexOf(":");
+			return timeStr.substring(0, temp1) + "  " + s.substring(0, temp3);
+		}
+
 	}
 
 }
