@@ -5,12 +5,18 @@
     android:background="@color/white"
     android:orientation="vertical" >
 
-    <com.comdosoft.ExerciseBook.tools.PredicateLayout
-        android:id="@+id/myLayout"
+    <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="20dp" >
-    </com.comdosoft.ExerciseBook.tools.PredicateLayout>
+        android:scrollbars="none" >
+
+        <com.comdosoft.ExerciseBook.tools.PredicateLayout
+            android:id="@+id/myLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp" >
+        </com.comdosoft.ExerciseBook.tools.PredicateLayout>
+    </ScrollView>
 
 </LinearLayout>

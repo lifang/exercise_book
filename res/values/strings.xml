@@ -57,7 +57,7 @@
     <string name="xlistview_header_last_time">上次更新时间：</string>
     <string name="xlistview_footer_hint_normal">查看更多</string>
     <string name="xlistview_footer_hint_ready">松开载入更多</string>
-    <string name="homeworking_title">今日作作业至时间为</string>
+    <string name="homeworking_title">今日作业截止时间为</string>
     <string name="top">排行</string>
     <string name="work_null">还没有需要完成的作业！</string>
     <string name="reson1">拼写错误</string>

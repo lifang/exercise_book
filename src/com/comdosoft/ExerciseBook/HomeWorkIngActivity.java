@@ -87,8 +87,8 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 				prodialog.dismiss();
 				if (work_list.size() != 0) {
 					start_time.setText("发布时间为"
-							+ work_list.get(0).getStart_time().split(" ")[1]);
-					end_time.setText(work_list.get(0).getEnd_time().split(" ")[1]);
+							+ work_list.get(0).getStart_time());
+					end_time.setText(work_list.get(0).getEnd_time());
 					questiontype_list = work_list.get(0).getQuestion_types();
 					finish_list = work_list.get(0).getFinish_types();
 					eb.setToday_newer_id(work_list.get(0).getId());
