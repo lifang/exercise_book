@@ -293,9 +293,9 @@ public final class R {
         public static final int button_error=0x7f0c007c;
         public static final int cardbagEt=0x7f0c002e;
         public static final int cardbatFind=0x7f0c002f;
-        public static final int cardbatdel=0x7f0c0047;
+        public static final int cardbatdel=0x7f0c0048;
         public static final int cardbatll1=0x7f0c002d;
-        public static final int cardbatread=0x7f0c0048;
+        public static final int cardbatread=0x7f0c0047;
         public static final int child_jiantou=0x7f0c004f;
         public static final int child_message=0x7f0c0051;
         public static final int child_message_date=0x7f0c0054;
