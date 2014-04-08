@@ -169,7 +169,7 @@ public class ExerciseBookTool implements Urlinterface {
 			if (!file.exists()) {
 				file.createNewFile();
 				Log.i("linshi", path + "/student_" + uid + ".json");
-				AnswerJson answer = new AnswerJson(id, "0", getTimeIng(),
+				AnswerJson answer = new AnswerJson(id, "0", "0000-00-00 00:00:00",
 						propList, new AnswerPojo("0", "", "-1", "-1", "0",
 								new ArrayList<Answer_QuestionsPojo>()),
 						new AnswerPojo("0", "", "-1", "-1", "0",
