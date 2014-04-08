@@ -170,7 +170,7 @@ IXListViewListener, Urlinterface, OnGestureListener {
 				JSONArray jsonarray = jsonobject.getJSONArray("sysmessage");
 				for (int i = 0; i < jsonarray.length(); i++) {
 					JSONObject jsonobject2 = jsonarray.getJSONObject(i);
-
+//					{"student_id":73,"new_created_at":"2014-04-04 10:37:52","content":"恭喜您获得成就“优异”","school_class_id":109}
 					String content = jsonobject2.getString("content");
 					String created_at = ExerciseBookTool.divisionTime2(jsonobject2
 							.getString("new_created_at"));

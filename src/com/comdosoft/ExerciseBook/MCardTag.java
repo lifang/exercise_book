@@ -60,6 +60,7 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 	int width;
 	List<tags> findlist;
 	private ProgressDialog prodialog;
+
 	@SuppressWarnings("unchecked")
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -92,11 +93,11 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 			}
 		});
 		show();
-		set();  //   搜索知识点  文本框  biaoqianet 设置监听
+		set(); // 搜索知识点 文本框 biaoqianet 设置监听
 	}
 
 	public List<tags> findbiaoqian(String et) {
-		 findlist = new ArrayList<tags>();
+		findlist = new ArrayList<tags>();
 		for (int i = 0; i < tagsList.size(); i++) {
 			if (tagsList.get(i).getName().indexOf(et) != -1) {
 				findlist.add(tagsList.get(i));
@@ -105,8 +106,7 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 		return findlist;
 	}
 
-	public void show()
-	{
+	public void show() {
 		if (width == 800) {
 			switch (index) {
 			case 0:
@@ -147,10 +147,11 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 			}
 		}
 	}
+
 	public boolean onTouchEvent(MotionEvent event) {
 		this.finish();
-//		eb.setAllmap(null);
-//		eb.setTagsList(null);
+		// eb.setAllmap(null);
+		// eb.setTagsList(null);
 		return super.onTouchEvent(event);
 	}
 
@@ -170,8 +171,8 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 					prodialog.dismiss();
 					biaoqianet.setText("");
 					LabelAdapter adapter2 = new LabelAdapter(
-							getApplicationContext(), index, add_tagsList, mytags,
-							student_id, school_class_id, id);
+							getApplicationContext(), index, add_tagsList,
+							mytags, student_id, school_class_id, id);
 					biaoqianlv.setAdapter(adapter2);
 					break;
 				default:
@@ -182,91 +183,92 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 		biaoqianet.addTextChangedListener(new TextWatcher() {
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
-				
-					newTv.setVisibility(View.VISIBLE);
-					newTv.setText("新建'" + biaoqianet.getText().toString() + "'");
-					newTv.setOnClickListener(new OnClickListener() {   //   新建标签
-						public void onClick(View v) {
-							Thread thread = new Thread() {
-								String json;
-								public void run() {
-									try {
-										add_tagsList= new ArrayList<tags>();
-										// viewPager = (ViewPager)
-										// findViewById(R.id.guidePages);
-										Map<String, String> map = new HashMap<String, String>();
-										map.put("student_id", student_id);
-										map.put("school_class_id",
-												school_class_id);
-										map.put("knowledge_card_id", id);
-										String s=String
-												.valueOf(biaoqianet.getText());
-										String s1=URLEncoder.encode(s, "utf-8");
-										map.put("name",s1);
-										json = ExerciseBookTool.sendGETRequest(
-												create_card_tag, map);
-										JSONObject jsonobject2 = new JSONObject(
-												json);
-										if (jsonobject2.getString("status")
-												.equals("success")) {
-											JSONObject jsonobject3 = jsonobject2
-													.getJSONObject("cardtag");
-											String card_bag_id = jsonobject3
-													.getString("card_bag_id");
-											String created_at = jsonobject3
-													.getString("created_at");
-											String id = jsonobject3
-													.getString("id");
-											String name = jsonobject3
-													.getString("name");
-											String update_at = jsonobject3
-													.getString("updated_at");
-											tagsList.add(new tags(card_bag_id,
-													created_at, id, name,
-													update_at));
-											add_tagsList.add(new tags(card_bag_id,
-													created_at, id, name,
-													update_at));
-											eb.setTagsList(tagsList);
-											MyMap.get(index).getTagsarr()
-											.add(Integer.valueOf(id));
-											mytags.add(Integer.valueOf(id));
-											eb.setTagsarr(mytags);
-											Intent intent3 = new Intent();
-											eb.setTagsarr(mytags);
-											// 通过调用setResult方法返回结果给前一个activity。
-											MCardTag.this.setResult(-12, intent3);
-										} else {
 
-										}
-										handler1.sendEmptyMessage(1);
-									} catch (Exception e) {
-										prodialog.dismiss();
+				newTv.setVisibility(View.VISIBLE);
+				newTv.setText("新建'" + biaoqianet.getText().toString() + "'");
+				newTv.setOnClickListener(new OnClickListener() { // 新建标签
+					public void onClick(View v) {
+						Thread thread = new Thread() {
+							String json;
+
+							public void run() {
+								try {
+									add_tagsList = new ArrayList<tags>();
+									// viewPager = (ViewPager)
+									// findViewById(R.id.guidePages);
+									Map<String, String> map = new HashMap<String, String>();
+									map.put("student_id", student_id);
+									map.put("school_class_id", school_class_id);
+									map.put("knowledge_card_id", id);
+									String s = String.valueOf(biaoqianet
+											.getText());
+									String s1 = URLEncoder.encode(s, "utf-8");
+									map.put("name", s1);
+									json = ExerciseBookTool.sendGETRequest(
+											create_card_tag, map);
+									JSONObject jsonobject2 = new JSONObject(
+											json);
+									if (jsonobject2.getString("status").equals(
+											"success")) {
+										JSONObject jsonobject3 = jsonobject2
+												.getJSONObject("cardtag");
+										String card_bag_id = jsonobject3
+												.getString("card_bag_id");
+										String created_at = jsonobject3
+												.getString("created_at");
+										String id = jsonobject3.getString("id");
+										String name = jsonobject3
+												.getString("name");
+										String update_at = jsonobject3
+												.getString("updated_at");
+										tagsList.add(new tags(card_bag_id,
+												created_at, id, name, update_at));
+										add_tagsList
+												.add(new tags(card_bag_id,
+														created_at, id, name,
+														update_at));
+										eb.setTagsList(tagsList);
+										MyMap.get(index).getTagsarr()
+												.add(Integer.valueOf(id));
+										mytags.add(Integer.valueOf(id));
+										eb.setTagsarr(mytags);
+										Intent intent3 = new Intent();
+										eb.setTagsarr(mytags);
+										// 通过调用setResult方法返回结果给前一个activity。
+										MCardTag.this.setResult(-12, intent3);
+									} else {
+
 									}
-								}
-							};
-							String reply_edit = biaoqianet.getText().toString();
-							String kongge = reply_edit.replaceAll(" ", "");
-							if (reply_edit.length() == 0 || kongge.equals("")) {
-								Toast.makeText(getApplicationContext(), R.string.edit_null,
-										Toast.LENGTH_SHORT).show();
-							} else {
-								if (ExerciseBookTool.isConnect(MCardTag.this)) {
-									prodialog = new ProgressDialog(MCardTag.this);
-									prodialog.setMessage("新建标签...");
-									prodialog.setCanceledOnTouchOutside(false);
-									prodialog.show();
-									thread.start();
-								} else {
-									Toast.makeText(getApplicationContext(),
-											ExerciseBookParams.INTERNET, 0).show();
+									handler1.sendEmptyMessage(1);
+								} catch (Exception e) {
+									prodialog.dismiss();
 								}
 							}
+						};
+						String reply_edit = biaoqianet.getText().toString();
+						String kongge = reply_edit.replaceAll(" ", "");
+						if (reply_edit.length() == 0 || kongge.equals("")) {
+							Toast.makeText(getApplicationContext(),
+									R.string.edit_null, Toast.LENGTH_SHORT)
+									.show();
+						} else {
+							if (ExerciseBookTool.isConnect(MCardTag.this)) {
+								prodialog = new ProgressDialog(MCardTag.this);
+								prodialog.setMessage("新建标签...");
+								prodialog.setCanceledOnTouchOutside(false);
+								prodialog.show();
+								thread.start();
+							} else {
+								Toast.makeText(getApplicationContext(),
+										ExerciseBookParams.INTERNET, 0).show();
+							}
 						}
-					});
-//					if (findbiaoqian(biaoqianet.getText().toString()).size() <= 2) {
-//				}
-					findbiaoqian(biaoqianet.getText().toString());
+					}
+				});
+				// if (findbiaoqian(biaoqianet.getText().toString()).size() <=
+				// 2) {
+				// }
+				findbiaoqian(biaoqianet.getText().toString());
 				LabelAdapter adapter = new LabelAdapter(
 						getApplicationContext(), index, findlist, mytags,
 						student_id, school_class_id, id);
@@ -281,20 +283,20 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 			}
 		});
 	}
-	
+
 	public class LabelAdapter extends BaseAdapter implements Urlinterface {
-		public List<tags> tagsList;  //  标签集合 
-		public List<Integer> cardlist;   //   选中的标签  id
+		public List<tags> tagsList; // 标签集合
+		public List<Integer> cardlist; // 选中的标签 id
 		Context content;
 		knowledges_card myList;
 		List<Integer> mytags;
 		private String student_id;
 		private String school_class_id;
-		private String card_id;    ///  卡片 id  
+		private String card_id; // / 卡片 id
 
-		public LabelAdapter(Context content, int index,
-				List<tags> tagsList, List<Integer> card, String student_id,
-				String school_class_id, String card_id) {
+		public LabelAdapter(Context content, int index, List<tags> tagsList,
+				List<Integer> card, String student_id, String school_class_id,
+				String card_id) {
 			this.content = content;
 			this.tagsList = tagsList;
 			this.cardlist = card;
@@ -302,11 +304,10 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 			this.school_class_id = school_class_id;
 			this.card_id = card_id;
 			mytags = new ArrayList<Integer>();
-			for(int i=0;i<cardlist.size();i++)
-			{
+			for (int i = 0; i < cardlist.size(); i++) {
 				mytags.add(cardlist.get(i));
 			}
-//			Log.i("2",mytags.size()+"1!!"+tagsList.size());
+			// Log.i("2",mytags.size()+"1!!"+tagsList.size());
 		}
 
 		public int getCount() {
@@ -326,7 +327,8 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 			TextView tv;
 		}
 
-		public View getView(final int position, View convertView, ViewGroup parent) {
+		public View getView(final int position, View convertView,
+				ViewGroup parent) {
 			LayoutInflater inflater = LayoutInflater.from(content);
 			Holder holder = null;
 			convertView = inflater.inflate(R.layout.biaoqian_iteam, null);
@@ -335,10 +337,10 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 			holder.tv = (TextView) convertView.findViewById(R.id.bq_iteam_tv);
 			convertView.setPadding(0, 10, 0, 10);
 			for (int i = 0; i < mytags.size(); i++) {
-				if (mytags.get(i) == Integer
-						.valueOf(tagsList.get(position).getId())) {
-					holder.img.setImageDrawable(content.getResources().getDrawable(
-							R.drawable.biaoqianf));
+				if (mytags.get(i) == Integer.valueOf(tagsList.get(position)
+						.getId())) {
+					holder.img.setImageDrawable(content.getResources()
+							.getDrawable(R.drawable.biaoqianf));
 				}
 			}
 			holder.tv.setText(tagsList.get(position).getName());
@@ -356,8 +358,8 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 								String json = ExerciseBookTool.sendGETRequest(
 										knoledge_tag_relation, map);
 								JSONObject jsonobject = new JSONObject(json);
-								if (jsonobject.getString("status")
-										.equals("success")) {
+								if (jsonobject.getString("status").equals(
+										"success")) {
 									int type = jsonobject.getInt("type");
 									Message msg = new Message();
 									switch (type) {
@@ -368,16 +370,18 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 									case 1:
 										prodialog.dismiss();
 										msg.obj = "删除标签成功";
-										mytags.remove(setList(tagsList.get(position).getId()));
-											Intent intent2 = new Intent();
-											eb.setTagsarr(mytags);
+										mytags.remove(setList(tagsList.get(
+												position).getId()));
+										Intent intent2 = new Intent();
+										eb.setTagsarr(mytags);
 										// 通过调用setResult方法返回结果给前一个activity。
-											MCardTag.this.setResult(-12, intent2);
+										MCardTag.this.setResult(-12, intent2);
 										break;
 									case 2:
 										prodialog.dismiss();
 										msg.obj = "添加标签成功";
-										mytags.add(Integer.valueOf(tagsList.get(position).getId()));
+										mytags.add(Integer.valueOf(tagsList
+												.get(position).getId()));
 										Intent intent3 = new Intent();
 										eb.setTagsarr(mytags);
 										// 通过调用setResult方法返回结果给前一个activity。
@@ -402,30 +406,32 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 
 					} else {
 						Toast.makeText(getApplicationContext(),
-								ExerciseBookParams.INTERNET, Toast.LENGTH_SHORT).show();
+								ExerciseBookParams.INTERNET, Toast.LENGTH_SHORT)
+								.show();
 					}
 				}
 			});
 			return convertView;
 
 		}
-		public int setList(String id)
-		{
+
+		public int setList(String id) {
 			for (int i = 0; i < mytags.size(); i++) {
-				if (mytags.get(i) == Integer
-						.valueOf(id)) {
+				if (mytags.get(i) == Integer.valueOf(id)) {
 					return i;
 				}
 			}
 			return 0;
 		}
+
 		Handler handler1 = new Handler() {
 			public void handleMessage(Message msg) {
 				super.handleMessage(msg);
 				switch (msg.what) {
 				case 0:
 					notifyDataSetChanged();
-					Toast.makeText(content, String.valueOf(msg.obj), Toast.LENGTH_SHORT).show();
+					Toast.makeText(content, String.valueOf(msg.obj),
+							Toast.LENGTH_SHORT).show();
 					break;
 				}
 			}

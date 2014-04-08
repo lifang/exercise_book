@@ -143,6 +143,8 @@
                 android:layout_marginLeft="32px"
                 android:background="@drawable/bqtv"
                 android:gravity="center_vertical"
+                android:maxLines="1"
+                android:singleLine="true"
                 android:textColor="@color/white"
                 android:visibility="gone" />
         </RelativeLayout>

@@ -589,7 +589,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 		ImageView rightIv;
 		if (PageBool[page][index]) {
 			bqtv = (TextView) v.findViewById(R.id.bqtv1);
-			String bqtvStr = "v.";
+			String bqtvStr = " v.";
 			for (int i = 0; i < tagsList.size(); i++) {
 				for (int j = 0; j < card.getTagsarr().size(); j++) {
 					if (card.getTagsarr().get(j) == Integer.valueOf(tagsList
