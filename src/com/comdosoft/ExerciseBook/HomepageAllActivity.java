@@ -111,6 +111,8 @@ public class HomepageAllActivity extends Activity implements
 			switch (msg.what) {
 			case 0:
 				prodialog.dismiss();
+				final String json = (String) msg.obj;
+				setJson(json);
 				init();
 				break;
 			case 2:
@@ -698,6 +700,7 @@ public class HomepageAllActivity extends Activity implements
 
 			String status = obj.getString("status");
 			String notice = obj.getString("notice");
+			
 			if ("success".equals(status)) {
 				// // 学生信息
 				JSONObject student = obj.getJSONObject("student"); // 获得学生的信息
@@ -739,10 +742,10 @@ public class HomepageAllActivity extends Activity implements
 					care.add(fmi);
 				}
 
-			} else {
+			} 
+
 				Toast.makeText(getApplicationContext(), notice,
 						Toast.LENGTH_SHORT).show();
-			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -1322,8 +1325,12 @@ public class HomepageAllActivity extends Activity implements
 				map.put("school_class_id", school_class_id);
 				json = ExerciseBookTool.sendGETRequest(
 						Urlinterface.get_class_info, map);
-				setJson(json);
-				handler.sendEmptyMessage(0);
+				Message msg = new Message();// 创建Message 对象
+				msg.what = 0;
+				msg.obj = json;
+				handler.sendMessage(msg);
+				
+//				handler.sendEmptyMessage(0);
 			} catch (Exception e) {
 				prodialog.dismiss();
 				handler.sendEmptyMessage(7);
