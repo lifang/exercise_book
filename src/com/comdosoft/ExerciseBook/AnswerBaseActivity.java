@@ -94,6 +94,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	public ProgressDialog prodialog;
 	public int index = 0;
 	private MediaPlayer player;
+	private String updated_time = "0000-00-00 00:00:00";
 	private Handler mHandler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -379,7 +380,6 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		index = 0;
 		if (status == 0) {// status:0表示答题 1重做 2表示历史
 			prodialog.show();
-			setUpdateJson();
 			Finish_Json();
 		} else {
 			mHandler.sendEmptyMessage(5);
@@ -390,7 +390,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		String answer_history = ExerciseBookTool.getAnswer_Json_history(path);
 		answerJson = gson.fromJson(answer_history, AnswerJson.class);
 		AnswerPojo ap = getAnswerPojo();
-		answerJson.update = ExerciseBookTool.getTimeIng();
+		answerJson.update = updated_time;
 		String str = gson.toJson(answerJson);
 		try {
 			ExerciseBookTool.writeFile(path, str);
@@ -439,6 +439,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 
 	public boolean Finish_Json() {
 		new Thread(new Runnable() {
+
 			public void run() {
 				MultipartEntity entity = new MultipartEntity();
 				try {
@@ -452,9 +453,12 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 							+ eb.getWork_id() + "/" + path);
 					String answer_json = ExerciseBookTool.sendPhostimg(
 							finish_question_packge, entity);
+					Log.i("suanfa", answer_json);
 					if (!answer_json.equals("")) {
-						if (new JSONObject(answer_json).getString("status")
-								.equals("success")) {
+						JSONObject obj = new JSONObject(answer_json);
+						if (obj.getString("status").equals("success")) {
+							updated_time = obj.getString("updated_time");
+							setUpdateJson();
 							answer_boolean = true;
 							Log.i("suanfa", answer_boolean + "--" + index);
 							if (index == 0) {// 0表示退出

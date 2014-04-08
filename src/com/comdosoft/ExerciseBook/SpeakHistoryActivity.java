@@ -354,7 +354,7 @@ public class SpeakHistoryActivity extends AnswerBaseActivity implements
 	public void onInit(int status) {
 		if (status == TextToSpeech.SUCCESS) {
 			int result = mTts.setLanguage(Locale.US);
-			mTts.setSpeechRate(0.5f);
+			mTts.setSpeechRate(0.8f);
 			// 设置发音语言
 			if (result == TextToSpeech.LANG_MISSING_DATA
 					|| result == TextToSpeech.LANG_NOT_SUPPORTED)
