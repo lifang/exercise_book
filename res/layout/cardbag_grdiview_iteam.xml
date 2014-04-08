@@ -73,7 +73,7 @@
                 android:textSize="30.77px" />
 
             <TextView
-                android:id="@+id/bqtv"
+                android:id="@+id/bqtv1"
                 android:layout_below="@id/answer"
                 android:layout_width="300.83px"
                 android:layout_height="39.53px"

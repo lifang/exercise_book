@@ -183,7 +183,7 @@ IXListViewListener, Urlinterface, OnGestureListener {
 							String content = liststr.get(1);
 
 							String created_at = ExerciseBookTool.divisionTime2(jsonobject2
-									.getString("created_at"));
+									.getString("new_created_at"));
 							String id = jsonobject2.getString("id");
 
 							String micropost_id = jsonobject2.getString("micropost_id");

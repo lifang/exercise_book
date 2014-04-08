@@ -10,6 +10,7 @@ import java.util.Map;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -33,9 +34,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.comdosoft.ExerciseBook.HomepageAllActivity.get_class_info;
 import com.comdosoft.ExerciseBook.pojo.knowledges_card;
 import com.comdosoft.ExerciseBook.pojo.tags;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
+import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
@@ -56,6 +59,7 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 	ExerciseBook eb;
 	int width;
 	List<tags> findlist;
+	private ProgressDialog prodialog;
 	@SuppressWarnings("unchecked")
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -236,7 +240,14 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 									}
 								}
 							};
+							String reply_edit = biaoqianet.getText().toString();
+							String kongge = reply_edit.replaceAll(" ", "");
+							if (reply_edit.length() == 0 || kongge.equals("")) {
+								Toast.makeText(getApplicationContext(), R.string.edit_null,
+										Toast.LENGTH_SHORT).show();
+							} else {
 							thread.start();
+							}
 						}
 					});
 //					if (findbiaoqian(biaoqianet.getText().toString()).size() <= 2) {
@@ -313,7 +324,7 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 				if (mytags.get(i) == Integer
 						.valueOf(tagsList.get(position).getId())) {
 					holder.img.setImageDrawable(content.getResources().getDrawable(
-							R.drawable.biaoqiant));
+							R.drawable.biaoqianf));
 				}
 			}
 			holder.tv.setText(tagsList.get(position).getName());
@@ -337,9 +348,11 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 									Message msg = new Message();
 									switch (type) {
 									case 0:
+										prodialog.dismiss();
 										msg.obj = "错误";
 										break;
 									case 1:
+										prodialog.dismiss();
 										msg.obj = "删除标签成功";
 										mytags.remove(setList(tagsList.get(position).getId()));
 											Intent intent2 = new Intent();
@@ -348,6 +361,7 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 											MCardTag.this.setResult(-12, intent2);
 										break;
 									case 2:
+										prodialog.dismiss();
 										msg.obj = "添加标签成功";
 										mytags.add(Integer.valueOf(tagsList.get(position).getId()));
 										Intent intent3 = new Intent();
@@ -360,12 +374,22 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 									handler1.sendMessage(msg);
 								}
 							} catch (Exception e) {
-								e.printStackTrace();
+								prodialog.dismiss();
 							}
 
 						}
 					};
-					thread.start();
+					if (ExerciseBookTool.isConnect(MCardTag.this)) {
+						prodialog = new ProgressDialog(MCardTag.this);
+						prodialog.setMessage(ExerciseBookParams.PD_REG);
+						prodialog.setCanceledOnTouchOutside(false);
+						prodialog.show();
+						thread.start();
+
+					} else {
+						Toast.makeText(getApplicationContext(),
+								ExerciseBookParams.INTERNET, Toast.LENGTH_SHORT).show();
+					}
 				}
 			});
 			return convertView;

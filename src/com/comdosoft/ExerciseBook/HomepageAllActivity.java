@@ -156,7 +156,7 @@ public class HomepageAllActivity extends Activity implements
 		memoryCache = HomePageMainActivity.instance.memoryCache;
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
-
+		exerciseBook.setMenu_num(0);
 		user_id = preferences.getString("user_id", "130");
 		id = preferences.getString("id", "73");
 		school_class_id = preferences.getString("school_class_id", "83");
@@ -801,7 +801,7 @@ public class HomepageAllActivity extends Activity implements
 				String name = o.getString("name");
 				String content = o.getString("content");
 				String avatar_url = o.getString("avatar_url");
-				String created_at = o.getString("created_at");
+				String created_at = o.getString("new_created_at");
 				String careCount = o.getString("follow_microposts_count"); // 关注数
 				if (careCount.equals("null")) {
 					careCount = "0";
@@ -866,7 +866,7 @@ public class HomepageAllActivity extends Activity implements
 				String sender_avatar_url = o.getString("sender_avatar_url");
 				String content = o.getString("content");
 				String reciver_name = o.getString("reciver_name");
-				String created_at = o.getString("created_at");
+				String created_at = o.getString("new_created_at");
 				Child_Micropost child = new Child_Micropost(id, sender_id,
 						sender_types, sender_name, sender_avatar_url, content,
 						reciver_name, created_at);
@@ -1085,7 +1085,7 @@ public class HomepageAllActivity extends Activity implements
 									String reciver_name = o
 											.getString("reciver_name");
 									String created_at = o
-											.getString("created_at");
+											.getString("new_created_at");
 									Child_Micropost child = new Child_Micropost(
 											id, sender_id, sender_types,
 											sender_name, sender_avatar_url,

@@ -85,7 +85,7 @@ public class LabelAdapter extends BaseAdapter implements Urlinterface {
 			if (mytags.get(i) == Integer
 					.valueOf(tagsList.get(position).getId())) {
 				holder.img.setImageDrawable(content.getResources().getDrawable(
-						R.drawable.biaoqiant));
+						R.drawable.biaoqianf));
 			}
 		}
 		holder.tv.setText(tagsList.get(position).getName());
