@@ -1,5 +1,7 @@
 package com.comdosoft.ExerciseBook.tools;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -7,6 +9,7 @@ import java.util.Map;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.view.View;
 
 import com.comdosoft.ExerciseBook.pojo.ListeningPojo;
 import com.comdosoft.ExerciseBook.pojo.QuestionPojo;
@@ -45,6 +48,19 @@ public class ExerciseBook extends Application {
 	public List<Integer> Tagsarr;
 	private int Time_number;
 	private int True_number;
+	Map<Integer, List<View>> FontCard;
+	
+	
+	
+
+	public Map<Integer, List<View>> getFontCard() {
+		return FontCard;
+	}
+
+	public void setFontCard(Map<Integer, List<View>> fontCard) {
+		FontCard = new HashMap<Integer, List<View>>();
+		FontCard = fontCard;
+	}
 
 	public ExerciseBook() {
 		this.setMneu(true);
@@ -85,8 +101,9 @@ public class ExerciseBook extends Application {
 		return tagsList;
 	}
 
-	public void setTagsList(List<tags> tagsList) {
-		this.tagsList = tagsList;
+	public void setTagsList(List<tags> tagsList0) {
+		tagsList = new ArrayList<tags>();
+		this.tagsList = tagsList0;
 	}
 
 	public List<Integer> getTagsarr() {
