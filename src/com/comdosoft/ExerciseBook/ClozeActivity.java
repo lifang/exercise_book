@@ -143,7 +143,10 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 	}
 
 	private void setTextView() {
-		// str = content.split("\\[\\[sign\\]\\]");
+		content = content.replaceAll("\\[\\[sign\\]\\]", " [[sign]]");
+		Log.i("suanfa", content + "==");
+		content = content.replaceAll("\\s", " ");
+		Log.i("suanfa", content + "==");
 		str = content.split(" ");
 		user_select = new HashMap<Integer, String>();
 		tv_list = new ArrayList<TextView>();

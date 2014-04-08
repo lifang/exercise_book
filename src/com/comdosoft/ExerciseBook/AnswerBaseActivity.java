@@ -38,6 +38,7 @@ import com.comdosoft.ExerciseBook.pojo.AnswerMyPojo;
 import com.comdosoft.ExerciseBook.pojo.AnswerPojo;
 import com.comdosoft.ExerciseBook.pojo.Answer_QuestionsPojo;
 import com.comdosoft.ExerciseBook.pojo.Branch_AnswerPoJo;
+import com.comdosoft.ExerciseBook.pojo.PropPojo;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
@@ -461,6 +462,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 							} else {
 								mHandler.sendEmptyMessage(4);
 							}
+							Del_Prop();// 清除道具列表
 						}
 					}
 				} catch (Exception e) {
@@ -721,6 +723,20 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		String str = gson.toJson(answerJson);
 		try {
 			ExerciseBookTool.writeFile(path, str);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void Del_Prop() {
+		String answer_history = ExerciseBookTool.getAnswer_Json_history(path);
+		answerJson = gson.fromJson(answer_history, AnswerJson.class);
+		AnswerPojo ap = getAnswerPojo();
+		answerJson.props = new ArrayList<PropPojo>();
+		String str = gson.toJson(answerJson);
+		try {
+			ExerciseBookTool.writeFile(path, str);
+			uploadJSON(ap.getStatus());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
