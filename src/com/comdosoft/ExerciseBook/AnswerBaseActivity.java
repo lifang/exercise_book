@@ -469,7 +469,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 						}
 					}
 				} catch (Exception e) {
-					mHandler.sendEmptyMessage(2);
+//					mHandler.sendEmptyMessage(2);
 				}
 			}
 		}).start();
@@ -481,6 +481,8 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 			count++;
 			ratioSum = ratioSum + mRatio;
 			ratio = 0;
+			firstRatioFlag = true;
+			Log.i("Ax", ratioSum + "--ratio--" + count);
 		}
 	}
 

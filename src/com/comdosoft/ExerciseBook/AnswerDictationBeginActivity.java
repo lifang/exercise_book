@@ -3,10 +3,10 @@ package com.comdosoft.ExerciseBook;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.json.JSONArray;
@@ -44,7 +44,10 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Soundex_Levenshtein;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
-// 2014年4月1日 10:45:06
+/**
+ * @作者 马龙
+ * @时间 2014-4-9 下午4:28:41
+ */
 public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		OnClickListener, ExerciseBookParams, OnPreparedListener,
 		OnCompletionListener, Urlinterface {
@@ -414,6 +417,7 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 						}
 					}
 				} else {
+					errorMap.put(dictationList.get(i).getValue(), 1);
 					dictationList.get(i).setFlag(0);
 				}
 			}
@@ -451,7 +455,7 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 					mesText.setVisibility(LinearLayout.VISIBLE);
 					mesText.setText(QUESTION_DICTATION_ERROR_MES_ONE);
 				}
-				setCheckText("继续");
+				setCheckText("下一题");
 			}
 
 			// 计算正确率 只计算第一次检查
@@ -474,16 +478,20 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		}
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public String getAnswer() {
 		StringBuffer error = new StringBuffer();
 		StringBuffer answer = new StringBuffer();
-		Iterator iterator = errorMap.entrySet().iterator();
 
-		while (iterator.hasNext()) {
-			Map.Entry<String, Integer> entry = (Map.Entry<String, Integer>) iterator
-					.next();
-			error.append(";||;").append(entry.getKey());
+		// Iterator iterator = errorMap.entrySet().iterator();
+		// while (iterator.hasNext()) {
+		// Map.Entry<String, Integer> entry = (Map.Entry<String, Integer>)
+		// iterator
+		// .next();
+		// error.append(";||;").append(entry.getKey());
+		// }
+
+		for (Entry<String, Integer> m : errorMap.entrySet()) {
+			error.append(";||;").append(m.getKey());
 		}
 
 		for (int i = 0; i < etList.size(); i++) {
