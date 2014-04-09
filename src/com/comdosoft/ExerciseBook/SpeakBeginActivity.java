@@ -46,6 +46,10 @@ import com.comdosoft.ExerciseBook.tools.Soundex_Levenshtein;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 import com.google.gson.Gson;
 
+/**
+ * 作者: 张秀楠
+ * 时间：2014-4-9 上午11:49:11
+ */
 public class SpeakBeginActivity extends AnswerBaseActivity implements
 		Urlinterface, OnPreparedListener, OnCompletionListener, OnInitListener,
 		OnUtteranceCompletedListener, OnClickListener {
