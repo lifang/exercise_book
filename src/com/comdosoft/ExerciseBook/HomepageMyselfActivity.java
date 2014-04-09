@@ -155,7 +155,17 @@ public class HomepageMyselfActivity extends Activity implements
 		school_class_id = preferences.getString("school_class_id", null);
 
 		initialize();  //  初始化参数
+		page = 1;
 
+//			if (ExerciseBookTool.isConnect(HomepageMyselfActivity.this)) {
+//				prodialog = new ProgressDialog(HomepageMyselfActivity.this);
+//				prodialog.setMessage(ExerciseBookParams.PD_CLASS_INFO);
+//				prodialog.setCanceledOnTouchOutside(false);
+//				prodialog.show();
+//				class_button_myself();
+//			} else {
+//				handler.sendEmptyMessage(7);
+//			}
 	}
 
 	protected void onResume() {
@@ -1178,7 +1188,10 @@ public class HomepageMyselfActivity extends Activity implements
 			}
 		};
 		if (ExerciseBookTool.isConnect(HomepageMyselfActivity.this)) {
-
+			SharedPreferences preferences = getSharedPreferences(SHARED,
+					Context.MODE_PRIVATE);
+			id = preferences.getString("id", "73");
+			school_class_id = preferences.getString("school_class_id", "83");
 			thread.start();
 		} else {
 			mPullToRefreshView.onHeaderRefreshComplete();
