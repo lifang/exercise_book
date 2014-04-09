@@ -599,7 +599,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 				}
 			}
 
-			if (bqtvStr.length() > 2) {
+			if (bqtvStr.length() > 3) {
 				bqtvStr = bqtvStr.substring(0, bqtvStr.length() - 1);
 				bqtv.setVisibility(View.VISIBLE);
 				bqtv.setText(bqtvStr);

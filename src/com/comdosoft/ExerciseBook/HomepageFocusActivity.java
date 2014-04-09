@@ -155,7 +155,16 @@ public class HomepageFocusActivity extends Activity implements
 		school_class_id = preferences.getString("school_class_id", null);
 
 		initialize(); // 初始化参数
-
+		page = 1;
+//		if (ExerciseBookTool.isConnect(HomepageFocusActivity.this)) {
+//			prodialog = new ProgressDialog(HomepageFocusActivity.this);
+//			prodialog.setMessage(ExerciseBookParams.PD_CLASS_INFO);
+//			prodialog.setCanceledOnTouchOutside(false);
+//			prodialog.show();
+//			class_focus();
+//		} else {
+//			handler.sendEmptyMessage(7);
+//		}
 	}
 
 	protected void onResume() {
@@ -1214,7 +1223,10 @@ public class HomepageFocusActivity extends Activity implements
 			}
 		};
 		if (ExerciseBookTool.isConnect(HomepageFocusActivity.this)) {
-
+			SharedPreferences preferences = getSharedPreferences(SHARED,
+					Context.MODE_PRIVATE);
+			id = preferences.getString("id", "73");
+			school_class_id = preferences.getString("school_class_id", "83");
 			thread.start();
 		} else {
 			mPullToRefreshView.onHeaderRefreshComplete();

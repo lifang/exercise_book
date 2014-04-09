@@ -168,12 +168,24 @@ public class HomepageAllActivity extends Activity implements
 		school_class_id = preferences.getString("school_class_id", "83");
 
 		initialize(); // 初始化参数
+		page = 1;
+//		if (ExerciseBookTool.isConnect(HomepageAllActivity.this)) {
+//			prodialog = new ProgressDialog(HomepageAllActivity.this);
+//			prodialog.setMessage(ExerciseBookParams.PD_CLASS_INFO);
+//			prodialog.setCanceledOnTouchOutside(false);
+//			prodialog.show();
+//			Thread thread = new Thread(new get_class_info());
+//			thread.start();
+//
+//		} else {
+//			handler.sendEmptyMessage(7);
+//		}
 	}
 
 	protected void onResume() {
 		super.onResume();
 		JPushInterface.onResume(this);
-		page = 1;
+//		page = 1;
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
 
@@ -307,7 +319,7 @@ public class HomepageAllActivity extends Activity implements
 		for (int j = 0; j < care.size(); j++) {
 			String a = (String) care.get(j);
 			if (a.equals(mic_id)) {
-//				imageView.setBackgroundResource(R.drawable.homepage_guanzhu2);
+				imageView.setBackgroundResource(R.drawable.homepage_guanzhu2);
 			}
 		}
 		// 回复
@@ -1371,6 +1383,10 @@ public class HomepageAllActivity extends Activity implements
 			}
 		};
 		if (ExerciseBookTool.isConnect(HomepageAllActivity.this)) {
+			SharedPreferences preferences = getSharedPreferences(SHARED,
+					Context.MODE_PRIVATE);
+			id = preferences.getString("id", "73");
+			school_class_id = preferences.getString("school_class_id", "83");
 			thread.start();
 		} else {
 			handler.sendEmptyMessage(7);
