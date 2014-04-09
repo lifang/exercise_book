@@ -83,7 +83,7 @@ public class ExerciseBookTool implements Urlinterface {
 
 	// 比较时间大小
 	public static boolean Comparison_Time(String date1, String date2) {
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
 			Date dt1 = df.parse(date1);
 			Date dt2 = df.parse(date2);
