@@ -87,6 +87,7 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 		// setTimePropEnd();// 禁用道具
 		// setTruePropEnd();// 禁用道具
 		// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
+		setCheckText("下一题");
 		this.mQuestionType = 2;
 		eb = (ExerciseBook) getApplication();
 		initialize();

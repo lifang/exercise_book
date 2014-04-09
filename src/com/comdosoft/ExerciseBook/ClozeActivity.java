@@ -151,10 +151,11 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		user_select = new HashMap<Integer, String>();
 		tv_list = new ArrayList<TextView>();
 		for (int i = 0; i < str.length; i++) {
-			View view1 = View.inflate(this, R.layout.cloze_view, null);
-			final TextView spinner = (TextView) view1
-					.findViewById(R.id.spinner);
+			View view1;
 			if (str[i].equals("[[sign]]")) {
+				view1 = View.inflate(this, R.layout.text_spinner, null);
+				final TextView spinner = (TextView) view1
+						.findViewById(R.id.spinner);
 				String Opption = cloze.getList().get(select_item).getOpption();
 				final String[] Opption_str = Opption.split(";\\|\\|;");
 				final int item = select_item;
@@ -164,12 +165,11 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 						showWindow(spinner, Opption_str, item);
 					}
 				});
-				spinner.setVisibility(View.VISIBLE);
 				if (select_item + 1 < cloze.getList().size()) {
 					select_item += 1;
 				}
 			} else {
-				spinner.setVisibility(View.GONE);
+				view1 = View.inflate(this, R.layout.cloze_view, null);
 				TextView text = (TextView) view1.findViewById(R.id.tv);
 				text.setText(str[i].toString());
 			}
@@ -252,13 +252,12 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 
 		q_item += 1;
 		answerJson.cloze.setQuestions_item(q_item + "");
-		int true_number = 0;
 		for (Map.Entry<Integer, String> entry : answer.entrySet()) {
 			int ratio = 0;
 			if (entry.getValue().equals(
 					cloze.getList().get(entry.getKey()).getAnswer())) {
 				ratio = 100;
-				true_number += 1;
+
 			}
 			answerJson.cloze
 					.getQuestions()
@@ -270,11 +269,6 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 			calculateRatio(ratio);
 		}
 		Log.i("aaa", "an:" + q_item + "/" + list.size());
-		if (true_number == answer.size()) {
-			MyPlayer(true);
-		} else {
-			MyPlayer(true);
-		}
 		if (q_item + 1 == list.size()) {// 结束
 			answerJson.cloze.setStatus("1");
 			type = 1;
@@ -317,7 +311,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 				Opption_str);
 		listView.setAdapter(adapter);
 		popupWindow = new PopupWindow(position);
-		popupWindow.setWidth(position.getWidth());
+		popupWindow.setWidth(400);
 		popupWindow.setHeight(LayoutParams.WRAP_CONTENT);
 		popupWindow.setBackgroundDrawable(new BitmapDrawable());
 		popupWindow.setOutsideTouchable(true);
@@ -351,16 +345,13 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		case R.id.base_check_linearlayout:
 			Log.i("linshi", user_select.size() + "/" + cloze.getList().size());
 			if (user_select.size() != cloze.getList().size()) {
-				Toast.makeText(ClozeActivity.this, "请先完成本题!",
+				Toast.makeText(ClozeActivity.this, "还有未填的选项哦!",
 						Toast.LENGTH_SHORT).show();
 			} else {
 				if (Check) {
 					Check = false;
 					setCheckText("检查");
 					propItem = 0;
-				} else {
-					Check = true;
-					setCheckText("下一个");
 					int type = 0;
 					String answer_history = ExerciseBookTool
 							.getAnswer_Json_history(path);
@@ -376,7 +367,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 							Log.i("aaa", type + "error-type");
 						}
 						Log.i("aaa", type + "-type");
-						switch (type) {// 0为下一小题    1为全部做完    2为本小题做完
+						switch (type) {// 0为下一小题 1为全部做完 2为本小题做完
 						case 0:
 							index += 1;
 							SetAnswer();
@@ -387,6 +378,28 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 						}
 					} catch (Exception e) {
 						e.printStackTrace();
+					}
+				} else {
+					Check = true;
+					setCheckText("下一题");
+					int true_number = 0;
+					for (Map.Entry<Integer, String> entry : user_select
+							.entrySet()) {
+						if (entry.getValue()
+								.equals(cloze.getList().get(entry.getKey())
+										.getAnswer())) {
+							Log.i("suanfa", entry.getValue()
+									+ "/"
+									+ cloze.getList().get(entry.getKey())
+											.getAnswer());
+							true_number += 1;
+						}
+					}
+					Log.i("suanfa", true_number+",number");
+					if (true_number == user_select.size()) {
+						MyPlayer(true);
+					} else {
+						MyPlayer(false);
 					}
 				}
 			}
@@ -409,7 +422,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 							.getAnswer());
 					if (propItem + 1 == tv_list.size()) {
 						Check = true;
-						setCheckText("下一个");
+						setCheckText("下一题");
 					} else {
 						propItem += 1;
 					}

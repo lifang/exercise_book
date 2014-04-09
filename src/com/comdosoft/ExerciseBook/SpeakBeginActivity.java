@@ -47,8 +47,7 @@ import com.comdosoft.ExerciseBook.tools.Urlinterface;
 import com.google.gson.Gson;
 
 /**
- * 作者: 张秀楠
- * 时间：2014-4-9 上午11:49:11
+ * 作者: 张秀楠 时间：2014-4-9 上午11:49:11
  */
 public class SpeakBeginActivity extends AnswerBaseActivity implements
 		Urlinterface, OnPreparedListener, OnCompletionListener, OnInitListener,
@@ -328,8 +327,10 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 					Speak_type = false;
 				}
 
-				ratio = (ok_speak.size() / ok_arr.length) * 100;
-				Log.i("aaa", ratio + "");
+				if (number == 1) {
+					ratio = (ok_speak.size() / ok_arr.length) * 100;
+					Log.i("aaa", ratio + "");
+				}
 			} else {
 				number -= 1;
 			}

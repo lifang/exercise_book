@@ -108,16 +108,17 @@ public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 	}
 
 	private void setTextView() {
-		content = content.replaceAll("\\[\\[sign\\]\\]", " [[sign]]");
+		content = content.replaceAll("\\[\\[sign\\]\\]", " [[sign]] ");
 		Log.i("suanfa", content + "==");
 		content = content.replaceAll("\\s", " ");
 		Log.i("suanfa", content + "==");
 		str = content.split(" ");
 		for (int i = 0; i < str.length; i++) {
-			View view1 = View.inflate(this, R.layout.cloze_view, null);
-			spinner = (TextView) view1.findViewById(R.id.spinner);
+			View view1;
 
 			if (str[i].equals("[[sign]]")) {
+				view1 = View.inflate(this, R.layout.text_spinner, null);
+				spinner = (TextView) view1.findViewById(R.id.spinner);
 				String Opption = cloze.getList().get(select_item).getOpption();
 				final String[] Opption_str = Opption.split(";\\|\\|;");
 				spinner.setOnClickListener(new OnClickListener() {
@@ -125,12 +126,12 @@ public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 						showWindow(spinner, Opption_str);
 					}
 				});
-				spinner.setVisibility(View.VISIBLE);
 				spinner.setText(cloze.getList().get(select_item).getAnswer());
 				if (select_item + 1 < cloze.getList().size()) {
 					select_item += 1;
 				}
 			} else {
+				view1 = View.inflate(this, R.layout.cloze_view, null);
 				TextView text = (TextView) view1.findViewById(R.id.tv);
 				text.setText(str[i].toString());
 			}
