@@ -481,6 +481,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 			count++;
 			ratioSum = ratioSum + mRatio;
 			ratio = 0;
+			firstRatioFlag = true;
 		}
 	}
 
