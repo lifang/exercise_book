@@ -279,10 +279,11 @@ public class ReplyListViewActivity extends Table_TabHost implements
 	public List<String> divisionStr(String str) {
 		// "content":"[[ding]]回复了您的消息：;||;we we"
 		// "content":"[[ding]]回复了您的消息：沃尔沃","reciver_types":0,"sender_avatar_url":"\/avatars\/students\/2014-04\/student_17.jpg","reciver_id":115,"created_at":"2014-04-01T16:57:20+08:00","user_id":130,"sender_name":"ding","micropost_id":604}
+//		[[若相守]]回复了您：;||;兔兔啦咯了
 		List<String> list = new ArrayList<String>();
 		int temp1 = str.indexOf("[[");
 		int temp2 = str.indexOf("]]");
-		int temp3 = str.indexOf("消息：");
+		int temp3 = str.indexOf("：");
 		// String st1 = str.substring(temp3 + 3, temp3 + 7);
 		// list.add(str.substring(temp2 + 2, temp3 + 2));
 		// if (";||;".equals(st1)) {
@@ -290,12 +291,12 @@ public class ReplyListViewActivity extends Table_TabHost implements
 		// } else {
 		// list.add(str.substring(temp3 + 3, str.length()));
 		// }
-		String st1 = str.substring(temp3 + 3, temp3 + 4);
-		list.add(str.substring(temp2 + 5, temp3 + 2));
+		String st1 = str.substring(temp3 + 1, temp3 + 2);
+		list.add(str.substring(temp2 + 5, temp3 ));
 		if (";".equals(st1)) {
-			list.add(str.substring(temp3 + 7, str.length()));
+			list.add(str.substring(temp3 + 5, str.length()));
 		} else {
-			list.add(str.substring(temp3 + 3, str.length()));
+			list.add(str.substring(temp3 + 1, str.length()));
 		}
 
 		return list;

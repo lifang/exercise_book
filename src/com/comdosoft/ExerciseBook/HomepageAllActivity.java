@@ -56,6 +56,10 @@ import com.comdosoft.ExerciseBook.tools.PullToRefreshView.OnFooterRefreshListene
 import com.comdosoft.ExerciseBook.tools.PullToRefreshView.OnHeaderRefreshListener;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
+/**
+ * @作者 丁作强
+ * @时间 2014-4-9 上午11:54:45
+ */
 public class HomepageAllActivity extends Activity implements
 		OnHeaderRefreshListener, OnFooterRefreshListener, Urlinterface,
 		OnGestureListener {
@@ -164,12 +168,24 @@ public class HomepageAllActivity extends Activity implements
 		school_class_id = preferences.getString("school_class_id", "83");
 
 		initialize(); // 初始化参数
+		page = 1;
+//		if (ExerciseBookTool.isConnect(HomepageAllActivity.this)) {
+//			prodialog = new ProgressDialog(HomepageAllActivity.this);
+//			prodialog.setMessage(ExerciseBookParams.PD_CLASS_INFO);
+//			prodialog.setCanceledOnTouchOutside(false);
+//			prodialog.show();
+//			Thread thread = new Thread(new get_class_info());
+//			thread.start();
+//
+//		} else {
+//			handler.sendEmptyMessage(7);
+//		}
 	}
 
 	protected void onResume() {
 		super.onResume();
 		JPushInterface.onResume(this);
-		page = 1;
+//		page = 1;
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
 
@@ -303,7 +319,7 @@ public class HomepageAllActivity extends Activity implements
 		for (int j = 0; j < care.size(); j++) {
 			String a = (String) care.get(j);
 			if (a.equals(mic_id)) {
-//				imageView.setBackgroundResource(R.drawable.homepage_guanzhu2);
+				imageView.setBackgroundResource(R.drawable.homepage_guanzhu2);
 			}
 		}
 		// 回复
@@ -694,6 +710,9 @@ public class HomepageAllActivity extends Activity implements
 	/*
 	 * 解析 get_class_info 方法返回的 json字符串
 	 */
+	/**
+	 * @param json
+	 */
 	private void setJson(String json) {
 		try {
 			JSONObject obj = new JSONObject(json);
@@ -721,7 +740,7 @@ public class HomepageAllActivity extends Activity implements
 				// 班级头像和名字
 				JSONObject class1 = obj.getJSONObject("class"); // 或得班级信息
 				String class_name = class1.getString("name"); // 获取class_name
-				// school_class_id = class1.getString("id");
+				String validtime = class1.getString("period_of_validity");
 
 				SharedPreferences preferences = getSharedPreferences(SHARED,
 						Context.MODE_PRIVATE);
@@ -733,6 +752,7 @@ public class HomepageAllActivity extends Activity implements
 				editor.putString("id", id);
 				editor.putString("user_id", user_id);
 				editor.putString("school_class_id", school_class_id);
+				editor.putString("validtime", validtime);
 				editor.commit();
 				care = new ArrayList<String>();
 				JSONArray follow_microposts_id = obj
@@ -1363,6 +1383,10 @@ public class HomepageAllActivity extends Activity implements
 			}
 		};
 		if (ExerciseBookTool.isConnect(HomepageAllActivity.this)) {
+			SharedPreferences preferences = getSharedPreferences(SHARED,
+					Context.MODE_PRIVATE);
+			id = preferences.getString("id", "73");
+			school_class_id = preferences.getString("school_class_id", "83");
 			thread.start();
 		} else {
 			handler.sendEmptyMessage(7);
