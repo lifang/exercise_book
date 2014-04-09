@@ -116,14 +116,13 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 
 	// 多写提示
 	public void setRecordMes() {
-		Log.i("Ax", getRecordMes() + "-mes");
-		String str = getRecordMes();
-		if (str != null && !str.equals("")) {
-			String[] arr = str.split(";\\|\\|;");
+		Log.i("Ax", getRecordMes().length + "-mes_size");
+		String[] str = getRecordMes();
+		if (str.length > 1) {
 			StringBuffer sb = new StringBuffer();
 			sb.append("你需要多写的词:");
-			for (int i = 0; i < arr.length; i++) {
-				sb.append("\n" + filterString(arr[i]));
+			for (int i = 1; i < str.length; i++) {
+				sb.append("\n" + filterString(str[i]));
 			}
 			mesText.setText(sb.toString());
 			mesText.setVisibility(View.VISIBLE);
@@ -378,6 +377,7 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 							.getValue());
 					if (hasDigit(answerStr)) {
 						if (answerStr.equals(filterString(s))) {
+							rightCount++;
 							dictationList.get(i).setFlag(1);
 							tvList.get(i).setVisibility(View.INVISIBLE);
 							etList.get(i).setTextColor(Color.rgb(146, 184, 27));
@@ -401,6 +401,7 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 						} else if (value > 6) {
 							// 半对
 							mesFlag = true;
+							errorMap.put(dictationList.get(i).getValue(), 1);
 							dictationList.get(i).setFlag(1);
 							etList.get(i).setTextColor(Color.rgb(00, 00, 00));
 							tvList.get(i).setVisibility(View.VISIBLE);
@@ -453,10 +454,11 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 				setCheckText("继续");
 			}
 
-			// 计算正确率
-			if (ratio == 0) {
+			// 计算正确率 只计算第一次检查
+			if (firstRatioFlag) {
 				ratio = (100 * rightCount) / etList.size();
 				rightCount = 0;
+				firstRatioFlag = false;
 			}
 		} else {
 			// Next
@@ -481,21 +483,18 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		while (iterator.hasNext()) {
 			Map.Entry<String, Integer> entry = (Map.Entry<String, Integer>) iterator
 					.next();
-			error.append(entry.getKey()).append(";||;");
+			error.append(";||;").append(entry.getKey());
 		}
 
 		for (int i = 0; i < etList.size(); i++) {
-			answer.append(etList.get(i).getText().toString()).append(";||;");
+			answer.append(etList.get(i).getText().toString()).append(" ");
 		}
 
-		if (error.length() > 0) {
-			error.delete(error.length() - 4, error.length());
-		}
 		if (answer.length() > 0) {
-			answer.delete(answer.length() - 4, answer.length());
+			answer.delete(answer.length() - 1, answer.length());
 		}
 
-		return answer.append(";&&;").append(error.toString()).toString();
+		return answer.append(error.toString()).toString();
 	}
 
 	// 播放音频
