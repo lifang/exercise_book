@@ -144,7 +144,7 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 	}
 
 	public void rightAnswer() {
-		if (amp.getStatus() == 0) {
+		if (status == 2) {
 			AnswerBasePojo sp = mQuestList.get(mQindex).get(mBindex);
 			List<String> option = sp.getOption();
 			List<String> answer = sp.getAnswer();
@@ -190,6 +190,7 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 			List<String> arr = sp.getOption();
 			if (mRecoirdAnswer != null) {
 				if (mRecordIndex < mRecoirdAnswer.size()) {
+					Log.i("Ax", mRecoirdAnswer.get(mRecordIndex) + "--answer");
 					String[] mArr = mRecoirdAnswer.get(mRecordIndex).split(
 							";\\|\\|;");
 					StringBuffer sb = new StringBuffer();
@@ -204,6 +205,9 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 						sb.delete(sb.length() - 1, sb.length());
 					}
 					setMyAnswer(sb.toString());
+					if (mRecordIndex < mRecoirdAnswer.size()) {
+						mRecordIndex++;
+					}
 				} else {
 					setMyAnswer("");
 				}
