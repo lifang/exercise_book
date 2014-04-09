@@ -41,6 +41,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -70,6 +71,19 @@ public class ExerciseBookTool implements Urlinterface {
 	private static int connectTimeOut = 5000;
 	private static int readTimeOut = 10000;
 	private static String requestEncoding = "UTF-8";
+
+	// 根据UnicodeBlock方法判断中文标点符号
+	public static boolean isChinesePunctuation(char c) {
+		Character.UnicodeBlock ub = Character.UnicodeBlock.of(c);
+		if (ub == Character.UnicodeBlock.GENERAL_PUNCTUATION
+				|| ub == Character.UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION
+				|| ub == Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS
+				|| ub == Character.UnicodeBlock.CJK_COMPATIBILITY_FORMS) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	// 过去answer中的时间
 	public static String getAnswerTime(String path) {
@@ -169,8 +183,9 @@ public class ExerciseBookTool implements Urlinterface {
 			if (!file.exists()) {
 				file.createNewFile();
 				Log.i("linshi", path + "/student_" + uid + ".json");
-				AnswerJson answer = new AnswerJson(id, "0", "0000-00-00 00:00:00",
-						propList, new AnswerPojo("0", "", "-1", "-1", "0",
+				AnswerJson answer = new AnswerJson(id, "0",
+						"0000-00-00 00:00:00", propList, new AnswerPojo("0",
+								"", "-1", "-1", "0",
 								new ArrayList<Answer_QuestionsPojo>()),
 						new AnswerPojo("0", "", "-1", "-1", "0",
 								new ArrayList<Answer_QuestionsPojo>()),

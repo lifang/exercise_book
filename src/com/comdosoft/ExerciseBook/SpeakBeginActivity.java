@@ -271,13 +271,16 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 				ok_speak = new HashMap<Integer, String>();// 用于记录正确的词
 				ArrayList<String> results = data
 						.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-
-				String speak = results.get(0);// 用户语音返回的字符串
+				Log.i("suanfa", "->" + results);
+				// String speak = getSpeakStr(results);// 用户语音返回的字符串
+				String speak = results.get(0);
 				Log.i("suanfa", "语音返回--->" + speak);
 				str_list = new ArrayList<String>();
 				content = content.replaceAll(
-						"(?i)[^a-zA-Z0-9\u4E00-\u9FA5\\s]", "");
-				;// 去除标点符号
+						"(?i)[^a-zA-Z0-9\u4E00-\u9FA5\\s]", "");// 去除标点符号
+				speak = speak
+						.replaceAll("(?i)[^a-zA-Z0-9\u4E00-\u9FA5\\s]", "");// 去除标点符号
+				Log.i("suanfa", "朗读答案->" + speak);
 				content = content.replaceAll("  ", " ");
 				String[] ok_arr = content.split(" ");
 				Log.i("suanfa", "正确答案->" + content);
@@ -386,6 +389,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 				eb.setQuestion_item(0);
 				intent.putExtra("path", path);
 				intent.putExtra("json", json);
+				intent.putExtra("status", 1);
 				intent.setClass(SpeakBeginActivity.this,
 						SpeakPrepareActivity.class);
 				startActivity(intent);
@@ -635,6 +639,15 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 		}
 		return type;
 	}
+
+	// public String getSpeakStr(ArrayList<String> str) {
+	// for (int i = 0; i < str.size(); i++) {
+	// if (ExerciseBookTool.isChinesePunctuation(str.get(i))) {
+	// return str.get(i);
+	// }
+	// }
+	// return "";
+	// }
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {

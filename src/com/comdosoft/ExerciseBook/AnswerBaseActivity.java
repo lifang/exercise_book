@@ -123,6 +123,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 					ratioSum = 0;
 					count = 0;
 				}
+				intent.putExtra("status", status);
 				intent.putExtra("use_time", getUseTime());// 用户使用的时间
 				intent.putExtra("specified_time", specified_time);// 任务基础时间
 				intent.setClass(AnswerBaseActivity.this, WorkEndActivity.class);
