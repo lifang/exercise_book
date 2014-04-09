@@ -8,6 +8,7 @@ import java.util.Map;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
@@ -22,20 +23,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.comdosoft.ExerciseBook.R;
+import com.comdosoft.ExerciseBook.SettingPhoto;
 import com.comdosoft.ExerciseBook.pojo.knowledges_card;
 import com.comdosoft.ExerciseBook.pojo.tags;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
 public class LabelAdapter extends BaseAdapter implements Urlinterface {
-	public List<tags> tagsList;
-	public List<Integer> cardlist;
+	public List<tags> tagsList;  //  标签集合 
+	public List<Integer> cardlist;   //   选中的标签  id
 	Context content;
 	knowledges_card myList;
 	List<Integer> mytags;
 	private String student_id;
 	private String school_class_id;
-	private String card_id;
+	private String card_id;    ///  卡片 id  
 
 	public LabelAdapter(Context content, int index,
 			List<tags> tagsList, List<Integer> card, String student_id,
@@ -51,7 +53,7 @@ public class LabelAdapter extends BaseAdapter implements Urlinterface {
 		{
 			mytags.add(cardlist.get(i));
 		}
-		Log.i("2",mytags.size()+"1!!"+tagsList.size());
+//		Log.i("2",mytags.size()+"1!!"+tagsList.size());
 	}
 
 	public int getCount() {
@@ -110,12 +112,21 @@ public class LabelAdapter extends BaseAdapter implements Urlinterface {
 									msg.obj = "错误";
 									break;
 								case 1:
-									msg.obj = "删除成功";
+									msg.obj = "删除标签成功";
 									mytags.remove(setList(tagsList.get(position).getId()));
+//									Intent intent2 = new Intent();
+//
+//									intent2.putExtra("uri",photoStr);
+//									// 通过调用setResult方法返回结果给前一个activity。
+//									SettingPhoto.this.setResult(-11, intent2);
 									break;
 								case 2:
-									msg.obj = "添加成功";
+									msg.obj = "添加标签成功";
 									mytags.add(Integer.valueOf(tagsList.get(position).getId()));
+//									Intent intent3 = new Intent();
+//
+//									// 通过调用setResult方法返回结果给前一个activity。
+//									LabelAdapter.this.setResult(-11, intent3);
 									break;
 								}
 								msg.what = 0;

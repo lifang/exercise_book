@@ -111,6 +111,8 @@ public class HomepageAllActivity extends Activity implements
 			switch (msg.what) {
 			case 0:
 				prodialog.dismiss();
+				final String json = (String) msg.obj;
+				setJson(json);
 				init();
 				break;
 			case 2:
@@ -156,7 +158,7 @@ public class HomepageAllActivity extends Activity implements
 		memoryCache = HomePageMainActivity.instance.memoryCache;
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
-
+		exerciseBook.setMenu_num(0);
 		user_id = preferences.getString("user_id", "130");
 		id = preferences.getString("id", "73");
 		school_class_id = preferences.getString("school_class_id", "83");
@@ -698,6 +700,7 @@ public class HomepageAllActivity extends Activity implements
 
 			String status = obj.getString("status");
 			String notice = obj.getString("notice");
+			
 			if ("success".equals(status)) {
 				// // 学生信息
 				JSONObject student = obj.getJSONObject("student"); // 获得学生的信息
@@ -739,10 +742,10 @@ public class HomepageAllActivity extends Activity implements
 					care.add(fmi);
 				}
 
-			} else {
+			} 
+
 				Toast.makeText(getApplicationContext(), notice,
 						Toast.LENGTH_SHORT).show();
-			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -801,7 +804,7 @@ public class HomepageAllActivity extends Activity implements
 				String name = o.getString("name");
 				String content = o.getString("content");
 				String avatar_url = o.getString("avatar_url");
-				String created_at = o.getString("created_at");
+				String created_at = o.getString("new_created_at");
 				String careCount = o.getString("follow_microposts_count"); // 关注数
 				if (careCount.equals("null")) {
 					careCount = "0";
@@ -866,7 +869,7 @@ public class HomepageAllActivity extends Activity implements
 				String sender_avatar_url = o.getString("sender_avatar_url");
 				String content = o.getString("content");
 				String reciver_name = o.getString("reciver_name");
-				String created_at = o.getString("created_at");
+				String created_at = o.getString("new_created_at");
 				Child_Micropost child = new Child_Micropost(id, sender_id,
 						sender_types, sender_name, sender_avatar_url, content,
 						reciver_name, created_at);
@@ -1085,7 +1088,7 @@ public class HomepageAllActivity extends Activity implements
 									String reciver_name = o
 											.getString("reciver_name");
 									String created_at = o
-											.getString("created_at");
+											.getString("new_created_at");
 									Child_Micropost child = new Child_Micropost(
 											id, sender_id, sender_types,
 											sender_name, sender_avatar_url,
@@ -1322,8 +1325,12 @@ public class HomepageAllActivity extends Activity implements
 				map.put("school_class_id", school_class_id);
 				json = ExerciseBookTool.sendGETRequest(
 						Urlinterface.get_class_info, map);
-				setJson(json);
-				handler.sendEmptyMessage(0);
+				Message msg = new Message();// 创建Message 对象
+				msg.what = 0;
+				msg.obj = json;
+				handler.sendMessage(msg);
+				
+//				handler.sendEmptyMessage(0);
 			} catch (Exception e) {
 				prodialog.dismiss();
 				handler.sendEmptyMessage(7);

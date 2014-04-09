@@ -268,9 +268,6 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 				Log.i("suanfa", code_list.size() + "");
 				if (code_list.size() > 0) {
 					for (int i = 0; i < code_list.size(); i++) {
-						// Log.i(tag, str_list.get(code_list.get(i)[0]) +
-						// "->相似度:"
-						// + code_list.get(i)[1]);
 						if (code_list.get(i)[1] >= 7) {
 							ok_speak.put(code_list.get(i)[0],
 									ok_arr[code_list.get(i)[0]]);
@@ -279,11 +276,9 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 						} else {
 							if (!error_str
 									.contains(ok_arr[code_list.get(i)[0]])) {
-								Log.i("aaa", "1");
 								error_str += ok_arr[code_list.get(i)[0]]
 										+ ";||;";
 							}
-							Log.i("aaa", "1");
 							text_list.get(code_list.get(i)[0]).setTextColor(
 									getResources().getColor(R.color.juhuang));
 						}
@@ -468,7 +463,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 	public void onInit(int status) {
 		if (status == TextToSpeech.SUCCESS) {
 			int result = mTts.setLanguage(Locale.US);
-			mTts.setSpeechRate(0.5f);
+			mTts.setSpeechRate(0.8f);
 			// 设置发音语言
 			if (result == TextToSpeech.LANG_MISSING_DATA
 					|| result == TextToSpeech.LANG_NOT_SUPPORTED)
@@ -566,6 +561,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 					Log.i("aaa", type + "-type");
 					switch (type) {// 0为下一小题 1为全部做完 2为本小题做完
 					case 0:
+						ok_speak.clear();
 						handler.sendEmptyMessage(0);
 						break;
 					case 1:

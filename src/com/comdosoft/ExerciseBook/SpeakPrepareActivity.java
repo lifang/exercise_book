@@ -66,7 +66,6 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 	private HashMap<String, String> params = new HashMap<String, String>();
 	public String sdpath = Environment.getExternalStorageDirectory() + "/";
 	public String path = "";
-	private int specified_time;
 	private int questions_item;
 	private int branch_item;
 	private int mystatus;
@@ -267,14 +266,12 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 		if (json != "") {
 			try {
 				JSONObject obj = new JSONObject(json);
-				JSONObject time_limit = obj.getJSONObject("reading");
-				questions_item = time_limit.getInt("questions_item");
-				branch_item = time_limit.getInt("branch_item");
-				use_time = time_limit.getInt("use_time");
-				specified_time = time_limit.getInt("specified_time");
-				setStart();
+				JSONObject reading = obj.getJSONObject("reading");
+				questions_item = reading.getInt("questions_item");
+				branch_item = reading.getInt("branch_item");
+				use_time = reading.getInt("use_time");
 				Log.i("aaa", specified_time + "--" + branch_item);
-				JSONArray questions = time_limit.getJSONArray("questions");
+				JSONArray questions = reading.getJSONArray("questions");
 				if (questions.length() > 0) {
 					for (int i = 0; i < questions.length(); i++) {
 						JSONObject jo = questions.getJSONObject(i);
@@ -446,7 +443,7 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 	public void onInit(int status) {
 		if (status == TextToSpeech.SUCCESS) {
 			int result = mTts.setLanguage(Locale.US);
-			mTts.setSpeechRate(0.5f);
+			mTts.setSpeechRate(0.8f);
 
 			// 设置发音语言
 			if (result == TextToSpeech.LANG_MISSING_DATA
