@@ -49,9 +49,6 @@ public class ExerciseBook extends Application {
 	private int Time_number;
 	private int True_number;
 	Map<Integer, List<View>> FontCard;
-	
-	
-	
 
 	public Map<Integer, List<View>> getFontCard() {
 		return FontCard;
@@ -288,7 +285,7 @@ public class ExerciseBook extends Application {
 
 	public void onCreate() {
 		super.onCreate();
-		initImageLoader(getApplicationContext());
+		// initImageLoader(getApplicationContext());
 	}
 
 	public static void initImageLoader(Context context) {
