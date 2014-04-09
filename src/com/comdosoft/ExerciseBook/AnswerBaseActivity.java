@@ -743,7 +743,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		String str = gson.toJson(answerJson);
 		try {
 			ExerciseBookTool.writeFile(path, str);
-			uploadJSON(ap.getStatus());
+			// uploadJSON(ap.getStatus());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
