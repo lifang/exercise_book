@@ -244,12 +244,14 @@ public class SwitchClassActivity extends Activity {
 									.getJSONObject("class");
 							int id = jsonobject2.getInt("id");
 							String name = jsonobject2.getString("name");
+							String validtime = jsonobject2.getString("period_of_validity");
 							SharedPreferences preferences = getSharedPreferences(
 									Urlinterface.SHARED, Context.MODE_PRIVATE);
 							Editor editor = preferences.edit();
 							editor.putString("school_class_id",
 									String.valueOf(id));
 							editor.putString("school_class_name", name);
+							editor.putString("validtime", validtime);
 							editor.commit();
 							exerciseBook.setMainItem(0);
 							exerciseBook.setRefresh(1);
