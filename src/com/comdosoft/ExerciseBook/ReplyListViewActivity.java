@@ -44,7 +44,7 @@ import com.comdosoft.ExerciseBook.tools.OpenInputMethod;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
 public class ReplyListViewActivity extends Table_TabHost implements
-IXListViewListener, Urlinterface, OnGestureListener {
+		IXListViewListener, Urlinterface, OnGestureListener {
 	private ReplyListView mListView;
 	private List<Reply> replyList = new ArrayList<Reply>();
 	private Handler mHandler;
@@ -72,6 +72,54 @@ IXListViewListener, Urlinterface, OnGestureListener {
 	String json;
 	public static ReplyListViewActivity instance = null;
 	List<Boolean> listbool = new ArrayList<Boolean>();
+	private Handler handler1 = new Handler() {
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case 0:
+				prodialog.dismiss();
+				final String json_all2 = (String) msg.obj;
+
+				if (json_all2.length() == 0) {
+				} else {
+					replyList = new ArrayList<Reply>();
+					getNewsJson(json_all2);
+				}
+				int a = replyList.size();
+				if (a == 0) {
+					Toast.makeText(ReplyListViewActivity.this, "暂无任何通知",
+							Toast.LENGTH_SHORT).show();
+				} else {
+					mListView.setAdapter(madapter);
+				}
+				onLoad();
+
+				break;
+			case 1:
+				Toast.makeText(ReplyListViewActivity.this, "未开启网络",
+						Toast.LENGTH_SHORT).show();
+				break;
+			case 3:
+				prodialog.dismiss();
+				// madapter.notifyDataSetChanged();
+				mListView.setAdapter(madapter);
+				Toast.makeText(ReplyListViewActivity.this,
+						String.valueOf(msg.obj), Toast.LENGTH_SHORT).show();
+				break;
+			case 4:
+				final String json4 = (String) msg.obj;
+
+				if (json4.length() == 0) {
+				} else {
+					getNewsJson(json4);
+				}
+				 handler.post(runnableUi);  
+//				madapter.notifyDataSetChanged();
+//				onLoad();
+				break;
+			}
+		}
+	};
+	private Handler handler=null;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -83,6 +131,7 @@ IXListViewListener, Urlinterface, OnGestureListener {
 				Context.MODE_PRIVATE);
 		user_id = preferences.getString("user_id", "121");
 		school_class_id = preferences.getString("school_class_id", "106");
+		handler=new Handler();  
 		mListView = (ReplyListView) findViewById(R.id.xListView);
 		mListView.setPullLoadEnable(true);
 		topTv2 = (TextView) findViewById(R.id.topTv2);
@@ -116,54 +165,17 @@ IXListViewListener, Urlinterface, OnGestureListener {
 		mListView.setDividerHeight(0);
 		mHandler = new Handler();
 	}
-
-
-	Handler handler1 = new Handler() {
-		public void handleMessage(Message msg) {
-			switch (msg.what) {
-			case 0:
-				prodialog.dismiss();
-				final String json_all2 = (String) msg.obj;
-
-				if (json_all2.length() == 0) {
-				} else {
-					replyList = new ArrayList<Reply>();
-					getNewsJson(json_all2);
-				}
-				int a = replyList.size();
-				if (a==0) {
-					Toast.makeText(ReplyListViewActivity.this, "暂无任何通知",
-							Toast.LENGTH_SHORT).show();
-				}else {
-					mListView.setAdapter(madapter);
-				}
-				onLoad();
-
-				break;
-			case 1:
-				Toast.makeText(ReplyListViewActivity.this, "未开启网络",
-						Toast.LENGTH_SHORT).show();
-				break;
-			case 3:
-				prodialog.dismiss();
-//				madapter.notifyDataSetChanged();
-				mListView.setAdapter(madapter);
-				Toast.makeText(ReplyListViewActivity.this,
-						String.valueOf(msg.obj), Toast.LENGTH_SHORT).show();
-				break;
-			case 4:
-				final String json4 = (String) msg.obj;
-
-				if (json4.length() == 0) {
-				} else {
-					getNewsJson(json4);
-				}
-				madapter.notifyDataSetChanged();
-				onLoad();
-				break;
-			}
-		}
-	};
+	
+	 // 构建Runnable对象，在runnable中更新界面  
+    Runnable   runnableUi=new  Runnable(){  
+        @Override  
+        public void run() {  
+            //更新界面  
+			madapter.notifyDataSetChanged();
+			onLoad();
+        }  
+          
+    }; 
 
 	// 解析获取到的Json
 	public int getNewsJson(String json) {
@@ -175,29 +187,31 @@ IXListViewListener, Urlinterface, OnGestureListener {
 				// [{"id":1378,"content":"[[布尔]]回复了您的消息：;||;nani","reciver_types":0,"sender_avatar_url":"\/avatars\/teachers\/2014-03\/teacher_75_2.jpg","reciver_id":158,"created_at":"2014-04-02T15:25:15+08:00","user_id":130,"sender_name":"布尔","micropost_id":647},{"id":1325,"content":"[[布尔]]回复了您的消息：结婚","reciver_types":0,"sender_avatar_url":"\/avatars\/teachers\/2014-03\/teacher_75_2.jpg","reciver_id":158,"created_at":"2014-04-01T17:21:04+08:00","user_id":130,"sender_name":"布尔","micropost_id":605},{"id":1318,"content":"[[布尔]]回复了您的消息：换个号","reciver_types":0,"sender_avatar_url":"\/avatars\/teachers\/2014-03\/teacher_75_2.jpg","reciver_id":158,"created_at":"2014-04-01T16:55:02+08:00","user_id":130,"sender_name":"布尔","micropost_id":605},{"id":1314,"content":"[[布尔]]回复了您的消息：将卡卡卡","reciver_types":0,"sender_avatar_url":"\/avatars\/teachers\/2014-03\/teacher_75_2.jpg","reciver_id":158,"created_at":"2014-04-01T16:52:15+08:00","user_id":130,"sender_name":"布尔","micropost_id":605},{"id":1304,"content":"[[wm]]回复了您的消息：qqqqqq","reciver_types":1,"sender_avatar_url":"\/avatars\/students\/2014-04\/student_92.jpg","reciver_id":161,"created_at":"2014-04-01T16:29:01+08:00","user_id":130,"sender_name":"wm","micropost_id":605},{"id":1302,"content":"[[wm]]回复了您的消息：ggggw","reciver_types":1,"sender_avatar_url":"\/avatars\/students\/2014-04\/student_92.jpg","reciver_id":161,"created_at":"2014-04-01T16:28:09+08:00","user_id":130,"sender_name":"wm","micropost_id":605},{"id":1300,"content":"[[charles]]回复了您的消息：hhhhh","reciver_types":1,"sender_avatar_url":"\/assets\/default_avater.jpg","reciver_id":163,"created_at":"2014-04-01T16:26:12+08:00","user_id":130,"sender_name":"charles","micropost_id":605},{"id":1298,"content":"[[charles]]回复了您的消息：ghhjj","reciver_types":1,"sender_avatar_url":"\/assets\/default_avater.jpg","reciver_id":163,"created_at":"2014-04-01T16:24:58+08:00","user_id":130,"sender_name":"charles","micropost_id":605}]
 				JSONArray jsonarray = jsonobject.getJSONArray("messages");
 				for (int i = 0; i < jsonarray.length(); i++) {
-					Log.i("aaa",  "getNewsJson----"+i);
+					Log.i("aaa", "getNewsJson----" + i);
 					JSONObject jsonobject2 = jsonarray.getJSONObject(i);
 					List<String> liststr = divisionStr(jsonobject2
-							.getString("content"));Log.i("aaa",  "getNewsJson----"+i);
-							String jsonstatus = liststr.get(0);
-							String content = liststr.get(1);
+							.getString("content"));
+					Log.i("aaa", "getNewsJson----" + i);
+					String jsonstatus = liststr.get(0);
+					String content = liststr.get(1);
 
-							String created_at = ExerciseBookTool.divisionTime2(jsonobject2
+					String created_at = ExerciseBookTool
+							.divisionTime2(jsonobject2
 									.getString("new_created_at"));
-							String id = jsonobject2.getString("id");
+					String id = jsonobject2.getString("id");
 
-							String micropost_id = jsonobject2.getString("micropost_id");
-							String reciver_id = jsonobject2.getString("reciver_id");
-							String reciver_types = jsonobject2
-									.getString("reciver_types");
-							String sender_avatar_url = jsonobject2
-									.getString("sender_avatar_url");
-							String sender_name = jsonobject2.getString("sender_name");
-							String user_id = jsonobject2.getString("user_id");
-							listbool.add(false);
-							replyList.add(new Reply(id, micropost_id, user_id,
-									reciver_id, reciver_types, sender_avatar_url,
-									sender_name, jsonstatus, content, created_at));
+					String micropost_id = jsonobject2.getString("micropost_id");
+					String reciver_id = jsonobject2.getString("reciver_id");
+					String reciver_types = jsonobject2
+							.getString("reciver_types");
+					String sender_avatar_url = jsonobject2
+							.getString("sender_avatar_url");
+					String sender_name = jsonobject2.getString("sender_name");
+					String user_id = jsonobject2.getString("user_id");
+					listbool.add(false);
+					replyList.add(new Reply(id, micropost_id, user_id,
+							reciver_id, reciver_types, sender_avatar_url,
+							sender_name, jsonstatus, content, created_at));
 
 				}
 				return replyList.size();
@@ -241,7 +255,7 @@ IXListViewListener, Urlinterface, OnGestureListener {
 	class get_news2 implements Runnable {
 		public void run() {
 			try {
-				Log.i("aaa",  "get_news2");
+				Log.i("aaa", "get_news2");
 				HashMap<String, String> mp = new HashMap<String, String>();
 				mp.put("user_id", user_id);
 				mp.put("school_class_id", school_class_id);
@@ -253,6 +267,7 @@ IXListViewListener, Urlinterface, OnGestureListener {
 				msg.what = 4;
 				msg.obj = json;
 				handler1.sendMessage(msg);
+				
 			} catch (Exception e) {
 				onLoad();
 				handler1.sendEmptyMessage(1);
@@ -263,20 +278,20 @@ IXListViewListener, Urlinterface, OnGestureListener {
 	// 分割content
 	public List<String> divisionStr(String str) {
 		// "content":"[[ding]]回复了您的消息：;||;we we"
-		//"content":"[[ding]]回复了您的消息：沃尔沃","reciver_types":0,"sender_avatar_url":"\/avatars\/students\/2014-04\/student_17.jpg","reciver_id":115,"created_at":"2014-04-01T16:57:20+08:00","user_id":130,"sender_name":"ding","micropost_id":604}
+		// "content":"[[ding]]回复了您的消息：沃尔沃","reciver_types":0,"sender_avatar_url":"\/avatars\/students\/2014-04\/student_17.jpg","reciver_id":115,"created_at":"2014-04-01T16:57:20+08:00","user_id":130,"sender_name":"ding","micropost_id":604}
 		List<String> list = new ArrayList<String>();
 		int temp1 = str.indexOf("[[");
 		int temp2 = str.indexOf("]]");
 		int temp3 = str.indexOf("消息：");
-		//		String st1 = str.substring(temp3 + 3, temp3 + 7);
-		//		list.add(str.substring(temp2 + 2, temp3 + 2));
-		//		if (";||;".equals(st1)) {
-		//		list.add(str.substring(temp3 + 7, str.length()));
-		//	} else {
-		//		list.add(str.substring(temp3 + 3, str.length()));
-		//	}
+		// String st1 = str.substring(temp3 + 3, temp3 + 7);
+		// list.add(str.substring(temp2 + 2, temp3 + 2));
+		// if (";||;".equals(st1)) {
+		// list.add(str.substring(temp3 + 7, str.length()));
+		// } else {
+		// list.add(str.substring(temp3 + 3, str.length()));
+		// }
 		String st1 = str.substring(temp3 + 3, temp3 + 4);
-		list.add(str.substring(temp2 +5, temp3 + 2));
+		list.add(str.substring(temp2 + 5, temp3 + 2));
 		if (";".equals(st1)) {
 			list.add(str.substring(temp3 + 7, str.length()));
 		} else {
@@ -285,8 +300,6 @@ IXListViewListener, Urlinterface, OnGestureListener {
 
 		return list;
 	}
-
-
 
 	private void onLoad() {
 		mListView.stopRefresh();
@@ -297,10 +310,10 @@ IXListViewListener, Urlinterface, OnGestureListener {
 	@Override
 	public void onRefresh() {
 
-		//		SharedPreferences userInfo = getSharedPreferences("replyMenu", 0);
-		//		Editor editor = userInfo.edit();// 获取编辑器
-		//		editor.putBoolean("ReplyMenu", true);
-		//		editor.commit();
+		// SharedPreferences userInfo = getSharedPreferences("replyMenu", 0);
+		// Editor editor = userInfo.edit();// 获取编辑器
+		// editor.putBoolean("ReplyMenu", true);
+		// editor.commit();
 		page = 1;
 		if (ExerciseBookTool.isConnect(ReplyListViewActivity.this)) {
 
@@ -316,10 +329,10 @@ IXListViewListener, Urlinterface, OnGestureListener {
 	@Override
 	public void onLoadMore() {
 
-		Log.i("aaa",  "onLoadMore（）");
+		Log.i("aaa", "onLoadMore（）");
 		if (ExerciseBookTool.isConnect(ReplyListViewActivity.this)) {
 			page = page + 1;
-			Log.i("aaa",  "onLoadMore（）--page："+page);
+			Log.i("aaa", "onLoadMore（）--page：" + page);
 			Thread thread = new Thread(new get_news2());
 			thread.start();
 
@@ -413,7 +426,7 @@ IXListViewListener, Urlinterface, OnGestureListener {
 				convertView = inflater.inflate(R.layout.reply_layout_iteam,
 						null);
 				holder = new ViewHolder();
-	
+
 				holder.hSView = (HorizontalScrollView) convertView
 						.findViewById(R.id.hsv2);
 
@@ -432,12 +445,12 @@ IXListViewListener, Urlinterface, OnGestureListener {
 				holder.imgbtn2 = (ImageView) convertView
 						.findViewById(R.id.child_micropost_delete);
 				holder.ll_action2 = convertView.findViewById(R.id.ll_action2);
-				
+
 				convertView.setTag(holder);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 			}
-			
+
 			convertView.setOnTouchListener(new View.OnTouchListener() {
 				final int showPosition = position;
 
@@ -482,8 +495,7 @@ IXListViewListener, Urlinterface, OnGestureListener {
 				// ExerciseBookTool.set_background(Urlinterface.IP
 				// + replyList.get(position).getSender_avatar_url(),
 				// holder.use_face);
-				String url = IP
-						+ rep.getSender_avatar_url();
+				String url = IP + rep.getSender_avatar_url();
 				// ExerciseBookTool.set_background(url, face);
 				Bitmap result = memoryCache.getBitmapFromCache(url);
 				if (result == null) {
@@ -491,7 +503,7 @@ IXListViewListener, Urlinterface, OnGestureListener {
 				} else {
 
 					holder.use_face
-					.setImageDrawable(new BitmapDrawable(result));
+							.setImageDrawable(new BitmapDrawable(result));
 				}
 			}
 			holder.imgbtn1.setOnClickListener(new OnClickListener() {
@@ -506,7 +518,7 @@ IXListViewListener, Urlinterface, OnGestureListener {
 			});
 			holder.imgbtn2.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
-					
+
 					Dialog dialog = new AlertDialog.Builder(
 							ReplyListViewActivity.this)
 							.setTitle("提示")
@@ -514,7 +526,8 @@ IXListViewListener, Urlinterface, OnGestureListener {
 							.setPositiveButton("确认",
 									new DialogInterface.OnClickListener() {
 										@Override
-										public void onClick(DialogInterface dialog,
+										public void onClick(
+												DialogInterface dialog,
 												int which) {
 											del(position);
 										}
@@ -523,21 +536,22 @@ IXListViewListener, Urlinterface, OnGestureListener {
 									new DialogInterface.OnClickListener() {
 
 										@Override
-										public void onClick(DialogInterface dialog,
+										public void onClick(
+												DialogInterface dialog,
 												int which) {
 											dialog.dismiss();
 										}
 									}).create();
 					dialog.show();
-					
-					
+
 				}
 			});
 			holder.sender.setText(rep.getSender_name());
 			holder.reciver.setText(rep.getStatus());
 			holder.content.setText(rep.getContent());
 			holder.date.setText(rep.getCreated_at());
-			RelativeLayout vew = (RelativeLayout) convertView.findViewById(R.id.child_user_left);
+			RelativeLayout vew = (RelativeLayout) convertView
+					.findViewById(R.id.child_user_left);
 
 			if (position % 2 == 0) {
 				vew.setBackgroundResource(R.color.before_click);
@@ -546,23 +560,21 @@ IXListViewListener, Urlinterface, OnGestureListener {
 			}
 			return convertView;
 		}
-		public void del(final int position){
-			
-			
+
+		public void del(final int position) {
+
 			Thread thread = new Thread() {
 				public void run() {
 					try {
 						HashMap<String, String> mp = new HashMap<String, String>();
 						mp.put("user_id", user_id);
 						mp.put("school_class_id", school_class_id);
-						mp.put("message_id", replyList.get(position)
-								.getId());
+						mp.put("message_id", replyList.get(position).getId());
 						String json = ExerciseBookTool.sendGETRequest(
 								delete_message, mp);
 						JSONObject jsonobject = new JSONObject(json);
 						String notice = jsonobject.getString("notice");
-						if (jsonobject.getString("status").equals(
-								"success")) {
+						if (jsonobject.getString("status").equals("success")) {
 							replyList.remove(position);
 						}
 						Message msg = new Message();
@@ -584,8 +596,8 @@ IXListViewListener, Urlinterface, OnGestureListener {
 				prodialog.setMessage("正在删除消息");
 				prodialog.setCanceledOnTouchOutside(false);
 				prodialog.show();
-			thread.start();	
-			}else {
+				thread.start();
+			} else {
 				handler1.sendEmptyMessage(1);
 			}
 		}

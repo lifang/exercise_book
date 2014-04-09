@@ -63,6 +63,55 @@ IXListViewListener, Urlinterface, OnGestureListener {
 	private TextView topTv1;
 	private ExerciseBook exerciseBook;
 	private ProgressDialog prodialog;
+	private Handler handler1 = new Handler() {
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case 0:
+				prodialog.dismiss();
+				final String json_all2 = (String) msg.obj;
+
+				if (json_all2.length() == 0) {
+				} else {
+					replyList = new ArrayList<SysMessage>();
+					getNewsJson(json_all2);
+				}
+				int a = replyList.size();
+				if (a==0) {
+					Toast.makeText(MessageActivity.this, "暂无任何通知",
+							Toast.LENGTH_SHORT).show();
+				}else {
+					mListView.setAdapter(madapter);
+				}
+				
+				onLoad();
+
+				break;
+			case 1:
+				Toast.makeText(MessageActivity.this, "未开启网络",
+						Toast.LENGTH_SHORT).show();
+				break;
+			case 3://  删除
+				prodialog.dismiss();
+//				madapter.notifyDataSetChanged();
+				mListView.setAdapter(madapter);
+				Toast.makeText(MessageActivity.this,
+						String.valueOf(msg.obj), Toast.LENGTH_SHORT).show();
+				break;
+			case 4:
+				final String json4 = (String) msg.obj;
+
+				if (json4.length() == 0) {
+				} else {
+					getNewsJson(json4);
+				}
+				 handler.post(runnableUi);  
+//				madapter.notifyDataSetChanged();
+//				onLoad();
+				break;
+			}
+		}
+	};
+	private Handler handler=null;
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -72,6 +121,7 @@ IXListViewListener, Urlinterface, OnGestureListener {
 		mListView = (ReplyListView) findViewById(R.id.xListView);
 		mListView.setPullLoadEnable(true);
 		topTv1=(TextView) findViewById(R.id.topTv1);
+		handler=new Handler(); 
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
 		student_id = preferences.getString("id", "1");
@@ -109,55 +159,17 @@ IXListViewListener, Urlinterface, OnGestureListener {
 		mHandler = new Handler();
 	}
 
-
-	Handler handler1 = new Handler() {
-		public void handleMessage(Message msg) {
-			switch (msg.what) {
-			case 0:
-				prodialog.dismiss();
-				final String json_all2 = (String) msg.obj;
-
-				if (json_all2.length() == 0) {
-				} else {
-					replyList = new ArrayList<SysMessage>();
-					getNewsJson(json_all2);
-				}
-				int a = replyList.size();
-				if (a==0) {
-					Toast.makeText(MessageActivity.this, "暂无任何通知",
-							Toast.LENGTH_SHORT).show();
-				}else {
-					mListView.setAdapter(madapter);
-				}
-				
-				onLoad();
-
-				break;
-			case 1:
-				Toast.makeText(MessageActivity.this, "未开启网络",
-						Toast.LENGTH_SHORT).show();
-				break;
-			case 3:
-				prodialog.dismiss();
-//				madapter.notifyDataSetChanged();
-				mListView.setAdapter(madapter);
-				Toast.makeText(MessageActivity.this,
-						String.valueOf(msg.obj), Toast.LENGTH_SHORT).show();
-				break;
-			case 4:
-				final String json4 = (String) msg.obj;
-
-				if (json4.length() == 0) {
-				} else {
-					getNewsJson(json4);
-				}
-				madapter.notifyDataSetChanged();
-				onLoad();
-				break;
-			}
-		}
-	};
-
+	 // 构建Runnable对象，在runnable中更新界面  
+    Runnable   runnableUi=new  Runnable(){  
+        @Override  
+        public void run() {  
+            //更新界面  
+			madapter.notifyDataSetChanged();
+			onLoad();
+        }  
+          
+    }; 
+	
 	// 解析获取到的Json
 	public int getNewsJson(String json) {
 		try {
@@ -170,7 +182,6 @@ IXListViewListener, Urlinterface, OnGestureListener {
 				JSONArray jsonarray = jsonobject.getJSONArray("sysmessage");
 				for (int i = 0; i < jsonarray.length(); i++) {
 					JSONObject jsonobject2 = jsonarray.getJSONObject(i);
-//					{"student_id":73,"new_created_at":"2014-04-04 10:37:52","content":"恭喜您获得成就“优异”","school_class_id":109}
 					String content = jsonobject2.getString("content");
 					String created_at = ExerciseBookTool.divisionTime2(jsonobject2
 							.getString("new_created_at"));
