@@ -8,6 +8,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import com.comdosoft.ExerciseBook.pojo.AnswerBasePojo;
 import com.comdosoft.ExerciseBook.pojo.AnswerWirePojo;
+import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
+
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
@@ -78,6 +80,7 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 		analysisJSON(json);
 
 		updateView();
+
 	}
 
 	public void updateView() {

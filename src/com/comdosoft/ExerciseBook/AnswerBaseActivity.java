@@ -470,7 +470,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 						}
 					}
 				} catch (Exception e) {
-					mHandler.sendEmptyMessage(2);
+					// mHandler.sendEmptyMessage(2);
 				}
 			}
 		}).start();
