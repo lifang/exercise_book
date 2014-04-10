@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.AlertDialog.Builder;
@@ -45,6 +46,7 @@ import com.comdosoft.ExerciseBook.tools.PredicateLayout;
 import com.comdosoft.ExerciseBook.tools.Soundex_Levenshtein;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 /**
  * 作者: 张秀楠 时间：2014-4-9 上午11:49:11
@@ -120,6 +122,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 		// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
 		super.mQuestionType = 1;
 		super.setStart();
+		setCheckText("下一题");
 		eb = (ExerciseBook) getApplication();
 
 		qid = eb.getQuestion_id();
@@ -326,6 +329,8 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 				}
 				if ((ok_speak.size() * 2) >= ok_arr.length || number >= 4) {// 设置如果正确率为50%就可以下一题
 					Speak_type = true;
+					setButtonOver();
+
 				} else {
 					Speak_type = false;
 				}
@@ -578,12 +583,10 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 
 			if (Speak_type == true || number >= 4) {
 				stop();
-				String answer_history = ExerciseBookTool
-						.getAnswer_Json_history(path);
 				try {
-					JSONObject obj = new JSONObject(answer_history);
-					if (obj.getJSONObject("reading").getString("status")
-							.equals("0")) {
+					if (status == 0) {
+						String answer_history = ExerciseBookTool
+								.getAnswer_Json_history(path);
 						type = setAnswerJson(answer_history, error_str, ratio,
 								branch_questions.get(index).getId());
 					} else {
@@ -645,14 +648,33 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 		return type;
 	}
 
-	// public String getSpeakStr(ArrayList<String> str) {
-	// for (int i = 0; i < str.size(); i++) {
-	// if (ExerciseBookTool.isChinesePunctuation(str.get(i))) {
-	// return str.get(i);
-	// }
-	// }
-	// return "";
-	// }
+	public void setButtonOver() {
+		if (status == 0) {
+			String answer_history = ExerciseBookTool
+					.getAnswer_Json_history(path);
+			JSONObject obj;
+			try {
+				obj = new JSONObject(answer_history);
+				int q_item = Integer.valueOf(obj.getJSONObject("reading")
+						.getString("questions_item"));
+				int b_item = Integer.valueOf(obj.getJSONObject("reading")
+						.getString("branch_item"));
+				Log.i("aaa", q_item + "/" + b_item);
+				if (q_item + 1 >= eb.getList().size()
+						&& b_item + 2 >= eb.getBranch_number()) {
+					setCheckText("完成");
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		} else {
+			type = Again();
+			if (type == 1) {
+				setCheckText("完成");
+			}
+		}
+
+	}
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {

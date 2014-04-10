@@ -317,7 +317,7 @@ public class ExerciseBookTool implements Urlinterface {
 				Log.i("aaa", ar.length() + "-ar");
 				for (int j = 0; j < ar.length(); j++) {
 					JSONObject o = ar.getJSONObject(j);
-					ratio.add(o.getInt("ratio"));
+					ratio.add(Integer.parseInt(o.getString("ratio")));
 				}
 			}
 		} catch (JSONException e) {

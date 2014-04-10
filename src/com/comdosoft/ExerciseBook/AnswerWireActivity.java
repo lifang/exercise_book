@@ -461,7 +461,7 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 								&& mBindex == mQuestList.get(mQindex).size() - 1) {
 							setCheckText("完成");
 						} else {
-							setCheckText("下一题");
+							setCheckText("检查");
 						}
 						if (status == 0) {
 							AnswerBasePojo aop = mQuestList.get(mQindex).get(

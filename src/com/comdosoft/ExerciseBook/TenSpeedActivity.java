@@ -83,11 +83,13 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 		super.onCreate(savedInstanceState);
 		super.setContentView(R.layout.ten_speed);
 		findViewById(R.id.base_back_linearlayout).setOnClickListener(this);
-		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_propTrue).setOnClickListener(this);
 		// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
+		setTimePropEnd();// 禁用道具
+		setTruePropEnd();// 禁用道具
 		setCheckText("下一题");
 		this.mQuestionType = 2;
+		yinCangCheck();
 		eb = (ExerciseBook) getApplication();
 		initialize();
 		branch_questions = new ArrayList<Time_LimitPojo>();
@@ -96,12 +98,6 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 		path = intent.getStringExtra("path");
 		json = intent.getStringExtra("json");
 		status = intent.getIntExtra("status", 1);
-		if (eb.getTime_number() <= 0 || status == 1) {
-			setTimePropEnd();// 禁用道具
-		}
-		if (eb.getTrue_number() <= 0 || status == 1) {
-			setTruePropEnd();// 禁用道具
-		}
 		Log.i("aaa", eb.getWork_id() + ":");
 		SetJson(json);
 		File answer_file = new File(path);
@@ -194,6 +190,40 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 				user_select = branch_questions.get(index).getOpption()[1];
 				break;
 			}
+			if (user_select.equals(branch_questions.get(index).getAnwser())) {
+				user_boolean = 100;
+				MyPlayer(true);
+			} else {
+				user_boolean = 0;
+				MyPlayer(false);
+			}
+			img_index -= 1;
+			String answer_history = ExerciseBookTool
+					.getAnswer_Json_history(path);
+			int type = 0;
+			try {
+				if (status == 0) {
+					type = setAnswerJson(answer_history, user_select,
+							user_boolean, branch_questions.get(index).getId());
+				} else {
+					type = Again();
+				}
+			} catch (Exception e) {
+				Toast.makeText(TenSpeedActivity.this, "json写入发生错误",
+						Toast.LENGTH_SHORT).show();
+			}
+			calculateRatio(user_boolean);
+			index += 1;
+			switch (type) {
+			case 0:
+				handler.sendEmptyMessage(1);
+				break;
+			case 1:
+				roundOver();
+				break;
+			}
+			user_select = "";
+
 		}
 	}
 
@@ -254,78 +284,6 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 		case R.id.base_back_linearlayout:
 			super.onClick(v);
 			break;
-		case R.id.base_check_linearlayout:
-			if (img_index >= 0) {
-				if (user_select.equals("")) {
-					Toast.makeText(this, "请选择答案!", Toast.LENGTH_SHORT).show();
-				} else {
-					if (user_select.equals(branch_questions.get(index)
-							.getAnwser())) {
-						user_boolean = 100;
-						MyPlayer(true);
-					} else {
-						user_boolean = 0;
-						MyPlayer(false);
-					}
-					img_index -= 1;
-					String answer_history = ExerciseBookTool
-							.getAnswer_Json_history(path);
-					int type = 0;
-					try {
-						if (status == 0) {
-							type = setAnswerJson(answer_history, user_select,
-									user_boolean, branch_questions.get(index)
-											.getId());
-						} else {
-							type = Again();
-						}
-					} catch (Exception e) {
-						Toast.makeText(TenSpeedActivity.this, "json写入发生错误",
-								Toast.LENGTH_SHORT).show();
-					}
-					calculateRatio(user_boolean);
-					index += 1;
-					switch (type) {
-					case 0:
-						handler.sendEmptyMessage(1);
-						break;
-					case 1:
-						roundOver();
-						break;
-					}
-					user_select = "";
-				}
-			}
-			break;
-		// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
-		case R.id.base_propTrue:
-			if (eb.getTrue_number() > 0) {// 判断显示答案的道具数量是否大于0
-				if (branch_questions.get(index).getOpption()[0]
-						.equals(branch_questions.get(index).getAnwser())) {
-					one_btn.setBackgroundResource(R.drawable.loginbtn_lv);
-					two_btn.setBackgroundResource(R.drawable.loginbtn_hui);
-				} else {
-					one_btn.setBackgroundResource(R.drawable.loginbtn_hui);
-					two_btn.setBackgroundResource(R.drawable.loginbtn_lv);
-				}
-				user_select = branch_questions.get(index).getAnwser();
-				PropJson(0, branch_questions.get(index).getId());
-				Toast.makeText(TenSpeedActivity.this, "使用成功!",
-						Toast.LENGTH_SHORT).show();
-			} else {
-				Toast.makeText(TenSpeedActivity.this,
-						R.string.prop_number_error, Toast.LENGTH_SHORT).show();
-			}
-			break;
-		case R.id.base_propTime:
-			// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
-			if (eb.getTime_number() > 0) {
-				PropJson(1, branch_questions.get(index).getId());
-			} else {
-				Toast.makeText(TenSpeedActivity.this,
-						R.string.prop_number_error, Toast.LENGTH_SHORT).show();
-			}
-			break;
 		}
 	}
 
@@ -346,8 +304,6 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 				img_index = 10;// 图片索引
 				user_boolean = 0;
 				status = 1;
-				setTimePropEnd();// 禁用道具
-				setTruePropEnd();// 禁用道具
 				Log.i("suanfa", "--");
 				handler.sendEmptyMessage(1);
 				break;
