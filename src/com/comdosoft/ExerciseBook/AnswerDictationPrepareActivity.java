@@ -3,9 +3,11 @@ package com.comdosoft.ExerciseBook;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -23,6 +25,7 @@ import android.widget.Toast;
 import com.comdosoft.ExerciseBook.pojo.AnswerBasePojo;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
+
 
 // 2014年4月1日 10:45:06
 public class AnswerDictationPrepareActivity extends AnswerBaseActivity
@@ -69,6 +72,8 @@ public class AnswerDictationPrepareActivity extends AnswerBaseActivity
 		analysisJSON(json);
 
 		setCheckText("开始");
+		
+		setTimeGone();
 
 		if (status == 2) {
 			TextView t = (TextView) findViewById(R.id.question_prepare_mes);

@@ -12,6 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Environment;
@@ -52,7 +53,6 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 	private String content = "";
 	private PredicateLayout myLayout;
 	private String[] str;
-	private int specified_time;
 	private List<Branch_PoJo> Branchlist;
 	private List<ClozePojo> list;
 	private ClozePojo cloze;
@@ -90,8 +90,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.cloze);
-		// setTimePropEnd();// 禁用道具
-		// setTruePropEnd();// 禁用道具
+
 		eb = (ExerciseBook) getApplication();
 		// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
 		super.mQuestionType = 5;
@@ -100,6 +99,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		findViewById(R.id.base_back_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_propTrue).setOnClickListener(this);
+		findViewById(R.id.base_propTime).setOnClickListener(this);
 
 		gson = new Gson();
 		initialize();
@@ -107,7 +107,13 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		path = intent.getStringExtra("path");
 		String json = intent.getStringExtra("json");
 		status = intent.getIntExtra("status", 1);
-
+		if (eb.getTime_number() <= 0 || status == 1) {
+			setTimePropEnd();// 禁用道具
+		}
+		if (eb.getTrue_number() <= 0 || status == 1) {
+			setTruePropEnd();// 禁用道具
+		}
+		Log.i("suanfa", eb.getTrue_number() + "/" + eb.getTime_number());
 		SetJson(json);
 		SetAnswer();
 	}
@@ -168,6 +174,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 				if (select_item + 1 < cloze.getList().size()) {
 					select_item += 1;
 				}
+				tv_list.add(spinner);
 			} else {
 				view1 = View.inflate(this, R.layout.cloze_view, null);
 				TextView text = (TextView) view1.findViewById(R.id.tv);
@@ -385,18 +392,18 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 					int true_number = 0;
 					for (Map.Entry<Integer, String> entry : user_select
 							.entrySet()) {
+						tv_list.get(entry.getKey()).setTextColor(
+								Color.rgb(227, 20, 39));
 						if (entry.getValue()
 								.equals(cloze.getList().get(entry.getKey())
 										.getAnswer())) {
-							Log.i("suanfa", entry.getValue()
-									+ "/"
-									+ cloze.getList().get(entry.getKey())
-											.getAnswer());
+							tv_list.get(entry.getKey()).setTextColor(
+									getResources().getColor(R.color.work_end));
 							true_number += 1;
 						}
 					}
-					Log.i("suanfa", true_number+",number");
-					if (true_number == user_select.size()) {
+					Log.i("suanfa", true_number + ",number");
+					if (true_number == cloze.getList().size()) {
 						MyPlayer(true);
 					} else {
 						MyPlayer(false);
@@ -460,6 +467,11 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 				break;
 			case 1:
 				index = 0;
+				select_item = 0;
+				status = 1;
+				setTimePropEnd();// 禁用道具
+				setTruePropEnd();// 禁用道具
+				user_select.clear();
 				SetAnswer();
 				break;
 			}

@@ -1,8 +1,12 @@
 package com.comdosoft.ExerciseBook;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +15,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.comdosoft.ExerciseBook.pojo.AnswerSelectItemPojo;
 
-//2014年4月1日 10:45:06
+/**
+ * @作者 马龙
+ * @时间 2014-4-9 下午4:29:04
+ */
 public class AnswerSelectAdapter extends BaseAdapter {
 
+	private int status = 0;
 	private int type = 0;
 	private LayoutInflater mInflater;
+	private Map<Integer, String> checkMap = new HashMap<Integer, String>();
 	private List<String> answerList = new ArrayList<String>();
 	private List<String> list = new ArrayList<String>();
 	private String[] letterArr = new String[] { "A", "B", "C", "D", "E", "F" };
@@ -78,6 +87,32 @@ public class AnswerSelectAdapter extends BaseAdapter {
 		holder.linearLayout
 				.setBackgroundResource(R.drawable.answer_select_item_style);
 
+		if (status == 1) {
+			for (int i = 0; i < answerList.size(); i++) {
+				if (answerList.get(i).equals(list.get(position))) {
+					holder.text.setTextColor(Color.rgb(53, 207, 143));
+				}
+			}
+
+			for (Entry<Integer, String> m : checkMap.entrySet()) {
+				if (m.getKey() == position) {
+					boolean flag = false;
+					for (int i = 0; i < answerList.size(); i++) {
+						if (m.getValue().equals(answerList.get(i))) {
+							flag = true;
+						}
+					}
+					if (flag) {
+						holder.text.setTextColor(Color.rgb(53, 207, 143));
+					} else {
+						holder.text.setTextColor(Color.rgb(227, 20, 39));
+					}
+					holder.linearLayout
+							.setBackgroundResource(R.drawable.answer_select_item_check_style);
+				}
+			}
+		}
+
 		if (type == 1) {
 			for (int i = 0; i < answerList.size(); i++) {
 				if (answerList.get(i).equals(list.get(position))) {
@@ -102,6 +137,14 @@ public class AnswerSelectAdapter extends BaseAdapter {
 		this.type = type;
 		this.list = list;
 		this.answerList = answer;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	public void setCheckMap(Map<Integer, String> checkMap) {
+		this.checkMap = checkMap;
 	}
 
 	public final class ViewHolder {

@@ -308,6 +308,7 @@ public final class R {
         public static final int child_micropost_huifu=0x7f0c0058;
         public static final int child_user_face=0x7f0c004e;
         public static final int child_user_left=0x7f0c004d;
+        public static final int cj=0x7f0c00ff;
         public static final int classMenu=0x7f0c009a;
         public static final int classback=0x7f0c009d;
         public static final int classstu=0x7f0c00a0;
@@ -352,7 +353,7 @@ public final class R {
         public static final int leftmenu_12red=0x7f0c0095;
         public static final int leftmenu_13=0x7f0c0097;
         public static final int leftmenu_13red=0x7f0c0098;
-        public static final int letsgo=0x7f0c0103;
+        public static final int letsgo=0x7f0c0104;
         public static final int linear=0x7f0c0091;
         public static final int listView=0x7f0c00b1;
         public static final int ll=0x7f0c00ce;
@@ -382,9 +383,9 @@ public final class R {
         public static final int myspinner_dropdown_txt=0x7f0c00b0;
         public static final int newTv=0x7f0c0049;
         public static final int next_btn=0x7f0c004a;
-        public static final int ok=0x7f0c0102;
+        public static final int ok=0x7f0c0103;
         public static final int one_btn=0x7f0c00ec;
-        public static final int over_img=0x7f0c0105;
+        public static final int over_img=0x7f0c0106;
         public static final int paizhaoshangchuan=0x7f0c00e1;
         public static final int pull_to_load_image=0x7f0c00db;
         public static final int pull_to_load_progress=0x7f0c00da;
@@ -485,23 +486,23 @@ public final class R {
         public static final int userinfo_youyi2=0x7f0c00f6;
         public static final int vPager=0x7f0c00d0;
         public static final int viewGroup=0x7f0c0036;
-        public static final int work_jiezu=0x7f0c0101;
-        public static final int work_jz=0x7f0c00ff;
-        public static final int work_name=0x7f0c0104;
+        public static final int work_jiezu=0x7f0c0102;
+        public static final int work_jz=0x7f0c0100;
+        public static final int work_name=0x7f0c0105;
         public static final int work_ratio=0x7f0c00fd;
         public static final int work_time=0x7f0c00fe;
-        public static final int work_xs=0x7f0c0100;
+        public static final int work_xs=0x7f0c0101;
         public static final int working=0x7f0c00ae;
         public static final int xListView=0x7f0c00a7;
-        public static final int xlistview_footer_content=0x7f0c0106;
-        public static final int xlistview_footer_hint_textview=0x7f0c0108;
-        public static final int xlistview_footer_progressbar=0x7f0c0107;
-        public static final int xlistview_header_arrow=0x7f0c010d;
-        public static final int xlistview_header_content=0x7f0c0109;
-        public static final int xlistview_header_hint_textview=0x7f0c010b;
-        public static final int xlistview_header_progressbar=0x7f0c010e;
-        public static final int xlistview_header_text=0x7f0c010a;
-        public static final int xlistview_header_time=0x7f0c010c;
+        public static final int xlistview_footer_content=0x7f0c0107;
+        public static final int xlistview_footer_hint_textview=0x7f0c0109;
+        public static final int xlistview_footer_progressbar=0x7f0c0108;
+        public static final int xlistview_header_arrow=0x7f0c010e;
+        public static final int xlistview_header_content=0x7f0c010a;
+        public static final int xlistview_header_hint_textview=0x7f0c010c;
+        public static final int xlistview_header_progressbar=0x7f0c010f;
+        public static final int xlistview_header_text=0x7f0c010b;
+        public static final int xlistview_header_time=0x7f0c010d;
         public static final int youranswer=0x7f0c0039;
     }
     public static final class integer {

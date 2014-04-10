@@ -4,14 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -31,7 +29,6 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.comdosoft.ExerciseBook.pojo.AnswerBasePojo;
 import com.comdosoft.ExerciseBook.pojo.AnswerJson;
 import com.comdosoft.ExerciseBook.pojo.AnswerMyPojo;
@@ -44,8 +41,13 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 import com.google.gson.Gson;
 
-//2014年4月2日 15:24:51
 // 答题父类
+/**
+ * <<<<<<< HEAD 作者: 张秀楠 时间：2014-4-10 上午10:41:29 =======
+ * 
+ * @作者 马龙
+ * @时间 2014-4-9 下午6:22:33 >>>>>>> d8f9d91d1088ee4a65f16e8016b6fa7a84300f2f
+ */
 public class AnswerBaseActivity extends Activity implements OnClickListener,
 		OnPreparedListener, Urlinterface {
 	public ExerciseBook eb;
@@ -123,6 +125,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 					ratioSum = 0;
 					count = 0;
 				}
+				intent.putExtra("status", status);
 				intent.putExtra("use_time", getUseTime());// 用户使用的时间
 				intent.putExtra("specified_time", specified_time);// 任务基础时间
 				intent.setClass(AnswerBaseActivity.this, WorkEndActivity.class);
@@ -165,6 +168,12 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		json = intent.getStringExtra("json");
 		path = intent.getStringExtra("path");
 		status = intent.getIntExtra("status", 2);
+
+		// 禁掉道具
+		if (status != 0) {
+			setTruePropEnd();
+			setTimePropEnd();
+		}
 	}
 
 	// 设置子布局View
@@ -198,6 +207,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		}
 	}
 
+	// 隐藏时间栏
 	public void setTimeGone() {
 		base_time_linearlayout.setVisibility(View.GONE);
 	}
@@ -227,6 +237,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		}
 	}
 
+	// 减时动画
 	public void startTimeFlash() {
 		base_time_flash.setVisibility(View.VISIBLE);
 		AlphaAnimation myAnimation_Alpha = new AlphaAnimation(1.0f, 0.0f);
@@ -366,13 +377,13 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 			}
 			break;
 		case R.id.base_propTrue:
-			if (eb.getTrue_number() > 0) {
-				rightAnswer();
-				PropJson(0, mQuestList.get(mQindex).get(mBindex)
-						.getBranch_questions_id());
-			} else {
-				Toast.makeText(getApplicationContext(), "道具数量不足!", 0).show();
-			}
+			// if (eb.getTrue_number() > 0) {
+			rightAnswer();
+			PropJson(0, mQuestList.get(mQindex).get(mBindex)
+					.getBranch_questions_id());
+			// } else {
+			// Toast.makeText(getApplicationContext(), "道具数量不足!", 0).show();
+			// }
 			break;
 		}
 	}
@@ -390,12 +401,10 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	public void setUpdateJson() {
 		String answer_history = ExerciseBookTool.getAnswer_Json_history(path);
 		answerJson = gson.fromJson(answer_history, AnswerJson.class);
-		AnswerPojo ap = getAnswerPojo();
 		answerJson.update = updated_time;
 		String str = gson.toJson(answerJson);
 		try {
 			ExerciseBookTool.writeFile(path, str);
-			uploadJSON(ap.getStatus());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -420,6 +429,8 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 					setMyAnswer(mRecoirdAnswer.get(mRecordIndex)
 							.replaceAll(";\\|\\|;", "    ")
 							.replaceAll("<=>", " "));
+				} else if (mQuestionType == 5) {
+
 				} else {
 					setMyAnswer(mRecoirdAnswer.get(mRecordIndex).replaceAll(
 							";\\|\\|;", " "));
@@ -469,13 +480,14 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 						}
 					}
 				} catch (Exception e) {
-					mHandler.sendEmptyMessage(2);
+					// mHandler.sendEmptyMessage(2);
 				}
 			}
 		}).start();
 		return answer_boolean;
 	}
 
+	// 计算重做正确率
 	public void calculateRatio(int mRatio) {
 		if (status == 1) {
 			count++;
@@ -725,7 +737,13 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 			eb.setTrue_number(eb.getTrue_number() - 1);
 		}
 		Log.i("Ax", "type-bid:" + type + "--" + branch_id);
-		answerJson.props.get(type).getBranch_id().add(branch_id);
+		try {
+			answerJson.props.get(type).getBranch_id().add(branch_id);
+		} catch (Exception e) {
+			List<Integer> list = new ArrayList<Integer>();
+			list.add(branch_id);
+			answerJson.props.add(new PropPojo(type + "", list));
+		}
 		String str = gson.toJson(answerJson);
 		try {
 			ExerciseBookTool.writeFile(path, str);
@@ -737,12 +755,10 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	public void Del_Prop() {
 		String answer_history = ExerciseBookTool.getAnswer_Json_history(path);
 		answerJson = gson.fromJson(answer_history, AnswerJson.class);
-		AnswerPojo ap = getAnswerPojo();
 		answerJson.props = new ArrayList<PropPojo>();
 		String str = gson.toJson(answerJson);
 		try {
 			ExerciseBookTool.writeFile(path, str);
-			uploadJSON(ap.getStatus());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -762,6 +778,8 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 				status = 1;
 				mQindex = 0;
 				mBindex = 0;
+				setTruePropEnd();
+				setTimePropEnd();
 				setUseTime(0);
 				setStart();
 				updateView();

@@ -49,9 +49,6 @@ public class ExerciseBook extends Application {
 	private int Time_number;
 	private int True_number;
 	Map<Integer, List<View>> FontCard;
-	
-	
-	
 
 	public Map<Integer, List<View>> getFontCard() {
 		return FontCard;
