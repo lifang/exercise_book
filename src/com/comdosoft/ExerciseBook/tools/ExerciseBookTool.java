@@ -294,7 +294,7 @@ public class ExerciseBookTool implements Urlinterface {
 			JSONObject js = obj.getJSONObject(key);
 			Log.i("Ax", js.toString());
 			JSONArray arr = js.getJSONArray("questions");
-			Log.i("Ax", arr.length() + "ratio-arr-size");
+			Log.i("Ax", arr.length() + "-ratio-arr-size");
 			if (arr.length() == 0) {
 				return -10;
 			}
@@ -304,14 +304,14 @@ public class ExerciseBookTool implements Urlinterface {
 				Log.i("aaa", ar.length() + "-ar");
 				for (int j = 0; j < ar.length(); j++) {
 					JSONObject o = ar.getJSONObject(j);
-					ratio.add(o.getInt("ratio"));
+					ratio.add(Integer.parseInt(o.getString("ratio")));
 				}
 			}
 		} catch (JSONException e) {
+			Log.i("Ax", "JSONException-" + e.toString() + "--" + e.getMessage());
 			return -20;
 		}
 		int size = 0;
-		Log.i("aaa", ratio.size() + "-ratio");
 		for (int i = 0; i < ratio.size(); i++) {
 			size += ratio.get(i);
 		}
@@ -365,7 +365,7 @@ public class ExerciseBookTool implements Urlinterface {
 			bf.close();
 			in.close();
 		} catch (IOException e) {
-			Log.i("linshi", "读取json文件发生错误");
+			Log.i("Ax", "读取json文件发生错误");
 		}
 		return stringBuilder.toString();
 	}

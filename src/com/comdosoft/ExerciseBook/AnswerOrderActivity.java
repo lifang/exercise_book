@@ -333,8 +333,8 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 						}
 					}
 				} else {
-					nextRecord();
 					calculateIndexAndUpdateView();
+					nextRecord();
 				}
 				break;
 			}
