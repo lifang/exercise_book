@@ -72,6 +72,19 @@ public class ExerciseBookTool implements Urlinterface {
 	private static int readTimeOut = 10000;
 	private static String requestEncoding = "UTF-8";
 
+	public static void UpdateJsonTime(String time, String url) {
+		Gson gson = new Gson();
+		String answer_history = ExerciseBookTool.getAnswer_Json_history(url);
+		AnswerJson answerJson = gson.fromJson(answer_history, AnswerJson.class);
+		answerJson.update = time;
+		String str = gson.toJson(answerJson);
+		try {
+			ExerciseBookTool.writeFile(url, str);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	// 根据UnicodeBlock方法判断中文标点符号
 	public static boolean isChinesePunctuation(char c) {
 		Character.UnicodeBlock ub = Character.UnicodeBlock.of(c);

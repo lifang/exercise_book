@@ -102,7 +102,6 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 				} else {
 					mylayout.setVisibility(View.GONE);
 				}
-
 				break;
 			case 1:
 				prodialog.dismiss();
@@ -141,6 +140,9 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 				break;
 			case 6:
 				prodialog.dismiss();
+				ExerciseBookTool.UpdateJsonTime(work_list.get(0)
+						.getUpdated_at(), path + "/student_" + eb.getUid()
+						+ ".json");
 				break;
 			}
 		};

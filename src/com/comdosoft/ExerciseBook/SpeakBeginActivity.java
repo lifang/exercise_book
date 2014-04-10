@@ -281,7 +281,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 				speak = speak
 						.replaceAll("(?i)[^a-zA-Z0-9\u4E00-\u9FA5\\s]", "");// 去除标点符号
 				Log.i("suanfa", "朗读答案->" + speak);
-				content = content.replaceAll("  ", " ");
+				content = content.replaceAll("\\s", " ");
 				String[] ok_arr = content.split(" ");
 				Log.i("suanfa", "正确答案->" + content);
 				String[] item = speak.split(" ");
@@ -330,9 +330,10 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 					Speak_type = false;
 				}
 
+				Log.i("aaa", ok_speak.size() + ":->" + ok_arr.length);
 				if (number == 1) {
-					ratio = (ok_speak.size() / ok_arr.length) * 100;
-					Log.i("aaa", ratio + "");
+					ratio = (ok_speak.size() * 100) / ok_arr.length;
+					Log.i("aaa", "ratio:" + ratio);
 				}
 			} else {
 				number -= 1;
@@ -380,6 +381,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 			switch (resultCode) {
 			case 0:
 				eb.setQuestion_item(0);
+				eb.setUsertime(0);
 				SpeakBeginActivity.this.finish();
 				intent.setClass(SpeakBeginActivity.this,
 						HomeWorkIngActivity.class);
@@ -387,6 +389,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 				break;
 			case 1:
 				eb.setQuestion_item(0);
+				eb.setUsertime(0);
 				intent.putExtra("path", path);
 				intent.putExtra("json", json);
 				intent.putExtra("status", 1);
@@ -596,9 +599,11 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 						break;
 					case 1:
 						Log.i("suanfa", "结束");
+						eb.setUsertime(0);
 						roundOver();
 						break;
 					case 2:
+						eb.setUsertime(getUseTime());
 						intent.putExtra("path", path);
 						intent.putExtra("json", json);
 						intent.setClass(SpeakBeginActivity.this,
@@ -652,6 +657,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			super.close();
+			eb.setUsertime(0);
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);

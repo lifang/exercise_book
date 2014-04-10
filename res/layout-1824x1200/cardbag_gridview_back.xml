@@ -38,6 +38,8 @@
                 android:layout_below="@id/rightIv"
                 android:layout_marginLeft="38px"
                 android:layout_marginTop="30px"
+                android:ellipsize="end"
+                android:lines="4"
                 android:text="We can watch it together!Good!"
                 android:textColor="@color/quescontent"
                 android:textSize="45.93px" />
@@ -49,7 +51,8 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="38px"
                 android:layout_marginTop="40px"
-                android:src="@drawable/cardbatread" />
+                android:src="@drawable/cardbatread" 
+                android:visibility="gone"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"

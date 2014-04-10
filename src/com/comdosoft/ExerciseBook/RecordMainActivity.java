@@ -169,6 +169,10 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 				break;
 			case 7:
 				prodialog.dismiss();
+				ExerciseBookTool.UpdateJsonTime(
+						work_list.get(pager.getCurrentItem()).getUpdated_at(),
+						pathList.get(pager.getCurrentItem()) + "/student_"
+								+ eb.getUid() + ".json");
 				break;
 			}
 		};

@@ -5,7 +5,7 @@
 
     <RelativeLayout
         android:layout_width="513px"
-        android:layout_height="512px"
+    android:layout_height="512px"
         android:background="@drawable/cardfont"
         android:orientation="vertical" >
 
@@ -19,7 +19,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="38px"
-                android:layout_marginTop="40px"
+                android:layout_marginTop="30px"
                 android:text="@string/reson1"
                 android:textColor="@color/quesreson"
                 android:textSize="33px" />
@@ -27,127 +27,68 @@
             <TextView
                 android:id="@+id/youranswer"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="200px"
                 android:layout_below="@id/reson"
                 android:layout_marginLeft="38px"
-                android:layout_marginTop="30px"
-                android:text="tagether"
+                android:layout_marginRight="38px"
+                android:layout_marginTop="20.1px"
+                android:ellipsize="end"
+                android:lines="3"
+                android:text="tagether1111111111111111111111111111"
                 android:textColor="@color/quescontent"
-                android:textSize="45.93px" />
+                android:textSize="40px" />
 
             <ImageView
                 android:id="@+id/fontIv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="38px"
-                android:layout_marginTop="40px"
+                  android:layout_marginRight="38px"
+                android:layout_marginTop="30px"
                 android:src="@drawable/ques_reson" />
-
-            <LinearLayout
-                android:id="@+id/biaoqian"
-                android:layout_width="512px"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginTop="120px"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                android:visibility="gone" >
-
-                <LinearLayout
-                    android:layout_width="512px"
-                    android:layout_height="184px"
-                    android:background="@drawable/biaoqianback"
-                    android:gravity="center_horizontal" >
-
-                    <LinearLayout
-                        android:layout_width="467px"
-                        android:layout_height="75px"
-                        android:layout_marginTop="60px"
-                        android:background="@drawable/biaoqianwriteback"
-                        android:orientation="horizontal" >
-
-                        <ImageView
-                            android:id="@+id/biaoqianfind"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="6px"
-                            android:src="@drawable/biaoqianfind" />
-
-                        <EditText
-                            android:id="@+id/biaoqianet"
-                            android:layout_width="306px"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/biaoqianwriteback"
-                            android:hint="搜索知识点"
-                            android:maxEms="10"
-                            android:maxLines="1" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="513px"
-                    android:layout_height="wrap_content"
-                    android:background="@color/top_qianlv"
-                    android:orientation="vertical" >
-
-                    <ListView
-                        android:id="@+id/biaoqianlv"
-                        android:layout_width="513px"
-                        android:layout_height="wrap_content" >
-                    </ListView>
-
-                    <TextView
-                        android:id="@+id/newTv"
-                        android:layout_width="513px"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:textColor="@color/white"
-                        android:visibility="gone" />
-                </LinearLayout>
-            </LinearLayout>
         </RelativeLayout>
 
-        <RelativeLayout
+        
+
+        <TextView
+            android:id="@+id/bqtv1"
+            android:layout_width="513px"
+            android:layout_height="59px"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/bqtv"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            />
+    </RelativeLayout>
+<RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/top"
-            android:layout_marginTop="120px"
+            android:layout_marginTop="280px"
             android:orientation="vertical" >
 
             <TextView
                 android:id="@+id/rightanswer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="38px"
+                  android:layout_marginLeft="38px"
                 android:text="正确拼写"
                 android:textColor="@color/quesreson"
                 android:textSize="33px" />
 
             <TextView
                 android:id="@+id/answer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="513px"
+                android:layout_height="135px"
                 android:layout_below="@id/rightanswer"
                 android:layout_marginLeft="38px"
-                android:layout_marginTop="30px"
-                android:text="together"
+                android:layout_marginRight="38px"
+                android:ellipsize="end"
+                android:lines="2"
+                android:text="together111111111111111111111111111111111111111111111"
                 android:textColor="@color/quesreson"
-                android:textSize="45.93px" />
+                android:textSize="45px" />
 
-            <TextView
-                android:id="@+id/bqtv1"
-                android:layout_width="449px"
-                android:layout_height="59px"
-                android:layout_below="@id/answer"
-                android:layout_marginLeft="32px"
-                android:background="@drawable/bqtv"
-                android:gravity="center_vertical"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:textColor="@color/white"
-                android:visibility="gone" />
         </RelativeLayout>
-    </RelativeLayout>
-
 </RelativeLayout>
