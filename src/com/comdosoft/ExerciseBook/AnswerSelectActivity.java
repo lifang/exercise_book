@@ -167,6 +167,7 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 			mediaPlayer.pause();
 		}
 
+		playFlag = false;
 		asipList.clear();
 		setPage(mBindex + 1, mQuestList.get(mQindex).size());
 		mAnswer.delete(0, mAnswer.length());

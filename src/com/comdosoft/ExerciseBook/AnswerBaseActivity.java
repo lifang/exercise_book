@@ -44,10 +44,14 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 import com.google.gson.Gson;
 
-//2014年4月2日 15:24:51
 // 答题父类
 /**
+<<<<<<< HEAD
  * 作者: 张秀楠 时间：2014-4-10 上午10:41:29
+=======
+ * @作者 马龙
+ * @时间 2014-4-9 下午6:22:33
+>>>>>>> d8f9d91d1088ee4a65f16e8016b6fa7a84300f2f
  */
 public class AnswerBaseActivity extends Activity implements OnClickListener,
 		OnPreparedListener, Urlinterface {

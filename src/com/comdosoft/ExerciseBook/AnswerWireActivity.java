@@ -8,8 +8,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import com.comdosoft.ExerciseBook.pojo.AnswerBasePojo;
 import com.comdosoft.ExerciseBook.pojo.AnswerWirePojo;
-import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
-
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
@@ -92,6 +90,8 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 		leftLinearLayout.removeAllViews();
 		rightLinearLayout.removeAllViews();
 
+		setPage(mBindex + 1, mQuestList.get(mQindex).size());
+
 		initData();
 
 		for (int i = 0; i < answerList.size(); i += 2) {
@@ -140,8 +140,10 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 				.split(";\\|\\|;");
 
 		for (int i = 0; i < arr.length; i++) {
-			answerList.add(arr[i].split("<=>")[0]);
-			answerList.add(arr[i].split("<=>")[1]);
+			if (arr[i].split("<=>").length > 1) {
+				answerList.add(arr[i].split("<=>")[0]);
+				answerList.add(arr[i].split("<=>")[1]);
+			}
 		}
 
 		List<String> left = new ArrayList<String>();

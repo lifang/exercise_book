@@ -482,14 +482,6 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		StringBuffer error = new StringBuffer();
 		StringBuffer answer = new StringBuffer();
 
-		// Iterator iterator = errorMap.entrySet().iterator();
-		// while (iterator.hasNext()) {
-		// Map.Entry<String, Integer> entry = (Map.Entry<String, Integer>)
-		// iterator
-		// .next();
-		// error.append(";||;").append(entry.getKey());
-		// }
-
 		for (Entry<String, Integer> m : errorMap.entrySet()) {
 			error.append(";||;").append(m.getKey());
 		}

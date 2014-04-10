@@ -15,10 +15,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.comdosoft.ExerciseBook.pojo.AnswerSelectItemPojo;
 
-/** 
-* @作者 马龙 
-* @时间 2014-4-9 下午4:29:04 
-*/ 
+/**
+ * @作者 马龙
+ * @时间 2014-4-9 下午4:29:04
+ */
 public class AnswerSelectAdapter extends BaseAdapter {
 
 	private int status = 0;
