@@ -44,6 +44,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 import cn.jpush.android.api.JPushInterface;
@@ -271,6 +272,19 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 					String resource_url = jsonobject2.getString("resource_url");
 					String types = jsonobject2.getString("types");
 					String answer = jsonobject2.getString("answer");
+					if ("5".equals(types)) {
+						JSONArray answerarray = jsonobject2 // 完形填空选项
+								.getJSONArray("answer");
+						for (int j = 0; j < answerarray.length(); j++) {
+							JSONObject ob = answerarray.getJSONObject(j);
+							String contentStr = ob.getString("content");
+							if (content.equals(contentStr)) {
+								answer = ob.getString("answer");
+								break;
+							}
+						}
+					}
+					
 					String options = jsonobject2.getString("options");
 					String full_text = jsonobject2.getString("full_text");
 					JSONArray tagsarray = jsonobject2 // 当前卡片 已选中的 标签 id
@@ -462,42 +476,46 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 		}
 		String[] strarr;
 		switch (types2) {
-		case 0:
+		case 0:  //  "your_answer": "where;||;Where?", 
 			if (str.indexOf(";||;") != -1) {
 				strarr = str.split(";\\|\\|;");
 				for (int i = 0; i < strarr.length; i++) {
 					content += strarr[i] + " ";
 				}
-				content = content.substring(4, content.length() - 5);
+				content = content.substring(4, content.length() );
 			} else {
 				content = str.substring(0, str.lastIndexOf(";&&;"));
 			}
 			Log.i("asd", "正面听力case0:" + content);
 			return content;
-		case 1:
-			return str;
+		case 1:   //   "your_answer": "Dad;||;come;||;and;||;sit;||;here;||;", 
+			strarr = str.split(";\\|\\|;");
+			for (int i = 0; i < strarr.length; i++) {
+				content += strarr[i] + " ";
+			}
+			content = content.substring(4, content.length() );
+			return content;
 		case 2:
 			return str;
 		case 3:
 			return str;
-		case 4:
-			strarr = str.split("  ");
+		case 4:  // "your_answer": "333<=>555;||;555<=>333;||;444<=>444",   
+//			"your_answer": "</><=>%$&!@#$;||;%$&!@#$<=>***;||;***<=></>", 
+			strarr = str.split(";\\|\\|;");
 			for (int i = 0; i < strarr.length; i++) {
-				String[] strarr1 = strarr[i].split(" ");
-				for (int j = 0; j < strarr1.length; j++) {
-					content += strarr1[j] + " ";
-				}
-				content += "\n";
+				content += strarr[i].replace("<=>", "  ") + " \n";
 			}
-			return content.substring(4, content.length());
+			content = content.substring(4, content.length() );
+			return content;
 		case 5:
 			return str;
 		case 6:
-			strarr = str.split(" ");
+			strarr = str.split(";\\|\\|;");
 			for (int i = 0; i < strarr.length; i++) {
 				content += strarr[i] + " ";
 			}
-			return content.substring(4, content.length());
+			content = content.substring(4, content.length() );
+			return content;
 		}
 		return null;
 	}
@@ -512,18 +530,17 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 						if (fanzhuan) {
 							fanzhuan = false;
 							mindex = j1;
+							mediaplay.stop();
 							NoClick(page, j1);
 							applyRotation(0, 90, view);
 						}
-						// mindex = j1;
-						// NoClick(page, j1);
-						// applyRotation(0, 90, view);
 					}
 				});
 			}
 		}
 	}
 
+//	MISTAKE_TYPES_NAME = {0 => "默认", 1 => "读错",2 => '写错',3 => '选错'}
 	public String setWrong(String miskatype) {
 		switch (Integer.valueOf(miskatype)) {
 		case 1:
@@ -600,7 +617,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 		TextView wronganswer;
 		ImageView fontIv;
 		TextView rightanswer;
-		TextView youranswer;
+		TextView answer;
 		TextView rightanswers;
 		ViewGroup v = v1;
 		TextView bqtv; // 显示已添加的标签
@@ -627,15 +644,18 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 			wronganswer = (TextView) v.findViewById(R.id.youranswer);
 			fontIv = (ImageView) v.findViewById(R.id.fontIv);
 			rightanswer = (TextView) v.findViewById(R.id.rightanswer);
-			youranswer = (TextView) v.findViewById(R.id.answer);
-			reson.setText(setWrong(card.getMistake_types())); // 错误类型
-			if (card.getTypes().equals("0") || card.getTypes().equals("1")
-					|| card.getTypes().equals("4")) {
+			answer = (TextView) v.findViewById(R.id.answer);
+//			reson.setText(setWrong(card.getMistake_types())); // 错误类型
+			reson.setText(setWrong(card.getMistake_types())+card.getTypes()); // 错误类型
+			if (card.getTypes().equals("0") ) {
 				rightanswer.setVisibility(View.GONE);
-				youranswer.setVisibility(View.GONE);
+				answer.setVisibility(View.GONE);
 			} else {
 				rightanswer.setText("正确答案");
-				youranswer.setText(card.getAnswer());
+				answer.setText(card.getAnswer());
+				if ("null".equals(card.getAnswer())) {
+					answer.setText(setback(card.getContent(), card.getTypes()));
+				}
 			}
 
 			wronganswer.setText(checkAns(card.getYour_answer(), // 你的错误
@@ -671,9 +691,9 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 			String playerIP = IP + card.getResource_url();
 			reson.setText("原题:");
 			rightanswers.setText(setback(card.getContent(), card.getTypes()));
-			if (card.getTypes().equals("0") || card.getTypes().equals("1")
-					|| card.getTypes().equals("3")) {
-				cardbatread.setVisibility(View.GONE);
+			if (card.getTypes().equals("1")
+					|| card.getTypes().equals("0")) {
+				cardbatread.setVisibility(View.VISIBLE);
 			}
 			if (card.getTypes().equals("3")) {
 				if ((card.getContent().indexOf("<file>") != -1)) {
@@ -719,15 +739,16 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 			cardbatread.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
 					try {
+						mediaplay = new MediaPlayer();
 						mediaplay.setDataSource(IP2);
 						mediaplay.prepare();
 						mediaplay.start();
-						mediaplay
-								.setOnCompletionListener(new OnCompletionListener() {
-									public void onCompletion(MediaPlayer mp) {
-										mediaplay.release();
-									}
-								});
+//						mediaplay
+//								.setOnCompletionListener(new OnCompletionListener() {
+//									public void onCompletion(MediaPlayer mp) {
+//										mediaplay.release();
+//									}
+//								});
 					} catch (IllegalArgumentException e) {
 						e.printStackTrace();
 					} catch (SecurityException e) {
