@@ -305,8 +305,9 @@ public class ExerciseBookTool implements Urlinterface {
 		try {
 			JSONObject obj = new JSONObject(answer_history);
 			JSONObject js = obj.getJSONObject(key);
-			Log.i("aaa", js.toString());
+			Log.i("Ax", js.toString());
 			JSONArray arr = js.getJSONArray("questions");
+			Log.i("Ax", arr.length() + "ratio-arr-size");
 			if (arr.length() == 0) {
 				return -10;
 			}
@@ -327,6 +328,7 @@ public class ExerciseBookTool implements Urlinterface {
 		for (int i = 0; i < ratio.size(); i++) {
 			size += ratio.get(i);
 		}
+		Log.i("Ax", size + "--" + ratio.size() + "-ratio-size");
 		return size / ratio.size();
 	}
 

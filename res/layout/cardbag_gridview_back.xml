@@ -34,11 +34,13 @@
 
             <TextView
                 android:id="@+id/rightanswerb"
-                android:layout_width="wrap_content"
+                android:layout_width="300px"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/rightIv"
                 android:layout_marginLeft="25.64px"
                 android:layout_marginTop="20.1px"
+                android:ellipsize="end"
+                android:lines="4"
                 android:text="We can watch it together!Good!"
                 android:textColor="@color/quescontent"
                 android:textSize="32.15px" />
@@ -49,8 +51,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="25.46px"
-                android:layout_marginTop="26.8px"
-                android:src="@drawable/cardbatread" />
+                android:layout_marginTop="20px"
+                android:src="@drawable/cardbatread" 
+                android:visibility="gone"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"

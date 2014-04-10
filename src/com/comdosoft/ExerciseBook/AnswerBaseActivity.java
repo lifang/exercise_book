@@ -4,14 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -31,7 +29,6 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.comdosoft.ExerciseBook.pojo.AnswerBasePojo;
 import com.comdosoft.ExerciseBook.pojo.AnswerJson;
 import com.comdosoft.ExerciseBook.pojo.AnswerMyPojo;
@@ -171,6 +168,12 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		json = intent.getStringExtra("json");
 		path = intent.getStringExtra("path");
 		status = intent.getIntExtra("status", 2);
+
+		// 禁掉道具
+		if (status != 0) {
+			setTruePropEnd();
+			setTimePropEnd();
+		}
 	}
 
 	// 设置子布局View
@@ -204,6 +207,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		}
 	}
 
+	// 隐藏时间栏
 	public void setTimeGone() {
 		base_time_linearlayout.setVisibility(View.GONE);
 	}
@@ -233,6 +237,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		}
 	}
 
+	// 减时动画
 	public void startTimeFlash() {
 		base_time_flash.setVisibility(View.VISIBLE);
 		AlphaAnimation myAnimation_Alpha = new AlphaAnimation(1.0f, 0.0f);
@@ -372,13 +377,13 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 			}
 			break;
 		case R.id.base_propTrue:
-			if (eb.getTrue_number() > 0) {
-				rightAnswer();
-				PropJson(0, mQuestList.get(mQindex).get(mBindex)
-						.getBranch_questions_id());
-			} else {
-				Toast.makeText(getApplicationContext(), "道具数量不足!", 0).show();
-			}
+			// if (eb.getTrue_number() > 0) {
+			rightAnswer();
+			PropJson(0, mQuestList.get(mQindex).get(mBindex)
+					.getBranch_questions_id());
+			// } else {
+			// Toast.makeText(getApplicationContext(), "道具数量不足!", 0).show();
+			// }
 			break;
 		}
 	}
@@ -497,6 +502,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		return answer_boolean;
 	}
 
+	// 计算重做正确率
 	public void calculateRatio(int mRatio) {
 		if (status == 1) {
 			count++;
@@ -791,6 +797,8 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 				status = 1;
 				mQindex = 0;
 				mBindex = 0;
+				setTruePropEnd();
+				setTimePropEnd();
 				setUseTime(0);
 				setStart();
 				updateView();

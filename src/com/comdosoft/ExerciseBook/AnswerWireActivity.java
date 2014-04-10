@@ -24,7 +24,10 @@ import android.widget.Toast;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
-//2014年4月1日 10:45:06
+/**
+ * @作者 马龙
+ * @时间 2014-4-10 上午10:29:08
+ */
 public class AnswerWireActivity extends AnswerBaseActivity {
 
 	private int coordinateIndex = 0;
@@ -78,6 +81,11 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 		analysisJSON(json);
 
 		updateView();
+
+		// for (int i = 0; i < trueList.size(); i++) {
+		// Toast.makeText(getApplicationContext(),
+		// trueList.get(i)[0] + "--" + trueList.get(i)[1], 0).show();
+		// }
 
 	}
 
@@ -182,20 +190,21 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 		}
 
 		for (int i = 0; i < orderAnswerList.size(); i += 2) {
-			int leftIndex = 0;
+			int leftIndex = -1;
+			int rightIndex = -1;
 			for (int j = 0; j < orderAnswerList.size(); j++) {
 				if (answerList.get(i).equals(orderAnswerList.get(j))) {
 					leftIndex = j;
 				}
 			}
 
-			int index = 0;
 			for (int j = 0; j < orderAnswerList.size(); j++) {
-				if (answerList.get(i + 1).equals(orderAnswerList.get(j))) {
-					index = j;
+				if (answerList.get(i + 1).equals(orderAnswerList.get(j))
+						&& j != leftIndex) {
+					rightIndex = j;
 				}
 			}
-			trueList.add(new Integer[] { leftIndex, index });
+			trueList.add(new Integer[] { leftIndex, rightIndex });
 		}
 	}
 
@@ -265,11 +274,20 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 				String answer = orderAnswerList.get(left)
 						+ orderAnswerList.get(right);
 
+				boolean flag = false;
 				for (int j = 0; j < answerList.size(); j += 2) {
 					if ((answerList.get(j) + answerList.get(j + 1))
 							.equals(answer)) {
+						flag = true;
 						count++;
 					}
+				}
+
+				if (!flag) {
+					wireList.get(left).getTv()
+							.setTextColor(Color.rgb(227, 20, 39));
+					wireList.get(right).getTv()
+							.setTextColor(Color.rgb(227, 20, 39));
 				}
 
 				sb.append(orderAnswerList.get(left)).append("<=>")
@@ -423,18 +441,38 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 				break;
 			case R.id.base_check_linearlayout:
 				if (status != 2) {
-					if (coordinate.size() == answerList.size() / 2) {
-						coordinateIndex = 0;
-						check(0);
-						AnswerBasePojo aop = mQuestList.get(mQindex).get(
-								mBindex);
-						saveAnswerJson(sb.toString(), ratio,
-								aop.getQuestions_id(),
-								aop.getBranch_questions_id());
-						sb.delete(0, sb.length());
+					if (getCheckText().equals("检查")) {
+						if (coordinate.size() == answerList.size() / 2) {
+							if (mQindex == mQuestList.size() - 1
+									&& mBindex == mQuestList.get(mQindex)
+											.size() - 1) {
+								setCheckText("完成");
+							} else {
+								setCheckText("下一题");
+							}
+							coordinateIndex = 0;
+							check(0);
+						} else {
+							Toast.makeText(getApplicationContext(), "请连接未完成的题",
+									0).show();
+						}
 					} else {
-						Toast.makeText(getApplicationContext(), "请连接未完成的题", 0)
-								.show();
+						if (mQindex == mQuestList.size() - 1
+								&& mBindex == mQuestList.get(mQindex).size() - 1) {
+							setCheckText("完成");
+						} else {
+							setCheckText("下一题");
+						}
+						if (status == 0) {
+							AnswerBasePojo aop = mQuestList.get(mQindex).get(
+									mBindex);
+							saveAnswerJson(sb.toString(), ratio,
+									aop.getQuestions_id(),
+									aop.getBranch_questions_id());
+							sb.delete(0, sb.length());
+						} else {
+							calculateIndexAndUpdateView();
+						}
 					}
 				} else {
 					nextRecord();

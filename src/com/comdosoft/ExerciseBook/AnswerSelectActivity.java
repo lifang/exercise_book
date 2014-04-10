@@ -133,7 +133,7 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 	}
 
 	public void rightAnswer() {
-		if (status == 2) {
+		if (status == 0) {
 			AnswerBasePojo sp = mQuestList.get(mQindex).get(mBindex);
 			List<String> option = sp.getOption();
 			List<String> answer = sp.getAnswer();
