@@ -43,12 +43,10 @@ import com.google.gson.Gson;
 
 // 答题父类
 /**
-<<<<<<< HEAD
- * 作者: 张秀楠 时间：2014-4-10 上午10:41:29
-=======
+ * <<<<<<< HEAD 作者: 张秀楠 时间：2014-4-10 上午10:41:29 =======
+ * 
  * @作者 马龙
- * @时间 2014-4-9 下午6:22:33
->>>>>>> d8f9d91d1088ee4a65f16e8016b6fa7a84300f2f
+ * @时间 2014-4-9 下午6:22:33 >>>>>>> d8f9d91d1088ee4a65f16e8016b6fa7a84300f2f
  */
 public class AnswerBaseActivity extends Activity implements OnClickListener,
 		OnPreparedListener, Urlinterface {
@@ -177,7 +175,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 			setTimePropEnd();
 		}
 	}
-	
+
 	// 设置子布局View
 	public void setContentView(int layoutId) {
 		View middleView = getLayoutInflater().inflate(layoutId, null);
@@ -200,7 +198,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		if (type != 7) {
 			setUseTime(amp.getUse_time());
 			setType(amp.getStatus());
-			
+
 			if (status == 2) {
 				mRecoirdAnswer = amp.getAnswer();
 				mRecoirdRatio = amp.getRatio();
@@ -379,13 +377,13 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 			}
 			break;
 		case R.id.base_propTrue:
-			if (eb.getTrue_number() > 0) {
-				rightAnswer();
-				PropJson(0, mQuestList.get(mQindex).get(mBindex)
-						.getBranch_questions_id());
-			} else {
-				Toast.makeText(getApplicationContext(), "道具数量不足!", 0).show();
-			}
+			// if (eb.getTrue_number() > 0) {
+			rightAnswer();
+			PropJson(0, mQuestList.get(mQindex).get(mBindex)
+					.getBranch_questions_id());
+			// } else {
+			// Toast.makeText(getApplicationContext(), "道具数量不足!", 0).show();
+			// }
 			break;
 		}
 	}

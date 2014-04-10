@@ -181,7 +181,7 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		if (status == 2) {
 			et.setFocusable(false);
 			et.setFocusableInTouchMode(false);
-			et.setText(filterString(value));
+			et.setText(value);
 			et.setTextColor(Color.rgb(53, 207, 143));
 		}
 		et.setInputType(InputType.TYPE_TEXT_VARIATION_URI

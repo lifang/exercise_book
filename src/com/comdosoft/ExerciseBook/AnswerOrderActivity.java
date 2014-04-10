@@ -225,6 +225,11 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 		for (int i = 0; i < mAnswerList.size(); i++) {
 			sb.append(mAnswerList.get(i)).append(";||;");
 			mSb.append(mAnswerList.get(i));
+			if (mAnswerList.get(i).equals(answerArr[i])) {
+				mSubjectEditList.get(i).setTextColor(Color.rgb(53, 207, 143));
+			} else {
+				mSubjectEditList.get(i).setTextColor((Color.rgb(227, 20, 39)));
+			}
 		}
 		mAnswerStr = sb.toString();
 		mAnswerStr = mAnswerStr.substring(0, mAnswerStr.length() - 4);
@@ -263,7 +268,7 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 					EditText et = mSubjectEditList.get(mAnswerIndex++);
 					String text = answerList.get(index);
 					et.setText(text);
-					et.setBackgroundResource(R.drawable.answer_wire_item_check_style);
+					// et.setBackgroundResource(R.drawable.answer_wire_item_check_style);
 
 					TextView tv = mOptionTextList.get(index);
 					tv.setClickable(false);
@@ -296,8 +301,27 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 				break;
 			case R.id.base_check_linearlayout:
 				if (status != 2) {
-					if (mAnswerList.size() == answerList.size()) {
-						check();
+					if (getCheckText().equals("检查")) {
+						if (mAnswerList.size() == answerList.size()) {
+							if (mQindex == mQuestList.size() - 1
+									&& mBindex == mQuestList.get(mQindex)
+											.size() - 1) {
+								setCheckText("完成");
+							} else {
+								setCheckText("下一题");
+							}
+							check();
+						} else {
+							Toast.makeText(getApplicationContext(),
+									"请完成未选择的题!", 0).show();
+						}
+					} else {
+						if (mQindex == mQuestList.size() - 1
+								&& mBindex == mQuestList.get(mQindex).size() - 1) {
+							setCheckText("完成");
+						} else {
+							setCheckText("检查");
+						}
 						if (status == 0) {
 							AnswerBasePojo aop = mQuestList.get(mQindex).get(
 									mBindex);
@@ -307,9 +331,6 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 						} else {
 							calculateIndexAndUpdateView();
 						}
-					} else {
-						Toast.makeText(getApplicationContext(), "请完成未选择的题!", 0)
-								.show();
 					}
 				} else {
 					nextRecord();
