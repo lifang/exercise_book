@@ -43,8 +43,11 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 import com.google.gson.Gson;
 
-//2014年4月2日 15:24:51
 // 答题父类
+/**
+ * @作者 马龙
+ * @时间 2014-4-9 下午6:22:33
+ */
 public class AnswerBaseActivity extends Activity implements OnClickListener,
 		OnPreparedListener, Urlinterface {
 	public ExerciseBook eb;
@@ -59,8 +62,10 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	public int type = 0;
 	private int count = 0;
 	private int ratioSum = 0;
+	private boolean answer_boolean = false;
 	private boolean flag = true;
-	private String recordMes;
+	public boolean firstRatioFlag = true;
+	private String[] recordMesArr;
 	public String json;
 	public String path;
 	private String[] answerArr = new String[] { "你的作答: ", " ", "你的选择: ",
@@ -85,7 +90,6 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	private TextView base_time_flash;
 	private ImageView propTrue;
 	private ImageView propTime;
-	private boolean answer_boolean = false;
 	public AnswerMyPojo amp;
 	private Gson gson = new Gson();
 	private AnswerJson answerJson;
@@ -288,8 +292,8 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		propTrue.setClickable(false);
 	}
 
-	public String getRecordMes() {
-		return recordMes;
+	public String[] getRecordMes() {
+		return recordMesArr;
 	}
 
 	// 时间int秒数转string
@@ -395,12 +399,10 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 				setAccuracyAndUseTime(mRecoirdRatio.get(mRecordIndex),
 						amp.getUse_time());
 				if (mQuestionType == 0) {
-					recordMes = null;
-					String s[] = mRecoirdAnswer.get(mRecordIndex).split(";&&;");
-					if (s.length > 1) {
-						recordMes = s[1];
-					}
-					setMyAnswer(s[0].replaceAll(";\\|\\|;", " "));
+					String s[] = mRecoirdAnswer.get(mRecordIndex).split(
+							";\\|\\|;");
+					recordMesArr = s;
+					setMyAnswer(s[0]);
 				} else if (mQuestionType == 4) {
 					setMyAnswer(mRecoirdAnswer.get(mRecordIndex)
 							.replaceAll(";\\|\\|;", "    ")
@@ -410,7 +412,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 							";\\|\\|;", " "));
 				}
 
-				if (mRecordIndex < mRecoirdAnswer.size() - 1) {
+				if (mRecordIndex < mRecoirdAnswer.size() && mQuestionType != 3) {
 					mRecordIndex++;
 				}
 			} else {
@@ -492,10 +494,11 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		}
 	}
 
-	// 子类实现父类刷新视图方法
+	// 子类实现父类刷新视图
 	public void updateView() {
 	}
 
+	// 子类实现父类显示正确答案
 	public void rightAnswer() {
 	}
 
@@ -569,6 +572,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 
 		String str = gson.toJson(answerJson);
 		this.ratio = 0;
+		firstRatioFlag = true;
 		try {
 			ExerciseBookTool.writeFile(path, str);
 			uploadJSON(ap.getStatus());
