@@ -78,6 +78,7 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 		analysisJSON(json);
 
 		updateView();
+
 	}
 
 	public void updateView() {

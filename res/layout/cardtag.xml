@@ -63,6 +63,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textColor="@color/white"
+                android:padding="10px"
                 android:visibility="gone" />
         </LinearLayout>
     </LinearLayout>

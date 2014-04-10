@@ -1,5 +1,8 @@
 package com.comdosoft.ExerciseBook;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +23,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
-
 import cn.jpush.android.api.JPushInterface;
 
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
@@ -76,13 +78,21 @@ public class LoginActivity extends Activity implements OnClickListener,
 		mTencent = Tencent.createInstance(APP_ID, this.getApplicationContext());
 		mPd = new ProgressDialog(LoginActivity.this);
 		mPd.setMessage("正在登录...");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date curDate = new Date(System.currentTimeMillis());// 获取当前时间
+		String str = formatter.format(curDate);
 		sp = getSharedPreferences(SHARED, MODE_PRIVATE);
 		if (!sp.getString("user_id", "").equals("")
 				&& !sp.getString("school_class_id", "").equals("")) {
-			LoginActivity.this.finish();
-			Intent intent = new Intent(getApplicationContext(),
-					HomePageMainActivity.class);
-			startActivity(intent);
+			String validtime =  sp.getString("validtime", "");
+			Boolean vt = ExerciseBookTool.Comparison_Time(str, validtime);
+			if (vt) {  //  当前时间小于 有效期
+				LoginActivity.this.finish();
+				Intent intent = new Intent(getApplicationContext(),
+						HomePageMainActivity.class);
+				startActivity(intent);
+			}
+			
 		}
 	}
 
@@ -102,6 +112,7 @@ public class LoginActivity extends Activity implements OnClickListener,
 	public void analyzeJson(String json) {
 		try {
 			JSONObject jo = new JSONObject(json);
+//			{"class":{"tearcher_id":51,"tearcher_name":"ding","id":107,"period_of_validity":"2014-08-01 23:59:59","name":"小丁英语课堂"},"follow_microposts_id":[589,588,587,586,585,584,582,581,580,579,578,576,590,577],"microposts":{"page":1,"pages_count":2,"details_microposts":[{"content":"爸爸妈妈","user_types":1,"avatar_url":"\/avatars\/students\/2014-04\/student_73.jpg","new_created_at":"2014-04-08 16:48:12","follow_microposts_count":null,"name":"若相守","user_id":130,"reply_microposts_count":0,"micropost_id":683},{"content":"空军建军节啦","user_types":1,"avatar_url":"\/avatars\/students\/2014-04\/student_73.jpg","new_created_at":"2014-03-31 14:03:44","follow_microposts_count":null,"name":"若相守","user_id":130,"reply_microposts_count":50,"micropost_id":604},{"content":"出来","user_types":1,"avatar_url":"\/avatars\/students\/2014-04\/student_73.jpg","new_created_at":"2014-03-31 13:27:39","follow_microposts_count":null,"name":"若相守","user_id":130,"reply_microposts_count":15,"micropost_id":601},{"content":"哈哈还差哈哈","user_types":1,"avatar_url":"\/avatars\/students\/2014-04\/student_73.jpg","new_created_at":"2014-03-31 12:30:55","follow_microposts_count":null,"name":"若相守","user_id":130,"reply_microposts_count":13,"micropost_id":595},{"content":"20","user_types":0,"avatar_url":"\/avatars\/students\/2014-04\/student_17.jpg","new_created_at":"2014-03-31 12:13:31","follow_microposts_count":0,"name":"ding","user_id":115,"reply_microposts_count":10,"micropost_id":592},{"content":"19","user_types":0,"avatar_url":"\/avatars\/students\/2014-04\/student_17.jpg","new_created_at":"2014-03-31 12:12:33","follow_microposts_count":0,"name":"ding","user_id":115,"reply_microposts_count":3,"micropost_id":591},{"content":"18","user_types":0,"avatar_url":"\/avatars\/students\/2014-04\/student_17.jpg","new_created_at":"2014-03-31 12:12:12","follow_microposts_count":1,"name":"ding","user_id":115,"reply_microposts_count":3,"micropost_id":590},{"content":"17","user_types":0,"avatar_url":"\/avatars\/students\/2014-04\/student_17.jpg","new_created_at":"2014-03-31 12:11:43","follow_microposts_count":1,"name":"ding","user_id":115,"reply_microposts_count":0,"micropost_id":589},{"content":"16","user_types":0,"avatar_url":"\/avatars\/students\/2014-04\/student_17.jpg","new_created_at":"2014-03-31 12:10:52","follow_microposts_count":1,"name":"ding","user_id":115,"reply_microposts_count":0,"micropost_id":588},{"content":"15","user_types":0,"avatar_url":"\/avatars\/students\/2014-04\/student_17.jpg","new_created_at":"2014-03-31 12:10:39","follow_microposts_count":1,"name":"ding","user_id":115,"reply_microposts_count":0,"micropost_id":587},{"content":"14","user_types":0,"avatar_url":"\/avatars\/students\/2014-04\/student_17.jpg","new_created_at":"2014-03-31 12:10:02","follow_microposts_count":1,"name":"ding","user_id":115,"reply_microposts_count":0,"micropost_id":586},{"content":"13","user_types":0,"avatar_url":"\/avatars\/students\/2014-04\/student_17.jpg","new_created_at":"2014-03-31 12:09:40","follow_microposts_count":1,"name":"ding","user_id":115,"reply_microposts_count":0,"micropost_id":585},{"content":"12","user_types":0,"avatar_url":"\/avatars\/students\/2014-04\/student_17.jpg","new_created_at":"2014-03-31 12:05:58","follow_microposts_count":1,"name":"ding","user_id":115,"reply_microposts_count":0,"micropost_id":584},{"content":"11","user_types":0,"avatar_url":"\/avatars\/students\/2014-04\/student_17.jpg","new_created_at":"2014-03-31 11:59:20","follow_microposts_count":1,"name":"ding","user_id":115,"reply_microposts_count":0,"micropost_id":582},{"content":"10","user_types":0,"avatar_url":"\/avatars\/students\/2014-04\/student_17.jpg","new_created_at":"2014-03-31 11:59:01","follow_microposts_count":1,"name":"ding","user_id":115,"reply_microposts_count":0,"micropost_id":581},{"content":"9","user_types":0,"avatar_url":"\/avatars\/students\/2014-04\/student_17.jpg","new_created_at":"2014-03-31 11:58:31","follow_microposts_count":1,"name":"ding","user_id":115,"reply_microposts_count":0,"micropost_id":580},{"content":"8","user_types":0,"avatar_url":"\/avatars\/students\/2014-04\/student_17.jpg","new_created_at":"2014-03-31 11:56:32","follow_microposts_count":1,"name":"ding","user_id":115,"reply_microposts_count":0,"micropost_id":579},{"content":"7","user_types":0,"avatar_url":"\/avatars\/students\/2014-04\/student_17.jpg","new_created_at":"2014-03-31 11:56:17","follow_microposts_count":1,"name":"ding","user_id":115,"reply_microposts_count":0,"micropost_id":578},{"content":"6","user_types":0,"avatar_url":"\/avatars\/students\/2014-04\/student_17.jpg","new_created_at":"2014-03-31 11:54:41","follow_microposts_count":1,"name":"ding","user_id":115,"reply_microposts_count":0,"micropost_id":577},{"content":"5","user_types":0,"avatar_url":"\/avatars\/students\/2014-04\/student_17.jpg","new_created_at":"2014-03-31 11:54:28","follow_microposts_count":1,"name":"ding","user_id":115,"reply_microposts_count":0,"micropost_id":576}]},"student":{"id":73,"avatar_url":"\/avatars\/students\/2014-04\/student_73.jpg","user_id":130,"nickname":"dingdin","name":"若相守"},"notice":"登录成功！","status":"success"}
 			String status = jo.getString("status");
 			mes = jo.getString("notice");
 			if (status.equals("error")) {
@@ -118,6 +129,7 @@ public class LoginActivity extends Activity implements OnClickListener,
 
 				String school_class_id = class1.getString("id");
 				String school_class_name = class1.getString("name");
+				String validtime = class1.getString("period_of_validity");
 				Log.i("Ax", user_id + "----------------" + school_class_id);
 				SharedPreferences preferences = getSharedPreferences(SHARED,
 						Context.MODE_PRIVATE);
@@ -130,6 +142,7 @@ public class LoginActivity extends Activity implements OnClickListener,
 				editor.putString("nickname", nick_name);
 				editor.putString("school_class_id", school_class_id);
 				editor.putString("school_class_name", school_class_name);
+				editor.putString("validtime", validtime);
 				editor.commit();
 				eb.setClass_id(school_class_id);
 				eb.setUser_id(Integer.parseInt(user_id));

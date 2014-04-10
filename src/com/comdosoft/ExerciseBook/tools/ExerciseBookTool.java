@@ -41,6 +41,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -71,6 +72,19 @@ public class ExerciseBookTool implements Urlinterface {
 	private static int readTimeOut = 10000;
 	private static String requestEncoding = "UTF-8";
 
+	// 根据UnicodeBlock方法判断中文标点符号
+	public static boolean isChinesePunctuation(char c) {
+		Character.UnicodeBlock ub = Character.UnicodeBlock.of(c);
+		if (ub == Character.UnicodeBlock.GENERAL_PUNCTUATION
+				|| ub == Character.UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION
+				|| ub == Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS
+				|| ub == Character.UnicodeBlock.CJK_COMPATIBILITY_FORMS) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	// 过去answer中的时间
 	public static String getAnswerTime(String path) {
 		Gson gson = new Gson();
@@ -83,7 +97,7 @@ public class ExerciseBookTool implements Urlinterface {
 
 	// 比较时间大小
 	public static boolean Comparison_Time(String date1, String date2) {
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
 			Date dt1 = df.parse(date1);
 			Date dt2 = df.parse(date2);
@@ -169,8 +183,9 @@ public class ExerciseBookTool implements Urlinterface {
 			if (!file.exists()) {
 				file.createNewFile();
 				Log.i("linshi", path + "/student_" + uid + ".json");
-				AnswerJson answer = new AnswerJson(id, "0", getTimeIng(),
-						propList, new AnswerPojo("0", "", "-1", "-1", "0",
+				AnswerJson answer = new AnswerJson(id, "0",
+						"0000-00-00 00:00:00", propList, new AnswerPojo("0",
+								"", "-1", "-1", "0",
 								new ArrayList<Answer_QuestionsPojo>()),
 						new AnswerPojo("0", "", "-1", "-1", "0",
 								new ArrayList<Answer_QuestionsPojo>()),
@@ -301,7 +316,6 @@ public class ExerciseBookTool implements Urlinterface {
 		}
 		return size / ratio.size();
 	}
-
 
 	// 下载路径判断
 	public static boolean FileExist(String path, String filename) {
@@ -854,11 +868,16 @@ public class ExerciseBookTool implements Urlinterface {
 	 */
 	public static String divisionTime2(String timeStr) {
 		timeStr = timeStr.replace("-", "/");
-		int temp1 = timeStr.indexOf("T");
-		int temp2 = timeStr.lastIndexOf("+");
-		String s = timeStr.substring(temp1 + 1, temp2);
-		int temp3 = s.lastIndexOf(":");
-		return timeStr.substring(0, temp1) + "  " + s.substring(0, temp3);
+		if (timeStr.length() < 22) {
+			return timeStr;
+		} else {
+			int temp1 = timeStr.indexOf("T");
+			int temp2 = timeStr.lastIndexOf("+");
+			String s = timeStr.substring(temp1 + 1, temp2);
+			int temp3 = s.lastIndexOf(":");
+			return timeStr.substring(0, temp1) + "  " + s.substring(0, temp3);
+		}
+
 	}
 
 }

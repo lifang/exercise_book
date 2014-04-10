@@ -27,7 +27,6 @@ import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.speech.tts.TextToSpeech.OnUtteranceCompletedListener;
 import android.util.Log;
-import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -47,6 +46,9 @@ import com.comdosoft.ExerciseBook.tools.Soundex_Levenshtein;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 import com.google.gson.Gson;
 
+/**
+ * 作者: 张秀楠 时间：2014-4-9 上午11:49:11
+ */
 public class SpeakBeginActivity extends AnswerBaseActivity implements
 		Urlinterface, OnPreparedListener, OnCompletionListener, OnInitListener,
 		OnUtteranceCompletedListener, OnClickListener {
@@ -75,8 +77,8 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 	private List<Integer> ratio_list;
 	private String json;
 	private AnswerJson answerJson;
-	private String specified_time;
 	private int qid;
+	private boolean playFlag = false;
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			Intent intent = new Intent();
@@ -86,6 +88,8 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 			case 0:
 				index += 1;
 				PredicateLayout.removeAllViews();
+				Speak_type = false;
+				number = 0;
 				Log.i("aaa", branch_questions.get(index).getContent());
 				content = branch_questions.get(index).getContent();
 				SetTextView();
@@ -126,11 +130,9 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 		json = intent.getStringExtra("json");
 		int time = intent.getIntExtra("time", 0);
 		setUseTime(time);
-		specified_time = intent.getStringExtra("specified_time");
 		super.specified_time = intent.getIntExtra("specified_time", 0);
 		initialize();
 		SetTextView();
-		Display display = this.getWindowManager().getDefaultDisplay();
 	}
 
 	// 初始化
@@ -165,10 +167,37 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 		Intent intent = new Intent();
 		switch (v.getId()) {
 		case R.id.question_speak_img:// 播放音频
-			if (mTts != null) {
-				if (mTts.isSpeaking()) {
-					handler.sendEmptyMessage(8);
-					onPause();
+			if (branch_questions.get(index).getUrl() != "null") {
+				path = eb.getPath() + "/"
+						+ branch_questions.get(index).getUrl();
+				if (player.isPlaying()) {// 正在播放
+					stop();
+				} else {
+					if (playFlag) {
+						handler.sendEmptyMessage(7);
+						player.start();
+					} else {
+						playFlag = true;
+						prodialog = new ProgressDialog(SpeakBeginActivity.this);
+						prodialog.setCanceledOnTouchOutside(false);
+						prodialog.setMessage("正在缓冲...");
+						prodialog.show();
+						new Thread(new setPlay()).start();
+					}
+				}
+			} else {// 如果音频为空 就使用TTS朗读
+				if (mTts != null) {
+					if (mTts.isSpeaking()) {
+						handler.sendEmptyMessage(8);
+						onPause();
+					} else {
+						handler.sendEmptyMessage(7);
+						Intent checkIntent = new Intent();
+						checkIntent
+								.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
+						startActivityForResult(checkIntent,
+								REQ_TTS_STATUS_CHECK);
+					}
 				} else {
 					handler.sendEmptyMessage(7);
 					Intent checkIntent = new Intent();
@@ -176,12 +205,6 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 							.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
 					startActivityForResult(checkIntent, REQ_TTS_STATUS_CHECK);
 				}
-			} else {
-				handler.sendEmptyMessage(7);
-				Intent checkIntent = new Intent();
-				checkIntent
-						.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
-				startActivityForResult(checkIntent, REQ_TTS_STATUS_CHECK);
 			}
 			break;
 
@@ -248,13 +271,16 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 				ok_speak = new HashMap<Integer, String>();// 用于记录正确的词
 				ArrayList<String> results = data
 						.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-
-				String speak = results.get(0);// 用户语音返回的字符串
+				Log.i("suanfa", "->" + results);
+				// String speak = getSpeakStr(results);// 用户语音返回的字符串
+				String speak = results.get(0);
 				Log.i("suanfa", "语音返回--->" + speak);
 				str_list = new ArrayList<String>();
 				content = content.replaceAll(
-						"(?i)[^a-zA-Z0-9\u4E00-\u9FA5\\s]", "");
-				;// 去除标点符号
+						"(?i)[^a-zA-Z0-9\u4E00-\u9FA5\\s]", "");// 去除标点符号
+				speak = speak
+						.replaceAll("(?i)[^a-zA-Z0-9\u4E00-\u9FA5\\s]", "");// 去除标点符号
+				Log.i("suanfa", "朗读答案->" + speak);
 				content = content.replaceAll("  ", " ");
 				String[] ok_arr = content.split(" ");
 				Log.i("suanfa", "正确答案->" + content);
@@ -268,9 +294,6 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 				Log.i("suanfa", code_list.size() + "");
 				if (code_list.size() > 0) {
 					for (int i = 0; i < code_list.size(); i++) {
-						// Log.i(tag, str_list.get(code_list.get(i)[0]) +
-						// "->相似度:"
-						// + code_list.get(i)[1]);
 						if (code_list.get(i)[1] >= 7) {
 							ok_speak.put(code_list.get(i)[0],
 									ok_arr[code_list.get(i)[0]]);
@@ -279,11 +302,9 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 						} else {
 							if (!error_str
 									.contains(ok_arr[code_list.get(i)[0]])) {
-								Log.i("aaa", "1");
 								error_str += ok_arr[code_list.get(i)[0]]
 										+ ";||;";
 							}
-							Log.i("aaa", "1");
 							text_list.get(code_list.get(i)[0]).setTextColor(
 									getResources().getColor(R.color.juhuang));
 						}
@@ -309,8 +330,10 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 					Speak_type = false;
 				}
 
-				ratio = (ok_speak.size() / ok_arr.length) * 100;
-				Log.i("aaa", ratio + "");
+				if (number == 1) {
+					ratio = (ok_speak.size() / ok_arr.length) * 100;
+					Log.i("aaa", ratio + "");
+				}
 			} else {
 				number -= 1;
 			}
@@ -366,6 +389,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 				eb.setQuestion_item(0);
 				intent.putExtra("path", path);
 				intent.putExtra("json", json);
+				intent.putExtra("status", 1);
 				intent.setClass(SpeakBeginActivity.this,
 						SpeakPrepareActivity.class);
 				startActivity(intent);
@@ -376,39 +400,38 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
-	//
-	// class setPlay implements Runnable {
-	// public void run() {
-	// play(path);
-	// }
-	// }
-	//
-	// /**
-	// * 播放音乐
-	// *
-	// * @param playPosition
-	// */
-	// private void play(String path) {
-	// try {
-	// Log.i("linshi", path + "/" + index);
-	// player.reset();// 把各项参数恢复到初始状态
-	// /**
-	// * 通过MediaPlayer.setDataSource()
-	// * 的方法,将URL或文件路径以字符串的方式传入.使用setDataSource ()方法时,要注意以下三点:
-	// * 1.构建完成的MediaPlayer 必须实现Null 对像的检查.
-	// * 2.必须实现接收IllegalArgumentException 与IOException
-	// * 等异常,在很多情况下,你所用的文件当下并不存在. 3.若使用URL 来播放在线媒体文件,该文件应该要能支持pragressive
-	// * 下载.
-	// */
-	// player.setDataSource(path);
-	// player.prepare();// 进行缓冲
-	// player.setOnPreparedListener(this);
-	// player.setOnCompletionListener(this);
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// }
-	// }
-	//
+	class setPlay implements Runnable {
+		public void run() {
+			play(path);
+		}
+	}
+
+	/**
+	 * 播放音乐
+	 * 
+	 * @param playPosition
+	 */
+	private void play(String path) {
+		try {
+			Log.i("linshi", path + "/" + index);
+			player.reset();// 把各项参数恢复到初始状态
+			/**
+			 * 通过MediaPlayer.setDataSource()
+			 * 的方法,将URL或文件路径以字符串的方式传入.使用setDataSource ()方法时,要注意以下三点:
+			 * 1.构建完成的MediaPlayer 必须实现Null 对像的检查.
+			 * 2.必须实现接收IllegalArgumentException 与IOException
+			 * 等异常,在很多情况下,你所用的文件当下并不存在. 3.若使用URL 来播放在线媒体文件,该文件应该要能支持pragressive
+			 * 下载.
+			 */
+			player.setDataSource(path);
+			player.prepare();// 进行缓冲
+			player.setOnPreparedListener(this);
+			player.setOnCompletionListener(this);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public void onPrepared(MediaPlayer mp) {
 		handler.sendEmptyMessage(9);
 		handler.sendEmptyMessage(7);
@@ -468,7 +491,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 	public void onInit(int status) {
 		if (status == TextToSpeech.SUCCESS) {
 			int result = mTts.setLanguage(Locale.US);
-			mTts.setSpeechRate(0.5f);
+			mTts.setSpeechRate(0.8f);
 			// 设置发音语言
 			if (result == TextToSpeech.LANG_MISSING_DATA
 					|| result == TextToSpeech.LANG_NOT_SUPPORTED)
@@ -551,6 +574,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 			int type;
 
 			if (Speak_type == true || number >= 4) {
+				stop();
 				String answer_history = ExerciseBookTool
 						.getAnswer_Json_history(path);
 				try {
@@ -562,10 +586,12 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 					} else {
 						type = Again();
 					}
+
 					calculateRatio(ratio);
 					Log.i("aaa", type + "-type");
 					switch (type) {// 0为下一小题 1为全部做完 2为本小题做完
 					case 0:
+						error_str = "";
 						handler.sendEmptyMessage(0);
 						break;
 					case 1:
@@ -613,6 +639,15 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 		}
 		return type;
 	}
+
+	// public String getSpeakStr(ArrayList<String> str) {
+	// for (int i = 0; i < str.size(); i++) {
+	// if (ExerciseBookTool.isChinesePunctuation(str.get(i))) {
+	// return str.get(i);
+	// }
+	// }
+	// return "";
+	// }
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {

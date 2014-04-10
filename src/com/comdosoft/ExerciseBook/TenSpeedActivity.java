@@ -50,7 +50,6 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 	private Gson gson;
 	private int branch_item;
 	private int status;
-	private boolean Check = false;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -88,6 +87,7 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 		// setTimePropEnd();// 禁用道具
 		// setTruePropEnd();// 禁用道具
 		// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
+		setCheckText("下一题");
 		this.mQuestionType = 2;
 		eb = (ExerciseBook) getApplication();
 		initialize();
@@ -251,9 +251,17 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 			break;
 		case R.id.base_check_linearlayout:
 			if (img_index >= 0) {
-				if (Check) {
-					Check = false;
-					setCheckText("检查");
+				if (user_select.equals("")) {
+					Toast.makeText(this, "请选择答案!", Toast.LENGTH_SHORT).show();
+				} else {
+					if (user_select.equals(branch_questions.get(index)
+							.getAnwser())) {
+						user_boolean = 100;
+						MyPlayer(true);
+					} else {
+						user_boolean = 0;
+						MyPlayer(false);
+					}
 					img_index -= 1;
 					String answer_history = ExerciseBookTool
 							.getAnswer_Json_history(path);
@@ -281,22 +289,6 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 						break;
 					}
 					user_select = "";
-				} else {
-					if (user_select.equals("")) {
-						Toast.makeText(this, "请选择答案!", Toast.LENGTH_SHORT)
-								.show();
-					} else {
-						Check = true;
-						if (user_select.equals(branch_questions.get(index)
-								.getAnwser())) {
-							user_boolean = 100;
-							MyPlayer(true);
-						} else {
-							user_boolean = 0;
-							MyPlayer(false);
-						}
-						setCheckText("下一个");
-					}
 				}
 			}
 			break;
@@ -311,8 +303,7 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 					one_btn.setBackgroundResource(R.drawable.loginbtn_hui);
 					two_btn.setBackgroundResource(R.drawable.loginbtn_lv);
 				}
-				Check = true;
-				setCheckText("下一个");
+				user_select = branch_questions.get(index).getAnwser();
 				PropJson(0, branch_questions.get(index).getId());
 				Toast.makeText(TenSpeedActivity.this, "使用成功!",
 						Toast.LENGTH_SHORT).show();

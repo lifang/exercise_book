@@ -155,7 +155,17 @@ public class HomepageMyselfActivity extends Activity implements
 		school_class_id = preferences.getString("school_class_id", null);
 
 		initialize();  //  初始化参数
+		page = 1;
 
+//			if (ExerciseBookTool.isConnect(HomepageMyselfActivity.this)) {
+//				prodialog = new ProgressDialog(HomepageMyselfActivity.this);
+//				prodialog.setMessage(ExerciseBookParams.PD_CLASS_INFO);
+//				prodialog.setCanceledOnTouchOutside(false);
+//				prodialog.show();
+//				class_button_myself();
+//			} else {
+//				handler.sendEmptyMessage(7);
+//			}
 	}
 
 	protected void onResume() {
@@ -706,7 +716,7 @@ public class HomepageMyselfActivity extends Activity implements
 				String name = o.getString("name");
 				String content = o.getString("content");
 				String avatar_url = o.getString("avatar_url");
-				String created_at = o.getString("created_at");
+				String created_at = o.getString("new_created_at");
 				String careCount = o.getString("follow_microposts_count"); // 关注数
 				if (careCount.equals("null")) {
 					careCount = "0";
@@ -756,7 +766,7 @@ public class HomepageMyselfActivity extends Activity implements
 						String reciver_name = o.getString("reciver_name");
 						// String reciver_avatar_url = o
 						// .getString("reciver_avatar_url");
-						String created_at = o.getString("created_at");
+						String created_at = o.getString("new_created_at");
 						Child_Micropost child = new Child_Micropost(id,
 								sender_id, sender_types, sender_name,
 								sender_avatar_url, content, reciver_name,
@@ -878,7 +888,7 @@ public class HomepageMyselfActivity extends Activity implements
 									String reciver_name = o
 											.getString("reciver_name");
 									String created_at = o
-											.getString("created_at");
+											.getString("new_created_at");
 									Child_Micropost child = new Child_Micropost(
 											id, sender_id, sender_types,
 											sender_name, sender_avatar_url,
@@ -1178,7 +1188,10 @@ public class HomepageMyselfActivity extends Activity implements
 			}
 		};
 		if (ExerciseBookTool.isConnect(HomepageMyselfActivity.this)) {
-
+			SharedPreferences preferences = getSharedPreferences(SHARED,
+					Context.MODE_PRIVATE);
+			id = preferences.getString("id", "73");
+			school_class_id = preferences.getString("school_class_id", "83");
 			thread.start();
 		} else {
 			mPullToRefreshView.onHeaderRefreshComplete();

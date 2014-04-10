@@ -54,6 +54,8 @@ public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 	private List<Branch_AnswerPoJo> Branch_list = new ArrayList<Branch_AnswerPoJo>();
 	private Gson gson;
 	private AnswerPojo answer;
+	private TextView spinner;
+	private int select_item;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -71,7 +73,6 @@ public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 			}
 		};
 	};
-	private TextView spinner;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -107,26 +108,32 @@ public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 	}
 
 	private void setTextView() {
-		str = content.split("\\[\\[sign\\]\\]");
+		content = content.replaceAll("\\[\\[sign\\]\\]", " [[sign]] ");
+		Log.i("suanfa", content + "==");
+		content = content.replaceAll("\\s", " ");
+		Log.i("suanfa", content + "==");
+		str = content.split(" ");
 		for (int i = 0; i < str.length; i++) {
-			View view1 = View.inflate(this, R.layout.cloze_view, null);
-			TextView text = (TextView) view1.findViewById(R.id.tv);
-			text.setText(str[i].toString());
-			spinner = (TextView) view1.findViewById(R.id.spinner);
+			View view1;
 
-			if (i != str.length - 1) {
-				String Opption = cloze.getList().get(i).getOpption();
+			if (str[i].equals("[[sign]]")) {
+				view1 = View.inflate(this, R.layout.text_spinner, null);
+				spinner = (TextView) view1.findViewById(R.id.spinner);
+				String Opption = cloze.getList().get(select_item).getOpption();
 				final String[] Opption_str = Opption.split(";\\|\\|;");
 				spinner.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {
-						Log.i("aaa", "---");
 						showWindow(spinner, Opption_str);
 					}
 				});
-				spinner.setText(cloze.getList().get(i).getAnswer());
-			}
-			if (i == str.length - 1) {
-				spinner.setVisibility(View.GONE);
+				spinner.setText(cloze.getList().get(select_item).getAnswer());
+				if (select_item + 1 < cloze.getList().size()) {
+					select_item += 1;
+				}
+			} else {
+				view1 = View.inflate(this, R.layout.cloze_view, null);
+				TextView text = (TextView) view1.findViewById(R.id.tv);
+				text.setText(str[i].toString());
 			}
 			myLayout.addView(view1);
 		}

@@ -28,7 +28,10 @@ import com.comdosoft.ExerciseBook.pojo.AnswerBasePojo;
 import com.comdosoft.ExerciseBook.pojo.AnswerSelectItemPojo;
 import com.comdosoft.ExerciseBook.tools.AnswerTools;
 
-//2014年4月4日 10:16:16
+/**
+ * @作者 马龙
+ * @时间 2014-4-9 下午4:28:58
+ */
 public class AnswerSelectActivity extends AnswerBaseActivity implements
 		OnItemClickListener, OnClickListener, OnPreparedListener {
 
@@ -69,13 +72,6 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 		if (status != 2) {
 			listView.setOnItemClickListener(this);
 		}
-		// if (amp.getStatus() == 1 && status > 1) {
-		// selectAdapter.setOptionAndAnswerList(1, answerOption, mQuestList
-		// .get(mQindex).get(mBindex).getAnswer());
-		// } else {
-		// listView.setOnItemClickListener(this);
-		// }
-		// listView.setAdapter(selectAdapter);
 		listView.setDividerHeight(10);
 		updateView();
 	}
@@ -112,17 +108,10 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 	public int check() {
 		int count = 0;
 		List<String> arr = mQuestList.get(mQindex).get(mBindex).getAnswer();
-		// List<String> option =
-		// mQuestList.get(mQindex).get(mBindex).getOption();
 		Iterator<Entry<Integer, String>> it = checkMap.entrySet().iterator();
 		while (it.hasNext()) {
 			String answer = it.next().getValue();
 			mAnswer.append(answer).append(";||;");
-			// for (int i = 0; i < option.size(); i++) {
-			// if (answer.equals(option.get(i))) {
-			// mAnswer.append(letterArr[i]).append(";||;");
-			// }
-			// }
 			for (int j = 0; j < arr.size(); j++) {
 				if (answer.equals(arr.get(j))) {
 					count++;
@@ -219,10 +208,20 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 			selectAdapter.setOptionList(answerOption);
 		}
 
+		selectAdapter.setStatus(0);
 		selectAdapter.notifyDataSetChanged();
 		listView.setAdapter(selectAdapter);
 		setSelectType(sp.getType(), sp.getContent());
 		checkMap.clear();
+	}
+
+	public void showSelectAnswer() {
+		AnswerBasePojo sp = mQuestList.get(mQindex).get(mBindex);
+		selectAdapter.setCheckMap(checkMap);
+		selectAdapter.setStatus(1);
+		selectAdapter.setOptionAndAnswerList(0, sp.getOption(), sp.getAnswer());
+		selectAdapter.notifyDataSetChanged();
+		listView.setAdapter(selectAdapter);
 	}
 
 	@Override
@@ -230,20 +229,37 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 		switch (v.getId()) {
 		case R.id.base_check_linearlayout:
 			if (status != 2) {
-				if (checkMap.size() == 0) {
-					Toast.makeText(getApplicationContext(), "请选择答案!", 0).show();
+				if (getCheckText().equals("检查")) {
+					if (checkMap.size() == 0) {
+						Toast.makeText(getApplicationContext(), "请选择答案!", 0)
+								.show();
+					} else {
+						if (mQindex == mQuestList.size() - 1
+								&& mBindex == mQuestList.get(mQindex).size() - 1) {
+							setCheckText("完成");
+						} else {
+							setCheckText("下一题");
+						}
+						switch (check()) {
+						case 0:
+							ratio = 100;
+							MyPlayer(true);
+							break;
+						case 1:
+							MyPlayer(false);
+							break;
+						case 2:
+							MyPlayer(false);
+							break;
+						}
+						showSelectAnswer();
+					}
 				} else {
-					switch (check()) {
-					case 0:
-						ratio = 100;
-						MyPlayer(true);
-						break;
-					case 1:
-						MyPlayer(false);
-						break;
-					case 2:
-						MyPlayer(false);
-						break;
+					if (mQindex == mQuestList.size() - 1
+							&& mBindex == mQuestList.get(mQindex).size() - 1) {
+						setCheckText("完成");
+					} else {
+						setCheckText("检查");
 					}
 					if (status == 0) {
 						AnswerBasePojo aop = mQuestList.get(mQindex).get(

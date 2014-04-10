@@ -38,6 +38,7 @@ import com.comdosoft.ExerciseBook.pojo.AnswerMyPojo;
 import com.comdosoft.ExerciseBook.pojo.AnswerPojo;
 import com.comdosoft.ExerciseBook.pojo.Answer_QuestionsPojo;
 import com.comdosoft.ExerciseBook.pojo.Branch_AnswerPoJo;
+import com.comdosoft.ExerciseBook.pojo.PropPojo;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
@@ -97,6 +98,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	public ProgressDialog prodialog;
 	public int index = 0;
 	private MediaPlayer player;
+	private String updated_time = "0000-00-00 00:00:00";
 	private Handler mHandler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -124,6 +126,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 					ratioSum = 0;
 					count = 0;
 				}
+				intent.putExtra("status", status);
 				intent.putExtra("use_time", getUseTime());// 用户使用的时间
 				intent.putExtra("specified_time", specified_time);// 任务基础时间
 				intent.setClass(AnswerBaseActivity.this, WorkEndActivity.class);
@@ -388,6 +391,18 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		}
 	}
 
+	public void setUpdateJson() {
+		String answer_history = ExerciseBookTool.getAnswer_Json_history(path);
+		answerJson = gson.fromJson(answer_history, AnswerJson.class);
+		answerJson.update = updated_time;
+		String str = gson.toJson(answerJson);
+		try {
+			ExerciseBookTool.writeFile(path, str);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	// 切换下一历史记录
 	public void nextRecord() {
 		if (mRecoirdRatio != null && mRecoirdAnswer != null) {
@@ -425,6 +440,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 
 	public boolean Finish_Json() {
 		new Thread(new Runnable() {
+
 			public void run() {
 				MultipartEntity entity = new MultipartEntity();
 				try {
@@ -438,9 +454,12 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 							+ eb.getWork_id() + "/" + path);
 					String answer_json = ExerciseBookTool.sendPhostimg(
 							finish_question_packge, entity);
+					Log.i("suanfa", answer_json);
 					if (!answer_json.equals("")) {
-						if (new JSONObject(answer_json).getString("status")
-								.equals("success")) {
+						JSONObject obj = new JSONObject(answer_json);
+						if (obj.getString("status").equals("success")) {
+							updated_time = obj.getString("updated_time");
+							setUpdateJson();
 							answer_boolean = true;
 							Log.i("suanfa", answer_boolean + "--" + index);
 							if (index == 0) {// 0表示退出
@@ -448,10 +467,11 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 							} else {
 								mHandler.sendEmptyMessage(4);
 							}
+							Del_Prop();// 清除道具列表
 						}
 					}
 				} catch (Exception e) {
-					mHandler.sendEmptyMessage(2);
+					// mHandler.sendEmptyMessage(2);
 				}
 			}
 		}).start();
@@ -463,6 +483,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 			count++;
 			ratioSum = ratioSum + mRatio;
 			ratio = 0;
+			firstRatioFlag = true;
 		}
 	}
 
@@ -710,6 +731,19 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		String str = gson.toJson(answerJson);
 		try {
 			ExerciseBookTool.writeFile(path, str);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void Del_Prop() {
+		String answer_history = ExerciseBookTool.getAnswer_Json_history(path);
+		answerJson = gson.fromJson(answer_history, AnswerJson.class);
+		answerJson.props = new ArrayList<PropPojo>();
+		String str = gson.toJson(answerJson);
+		try {
+			ExerciseBookTool.writeFile(path, str);
+			// uploadJSON(ap.getStatus());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

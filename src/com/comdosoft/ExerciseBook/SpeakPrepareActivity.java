@@ -66,7 +66,6 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 	private HashMap<String, String> params = new HashMap<String, String>();
 	public String sdpath = Environment.getExternalStorageDirectory() + "/";
 	public String path = "";
-	private int specified_time;
 	private int questions_item;
 	private int branch_item;
 	private int mystatus;
@@ -267,14 +266,12 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 		if (json != "") {
 			try {
 				JSONObject obj = new JSONObject(json);
-				JSONObject time_limit = obj.getJSONObject("reading");
-				questions_item = time_limit.getInt("questions_item");
-				branch_item = time_limit.getInt("branch_item");
-				use_time = time_limit.getInt("use_time");
-				specified_time = time_limit.getInt("specified_time");
-				setStart();
+				JSONObject reading = obj.getJSONObject("reading");
+				questions_item = reading.getInt("questions_item");
+				branch_item = reading.getInt("branch_item");
+				use_time = reading.getInt("use_time");
 				Log.i("aaa", specified_time + "--" + branch_item);
-				JSONArray questions = time_limit.getJSONArray("questions");
+				JSONArray questions = reading.getJSONArray("questions");
 				if (questions.length() > 0) {
 					for (int i = 0; i < questions.length(); i++) {
 						JSONObject jo = questions.getJSONObject(i);
@@ -310,23 +307,33 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 	}
 
 	public void onclicks(View v) {
-		// boolean staick = false;
-		// if (ExerciseBookTool.isConnect(getApplicationContext())) {
-		// mp3List = new ArrayList<String>();
-		// for (int i = 0; i < questionlist.size(); i++) {
-		// if (questionlist.get(i).getUrl() == "") {
-		// staick = true;
-		// }
-		// mp3List.add(IP + questionlist.get(i).getUrl());
-		// }
-		// 从文件系统播放
-		// if (staick) {
-		if (mTts != null) {
-			if (mTts.isSpeaking()) {
-				mTts_static = false;
-				handler.sendEmptyMessage(5);
-				handler.sendEmptyMessage(10);
-				onPause();
+		boolean staick = false;
+		mp3List = new ArrayList<String>();
+		for (int i = 0; i < questionlist.size(); i++) {
+			if (questionlist.get(i).getUrl() == "null") {
+				staick = true;
+			}
+			mp3List.add(eb.getPath() + "/" + questionlist.get(i).getUrl());
+		}
+		// 使用tts播放
+		if (staick) {
+			if (mTts != null) {
+				if (mTts.isSpeaking()) {
+					mTts_static = false;
+					handler.sendEmptyMessage(5);
+					handler.sendEmptyMessage(10);
+					onPause();
+				} else {
+					mTts_static = true;
+					handler.sendEmptyMessage(4);
+					index = 0;
+					handler.sendEmptyMessage(9);
+					// 检查TTS数据是否已经安装并且可用
+					Intent checkIntent = new Intent();
+					checkIntent
+							.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
+					startActivityForResult(checkIntent, REQ_TTS_STATUS_CHECK);
+				}
 			} else {
 				mTts_static = true;
 				handler.sendEmptyMessage(4);
@@ -339,38 +346,23 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 				startActivityForResult(checkIntent, REQ_TTS_STATUS_CHECK);
 			}
 		} else {
-			mTts_static = true;
-			handler.sendEmptyMessage(4);
-			index = 0;
-			handler.sendEmptyMessage(9);
-			// 检查TTS数据是否已经安装并且可用
-			Intent checkIntent = new Intent();
-			checkIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
-			startActivityForResult(checkIntent, REQ_TTS_STATUS_CHECK);
+			if (player.isPlaying()) {// 暂停播放
+				stop();
+			} else {
+				if (mp3Index >= mp3List.size()) {
+					mp3Index = 0;
+					handler.sendEmptyMessage(7);
+					new Thread(new setPlay()).start();
+				} else if (playFlag) {
+					handler.sendEmptyMessage(4);
+					player.start();
+				} else {
+					playFlag = true;
+					handler.sendEmptyMessage(7);
+					new Thread(new setPlay()).start();
+				}
+			}
 		}
-		// }
-		// else {
-		// if (player.isPlaying()) {// 暂停播放
-		// stop();
-		// } else {
-		// if (mp3Index >= mp3List.size()) {
-		// mp3Index = 0;
-		// handler.sendEmptyMessage(7);
-		// new Thread(new setPlay()).start();
-		// } else if (playFlag) {
-		// handler.sendEmptyMessage(4);
-		// player.start();
-		// } else {
-		// playFlag = true;
-		// handler.sendEmptyMessage(7);
-		// new Thread(new setPlay()).start();
-		// }
-		// }
-		// }
-		// } else {
-		// Toast.makeText(getApplicationContext(),
-		// ExerciseBookParams.INTERNET, Toast.LENGTH_SHORT).show();
-		// }
 	}
 
 	/**
@@ -381,7 +373,7 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 	class setPlay implements Runnable {
 		public void run() {
 			index = 0;
-			Log.i("aaa", index + "-index");
+			Log.i("aaa", index + "-index-" + mp3List.get(mp3Index));
 			play(mp3List.get(mp3Index));
 		}
 	}
@@ -446,7 +438,7 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 	public void onInit(int status) {
 		if (status == TextToSpeech.SUCCESS) {
 			int result = mTts.setLanguage(Locale.US);
-			mTts.setSpeechRate(0.5f);
+			mTts.setSpeechRate(0.8f);
 
 			// 设置发音语言
 			if (result == TextToSpeech.LANG_MISSING_DATA

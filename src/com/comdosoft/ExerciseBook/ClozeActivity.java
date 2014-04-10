@@ -12,6 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Environment;
@@ -67,6 +68,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 	private List<TextView> tv_list;
 	private boolean Check = false;
 	private PopupWindow popupWindow;
+	private int select_item = 0;
 	private static final String regEx_html = "<[^>]+>";
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -94,10 +96,12 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		eb = (ExerciseBook) getApplication();
 		// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
 		super.mQuestionType = 5;
+		setStart();
 		// super.type = 0;
 		findViewById(R.id.base_back_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_propTrue).setOnClickListener(this);
+		findViewById(R.id.base_propTime).setOnClickListener(this);
 
 		gson = new Gson();
 		initialize();
@@ -141,29 +145,36 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 	}
 
 	private void setTextView() {
-		str = content.split("\\[\\[sign\\]\\]");
+		content = content.replaceAll("\\[\\[sign\\]\\]", " [[sign]] ");
+		Log.i("suanfa", content + "==");
+		content = content.replaceAll("\\s", " ");
+		Log.i("suanfa", content + "==");
+		str = content.split(" ");
 		user_select = new HashMap<Integer, String>();
 		tv_list = new ArrayList<TextView>();
 		for (int i = 0; i < str.length; i++) {
-			View view1 = View.inflate(this, R.layout.cloze_view, null);
-			TextView text = (TextView) view1.findViewById(R.id.tv);
-			text.setText(str[i].toString());
-			final TextView spinner = (TextView) view1
-					.findViewById(R.id.spinner);
-			final int item = i;
-			if (i != str.length - 1) {
-				String Opption = cloze.getList().get(i).getOpption();
+			View view1;
+			if (str[i].equals("[[sign]]")) {
+				view1 = View.inflate(this, R.layout.text_spinner, null);
+				final TextView spinner = (TextView) view1
+						.findViewById(R.id.spinner);
+				String Opption = cloze.getList().get(select_item).getOpption();
 				final String[] Opption_str = Opption.split(";\\|\\|;");
+				final int item = select_item;
 				spinner.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {
+						Log.i("suanfa", "item:" + item);
 						showWindow(spinner, Opption_str, item);
 					}
 				});
-			}
-			if (i == str.length - 1) {
-				spinner.setVisibility(View.GONE);
-			} else {
+				if (select_item + 1 < cloze.getList().size()) {
+					select_item += 1;
+				}
 				tv_list.add(spinner);
+			} else {
+				view1 = View.inflate(this, R.layout.cloze_view, null);
+				TextView text = (TextView) view1.findViewById(R.id.tv);
+				text.setText(str[i].toString());
 			}
 			myLayout.addView(view1);
 		}
@@ -233,7 +244,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		answerJson.cloze.setUpdate_time(ExerciseBookTool.getTimeIng());
 		int q_item = Integer.valueOf(answerJson.cloze.getQuestions_item());
 		int b_item = Integer.valueOf(answerJson.cloze.getBranch_item());
-		Log.i("aaa", b_item + "/" + q_item);
+		Log.i("aaa", "--");
 
 		b_item += 1;
 		answerJson.cloze.setBranch_item(b_item + "");
@@ -244,13 +255,12 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 
 		q_item += 1;
 		answerJson.cloze.setQuestions_item(q_item + "");
-		int true_number = 0;
 		for (Map.Entry<Integer, String> entry : answer.entrySet()) {
 			int ratio = 0;
 			if (entry.getValue().equals(
 					cloze.getList().get(entry.getKey()).getAnswer())) {
 				ratio = 100;
-				true_number += 1;
+
 			}
 			answerJson.cloze
 					.getQuestions()
@@ -261,12 +271,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 							+ "", entry.getValue(), ratio + ""));
 			calculateRatio(ratio);
 		}
-		Log.i("aaa", q_item + "/" + list.size());
-		if (true_number == answer.size()) {
-			MyPlayer(true);
-		} else {
-			MyPlayer(true);
-		}
+		Log.i("aaa", "an:" + q_item + "/" + list.size());
 		if (q_item + 1 == list.size()) {// 结束
 			answerJson.cloze.setStatus("1");
 			type = 1;
@@ -287,6 +292,9 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		}
 		for (Map.Entry<Integer, String> entry : user_select.entrySet()) {
 			int ratio = 0;
+			Log.i("suanfa",
+					entry.getValue() + "-"
+							+ cloze.getList().get(entry.getKey()).getAnswer());
 			if (entry.getValue().equals(
 					cloze.getList().get(entry.getKey()).getAnswer())) {
 				ratio = 100;
@@ -306,7 +314,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 				Opption_str);
 		listView.setAdapter(adapter);
 		popupWindow = new PopupWindow(position);
-		popupWindow.setWidth(position.getWidth());
+		popupWindow.setWidth(400);
 		popupWindow.setHeight(LayoutParams.WRAP_CONTENT);
 		popupWindow.setBackgroundDrawable(new BitmapDrawable());
 		popupWindow.setOutsideTouchable(true);
@@ -340,26 +348,26 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		case R.id.base_check_linearlayout:
 			Log.i("linshi", user_select.size() + "/" + cloze.getList().size());
 			if (user_select.size() != cloze.getList().size()) {
-				Toast.makeText(ClozeActivity.this, "请先完成本题!",
+				Toast.makeText(ClozeActivity.this, "还有未填的选项哦!",
 						Toast.LENGTH_SHORT).show();
 			} else {
 				if (Check) {
 					Check = false;
 					setCheckText("检查");
 					propItem = 0;
-				} else {
-					Check = true;
-					setCheckText("下一个");
 					int type = 0;
 					String answer_history = ExerciseBookTool
 							.getAnswer_Json_history(path);
+					Log.i("aaa", 1 + "-error");
 					try {
 						if (status == 0) {
 							Log.i("aaa", question_id + "");
 							type = setAnswerJson(answer_history, user_select,
 									question_id);
 						} else {
+							Log.i("aaa", 2 + "-error");
 							type = Again();
+							Log.i("aaa", type + "error-type");
 						}
 						Log.i("aaa", type + "-type");
 						switch (type) {// 0为下一小题 1为全部做完 2为本小题做完
@@ -373,6 +381,28 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 						}
 					} catch (Exception e) {
 						e.printStackTrace();
+					}
+				} else {
+					Check = true;
+					setCheckText("下一题");
+					int true_number = 0;
+					for (Map.Entry<Integer, String> entry : user_select
+							.entrySet()) {
+						tv_list.get(entry.getKey()).setTextColor(
+								Color.rgb(227, 20, 39));
+						if (entry.getValue()
+								.equals(cloze.getList().get(entry.getKey())
+										.getAnswer())) {
+							tv_list.get(entry.getKey()).setTextColor(
+									getResources().getColor(R.color.work_end));
+							true_number += 1;
+						}
+					}
+					Log.i("suanfa", true_number + ",number");
+					if (true_number == cloze.getList().size()) {
+						MyPlayer(true);
+					} else {
+						MyPlayer(false);
 					}
 				}
 			}
@@ -395,7 +425,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 							.getAnswer());
 					if (propItem + 1 == tv_list.size()) {
 						Check = true;
-						setCheckText("下一个");
+						setCheckText("下一题");
 					} else {
 						propItem += 1;
 					}
@@ -433,6 +463,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 				break;
 			case 1:
 				index = 0;
+				user_select.clear();
 				SetAnswer();
 				break;
 			}
