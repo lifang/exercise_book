@@ -53,7 +53,6 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 	private String content = "";
 	private PredicateLayout myLayout;
 	private String[] str;
-	private int specified_time;
 	private List<Branch_PoJo> Branchlist;
 	private List<ClozePojo> list;
 	private ClozePojo cloze;
@@ -91,8 +90,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.cloze);
-		// setTimePropEnd();// 禁用道具
-		// setTruePropEnd();// 禁用道具
+
 		eb = (ExerciseBook) getApplication();
 		// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
 		super.mQuestionType = 5;
@@ -109,7 +107,13 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		path = intent.getStringExtra("path");
 		String json = intent.getStringExtra("json");
 		status = intent.getIntExtra("status", 1);
-
+		if (eb.getTime_number() <= 0 || status == 1) {
+			setTimePropEnd();// 禁用道具
+		}
+		if (eb.getTrue_number() <= 0 || status == 1) {
+			setTruePropEnd();// 禁用道具
+		}
+		Log.i("suanfa", eb.getTrue_number() + "/" + eb.getTime_number());
 		SetJson(json);
 		SetAnswer();
 	}
@@ -463,6 +467,10 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 				break;
 			case 1:
 				index = 0;
+				select_item = 0;
+				status = 1;
+				setTimePropEnd();// 禁用道具
+				setTruePropEnd();// 禁用道具
 				user_select.clear();
 				SetAnswer();
 				break;
