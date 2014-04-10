@@ -19,7 +19,10 @@ import android.widget.Toast;
 
 import com.comdosoft.ExerciseBook.pojo.AnswerBasePojo;
 
-//2014年4月1日 10:45:06
+/**
+ * @作者 马龙
+ * @时间 2014-4-10 上午10:28:58
+ */
 public class AnswerOrderActivity extends AnswerBaseActivity {
 
 	// private String json =

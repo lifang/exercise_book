@@ -24,7 +24,10 @@ import android.widget.Toast;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
-//2014年4月1日 10:45:06
+/**
+ * @作者 马龙
+ * @时间 2014-4-10 上午10:29:08
+ */
 public class AnswerWireActivity extends AnswerBaseActivity {
 
 	private int coordinateIndex = 0;

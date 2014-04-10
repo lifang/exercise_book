@@ -72,6 +72,8 @@ public class AnswerDictationPrepareActivity extends AnswerBaseActivity
 		analysisJSON(json);
 
 		setCheckText("开始");
+		
+		setTimeGone();
 
 		if (status == 2) {
 			TextView t = (TextView) findViewById(R.id.question_prepare_mes);
