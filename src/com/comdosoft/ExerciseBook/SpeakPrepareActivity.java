@@ -190,6 +190,7 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 			case 1:
 				type = 2;
 				Log.i("suanfa", "做完了");
+				use_time = eb.getUsertime();
 				questionlist = list.get(eb.getQuestion_item())
 						.getQuesttionList();
 				eb.setQuestion_id(list.get(eb.getQuestion_item()).getId());

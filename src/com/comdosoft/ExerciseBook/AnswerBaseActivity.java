@@ -46,12 +46,10 @@ import com.google.gson.Gson;
 
 // 答题父类
 /**
-<<<<<<< HEAD
- * 作者: 张秀楠 时间：2014-4-10 上午10:41:29
-=======
+ * <<<<<<< HEAD 作者: 张秀楠 时间：2014-4-10 上午10:41:29 =======
+ * 
  * @作者 马龙
- * @时间 2014-4-9 下午6:22:33
->>>>>>> d8f9d91d1088ee4a65f16e8016b6fa7a84300f2f
+ * @时间 2014-4-9 下午6:22:33 >>>>>>> d8f9d91d1088ee4a65f16e8016b6fa7a84300f2f
  */
 public class AnswerBaseActivity extends Activity implements OnClickListener,
 		OnPreparedListener, Urlinterface {
@@ -427,7 +425,22 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 							.replaceAll(";\\|\\|;", "    ")
 							.replaceAll("<=>", " "));
 				} else if (mQuestionType == 5) {
-
+					int myratio = 0;
+					StringBuffer sb = new StringBuffer("");
+					for (int i = 0; i < mRecoirdRatio.size(); i++) {
+						myratio += mRecoirdRatio.get(i);
+						if (!mRecoirdAnswer.get(i).equals("")) {
+							sb.append(mRecoirdAnswer.get(i)).append(",");
+						}
+					}
+					if (sb.length() > 0) {
+						sb.deleteCharAt(sb.length() - 1);
+					}
+					if (myratio != 0) {
+						myratio = myratio / mRecoirdRatio.size();
+					}
+					setAccuracyAndUseTime(myratio, amp.getUse_time());
+					setMyAnswer(sb.toString());
 				} else {
 					setMyAnswer(mRecoirdAnswer.get(mRecordIndex).replaceAll(
 							";\\|\\|;", " "));
@@ -758,6 +771,10 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void yinCang() {
+		base_answer_linearlayout.setVisibility(View.GONE);
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
