@@ -285,7 +285,7 @@ public class ExerciseBook extends Application {
 
 	public void onCreate() {
 		super.onCreate();
-		// initImageLoader(getApplicationContext());
+		initImageLoader(getApplicationContext());
 	}
 
 	public static void initImageLoader(Context context) {

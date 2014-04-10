@@ -46,6 +46,9 @@ import com.google.gson.Gson;
 
 //2014年4月2日 15:24:51
 // 答题父类
+/**
+ * 作者: 张秀楠 时间：2014-4-10 上午10:41:29
+ */
 public class AnswerBaseActivity extends Activity implements OnClickListener,
 		OnPreparedListener, Urlinterface {
 	public ExerciseBook eb;
@@ -391,7 +394,6 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	public void setUpdateJson() {
 		String answer_history = ExerciseBookTool.getAnswer_Json_history(path);
 		answerJson = gson.fromJson(answer_history, AnswerJson.class);
-		AnswerPojo ap = getAnswerPojo();
 		answerJson.update = updated_time;
 		String str = gson.toJson(answerJson);
 		try {
@@ -420,6 +422,8 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 					setMyAnswer(mRecoirdAnswer.get(mRecordIndex)
 							.replaceAll(";\\|\\|;", "    ")
 							.replaceAll("<=>", " "));
+				} else if (mQuestionType == 5) {
+
 				} else {
 					setMyAnswer(mRecoirdAnswer.get(mRecordIndex).replaceAll(
 							";\\|\\|;", " "));
@@ -725,7 +729,13 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 			eb.setTrue_number(eb.getTrue_number() - 1);
 		}
 		Log.i("Ax", "type-bid:" + type + "--" + branch_id);
-		answerJson.props.get(type).getBranch_id().add(branch_id);
+		try {
+			answerJson.props.get(type).getBranch_id().add(branch_id);
+		} catch (Exception e) {
+			List<Integer> list = new ArrayList<Integer>();
+			list.add(branch_id);
+			answerJson.props.add(new PropPojo(type + "", list));
+		}
 		String str = gson.toJson(answerJson);
 		try {
 			ExerciseBookTool.writeFile(path, str);
@@ -737,12 +747,10 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	public void Del_Prop() {
 		String answer_history = ExerciseBookTool.getAnswer_Json_history(path);
 		answerJson = gson.fromJson(answer_history, AnswerJson.class);
-		AnswerPojo ap = getAnswerPojo();
 		answerJson.props = new ArrayList<PropPojo>();
 		String str = gson.toJson(answerJson);
 		try {
 			ExerciseBookTool.writeFile(path, str);
-			// uploadJSON(ap.getStatus());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

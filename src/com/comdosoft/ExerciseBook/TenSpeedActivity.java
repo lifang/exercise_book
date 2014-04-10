@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.StaticLayout;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -84,8 +85,6 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 		findViewById(R.id.base_back_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_propTrue).setOnClickListener(this);
-		// setTimePropEnd();// 禁用道具
-		// setTruePropEnd();// 禁用道具
 		// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
 		setCheckText("下一题");
 		this.mQuestionType = 2;
@@ -97,6 +96,12 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 		path = intent.getStringExtra("path");
 		json = intent.getStringExtra("json");
 		status = intent.getIntExtra("status", 1);
+		if (eb.getTime_number() <= 0 || status == 1) {
+			setTimePropEnd();// 禁用道具
+		}
+		if (eb.getTrue_number() <= 0 || status == 1) {
+			setTruePropEnd();// 禁用道具
+		}
 		Log.i("aaa", eb.getWork_id() + ":");
 		SetJson(json);
 		File answer_file = new File(path);
@@ -326,7 +331,7 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == 0) {
+		if (requestCode == 1) {
 			Log.i("aaa", "resultCode:" + resultCode);
 			Intent intent = new Intent();
 			switch (resultCode) {
@@ -338,10 +343,12 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 				break;
 			case 1:
 				index = 0;// 题目索引
-				img_index = 1;// 图片索引
+				img_index = 10;// 图片索引
 				user_boolean = 0;
-				branch_questions = new ArrayList<Time_LimitPojo>();
-				SetJson(json);
+				status = 1;
+				setTimePropEnd();// 禁用道具
+				setTruePropEnd();// 禁用道具
+				Log.i("suanfa", "--");
 				handler.sendEmptyMessage(1);
 				break;
 			}
