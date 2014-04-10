@@ -30,14 +30,13 @@ import com.comdosoft.ExerciseBook.tools.AnswerTools;
 
 /**
  * @作者 马龙
- * @时间 2014-4-9 下午4:28:58
+ * @时间 2014-4-10 下午3:50:55
  */
 public class AnswerSelectActivity extends AnswerBaseActivity implements
 		OnItemClickListener, OnClickListener, OnPreparedListener {
 
 	// private String json =
 	// "{  \"selecting\": {\"specified_time\": \"100\", \"question_types\": \"6\", \"questions\": [{\"id\": \"284\",\"branch_questions\": [ {\"id\": \"181\", \"content\": \"This is ___ apple!\", \"option\": \"a;||;an\", \"answer\": \"an;||;a\" },{\"id\": \"181\", \"content\": \"<file>apple.jpg</file>Why he is ___ Google!\", \"option\": \"apple;||;banana;||;orange;||;pear\", \"answer\": \"apple;||;banana\"},{\"id\": \"181\", \"content\": \"<file>apple.mp3</file>\", \"option\": \"one;||;two;||;three\", \"answer\": \"two\"}, {\"id\": \"181\", \"content\": \"<file>apple.jpg</file>Pears have white flesh and thin green or yellow skin.\", \"option\": \"iPhone;||;S5;||;Xperia\", \"answer\": \"iPhone\"},{\"id\": \"181\", \"content\": \"Dad.come set here!\", \"option\": \"ZhangDaCa;||;ChenLong\", \"answer\": \"ZhangDaCa\"}]}]}}";
-	private String[] letterArr = new String[] { "A", "B", "C", "D", "E", "F" };
 	private boolean playFlag = false;
 	private StringBuffer mAnswer = new StringBuffer();
 	private List<String> answerOption = new ArrayList<String>();
@@ -177,33 +176,6 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 		if (status > 1) {
 			selectAdapter.setOptionAndAnswerList(1, sp.getOption(),
 					sp.getAnswer());
-			List<String> arr = sp.getOption();
-			if (mRecoirdAnswer != null) {
-				if (mRecordIndex < mRecoirdAnswer.size()) {
-					Log.i("Ax", mRecoirdAnswer.get(mRecordIndex) + "--answer");
-					String[] mArr = mRecoirdAnswer.get(mRecordIndex).split(
-							";\\|\\|;");
-					StringBuffer sb = new StringBuffer();
-					for (int i = 0; i < arr.size(); i++) {
-						for (int j = 0; j < mArr.length; j++) {
-							if (arr.get(i).equals(mArr[j])) {
-								sb.append(letterArr[i]).append(" ");
-							}
-						}
-					}
-					if (sb.length() > 0) {
-						sb.delete(sb.length() - 1, sb.length());
-					}
-					setMyAnswer(sb.toString());
-					if (mRecordIndex < mRecoirdAnswer.size()) {
-						mRecordIndex++;
-					}
-				} else {
-					setMyAnswer("");
-				}
-			} else {
-				setMyAnswer("");
-			}
 		} else {
 			selectAdapter.setOptionList(answerOption);
 		}
@@ -272,8 +244,8 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 					}
 				}
 			} else {
-				nextRecord();
 				calculateIndexAndUpdateView();
+				nextRecord();
 			}
 			break;
 		case R.id.base_back_linearlayout:

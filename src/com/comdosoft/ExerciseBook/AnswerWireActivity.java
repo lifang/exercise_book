@@ -24,10 +24,10 @@ import android.widget.Toast;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
-/**
- * @作者 马龙
- * @时间 2014-4-10 上午10:29:08
- */
+/** 
+* @作者 马龙 
+* @时间 2014-4-10 下午3:50:03 
+*/ 
 public class AnswerWireActivity extends AnswerBaseActivity {
 
 	private int coordinateIndex = 0;
@@ -475,8 +475,8 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 						}
 					}
 				} else {
-					nextRecord();
 					calculateIndexAndUpdateView();
+					nextRecord();
 				}
 				break;
 			}
