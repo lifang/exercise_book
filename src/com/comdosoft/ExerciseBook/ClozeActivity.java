@@ -76,6 +76,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 			switch (msg.what) {
 			case 0:
 				Log.i("aaa", "---");
+				setButtonOver();
 				myLayout.removeAllViews();
 				content = cloze.getContent();
 				content = ExerciseBookTool.del_tag(content);
@@ -119,6 +120,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		Log.i("suanfa", eb.getTrue_number() + "/" + eb.getTime_number());
 		SetJson(json);
 		SetAnswer();
+		setButtonOver();
 	}
 
 	private void SetAnswer() {
@@ -459,6 +461,12 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 						Toast.LENGTH_SHORT).show();
 			}
 			break;
+		}
+	}
+
+	public void setButtonOver() {
+		if (index + 1 == list.size()) {
+			setCheckText("完成");
 		}
 	}
 

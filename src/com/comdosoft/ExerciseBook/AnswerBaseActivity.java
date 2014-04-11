@@ -96,6 +96,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	public int index = 0;
 	private MediaPlayer player;
 	private String updated_time = "0000-00-00 00:00:00";
+	private LinearLayout base_check_linearlayout;
 	private Handler mHandler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -150,6 +151,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		base_time_linearlayout = (LinearLayout) findViewById(R.id.base_time_linearlayout);
 		base_history_linearlayout = (LinearLayout) findViewById(R.id.base_history_linearlayout);
 		base_answer_linearlayout = (LinearLayout) findViewById(R.id.base_answer_Linearlayout);
+		base_check_linearlayout = (LinearLayout) findViewById(R.id.base_check_linearlayout);
 		propTrue = (ImageView) findViewById(R.id.base_propTrue);
 		propTime = (ImageView) findViewById(R.id.base_propTime);
 		page = (TextView) findViewById(R.id.base_page);
@@ -807,6 +809,10 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 				break;
 			}
 		}
+	}
+
+	public void yinCangCheck() {
+		base_check_linearlayout.setVisibility(View.GONE);
 	}
 
 	public void MyPlayer(boolean status) {

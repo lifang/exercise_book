@@ -106,6 +106,14 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 		return findlist;
 	}
 
+	public Boolean isExist(String et) {
+		for (int i = 0; i < tagsList.size(); i++) {
+			if (tagsList.get(i).getName().equals(et)) {
+				return false;
+			}
+		}
+		return true;
+	}
 	public void show() {
 		if (width == 800) {
 			switch (index) {
@@ -185,7 +193,13 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 					int count) {
 
 				newTv.setVisibility(View.VISIBLE);
-				newTv.setText("新建'" + biaoqianet.getText().toString() + "'");
+				String reply_edit = biaoqianet.getText().toString();
+				String kongge = reply_edit.replaceAll(" ", "");
+				if (isExist(kongge)) {
+					newTv.setText("新建'" + biaoqianet.getText().toString() + "'");
+				}
+				
+				
 				newTv.setOnClickListener(new OnClickListener() { // 新建标签
 					public void onClick(View v) {
 						Thread thread = new Thread() {
