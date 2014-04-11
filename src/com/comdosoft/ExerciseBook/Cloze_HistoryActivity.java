@@ -28,7 +28,7 @@ import android.widget.Toast;
 import com.comdosoft.ExerciseBook.pojo.Branch_PoJo;
 import com.comdosoft.ExerciseBook.pojo.ClozePojo;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
-import com.comdosoft.ExerciseBook.tools.MyViewGroup;
+import com.comdosoft.ExerciseBook.tools.FlowLayout;
 import com.comdosoft.ExerciseBook.tools.MyspinnerAdapter;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
@@ -38,7 +38,7 @@ public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 	public String path = "";
 	public String sdpath = Environment.getExternalStorageDirectory() + "/";
 	private String content = "";
-	private MyViewGroup myLayout;
+	private FlowLayout myLayout;
 	private String[] str;
 	private int specified_time;
 	private List<Branch_PoJo> Branchlist;
@@ -85,7 +85,7 @@ public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 
 	// 初始化
 	public void initialize() {
-		myLayout = (MyViewGroup) findViewById(R.id.myLayout);
+		myLayout = (FlowLayout) findViewById(R.id.myLayout);
 	}
 
 	private void setTextView() {
@@ -104,7 +104,7 @@ public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 				final String[] Opption_str = Opption.split(";\\|\\|;");
 				spinner.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {
-						showWindow(spinner, Opption_str);
+						// showWindow(spinner, Opption_str);
 					}
 				});
 				spinner.setText(cloze.getList().get(select_item).getAnswer());

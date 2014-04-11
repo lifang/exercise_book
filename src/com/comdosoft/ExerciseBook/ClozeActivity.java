@@ -19,6 +19,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,7 +41,7 @@ import com.comdosoft.ExerciseBook.pojo.Branch_PoJo;
 import com.comdosoft.ExerciseBook.pojo.ClozePojo;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
-import com.comdosoft.ExerciseBook.tools.MyViewGroup;
+import com.comdosoft.ExerciseBook.tools.FlowLayout;
 import com.comdosoft.ExerciseBook.tools.MyspinnerAdapter;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 import com.google.gson.Gson;
@@ -52,7 +53,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 	public String path = "";
 	public String sdpath = Environment.getExternalStorageDirectory() + "/";
 	private String content = "";
-	private MyViewGroup myLayout;
+	private FlowLayout myLayout;
 	private String[] str;
 	private List<Branch_PoJo> Branchlist;
 	private List<ClozePojo> list;
@@ -150,7 +151,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 
 	// 初始化
 	public void initialize() {
-		myLayout = (MyViewGroup) findViewById(R.id.myLayout);
+		myLayout = (FlowLayout) findViewById(R.id.myLayout);
 	}
 
 	private void setTextView() {
@@ -326,7 +327,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		if (width == 1200) {
 			popupWindow.setWidth(400);
 		} else {
-			popupWindow.setWidth(300);
+			popupWindow.setWidth(250);
 		}
 		popupWindow.setHeight(LayoutParams.WRAP_CONTENT);
 		popupWindow.setBackgroundDrawable(new BitmapDrawable());
@@ -334,11 +335,11 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		popupWindow.setFocusable(true);
 		popupWindow.setContentView(layout);
 		popupWindow.showAsDropDown(position, 0, 0);
-		popupWindow.setOnDismissListener(new OnDismissListener() {
-			public void onDismiss() {
-				// position.setBackgroundResource(R.drawable.preference_single_item);
-			}
-		});
+		// popupWindow.setOnDismissListener(new OnDismissListener() {
+		// public void onDismiss() {
+		// position.setBackgroundResource(R.drawable.preference_single_item);
+		// }
+		// });
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {

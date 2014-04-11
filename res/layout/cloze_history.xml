@@ -6,16 +6,15 @@
     android:orientation="vertical"
     android:paddingBottom="240px" >
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:layout_height="wrap_content" >
 
-        <com.comdosoft.ExerciseBook.tools.MyViewGroup
+        <com.comdosoft.ExerciseBook.tools.FlowLayout
             android:id="@+id/myLayout"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent" >
-        </com.comdosoft.ExerciseBook.tools.MyViewGroup>
-    </LinearLayout>
+        </com.comdosoft.ExerciseBook.tools.FlowLayout>
+    </ScrollView>
 
 </RelativeLayout>
