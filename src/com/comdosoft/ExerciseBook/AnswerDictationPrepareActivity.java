@@ -3,11 +3,9 @@ package com.comdosoft.ExerciseBook;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -26,10 +24,9 @@ import com.comdosoft.ExerciseBook.pojo.AnswerBasePojo;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
-
 /** 
 * @作者 马龙 
-* @时间 2014-4-10 下午3:50:36 
+* @时间 2014-4-11 下午6:16:08 
 */ 
 public class AnswerDictationPrepareActivity extends AnswerBaseActivity
 		implements OnClickListener, OnPreparedListener, OnCompletionListener,
@@ -75,8 +72,10 @@ public class AnswerDictationPrepareActivity extends AnswerBaseActivity
 		analysisJSON(json);
 
 		setCheckText("开始");
-		
+
 		setTimeGone();
+		setTruePropEnd();
+		setTimePropEnd();
 
 		if (status == 2) {
 			TextView t = (TextView) findViewById(R.id.question_prepare_mes);

@@ -17,11 +17,11 @@
         android:textSize="28dp" />
 
     <TextView
-        android:layout_margin="10dp"
         android:id="@+id/answer_select_item_textView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginLeft="10dp"
         android:gravity="center"
         android:textColor="#595c5e"
         android:textSize="24dp" />

@@ -442,6 +442,7 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 			case R.id.base_check_linearlayout:
 				if (status != 2) {
 					if (getCheckText().equals("检查")) {
+						setPause();
 						if (coordinate.size() == answerList.size() / 2) {
 							if (mQindex == mQuestList.size() - 1
 									&& mBindex == mQuestList.get(mQindex)
@@ -457,6 +458,7 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 									0).show();
 						}
 					} else {
+						setStart();
 						if (mQindex == mQuestList.size() - 1
 								&& mBindex == mQuestList.get(mQindex).size() - 1) {
 							setCheckText("完成");

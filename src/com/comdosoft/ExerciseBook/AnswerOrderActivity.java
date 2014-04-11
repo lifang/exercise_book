@@ -21,7 +21,7 @@ import com.comdosoft.ExerciseBook.pojo.AnswerBasePojo;
 
 /** 
 * @作者 马龙 
-* @时间 2014-4-11 下午4:42:18 
+* @时间 2014-4-11 下午6:16:31 
 */ 
 public class AnswerOrderActivity extends AnswerBaseActivity {
 
@@ -205,9 +205,11 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 		mSubjectIndex = 0;
 		mOptionIndex = 0;
 
-		if (status == 0) {
+		if (status == 0 && eb.getTrue_number() > 0) {
 			setTruePropShow();
 		}
+
+		setPage(mBindex + 1, mQuestList.get(mQindex).size());
 
 		answerArr = mQuestList.get(mQindex).get(mBindex).getContent()
 				.split(" ");
@@ -324,6 +326,7 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 			case R.id.base_check_linearlayout:
 				if (status != 2) {
 					if (getCheckText().equals("检查")) {
+						setPause();
 						if (mAnswerList.size() == answerList.size()) {
 							if (mQindex == mQuestList.size() - 1
 									&& mBindex == mQuestList.get(mQindex)
@@ -338,6 +341,7 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 									"请完成未选择的题!", 0).show();
 						}
 					} else {
+						setStart();
 						if (mQindex == mQuestList.size() - 1
 								&& mBindex == mQuestList.get(mQindex).size() - 1) {
 							setCheckText("完成");
