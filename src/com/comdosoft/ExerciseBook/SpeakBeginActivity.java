@@ -46,7 +46,6 @@ import com.comdosoft.ExerciseBook.tools.PredicateLayout;
 import com.comdosoft.ExerciseBook.tools.Soundex_Levenshtein;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 /**
  * 作者: 张秀楠 时间：2014-4-9 上午11:49:11
@@ -668,8 +667,8 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 				e.printStackTrace();
 			}
 		} else {
-			type = Again();
-			if (type == 1) {
+			int status = Again();
+			if (status == 1) {
 				setCheckText("完成");
 			}
 		}
