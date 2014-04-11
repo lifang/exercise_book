@@ -85,17 +85,13 @@ public class ExerciseBookTool implements Urlinterface {
 		}
 	}
 
-	// 根据UnicodeBlock方法判断中文标点符号
-	public static boolean isChinesePunctuation(char c) {
-		Character.UnicodeBlock ub = Character.UnicodeBlock.of(c);
-		if (ub == Character.UnicodeBlock.GENERAL_PUNCTUATION
-				|| ub == Character.UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION
-				|| ub == Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS
-				|| ub == Character.UnicodeBlock.CJK_COMPATIBILITY_FORMS) {
-			return true;
-		} else {
+	// 判断是否包含标点符号
+	public boolean isNotChinese(String str) {
+		if (str.equals("") || str == null) {
 			return false;
 		}
+		Pattern pattern = Pattern.compile("(?i)[^a-zA-Z0-9\u4E00-\u9FA5]");
+		return pattern.matcher(str.trim()).find();
 	}
 
 	// 过去answer中的时间
@@ -322,7 +318,7 @@ public class ExerciseBookTool implements Urlinterface {
 			}
 		} catch (JSONException e) {
 			Log.i("Ax", "JSONException-" + e.toString() + "--" + e.getMessage());
-			return -20;
+			return 0;
 		}
 		int size = 0;
 		for (int i = 0; i < ratio.size(); i++) {

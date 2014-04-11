@@ -22,12 +22,12 @@
             android:onClick="onclicks"
             android:src="@drawable/xiao2" />
 
-        <com.comdosoft.ExerciseBook.tools.MyViewGroup
+        <com.comdosoft.ExerciseBook.tools.PredicateLayout
             android:id="@+id/question_speak_content"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" 
-            android:layout_gravity="left">
-        </com.comdosoft.ExerciseBook.tools.MyViewGroup>
+            android:layout_height="wrap_content"
+            android:layout_gravity="left" >
+        </com.comdosoft.ExerciseBook.tools.PredicateLayout>
     </LinearLayout>
 
     <ImageView
@@ -44,7 +44,7 @@
         android:layout_width="400dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:background="@drawable/textview_border"
+        android:background="@drawable/dictation_mes_bg"
         android:gravity="center"
         android:lineSpacingExtra="15dp"
         android:padding="15dp"

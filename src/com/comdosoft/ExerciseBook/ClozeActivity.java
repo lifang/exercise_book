@@ -386,6 +386,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 						switch (type) {// 0为下一小题 1为全部做完 2为本小题做完
 						case 0:
 							index += 1;
+							select_item = 0;
 							SetAnswer();
 							break;
 						case 1:
@@ -424,7 +425,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		case R.id.base_propTrue:
 			if (eb.getTrue_number() > 0) {// 判断显示答案的道具数量是否大于0
 				if (propItem < tv_list.size()) {
-					PropJson(0, cloze.getList().get(propItem).getId());// 1道具类型
+					PropJson(1, cloze.getList().get(propItem).getId());// 1道具类型
 																		// --0显示答案
 																		// 1时间
 																		// ,
@@ -451,7 +452,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		case R.id.base_propTime:
 			if (eb.getTime_number() > 0) {// 判断显示答案的道具数量是否大于0
 				// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
-				PropJson(1, cloze.getList().get(propItem).getId());// 1道具类型
+				PropJson(0, cloze.getList().get(propItem).getId());// 1道具类型
 																	// --0显示答案
 																	// 1时间 ,
 																	// 2--小题id
@@ -465,7 +466,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 	}
 
 	public void setButtonOver() {
-		if (index + 1 == list.size()) {
+		if (index + 1 >= list.size()) {
 			setCheckText("完成");
 		}
 	}

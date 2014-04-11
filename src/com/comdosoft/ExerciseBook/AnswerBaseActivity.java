@@ -97,6 +97,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	private MediaPlayer player;
 	private String updated_time = "0000-00-00 00:00:00";
 	private LinearLayout base_check_linearlayout;
+	private List<List<String>> Cloze_list;
 	private Handler mHandler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -198,13 +199,44 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		if (type != 7) {
 			setUseTime(amp.getUse_time());
 			setType(amp.getStatus());
-
 			if (status == 2) {
 				mRecoirdAnswer = amp.getAnswer();
 				mRecoirdRatio = amp.getRatio();
+				if (type == 5) {
+					GetClozeList();
+				}
 				nextRecord();
 			}
 		}
+	}
+
+	public void GetClozeList() {
+		File answer_file = new File(path);
+		if (answer_file.exists()) {
+			String json2 = ExerciseBookTool.getJson(path);
+			JSONObject obj;
+			try {
+				obj = new JSONObject(json2);
+				JSONObject cloze = obj.getJSONObject("cloze");
+				JSONArray ja = cloze.getJSONArray("questions");
+				if (ja.length() > 0) {
+					Cloze_list = new ArrayList<List<String>>();
+					for (int i = 0; i < ja.length(); i++) {
+						JSONArray jArr = ja.getJSONObject(i).getJSONArray(
+								"branch_questions");
+						List<String> branchlist = new ArrayList<String>();
+						for (int j = 0; j < jArr.length(); j++) {
+							branchlist.add(jArr.getJSONObject(j).getString(
+									"answer"));
+						}
+						Cloze_list.add(branchlist);
+					}
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+		Log.i("linshi", "Cloze_list:" + Cloze_list.size());
 	}
 
 	// 隐藏时间栏
@@ -284,7 +316,6 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	public void setMyAnswer(String s) {
 		if (s == null || s.equals("")) {
 			base_answer_text.setText("没有答题记录!");
-			setAccuracyAndUseTime(0, 0);
 		} else {
 			base_answer_text.setText(answerArr[mQuestionType] + s);
 		}
@@ -370,7 +401,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 			break;
 		case R.id.base_propTime:
 			if (eb.getTime_number() > 0) {
-				PropJson(1, mQuestList.get(mQindex).get(mBindex)
+				PropJson(0, mQuestList.get(mQindex).get(mBindex)
 						.getBranch_questions_id());
 			} else {
 				Toast.makeText(getApplicationContext(), "道具数量不足!", 0).show();
@@ -379,7 +410,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		case R.id.base_propTrue:
 			// if (eb.getTrue_number() > 0) {
 			rightAnswer();
-			PropJson(0, mQuestList.get(mQindex).get(mBindex)
+			PropJson(1, mQuestList.get(mQindex).get(mBindex)
 					.getBranch_questions_id());
 			// } else {
 			// Toast.makeText(getApplicationContext(), "道具数量不足!", 0).show();
@@ -421,6 +452,9 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 					&& mRecordIndex < mRecoirdAnswer.size()) {
 				setAccuracyAndUseTime(aveRatio, amp.getUse_time());
 				setMyAnswer(mRecoirdAnswer.get(mRecordIndex));
+				aveRatio = ExerciseBookTool.getRatio(path,
+						questionArr[mQuestionType]);
+				Log.i("aaa", aveRatio + "=,.");
 				setAccuracyAndUseTime(aveRatio, amp.getUse_time());
 				if (mQuestionType == 0) {
 					String s[] = mRecoirdAnswer.get(mRecordIndex).split(
@@ -432,16 +466,20 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 							.replaceAll(";\\|\\|;", "    ")
 							.replaceAll("<=>", " "));
 				} else if (mQuestionType == 5) {
+
+					Log.i("linshi", "mRecordIndex:" + mRecordIndex);
 					StringBuffer sb = new StringBuffer("");
-					for (int i = 0; i < mRecoirdRatio.size(); i++) {
-						if (!mRecoirdAnswer.get(i).equals("")) {
-							sb.append(mRecoirdAnswer.get(i)).append(",");
+					for (int i = 0; i < Cloze_list.get(mRecordIndex).size(); i++) {
+						Log.i("linshi", "Cloze_list.get(mRecordIndex):"
+								+ Cloze_list.get(mRecordIndex).get(i));
+						if (!Cloze_list.get(mRecordIndex).get(i).equals("")) {
+							sb.append(Cloze_list.get(mRecordIndex).get(i))
+									.append(",");
 						}
 					}
 					if (sb.length() > 0) {
 						sb.deleteCharAt(sb.length() - 1);
 					}
-					setAccuracyAndUseTime(aveRatio, amp.getUse_time());
 					setMyAnswer(sb.toString());
 				} else {
 					setMyAnswer(mRecoirdAnswer.get(mRecordIndex).replaceAll(
@@ -738,7 +776,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	public void PropJson(int type, int branch_id) {
 		String answer_history = ExerciseBookTool.getAnswer_Json_history(path);
 		answerJson = gson.fromJson(answer_history, AnswerJson.class);
-		if (type == 1) {// 减时卡
+		if (type == 0) {// 减时卡
 			Toast.makeText(AnswerBaseActivity.this, "成功使用减时卡减去5秒时间！",
 					Toast.LENGTH_SHORT).show();
 			setUseTime(second - 5 < 0 ? 0 : second - 5);
