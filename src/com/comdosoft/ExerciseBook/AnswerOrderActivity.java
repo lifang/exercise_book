@@ -19,10 +19,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.comdosoft.ExerciseBook.pojo.AnswerBasePojo;
 
-/**
- * @作者 马龙
- * @时间 2014-4-10 上午10:28:58
- */
+/** 
+* @作者 马龙 
+* @时间 2014-4-11 下午4:42:18 
+*/ 
 public class AnswerOrderActivity extends AnswerBaseActivity {
 
 	// private String json =
@@ -205,7 +205,7 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 		mSubjectIndex = 0;
 		mOptionIndex = 0;
 
-		if(status==0){
+		if (status == 0) {
 			setTruePropShow();
 		}
 
@@ -360,12 +360,19 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 				}
 				break;
 			case R.id.base_propTrue:
-				if (!truePropFlag) {
-					truePropFlag = true;
-					setTruePropEnd();
+				if (eb.getTrue_number() > 0) {
 					rightAnswer();
-					PropJson(0, mQuestList.get(mQindex).get(mBindex)
-							.getBranch_questions_id());
+					if (!truePropFlag) {
+						truePropFlag = true;
+						setTruePropEnd();
+						rightAnswer();
+						PropJson(1, mQuestList.get(mQindex).get(mBindex)
+								.getBranch_questions_id());
+					}
+				} else {
+					setTruePropEnd();
+					Toast.makeText(getApplicationContext(), "道具数量不足!", 0)
+							.show();
 				}
 				break;
 			}
