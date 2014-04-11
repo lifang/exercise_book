@@ -38,6 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/rightIv"
                 android:layout_marginLeft="25.64px"
+                android:layout_marginRight="25.64px"
                 android:layout_marginTop="20.1px"
                 android:ellipsize="end"
                 android:lines="4"
@@ -52,8 +53,8 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="25.46px"
                 android:layout_marginTop="20px"
-                android:src="@drawable/cardbatread" 
-                android:visibility="gone"/>
+                android:src="@drawable/cardbatread"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -70,6 +71,18 @@
                     android:layout_marginRight="25.46px"
                     android:src="@drawable/cardbagdel" />
             </LinearLayout>
+
+            <Button
+                android:id="@+id/button1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/backreson"
+                android:layout_alignBottom="@+id/backreson"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/cardchoice"
+                android:layout_toRightOf="@+id/backreson"
+                android:visibility="gone"
+                android:text="查看全文" />
         </RelativeLayout>
     </LinearLayout>
 

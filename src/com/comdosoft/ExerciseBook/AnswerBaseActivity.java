@@ -229,13 +229,15 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 				obj = new JSONObject(json2);
 				JSONObject cloze = obj.getJSONObject("cloze");
 				JSONArray ja = cloze.getJSONArray("questions");
+				Cloze_list = new ArrayList<List<String>>();
 				if (ja.length() > 0) {
-					Cloze_list = new ArrayList<List<String>>();
 					for (int i = 0; i < ja.length(); i++) {
 						JSONArray jArr = ja.getJSONObject(i).getJSONArray(
 								"branch_questions");
 						List<String> branchlist = new ArrayList<String>();
 						for (int j = 0; j < jArr.length(); j++) {
+							Log.i("aa",
+									jArr.getJSONObject(j).getString("answer"));
 							branchlist.add(jArr.getJSONObject(j).getString(
 									"answer"));
 						}
@@ -489,13 +491,17 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 
 					Log.i("linshi", "mRecordIndex:" + mRecordIndex);
 					StringBuffer sb = new StringBuffer("");
-					for (int i = 0; i < Cloze_list.get(mRecordIndex).size(); i++) {
-						Log.i("linshi", "Cloze_list.get(mRecordIndex):"
-								+ Cloze_list.get(mRecordIndex).get(i));
-						if (!Cloze_list.get(mRecordIndex).get(i).equals("")) {
-							sb.append(Cloze_list.get(mRecordIndex).get(i))
-									.append(",");
+					if (Cloze_list.size() > 0) {
+						for (int i = 0; i < Cloze_list.get(mRecordIndex).size(); i++) {
+							Log.i("linshi", "Cloze_list.get(mRecordIndex):"
+									+ Cloze_list.get(mRecordIndex).get(i));
+							if (!Cloze_list.get(mRecordIndex).get(i).equals("")) {
+								sb.append(Cloze_list.get(mRecordIndex).get(i))
+										.append(",");
+							}
 						}
+					} else {
+						setAccuracyAndUseTime(0, 0);
 					}
 					if (sb.length() > 0) {
 						sb.deleteCharAt(sb.length() - 1);

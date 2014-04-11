@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:id="@+id/lookL"
+        android:layout_width="900px"
+        android:layout_height="900px"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="150px"
+        android:layout_marginTop="300px"
+        android:background="@color/top_qianlv"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="31px" >
+
+        <ImageView
+            android:id="@+id/lookIv"
+            android:layout_width="180px"
+            android:layout_height="180px"
+            android:visibility="gone" />
+
+        <ScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:cacheColorHint="#00000000"
+            android:fadingEdge="none"
+            android:listSelector="#00000000"
+            android:scrollbars="none" >
+
+            <TextView
+                android:id="@+id/lookcontent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="\t\t卡包中的卡包为作业时出现的错误，记录下来便于复习和巩固，若以后遇到同类问题，不再\n犯同样的错误，卡片自动消失"
+                android:textColor="@color/white"
+                android:textSize="47px" />
+        </ScrollView>
+    </LinearLayout>
+
+</RelativeLayout>

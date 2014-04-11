@@ -318,7 +318,7 @@ public class ExerciseBookTool implements Urlinterface {
 			}
 		} catch (JSONException e) {
 			Log.i("Ax", "JSONException-" + e.toString() + "--" + e.getMessage());
-			return 0;
+			return -20;
 		}
 		int size = 0;
 		for (int i = 0; i < ratio.size(); i++) {
