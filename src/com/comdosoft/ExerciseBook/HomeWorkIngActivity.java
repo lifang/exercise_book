@@ -165,7 +165,9 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 		instance = this;
 
 		Display display = this.getWindowManager().getDefaultDisplay();
+		@SuppressWarnings("deprecation")
 		int width = display.getWidth();
+		@SuppressWarnings("deprecation")
 		int height = display.getHeight();
 		Log.i(id, width + "/" + height);
 

@@ -17,6 +17,7 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
@@ -64,12 +65,11 @@ import com.comdosoft.ExerciseBook.tools.Urlinterface;
 import com.comdosoft.ExerciseBook.tools.WorkJson;
 
 public class RecordMainActivity extends Table_TabHost implements Urlinterface,
-		OnGestureListener {
+		OnGestureListener, android.view.View.OnClickListener {
 	// private String json =
 	// "{\"status\": \"success\",\"notice\": \"\u83b7\u53d6\u6210\u529f\uff01\",\"tasks\": [{\"id\": 130,\"name\": \"\",\"start_time\": \"2014-03-12T14: 44: 45+08: 00\",\"question_types\": [0,1,2,3,4,5,6],\"finish_types\": [2,5],\"end_time\": \"2014-03-13T18: 00: 00+08: 00\",\"question_packages_url\": \"/que_ps/question_p_264/resourse.zip\"},{\"id\": 131,\"name\": \"\",\"start_time\": \"2014-03-12T14: 44: 45+08: 00\",\"question_types\": [0,1,2,3,4,5,6],\"finish_types\": [2,5],\"end_time\": \"2014-03-13T18: 00: 00+08: 00\",\"question_packages_url\": \"/que_ps/question_p_264/resourse.zip\"}],\"knowledges_cards_count\": 10}";
 	private ViewPager pager;
 	private List<LinearLayout> linearList = new ArrayList<LinearLayout>();
-	private List<Integer> finish_list = new ArrayList<Integer>();
 	private List<WorkPoJo> work_list = new ArrayList<WorkPoJo>();
 	private int linear_item = 0;
 	private int number;
@@ -77,7 +77,6 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 	private ProgressDialog prodialog;
 	private String notice;
 	private ExerciseBook eb;
-	private LinearLayout ll;
 	private String date;
 	private List<String> json_list;
 
@@ -91,9 +90,6 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 	private int month_c = 0;
 	private int day_c = 0;
 	private String currentDate = "";
-	private Bundle bd = null;// 发送参数
-	private Bundle bun = null;// 接收参数
-	private String state = "";
 	private LinearLayout date_ll;
 	public boolean date_type = false;
 	public ImagePagerAdapter ipa;
@@ -197,14 +193,16 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 	public void initialize() {
 		ipa = new ImagePagerAdapter();
 		pager = (ViewPager) findViewById(R.id.vPager);
-		ll = (LinearLayout) findViewById(R.id.ll);
 		date_ll = (LinearLayout) findViewById(R.id.date_ll);
-		// pager.setAdapter(new ImagePagerAdapter());
+		findViewById(R.id.btn_prev_month).setOnClickListener(this);
+		findViewById(R.id.btn_next_month).setOnClickListener(this);
 		date_ll.setVisibility(View.GONE);
 		tishi = (TextView) findViewById(R.id.tishis);
 	}
 
 	// 初始化日历
+	@SuppressLint("SimpleDateFormat")
+	@SuppressWarnings("deprecation")
 	public void initDate() {
 		Date date = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-d");
@@ -212,15 +210,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 		year_c = Integer.parseInt(currentDate.split("-")[0]);
 		month_c = Integer.parseInt(currentDate.split("-")[1]);
 		day_c = Integer.parseInt(currentDate.split("-")[2]);
-		bd = new Bundle();// out
-		bun = getIntent().getExtras();// in
-		if (bun != null && bun.getString("state").equals("ruzhu")) {
-			state = bun.getString("state");
-		} else if (bun != null && bun.getString("state").equals("lidian")) {
-			state = bun.getString("state");
-		}
 		gestureDetector = new GestureDetector(this);
-		// bd=new Bundle();
 		calV = new CalendarAdapter(this, getResources(), jumpMonth, jumpYear,
 				year_c, month_c, day_c);
 		addGridView();
@@ -284,7 +274,6 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 				linear_item = 0;
 				final List<Integer> questiontype_list = work_list.get(arg1)
 						.getQuestion_types();
-				finish_list = work_list.get(arg1).getFinish_types();
 				cardType = work_list.get(arg1).getNumber() < 20 ? true : false;
 				eb.setWork_id(work_list.get(arg1).getId() + "");
 				for (int i = 0; i < work_list.get(arg1).getQuestion_types()
@@ -761,7 +750,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 	/**
 	 * 创建菜单
 	 */
-	@Override
+	@SuppressWarnings("static-access")
 	public boolean onCreateOptionsMenu(Menu menu) {
 
 		menu.add(0, menu.FIRST, menu.FIRST, "今天");
@@ -952,5 +941,28 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.btn_next_month:
+			addGridView(); // 添加一个gridView
+			jumpMonth++; // 下一个月
+
+			calV = new CalendarAdapter(this, getResources(), jumpMonth,
+					jumpYear, year_c, month_c, day_c);
+			gridView.setAdapter(calV);
+			addTextToTopTextView(topText);
+			break;
+		case R.id.btn_prev_month:
+			addGridView(); // 添加一个gridView
+			jumpMonth--; // 上一个月
+
+			calV = new CalendarAdapter(this, getResources(), jumpMonth,
+					jumpYear, year_c, month_c, day_c);
+			gridView.setAdapter(calV);
+			addTextToTopTextView(topText);
+			break;
+		}
 	}
 }

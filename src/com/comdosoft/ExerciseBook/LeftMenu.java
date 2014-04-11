@@ -16,7 +16,6 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -188,7 +187,7 @@ public class LeftMenu extends Activity implements Urlinterface {
 				startActivity(intent);
 				eb.setMneu(true);
 				Editor editor = userInfo.edit();// 获取编辑器
-//				editor.putBoolean("ReplyMenu", true);
+				// editor.putBoolean("ReplyMenu", true);
 				editor.putString(school_class_id + "ReplyMenu", "none");
 				editor.commit();
 			}

@@ -71,14 +71,13 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 	private boolean Check = false;
 	private PopupWindow popupWindow;
 	private int select_item = 0;
-	private static final String regEx_html = "<[^>]+>";
 	private int width;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case 0:
 				Log.i("aaa", "---");
-				setPage(index, list.size());
+				setPage(index + 1, list.size());
 				setButtonOver();
 				myLayout.removeAllViews();
 				content = cloze.getContent();
@@ -93,6 +92,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		};
 	};
 
+	@SuppressWarnings("deprecation")
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.cloze);
@@ -316,6 +316,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		return type;
 	}
 
+	@SuppressWarnings("deprecation")
 	public void showWindow(final View position, final String[] Opption_str,
 			final int item) {
 

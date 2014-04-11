@@ -40,13 +40,12 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
+@SuppressWarnings("deprecation")
 public class SpeakPrepareActivity extends AnswerBaseActivity implements
 		Urlinterface, OnPreparedListener, OnCompletionListener, OnInitListener,
 		OnUtteranceCompletedListener, OnClickListener {
 	private int mp3Index = 0;
-	private String content = "";
 	private LinearLayout layout;
-	private TextView img_title;
 	private MediaPlayer player;
 	private String message;
 	private ProgressDialog prodialog;
@@ -221,7 +220,6 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 		// question_speak_content = (TextView)
 		// findViewById(R.id.question_speak_content);
 		question_speak_img = (ImageView) findViewById(R.id.question_speak_img);
-		img_title = (TextView) findViewById(R.id.tou);
 		player = new MediaPlayer();
 	}
 

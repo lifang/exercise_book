@@ -50,6 +50,7 @@ import com.google.gson.Gson;
 /**
  * 作者: 张秀楠 时间：2014-4-9 上午11:49:11
  */
+@SuppressWarnings("deprecation")
 public class SpeakBeginActivity extends AnswerBaseActivity implements
 		Urlinterface, OnPreparedListener, OnCompletionListener, OnInitListener,
 		OnUtteranceCompletedListener, OnClickListener {
@@ -75,7 +76,6 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 	private String path;
 	private Gson gson;
 	private int ratio = 0;
-	private List<Integer> ratio_list;
 	private String json;
 	private AnswerJson answerJson;
 	private int qid;
@@ -87,6 +87,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 			switch (msg.what) {
 			case 0:
 				index += 1;
+				setPage(index + 1, branch_questions.size());
 				PredicateLayout.removeAllViews();
 				Speak_type = false;
 				number = 0;
@@ -128,7 +129,6 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 
 		qid = eb.getQuestion_id();
 		gson = new Gson();
-		ratio_list = new ArrayList<Integer>();
 		Intent intent = getIntent();
 		path = intent.getStringExtra("path");
 		json = intent.getStringExtra("json");
@@ -143,6 +143,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 	public void initialize() {
 		branch_questions = eb.getQuestion_list();
 		content = branch_questions.get(0).getContent();
+		setPage(1, branch_questions.size());
 		PredicateLayout = (PredicateLayout) findViewById(R.id.question_speak_content);
 		question_speak_tishi = (TextView) findViewById(R.id.question_speak_tishi);
 		question_speak_tishi.setVisibility(View.GONE);
