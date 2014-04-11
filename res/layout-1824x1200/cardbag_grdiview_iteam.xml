@@ -5,7 +5,7 @@
 
     <RelativeLayout
         android:layout_width="513px"
-    android:layout_height="512px"
+        android:layout_height="512px"
         android:background="@drawable/cardfont"
         android:orientation="vertical" >
 
@@ -43,12 +43,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                  android:layout_marginRight="38px"
+                android:layout_marginRight="30px"
                 android:layout_marginTop="30px"
                 android:src="@drawable/ques_reson" />
         </RelativeLayout>
-
-        
 
         <TextView
             android:id="@+id/bqtv1"
@@ -59,36 +57,36 @@
             android:gravity="center_vertical"
             android:maxLines="1"
             android:singleLine="true"
-            android:textColor="@color/white"
-            />
+            android:textColor="@color/white" />
     </RelativeLayout>
-<RelativeLayout
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="280px"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/rightanswer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="280px"
-            android:orientation="vertical" >
+            android:layout_marginLeft="38px"
+            android:text="正确拼写"
+            android:textColor="@color/quesreson"
+            android:textSize="33px" />
 
-            <TextView
-                android:id="@+id/rightanswer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                  android:layout_marginLeft="38px"
-                android:text="正确拼写"
-                android:textColor="@color/quesreson"
-                android:textSize="33px" />
+        <TextView
+            android:id="@+id/answer"
+            android:layout_width="435px"
+            android:layout_height="135px"
+            android:layout_below="@id/rightanswer"
+            android:layout_marginLeft="38px"
+            android:layout_marginRight="38px"
+            android:ellipsize="end"
+            android:lines="2"
+            android:text="together111111111111111111111111111111111111111111111"
+            android:textColor="@color/quesreson"
+            android:textSize="45px" />
+    </RelativeLayout>
 
-            <TextView
-                android:id="@+id/answer"
-                android:layout_width="513px"
-                android:layout_height="135px"
-                android:layout_below="@id/rightanswer"
-                android:layout_marginLeft="38px"
-                android:layout_marginRight="38px"
-                android:ellipsize="end"
-                android:lines="2"
-                android:text="together111111111111111111111111111111111111111111111"
-                android:textColor="@color/quesreson"
-                android:textSize="45px" />
-
-        </RelativeLayout>
 </RelativeLayout>
