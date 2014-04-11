@@ -544,11 +544,11 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 	public String setWrong(String miskatype) {
 		switch (Integer.valueOf(miskatype)) {
 		case 1:
-			return "读错";
+			return "朗读错误";
 		case 2:
-			return "拼错";
+			return "拼写错误";
 		case 3:
-			return "选错";
+			return "选择错误";
 		default:
 			break;
 		}
@@ -598,17 +598,19 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 	}
 
 	// 完形填空
-	public void settypes5(String full_text, String options) {
-		String content = null;
+	public String settypes5(String full_text, String options) {
+		String content = "";
 		String[] arrs = options.split(";\\|\\|;");
 		full_text = ExerciseBookTool.del_tag(full_text);
-		String[] textarr = full_text.split("[[sign]]");
-		for (int i = 0; i < textarr.length; i++) {
-			content += textarr[i];
-			for (int j = 0; j < arrs.length; j++) {
-				content += (Html.fromHtml("<u>" + arrs[j] + "</u>"));
-			}
-		}
+//		String[] textarr = full_text.split("[[sign]]");
+//		for (int i = 0; i < textarr.length; i++) {
+//			content += textarr[i];
+//			for (int j = 0; j < arrs.length; j++) {
+//				content += (Html.fromHtml("<u>" + arrs[j] + "</u>"));
+//			}
+//		}
+		content = full_text.replace("[[sign]]", "___");
+		return content;
 	}
 
 	public void setFontCard(ViewGroup v1, final knowledges_card card,
@@ -647,7 +649,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 			answer = (TextView) v.findViewById(R.id.answer);
 //			reson.setText(setWrong(card.getMistake_types())); // 错误类型
 			reson.setText(setWrong(card.getMistake_types())+card.getTypes()); // 错误类型
-			if (card.getTypes().equals("0") ) {
+			if (card.getTypes().equals("1") ) {
 				rightanswer.setVisibility(View.GONE);
 				answer.setVisibility(View.GONE);
 			} else {
@@ -690,7 +692,12 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 			rightIv = (ImageView) v.findViewById(R.id.rightIv);
 			String playerIP = IP + card.getResource_url();
 			reson.setText("原题:");
-			rightanswers.setText(setback(card.getContent(), card.getTypes()));
+			if (card.getTypes().equals("5")) {
+				rightanswers.setText(settypes5(card.getFull_text(), card.getOptions()));
+			}else {
+				rightanswers.setText(setback(card.getContent(), card.getTypes()));
+			}
+			
 			if (card.getTypes().equals("1")
 					|| card.getTypes().equals("0")) {
 				cardbatread.setVisibility(View.VISIBLE);
@@ -732,9 +739,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 				}
 			} else if (card.getResource_url().equals(""))
 				cardbatread.setVisibility(View.GONE);
-			if (card.getTypes().equals("5")) {
-				settypes5(card.getFull_text(), card.getOptions());
-			}
+		
 			final String IP2 = playerIP;
 			cardbatread.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {

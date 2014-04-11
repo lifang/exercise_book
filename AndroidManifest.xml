@@ -328,6 +328,11 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
+         <activity
+            android:name="com.comdosoft.ExerciseBook.MCardTag"
+            android:theme="@android:style/Theme.Translucent"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+        </activity>
     </application>
 
 </manifest>
