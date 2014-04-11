@@ -44,10 +44,10 @@
         android:layout_width="400dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:background="@drawable/textview_border"
+        android:background="@drawable/dictation_mes_bg"
         android:gravity="center"
         android:lineSpacingExtra="15dp"
-        android:padding="15dp"
+        android:padding="20dp"
         android:text="@string/question_speak_tishi"
         android:textColor="#6E6B6B"
         android:textSize="18sp" />

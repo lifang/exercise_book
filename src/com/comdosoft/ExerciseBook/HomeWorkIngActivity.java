@@ -215,6 +215,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 		ImageView imageView = (ImageView) view.findViewById(R.id.image);
 		TextView work_name = (TextView) view.findViewById(R.id.work_name);
 		TextView top = (TextView) view.findViewById(R.id.top);
+		top.setVisibility(View.GONE);
 		ImageView over_img = (ImageView) view.findViewById(R.id.over_img);
 		work_name.setText(namearr[questiontype_list.get(i)].toString());
 		layout.setOnClickListener(new View.OnClickListener() {
@@ -226,23 +227,23 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 				startDekaron(i);// 跳转到答题页面
 			}
 		});
-		top.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View arg0) {
-				Intent intent = new Intent(HomeWorkIngActivity.this,
-						RankingOfPointsActivity.class);
-				intent.putExtra("types", questiontype_list.get(i));
-				intent.putExtra("pub_id", Integer.valueOf(eb.getWork_id()));
-				startActivity(intent);
-			}
-		});
+		// top.setOnClickListener(new View.OnClickListener() {
+		// public void onClick(View arg0) {
+		// Intent intent = new Intent(HomeWorkIngActivity.this,
+		// RankingOfPointsActivity.class);
+		// intent.putExtra("types", questiontype_list.get(i));
+		// intent.putExtra("pub_id", Integer.valueOf(eb.getWork_id()));
+		// startActivity(intent);
+		// }
+		// });
 		if (ExerciseBookTool.getExist(questiontype_list.get(i), finish_list)) {
 			typeList.add(true);
 			over_img.setVisibility(View.VISIBLE);
-			top.setVisibility(View.VISIBLE);
+			// top.setVisibility(View.VISIBLE);
 		} else {
 			typeList.add(false);
 			over_img.setVisibility(View.GONE);
-			top.setVisibility(View.GONE);
+			// top.setVisibility(View.GONE);
 		}
 
 		int imgid = 0;
@@ -286,8 +287,8 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 				if (obj.getString("status").equals("success")) {
 					work_list = WorkJson.json(json);
 					Map<Integer, Integer> number = WorkJson.getProp(json);
-					eb.setTrue_number(number.get(0));
-					eb.setTime_number(number.get(1));
+					eb.setTrue_number(number.get(1));
+					eb.setTime_number(number.get(0));
 					if (work_list.size() != 0) {
 						eb.setWork_number(work_list.get(0).getQuestion_types()
 								.size());

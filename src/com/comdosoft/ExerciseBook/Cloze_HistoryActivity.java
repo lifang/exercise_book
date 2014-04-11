@@ -1,6 +1,5 @@
 package com.comdosoft.ExerciseBook;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,16 +25,12 @@ import android.widget.PopupWindow.OnDismissListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.comdosoft.ExerciseBook.pojo.AnswerJson;
-import com.comdosoft.ExerciseBook.pojo.AnswerPojo;
-import com.comdosoft.ExerciseBook.pojo.Branch_AnswerPoJo;
 import com.comdosoft.ExerciseBook.pojo.Branch_PoJo;
 import com.comdosoft.ExerciseBook.pojo.ClozePojo;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
-import com.comdosoft.ExerciseBook.tools.MyViewGroup;
+import com.comdosoft.ExerciseBook.tools.FlowLayout;
 import com.comdosoft.ExerciseBook.tools.MyspinnerAdapter;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
-import com.google.gson.Gson;
 
 public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 		Urlinterface, OnClickListener {
@@ -43,17 +38,13 @@ public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 	public String path = "";
 	public String sdpath = Environment.getExternalStorageDirectory() + "/";
 	private String content = "";
-	private MyViewGroup myLayout;
+	private FlowLayout myLayout;
 	private String[] str;
 	private int specified_time;
 	private List<Branch_PoJo> Branchlist;
 	private List<ClozePojo> list;
 	private ClozePojo cloze;
 	private int index = 0;
-	private AnswerJson answerJson;
-	private List<Branch_AnswerPoJo> Branch_list = new ArrayList<Branch_AnswerPoJo>();
-	private Gson gson;
-	private AnswerPojo answer;
 	private TextView spinner;
 	private int select_item;
 	private Handler handler = new Handler() {
@@ -84,7 +75,6 @@ public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 		setType(1);
 		setQuestionType(5);
 		setCheckText("下一个");
-		gson = new Gson();
 		initialize();
 		Intent intent = getIntent();
 		path = intent.getStringExtra("path");
@@ -93,18 +83,9 @@ public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 		SetJson(json);
 	}
 
-	private void SetAnswer() {
-		File answer_file = new File(path);
-		if (answer_file.exists()) {
-			String json2 = ExerciseBookTool.getJson(path);
-			answer = ExerciseBookTool.getAnswer(json2, "cloze");
-		}
-		handler.sendEmptyMessage(0);
-	}
-
 	// 初始化
 	public void initialize() {
-		myLayout = (MyViewGroup) findViewById(R.id.myLayout);
+		myLayout = (FlowLayout) findViewById(R.id.myLayout);
 	}
 
 	private void setTextView() {
@@ -123,7 +104,7 @@ public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 				final String[] Opption_str = Opption.split(";\\|\\|;");
 				spinner.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {
-						showWindow(spinner, Opption_str);
+						// showWindow(spinner, Opption_str);
 					}
 				});
 				spinner.setText(cloze.getList().get(select_item).getAnswer());
@@ -194,21 +175,11 @@ public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 				Toast.makeText(Cloze_HistoryActivity.this, "解析json发生错误",
 						Toast.LENGTH_SHORT).show();
 			}
-			SetAnswer();
+			handler.sendEmptyMessage(0);
 		}
-	}
-
-	private List<String> getlist(String[] str) {
-		List<String> strlist = new ArrayList<String>();
-		strlist.add("");
-		for (int i = 0; i < str.length; i++) {
-			strlist.add(str[i]);
-		}
-		return strlist;
 	}
 
 	public void onClick(View v) {
-		Intent intent = new Intent();
 		switch (v.getId()) {
 		case R.id.base_back_linearlayout:
 			super.onClick(v);
@@ -216,6 +187,7 @@ public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 		case R.id.base_check_linearlayout:
 			if (index + 1 < list.size()) {
 				index += 1;
+				select_item = 0;
 				nextRecord();
 				handler.sendEmptyMessage(0);
 			} else {

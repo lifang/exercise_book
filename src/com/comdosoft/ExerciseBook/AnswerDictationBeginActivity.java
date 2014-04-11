@@ -108,6 +108,7 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		mPlayImg.setOnClickListener(this);
 
 		setQuestionType(0);
+
 		setTruePropEnd();
 
 		etlp = new LayoutParams(LayoutParams.WRAP_CONTENT,
@@ -620,8 +621,8 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 			if (status != 2) {
 				check();
 			} else {
-				calculateIndexAndUpdateView();
 				nextRecord();
+				calculateIndexAndUpdateView();
 			}
 			break;
 		case R.id.question_dictation_play:

@@ -41,13 +41,14 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 import com.google.gson.Gson;
 
-/**
- * @作者 马龙
- * @时间 2014-4-10 下午3:50:20
- */
+/** 
+* @作者 马龙 
+* @时间 2014-4-11 下午4:42:27 
+*/ 
 public class AnswerBaseActivity extends Activity implements OnClickListener,
 		OnPreparedListener, Urlinterface {
 	public ExerciseBook eb;
+	private int aveRatio = 0;
 	public int mQindex = 0;
 	public int mBindex = 0;
 	public int mRecordIndex = 0;
@@ -96,6 +97,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	private MediaPlayer player;
 	private String updated_time = "0000-00-00 00:00:00";
 	private LinearLayout base_check_linearlayout;
+	private List<List<String>> Cloze_list;
 	private Handler mHandler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -173,6 +175,12 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 			setTruePropEnd();
 			setTimePropEnd();
 		}
+		if (eb.getTrue_number() <= 0) {
+			setTruePropEnd();
+		}
+		if (eb.getTime_number() <= 0) {
+			setTimePropEnd();
+		}
 	}
 
 	// 设置子布局View
@@ -197,13 +205,46 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		if (type != 7) {
 			setUseTime(amp.getUse_time());
 			setType(amp.getStatus());
-
 			if (status == 2) {
 				mRecoirdAnswer = amp.getAnswer();
 				mRecoirdRatio = amp.getRatio();
+				if (type == 5) {
+					GetClozeList();
+				}
 				nextRecord();
 			}
 		}
+	}
+
+	public void GetClozeList() {
+		File answer_file = new File(path);
+		if (answer_file.exists()) {
+			String json2 = ExerciseBookTool.getJson(path);
+			JSONObject obj;
+			try {
+				obj = new JSONObject(json2);
+				JSONObject cloze = obj.getJSONObject("cloze");
+				JSONArray ja = cloze.getJSONArray("questions");
+				Cloze_list = new ArrayList<List<String>>();
+				if (ja.length() > 0) {
+					for (int i = 0; i < ja.length(); i++) {
+						JSONArray jArr = ja.getJSONObject(i).getJSONArray(
+								"branch_questions");
+						List<String> branchlist = new ArrayList<String>();
+						for (int j = 0; j < jArr.length(); j++) {
+							Log.i("aa",
+									jArr.getJSONObject(j).getString("answer"));
+							branchlist.add(jArr.getJSONObject(j).getString(
+									"answer"));
+						}
+						Cloze_list.add(branchlist);
+					}
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+		Log.i("linshi", "Cloze_list:" + Cloze_list.size());
 	}
 
 	// 隐藏时间栏
@@ -223,8 +264,8 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 			base_answer_linearlayout.setVisibility(View.GONE);
 		} else if (status == 2) {
 			setCheckText("下一个");
-			propTrue.setImageResource(R.drawable.base_prop3);
-			propTime.setImageResource(R.drawable.base_prop4);
+			propTrue.setImageResource(R.drawable.base_prop4);
+			propTime.setImageResource(R.drawable.base_prop3);
 			base_time_linearlayout.setVisibility(View.GONE);
 			base_history_linearlayout.setVisibility(View.VISIBLE);
 			base_answer_linearlayout.setVisibility(View.VISIBLE);
@@ -283,7 +324,6 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	public void setMyAnswer(String s) {
 		if (s == null || s.equals("")) {
 			base_answer_text.setText("没有答题记录!");
-			setAccuracyAndUseTime(0, 0);
 		} else {
 			base_answer_text.setText(answerArr[mQuestionType] + s);
 		}
@@ -299,6 +339,12 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	public void setTruePropEnd() {
 		propTrue.setImageResource(R.drawable.base_prop4);
 		propTrue.setClickable(false);
+	}
+
+	// 正确道具显示
+	public void setTruePropShow() {
+		propTrue.setImageResource(R.drawable.base_prop1);
+		propTrue.setClickable(true);
 	}
 
 	public String[] getRecordMes() {
@@ -369,20 +415,22 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 			break;
 		case R.id.base_propTime:
 			if (eb.getTime_number() > 0) {
-				PropJson(1, mQuestList.get(mQindex).get(mBindex)
+				PropJson(0, mQuestList.get(mQindex).get(mBindex)
 						.getBranch_questions_id());
 			} else {
+				setTimePropEnd();
 				Toast.makeText(getApplicationContext(), "道具数量不足!", 0).show();
 			}
 			break;
 		case R.id.base_propTrue:
-			// if (eb.getTrue_number() > 0) {
-			rightAnswer();
-			PropJson(0, mQuestList.get(mQindex).get(mBindex)
-					.getBranch_questions_id());
-			// } else {
-			// Toast.makeText(getApplicationContext(), "道具数量不足!", 0).show();
-			// }
+			if (eb.getTrue_number() > 0) {
+				rightAnswer();
+				PropJson(1, mQuestList.get(mQindex).get(mBindex)
+						.getBranch_questions_id());
+			} else {
+				setTruePropEnd();
+				Toast.makeText(getApplicationContext(), "道具数量不足!", 0).show();
+			}
 			break;
 		}
 	}
@@ -418,11 +466,12 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		if (mRecoirdRatio != null && mRecoirdAnswer != null) {
 			if (mRecordIndex < mRecoirdRatio.size()
 					&& mRecordIndex < mRecoirdAnswer.size()) {
-				setAccuracyAndUseTime(mRecoirdRatio.get(mRecordIndex),
-						amp.getUse_time());
+				setAccuracyAndUseTime(aveRatio, amp.getUse_time());
 				setMyAnswer(mRecoirdAnswer.get(mRecordIndex));
-				setAccuracyAndUseTime(mRecoirdRatio.get(mRecordIndex),
-						amp.getUse_time());
+				aveRatio = ExerciseBookTool.getRatio(path,
+						questionArr[mQuestionType]);
+				Log.i("aaa", aveRatio + "=,.");
+				setAccuracyAndUseTime(aveRatio, amp.getUse_time());
 				if (mQuestionType == 0) {
 					String s[] = mRecoirdAnswer.get(mRecordIndex).split(
 							";\\|\\|;");
@@ -433,21 +482,24 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 							.replaceAll(";\\|\\|;", "    ")
 							.replaceAll("<=>", " "));
 				} else if (mQuestionType == 5) {
-					int myratio = 0;
+
+					Log.i("linshi", "mRecordIndex:" + mRecordIndex);
 					StringBuffer sb = new StringBuffer("");
-					for (int i = 0; i < mRecoirdRatio.size(); i++) {
-						myratio += mRecoirdRatio.get(i);
-						if (!mRecoirdAnswer.get(i).equals("")) {
-							sb.append(mRecoirdAnswer.get(i)).append(",");
+					if (Cloze_list.size() > 0) {
+						for (int i = 0; i < Cloze_list.get(mRecordIndex).size(); i++) {
+							Log.i("linshi", "Cloze_list.get(mRecordIndex):"
+									+ Cloze_list.get(mRecordIndex).get(i));
+							if (!Cloze_list.get(mRecordIndex).get(i).equals("")) {
+								sb.append(Cloze_list.get(mRecordIndex).get(i))
+										.append(",");
+							}
 						}
+					} else {
+						setAccuracyAndUseTime(0, 0);
 					}
 					if (sb.length() > 0) {
 						sb.deleteCharAt(sb.length() - 1);
 					}
-					if (myratio != 0) {
-						myratio = myratio / mRecoirdRatio.size();
-					}
-					setAccuracyAndUseTime(myratio, amp.getUse_time());
 					setMyAnswer(sb.toString());
 				} else {
 					setMyAnswer(mRecoirdAnswer.get(mRecordIndex).replaceAll(
@@ -708,6 +760,8 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 							ratio.add(jArr.getJSONObject(j).getInt("ratio"));
 						}
 					}
+					aveRatio = ExerciseBookTool.getRatio(path,
+							questionArr[mQuestionType]);
 					return new AnswerMyPojo(status, use_time, answer, ratio);
 				}
 			}
@@ -742,7 +796,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	public void PropJson(int type, int branch_id) {
 		String answer_history = ExerciseBookTool.getAnswer_Json_history(path);
 		answerJson = gson.fromJson(answer_history, AnswerJson.class);
-		if (type == 1) {// 减时卡
+		if (type == 0) {// 减时卡
 			Toast.makeText(AnswerBaseActivity.this, "成功使用减时卡减去5秒时间！",
 					Toast.LENGTH_SHORT).show();
 			setUseTime(second - 5 < 0 ? 0 : second - 5);
@@ -751,6 +805,12 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 			eb.setTime_number(eb.getTime_number() - 1);
 		} else {
 			eb.setTrue_number(eb.getTrue_number() - 1);
+		}
+		if (eb.getTrue_number() == 0) {
+			setTruePropEnd();
+		}
+		if (eb.getTime_number() == 0) {
+			setTimePropEnd();
 		}
 		Log.i("Ax", "type-bid:" + type + "--" + branch_id);
 		try {
@@ -784,10 +844,6 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		base_answer_linearlayout.setVisibility(View.GONE);
 	}
 
-	public void yinCangCheck() {
-		base_check_linearlayout.setVisibility(View.GONE);
-	}
-
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == 1) {
@@ -810,6 +866,10 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 				break;
 			}
 		}
+	}
+
+	public void yinCangCheck() {
+		base_check_linearlayout.setVisibility(View.GONE);
 	}
 
 	public void MyPlayer(boolean status) {

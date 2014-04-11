@@ -85,17 +85,13 @@ public class ExerciseBookTool implements Urlinterface {
 		}
 	}
 
-	// 根据UnicodeBlock方法判断中文标点符号
-	public static boolean isChinesePunctuation(char c) {
-		Character.UnicodeBlock ub = Character.UnicodeBlock.of(c);
-		if (ub == Character.UnicodeBlock.GENERAL_PUNCTUATION
-				|| ub == Character.UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION
-				|| ub == Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS
-				|| ub == Character.UnicodeBlock.CJK_COMPATIBILITY_FORMS) {
-			return true;
-		} else {
+	// 判断是否包含标点符号
+	public boolean isNotChinese(String str) {
+		if (str.equals("") || str == null) {
 			return false;
 		}
+		Pattern pattern = Pattern.compile("(?i)[^a-zA-Z0-9\u4E00-\u9FA5]");
+		return pattern.matcher(str.trim()).find();
 	}
 
 	// 过去answer中的时间
@@ -307,16 +303,16 @@ public class ExerciseBookTool implements Urlinterface {
 			JSONObject js = obj.getJSONObject(key);
 			Log.i("Ax", js.toString());
 			JSONArray arr = js.getJSONArray("questions");
-			Log.i("Ax", arr.length() + "-ratio-arr-size");
 			if (arr.length() == 0) {
 				return -10;
 			}
 			for (int i = 0; i < arr.length(); i++) {
 				JSONObject item = arr.getJSONObject(i);
 				JSONArray ar = item.getJSONArray("branch_questions");
-				Log.i("aaa", ar.length() + "-ar");
 				for (int j = 0; j < ar.length(); j++) {
 					JSONObject o = ar.getJSONObject(j);
+					Log.i("Ax",
+							"ratio:" + Integer.parseInt(o.getString("ratio")));
 					ratio.add(Integer.parseInt(o.getString("ratio")));
 				}
 			}

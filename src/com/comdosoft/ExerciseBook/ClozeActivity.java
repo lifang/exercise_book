@@ -19,6 +19,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,7 +41,7 @@ import com.comdosoft.ExerciseBook.pojo.Branch_PoJo;
 import com.comdosoft.ExerciseBook.pojo.ClozePojo;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
-import com.comdosoft.ExerciseBook.tools.MyViewGroup;
+import com.comdosoft.ExerciseBook.tools.FlowLayout;
 import com.comdosoft.ExerciseBook.tools.MyspinnerAdapter;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 import com.google.gson.Gson;
@@ -52,7 +53,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 	public String path = "";
 	public String sdpath = Environment.getExternalStorageDirectory() + "/";
 	private String content = "";
-	private MyViewGroup myLayout;
+	private FlowLayout myLayout;
 	private String[] str;
 	private List<Branch_PoJo> Branchlist;
 	private List<ClozePojo> list;
@@ -150,7 +151,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 
 	// 初始化
 	public void initialize() {
-		myLayout = (MyViewGroup) findViewById(R.id.myLayout);
+		myLayout = (FlowLayout) findViewById(R.id.myLayout);
 	}
 
 	private void setTextView() {
@@ -326,7 +327,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		if (width == 1200) {
 			popupWindow.setWidth(400);
 		} else {
-			popupWindow.setWidth(300);
+			popupWindow.setWidth(250);
 		}
 		popupWindow.setHeight(LayoutParams.WRAP_CONTENT);
 		popupWindow.setBackgroundDrawable(new BitmapDrawable());
@@ -334,11 +335,11 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		popupWindow.setFocusable(true);
 		popupWindow.setContentView(layout);
 		popupWindow.showAsDropDown(position, 0, 0);
-		popupWindow.setOnDismissListener(new OnDismissListener() {
-			public void onDismiss() {
-				// position.setBackgroundResource(R.drawable.preference_single_item);
-			}
-		});
+		// popupWindow.setOnDismissListener(new OnDismissListener() {
+		// public void onDismiss() {
+		// position.setBackgroundResource(R.drawable.preference_single_item);
+		// }
+		// });
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
@@ -386,6 +387,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 						switch (type) {// 0为下一小题 1为全部做完 2为本小题做完
 						case 0:
 							index += 1;
+							select_item = 0;
 							SetAnswer();
 							break;
 						case 1:
@@ -424,7 +426,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		case R.id.base_propTrue:
 			if (eb.getTrue_number() > 0) {// 判断显示答案的道具数量是否大于0
 				if (propItem < tv_list.size()) {
-					PropJson(0, cloze.getList().get(propItem).getId());// 1道具类型
+					PropJson(1, cloze.getList().get(propItem).getId());// 1道具类型
 																		// --0显示答案
 																		// 1时间
 																		// ,
@@ -451,7 +453,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		case R.id.base_propTime:
 			if (eb.getTime_number() > 0) {// 判断显示答案的道具数量是否大于0
 				// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
-				PropJson(1, cloze.getList().get(propItem).getId());// 1道具类型
+				PropJson(0, cloze.getList().get(propItem).getId());// 1道具类型
 																	// --0显示答案
 																	// 1时间 ,
 																	// 2--小题id
@@ -465,7 +467,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 	}
 
 	public void setButtonOver() {
-		if (index + 1 == list.size()) {
+		if (index + 1 >= list.size()) {
 			setCheckText("完成");
 		}
 	}

@@ -46,7 +46,6 @@ import com.comdosoft.ExerciseBook.tools.PredicateLayout;
 import com.comdosoft.ExerciseBook.tools.Soundex_Levenshtein;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 /**
  * 作者: 张秀楠 时间：2014-4-9 上午11:49:11
@@ -83,7 +82,6 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 	private boolean playFlag = false;
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
-			Intent intent = new Intent();
 			Builder builder = new Builder(SpeakBeginActivity.this);
 			builder.setTitle("提示");
 			switch (msg.what) {
@@ -118,12 +116,15 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 		findViewById(R.id.base_back_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_propTime).setOnClickListener(this);
-		setTruePropEnd();// 禁用道具
 		// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
 		super.mQuestionType = 1;
 		super.setStart();
 		setCheckText("下一题");
 		eb = (ExerciseBook) getApplication();
+		if (eb.getTime_number() <= 0 || status == 1) {
+			setTimePropEnd();// 禁用道具
+		}
+		setTruePropEnd();// 禁用道具
 
 		qid = eb.getQuestion_id();
 		gson = new Gson();
@@ -275,15 +276,11 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 				ArrayList<String> results = data
 						.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 				Log.i("suanfa", "->" + results);
-				// String speak = getSpeakStr(results);// 用户语音返回的字符串
-				String speak = results.get(0);
+				String speak = getSpeakStr(results);
 				Log.i("suanfa", "语音返回--->" + speak);
 				str_list = new ArrayList<String>();
 				content = content.replaceAll(
 						"(?i)[^a-zA-Z0-9\u4E00-\u9FA5\\s]", "");// 去除标点符号
-				speak = speak
-						.replaceAll("(?i)[^a-zA-Z0-9\u4E00-\u9FA5\\s]", "");// 去除标点符号
-				Log.i("suanfa", "朗读答案->" + speak);
 				content = content.replaceAll("\\s", " ");
 				String[] ok_arr = content.split(" ");
 				Log.i("suanfa", "正确答案->" + content);
@@ -292,53 +289,65 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 					str_list.add(item[i]);
 				}
 
-				List<int[]> code_list = Soundex_Levenshtein.Engine2(content,
-						str_list);
-				Log.i("suanfa", code_list.size() + "");
-				if (code_list.size() > 0) {
-					for (int i = 0; i < code_list.size(); i++) {
-						if (code_list.get(i)[1] >= 7) {
-							ok_speak.put(code_list.get(i)[0],
-									ok_arr[code_list.get(i)[0]]);
-							text_list.get(code_list.get(i)[0]).setTextColor(
-									getResources().getColor(R.color.work_end));
-						} else {
-							if (!error_str
-									.contains(ok_arr[code_list.get(i)[0]])) {
-								error_str += ok_arr[code_list.get(i)[0]]
-										+ ";||;";
+				if (!speak.equals("")) {
+					List<int[]> code_list = Soundex_Levenshtein.Engine2(
+							content, str_list);
+
+					Log.i("suanfa", code_list.size() + "");
+					if (code_list.size() > 0) {
+						for (int i = 0; i < code_list.size(); i++) {
+							if (code_list.get(i)[1] >= 7) {
+								ok_speak.put(code_list.get(i)[0],
+										ok_arr[code_list.get(i)[0]]);
+								text_list.get(code_list.get(i)[0])
+										.setTextColor(
+												getResources().getColor(
+														R.color.work_end));
+							} else {
+								if (!error_str
+										.contains(ok_arr[code_list.get(i)[0]])) {
+									error_str += ok_arr[code_list.get(i)[0]]
+											+ ";||;";
+								}
+								text_list.get(code_list.get(i)[0])
+										.setTextColor(
+												getResources().getColor(
+														R.color.juhuang));
 							}
-							text_list.get(code_list.get(i)[0]).setTextColor(
+						}
+
+					} else {
+						for (int i = 0; i < str_list.size(); i++) {
+							text_list.get(i).setTextColor(
 									getResources().getColor(R.color.juhuang));
 						}
 					}
-
-				} else {
-					for (int i = 0; i < str_list.size(); i++) {
-						text_list.get(i).setTextColor(
-								getResources().getColor(R.color.juhuang));
+					Log.i(tag, ok_speak.size() + "-" + str_list.size());
+					question_speak_tishi.setVisibility(View.VISIBLE);
+					if (ok_speak.size() == ok_arr.length) {
+						question_speak_tishi
+								.setText(R.string.question_speak_tishi_ok);
+					} else {
+						question_speak_tishi
+								.setText(R.string.question_speak_tishi);
 					}
-				}
-				Log.i(tag, ok_speak.size() + "-" + str_list.size());
-				question_speak_tishi.setVisibility(View.VISIBLE);
-				if (ok_speak.size() == ok_arr.length) {
-					question_speak_tishi
-							.setText(R.string.question_speak_tishi_ok);
-				} else {
-					question_speak_tishi.setText(R.string.question_speak_tishi);
-				}
-				if ((ok_speak.size() * 2) >= ok_arr.length || number >= 4) {// 设置如果正确率为50%就可以下一题
-					Speak_type = true;
-					setButtonOver();
+					if ((ok_speak.size() * 2) >= ok_arr.length || number >= 4) {// 设置如果正确率为50%就可以下一题
+						Speak_type = true;
+						setButtonOver();
 
-				} else {
-					Speak_type = false;
-				}
+					} else {
+						Speak_type = false;
+					}
 
-				Log.i("aaa", ok_speak.size() + ":->" + ok_arr.length);
-				if (number == 1) {
-					ratio = (ok_speak.size() * 100) / ok_arr.length;
-					Log.i("aaa", "ratio:" + ratio);
+					Log.i("aaa", ok_speak.size() + ":->" + ok_arr.length);
+					if (number == 1) {
+						ratio = (ok_speak.size() * 100) / ok_arr.length;
+						Log.i("aaa", "ratio:" + ratio);
+					}
+				} else {
+					Toast.makeText(getApplicationContext(), "语音不清晰,请再认真朗读一次吧",
+							Toast.LENGTH_SHORT).show();
+					number -= 1;
 				}
 			} else {
 				number -= 1;
@@ -626,7 +635,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 		case R.id.base_propTime:
 			// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
 			if (eb.getTime_number() > 0) {
-				PropJson(1, branch_questions.get(index).getId());
+				PropJson(0, branch_questions.get(index).getId());
 			} else {
 				Toast.makeText(SpeakBeginActivity.this,
 						R.string.prop_number_error, Toast.LENGTH_SHORT).show();
@@ -646,6 +655,25 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 			type = 2;
 		}
 		return type;
+	}
+
+	public String getSpeakStr(ArrayList<String> list) {
+		for (int i = 0; i < list.size(); i++) {
+			String[] arr = list.get(i).split(" ");
+			if (!StrArr(arr)) {
+				return list.get(i);
+			}
+		}
+		return "";
+	}
+
+	public boolean StrArr(String[] arr) {
+		for (int i = 0; i < arr.length; i++) {
+			if (ExerciseBookTool.isChinese(arr[i])) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public void setButtonOver() {
@@ -668,8 +696,8 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 				e.printStackTrace();
 			}
 		} else {
-			type = Again();
-			if (type == 1) {
+			int status = Again();
+			if (status == 1) {
 				setCheckText("完成");
 			}
 		}
