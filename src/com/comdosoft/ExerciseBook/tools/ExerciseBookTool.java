@@ -72,6 +72,19 @@ public class ExerciseBookTool implements Urlinterface {
 	private static int readTimeOut = 10000;
 	private static String requestEncoding = "UTF-8";
 
+	public static void UpdateJsonTime(String time, String url) {
+		Gson gson = new Gson();
+		String answer_history = ExerciseBookTool.getAnswer_Json_history(url);
+		AnswerJson answerJson = gson.fromJson(answer_history, AnswerJson.class);
+		answerJson.update = time;
+		String str = gson.toJson(answerJson);
+		try {
+			ExerciseBookTool.writeFile(url, str);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	// 根据UnicodeBlock方法判断中文标点符号
 	public static boolean isChinesePunctuation(char c) {
 		Character.UnicodeBlock ub = Character.UnicodeBlock.of(c);
@@ -294,7 +307,7 @@ public class ExerciseBookTool implements Urlinterface {
 			JSONObject js = obj.getJSONObject(key);
 			Log.i("Ax", js.toString());
 			JSONArray arr = js.getJSONArray("questions");
-			Log.i("Ax", arr.length() + "ratio-arr-size");
+			Log.i("Ax", arr.length() + "-ratio-arr-size");
 			if (arr.length() == 0) {
 				return -10;
 			}
@@ -304,14 +317,14 @@ public class ExerciseBookTool implements Urlinterface {
 				Log.i("aaa", ar.length() + "-ar");
 				for (int j = 0; j < ar.length(); j++) {
 					JSONObject o = ar.getJSONObject(j);
-					ratio.add(o.getInt("ratio"));
+					ratio.add(Integer.parseInt(o.getString("ratio")));
 				}
 			}
 		} catch (JSONException e) {
+			Log.i("Ax", "JSONException-" + e.toString() + "--" + e.getMessage());
 			return -20;
 		}
 		int size = 0;
-		Log.i("aaa", ratio.size() + "-ratio");
 		for (int i = 0; i < ratio.size(); i++) {
 			size += ratio.get(i);
 		}
@@ -365,7 +378,7 @@ public class ExerciseBookTool implements Urlinterface {
 			bf.close();
 			in.close();
 		} catch (IOException e) {
-			Log.i("linshi", "读取json文件发生错误");
+			Log.i("Ax", "读取json文件发生错误");
 		}
 		return stringBuilder.toString();
 	}

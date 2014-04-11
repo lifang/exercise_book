@@ -71,6 +71,7 @@ public class SpeakHistoryActivity extends AnswerBaseActivity implements
 						error_str = answer.getQuestions()
 								.get(eb.getQuestion_item())
 								.getBranch_questions().get(index).getAnswer();
+						Log.i("suanfa", error_str);
 					} catch (Exception e) {
 						error_str = "";
 					}
@@ -105,7 +106,8 @@ public class SpeakHistoryActivity extends AnswerBaseActivity implements
 		setTruePropEnd();// 禁用道具
 		setType(1);
 		setQuestionType(1);
-		setCheckText("下一个");
+		setCheckText("下一题");
+		yinCang();// 隐藏"你的作答"布局
 		eb = (ExerciseBook) getApplication();
 
 		ratio_list = new ArrayList<Integer>();
@@ -133,7 +135,7 @@ public class SpeakHistoryActivity extends AnswerBaseActivity implements
 		File answer_file = new File(path);
 		if (answer_file.exists()) {
 			String json2 = ExerciseBookTool.getJson(path);
-			answer = ExerciseBookTool.getAnswer(json2, "cloze");
+			answer = ExerciseBookTool.getAnswer(json2, "reading");
 		}
 		handler.sendEmptyMessage(0);
 	}

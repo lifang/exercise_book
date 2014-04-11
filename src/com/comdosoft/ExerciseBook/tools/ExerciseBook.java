@@ -49,6 +49,7 @@ public class ExerciseBook extends Application {
 	private int Time_number;
 	private int True_number;
 	Map<Integer, List<View>> FontCard;
+	private int usertime;
 
 	public Map<Integer, List<View>> getFontCard() {
 		return FontCard;
@@ -68,6 +69,7 @@ public class ExerciseBook extends Application {
 		this.setMneu(true);
 		this.setHistory_type(false);
 		this.setPropTime_Number(0);
+		this.setUsertime(0);
 	}
 
 	public int getWork_number() {
@@ -281,6 +283,14 @@ public class ExerciseBook extends Application {
 
 	public void setTrue_number(int true_number) {
 		True_number = true_number;
+	}
+
+	public int getUsertime() {
+		return usertime;
+	}
+
+	public void setUsertime(int usertime) {
+		this.usertime = usertime;
 	}
 
 	public void onCreate() {

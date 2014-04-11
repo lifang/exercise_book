@@ -32,8 +32,8 @@ import com.comdosoft.ExerciseBook.pojo.Branch_AnswerPoJo;
 import com.comdosoft.ExerciseBook.pojo.Branch_PoJo;
 import com.comdosoft.ExerciseBook.pojo.ClozePojo;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
+import com.comdosoft.ExerciseBook.tools.MyViewGroup;
 import com.comdosoft.ExerciseBook.tools.MyspinnerAdapter;
-import com.comdosoft.ExerciseBook.tools.PredicateLayout;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 import com.google.gson.Gson;
 
@@ -43,7 +43,7 @@ public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 	public String path = "";
 	public String sdpath = Environment.getExternalStorageDirectory() + "/";
 	private String content = "";
-	private PredicateLayout myLayout;
+	private MyViewGroup myLayout;
 	private String[] str;
 	private int specified_time;
 	private List<Branch_PoJo> Branchlist;
@@ -104,7 +104,7 @@ public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 
 	// 初始化
 	public void initialize() {
-		myLayout = (PredicateLayout) findViewById(R.id.myLayout);
+		myLayout = (MyViewGroup) findViewById(R.id.myLayout);
 	}
 
 	private void setTextView() {

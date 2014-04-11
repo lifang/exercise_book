@@ -41,12 +41,9 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 import com.google.gson.Gson;
 
-// 答题父类
 /**
- * <<<<<<< HEAD 作者: 张秀楠 时间：2014-4-10 上午10:41:29 =======
- * 
  * @作者 马龙
- * @时间 2014-4-9 下午6:22:33 >>>>>>> d8f9d91d1088ee4a65f16e8016b6fa7a84300f2f
+ * @时间 2014-4-10 下午3:50:20
  */
 public class AnswerBaseActivity extends Activity implements OnClickListener,
 		OnPreparedListener, Urlinterface {
@@ -98,6 +95,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	public int index = 0;
 	private MediaPlayer player;
 	private String updated_time = "0000-00-00 00:00:00";
+	private LinearLayout base_check_linearlayout;
 	private Handler mHandler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -152,6 +150,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		base_time_linearlayout = (LinearLayout) findViewById(R.id.base_time_linearlayout);
 		base_history_linearlayout = (LinearLayout) findViewById(R.id.base_history_linearlayout);
 		base_answer_linearlayout = (LinearLayout) findViewById(R.id.base_answer_Linearlayout);
+		base_check_linearlayout = (LinearLayout) findViewById(R.id.base_check_linearlayout);
 		propTrue = (ImageView) findViewById(R.id.base_propTrue);
 		propTime = (ImageView) findViewById(R.id.base_propTime);
 		page = (TextView) findViewById(R.id.base_page);
@@ -169,7 +168,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		path = intent.getStringExtra("path");
 		status = intent.getIntExtra("status", 2);
 
-		// 禁掉道具
+		// 禁用道具
 		if (status != 0) {
 			setTruePropEnd();
 			setTimePropEnd();
@@ -412,6 +411,10 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 
 	// 切换下一历史记录
 	public void nextRecord() {
+		if (mQindex == mQuestList.size() - 1
+				&& mBindex == mQuestList.get(mQindex).size() - 1) {
+			setCheckText("完成");
+		}
 		if (mRecoirdRatio != null && mRecoirdAnswer != null) {
 			if (mRecordIndex < mRecoirdRatio.size()
 					&& mRecordIndex < mRecoirdAnswer.size()) {
@@ -430,17 +433,30 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 							.replaceAll(";\\|\\|;", "    ")
 							.replaceAll("<=>", " "));
 				} else if (mQuestionType == 5) {
-
+					int myratio = 0;
+					StringBuffer sb = new StringBuffer("");
+					for (int i = 0; i < mRecoirdRatio.size(); i++) {
+						myratio += mRecoirdRatio.get(i);
+						if (!mRecoirdAnswer.get(i).equals("")) {
+							sb.append(mRecoirdAnswer.get(i)).append(",");
+						}
+					}
+					if (sb.length() > 0) {
+						sb.deleteCharAt(sb.length() - 1);
+					}
+					if (myratio != 0) {
+						myratio = myratio / mRecoirdRatio.size();
+					}
+					setAccuracyAndUseTime(myratio, amp.getUse_time());
+					setMyAnswer(sb.toString());
 				} else {
 					setMyAnswer(mRecoirdAnswer.get(mRecordIndex).replaceAll(
 							";\\|\\|;", " "));
 				}
 
-				if (mRecordIndex < mRecoirdAnswer.size() && mQuestionType != 3) {
+				if (mRecordIndex < mRecoirdAnswer.size()) {
 					mRecordIndex++;
 				}
-			} else {
-				setMyAnswer("");
 			}
 		} else {
 			setMyAnswer("");
@@ -762,6 +778,14 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void yinCang() {
+		base_answer_linearlayout.setVisibility(View.GONE);
+	}
+
+	public void yinCangCheck() {
+		base_check_linearlayout.setVisibility(View.GONE);
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {

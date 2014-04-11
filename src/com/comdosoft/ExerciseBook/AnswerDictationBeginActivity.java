@@ -46,7 +46,7 @@ import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
 /**
  * @作者 马龙
- * @时间 2014-4-9 下午4:28:41
+ * @时间 2014-4-10 下午3:50:29
  */
 public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		OnClickListener, ExerciseBookParams, OnPreparedListener,
@@ -78,6 +78,7 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 
 	private LinearLayout editLinearLayout;
 	private TextView mesText;
+	private TextView recordText;
 	private ImageView mPlayImg;
 	private MediaPlayer mediaPlayer = new MediaPlayer();
 	private LayoutParams etlp;
@@ -101,6 +102,7 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		super.setContentView(R.layout.question_dictation_begin);
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
 		editLinearLayout = (LinearLayout) findViewById(R.id.question_dictation_linearLayout);
+		recordText = (TextView) findViewById(R.id.question_dictation_tv);
 		mesText = (TextView) findViewById(R.id.question_dictation_mes);
 		mPlayImg = (ImageView) findViewById(R.id.question_dictation_play);
 		mPlayImg.setOnClickListener(this);
@@ -171,6 +173,10 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		setPage(mBindex + 1, mQuestList.get(mQindex).size());
 		if (status == 2) {
 			setRecordMes();
+			recordText.setText(mQuestList.get(mQindex).get(mBindex)
+					.getContent());
+			recordText.setVisibility(View.VISIBLE);
+			editLinearLayout.setVisibility(View.GONE);
 		}
 	}
 
@@ -614,8 +620,8 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 			if (status != 2) {
 				check();
 			} else {
-				nextRecord();
 				calculateIndexAndUpdateView();
+				nextRecord();
 			}
 			break;
 		case R.id.question_dictation_play:

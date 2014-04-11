@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,8 +40,8 @@ import com.comdosoft.ExerciseBook.pojo.Branch_PoJo;
 import com.comdosoft.ExerciseBook.pojo.ClozePojo;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
+import com.comdosoft.ExerciseBook.tools.MyViewGroup;
 import com.comdosoft.ExerciseBook.tools.MyspinnerAdapter;
-import com.comdosoft.ExerciseBook.tools.PredicateLayout;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 import com.google.gson.Gson;
 
@@ -51,7 +52,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 	public String path = "";
 	public String sdpath = Environment.getExternalStorageDirectory() + "/";
 	private String content = "";
-	private PredicateLayout myLayout;
+	private MyViewGroup myLayout;
 	private String[] str;
 	private List<Branch_PoJo> Branchlist;
 	private List<ClozePojo> list;
@@ -69,11 +70,13 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 	private PopupWindow popupWindow;
 	private int select_item = 0;
 	private static final String regEx_html = "<[^>]+>";
+	private int width;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case 0:
 				Log.i("aaa", "---");
+				setButtonOver();
 				myLayout.removeAllViews();
 				content = cloze.getContent();
 				content = ExerciseBookTool.del_tag(content);
@@ -100,7 +103,8 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_propTrue).setOnClickListener(this);
 		findViewById(R.id.base_propTime).setOnClickListener(this);
-
+		Display display = this.getWindowManager().getDefaultDisplay();
+		width = display.getWidth();
 		gson = new Gson();
 		initialize();
 		Intent intent = getIntent();
@@ -116,6 +120,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		Log.i("suanfa", eb.getTrue_number() + "/" + eb.getTime_number());
 		SetJson(json);
 		SetAnswer();
+		setButtonOver();
 	}
 
 	private void SetAnswer() {
@@ -145,7 +150,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 
 	// 初始化
 	public void initialize() {
-		myLayout = (PredicateLayout) findViewById(R.id.myLayout);
+		myLayout = (MyViewGroup) findViewById(R.id.myLayout);
 	}
 
 	private void setTextView() {
@@ -318,7 +323,11 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 				Opption_str);
 		listView.setAdapter(adapter);
 		popupWindow = new PopupWindow(position);
-		popupWindow.setWidth(400);
+		if (width == 1200) {
+			popupWindow.setWidth(400);
+		} else {
+			popupWindow.setWidth(300);
+		}
 		popupWindow.setHeight(LayoutParams.WRAP_CONTENT);
 		popupWindow.setBackgroundDrawable(new BitmapDrawable());
 		popupWindow.setOutsideTouchable(true);
@@ -452,6 +461,12 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 						Toast.LENGTH_SHORT).show();
 			}
 			break;
+		}
+	}
+
+	public void setButtonOver() {
+		if (index + 1 == list.size()) {
+			setCheckText("完成");
 		}
 	}
 

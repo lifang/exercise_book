@@ -27,7 +27,10 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
 
-// 2014年4月1日 10:45:06
+/** 
+* @作者 马龙 
+* @时间 2014-4-10 下午3:50:36 
+*/ 
 public class AnswerDictationPrepareActivity extends AnswerBaseActivity
 		implements OnClickListener, OnPreparedListener, OnCompletionListener,
 		Urlinterface {

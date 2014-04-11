@@ -47,7 +47,7 @@
     <application
         android:name="com.comdosoft.ExerciseBook.tools.ExerciseBook"
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/logo_hw"
         android:label="@string/app_name"
         android:theme="@android:style/Theme.NoTitleBar" >
 
@@ -80,6 +80,27 @@
                 <action android:name="cn.jpush.android.intent.ACTION_RICHPUSH_CALLBACK" />
                 <!-- Optional 用户接受Rich Push Javascript 回调函数的intent -->
                 <category android:name="com.comdosoft.ExerciseBook" />
+            </intent-filter>
+        </receiver>
+        <!-- Required SDK核心功能 -->
+        <receiver
+            android:name="cn.jpush.android.service.PushReceiver"
+            android:enabled="true" >
+            <intent-filter android:priority="1000" >
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" />
+               <!-- Required  显示通知栏 -->
+                <category android:name="com.comdosoft.ExerciseBook" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+            <!-- Optional -->
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+
+                <data android:scheme="package" />
             </intent-filter>
         </receiver>
         <!-- Required -->
@@ -195,19 +216,17 @@
         </activity>
         <activity
             android:name=".ReplyListViewActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" >
+            android:label="@string/app_name" >
         </activity>
-        <activity
-            android:name=".MessageActivity"
-            android:screenOrientation="portrait" />
+        <activity android:name=".MessageActivity" />
         <activity
             android:name=".HomeWorkIngActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".MCardBagActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
         </activity>
         <activity
             android:name=".TenSpeedActivity"
@@ -298,6 +317,11 @@
             android:name=".Cloze_HistoryActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="com.comdosoft.ExerciseBook.MCardTag"
+            android:theme="@android:style/Theme.Translucent"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
         </activity>
         <activity
             android:name=".Ten_HistoryActivity"
