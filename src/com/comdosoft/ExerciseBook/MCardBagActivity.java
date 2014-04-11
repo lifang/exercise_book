@@ -2,6 +2,7 @@ package com.comdosoft.ExerciseBook;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -147,9 +148,11 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 							Map<String, String> map = new HashMap<String, String>();
 							map.put("student_id", student_id);
 							map.put("school_class_id", school_class_id);
-							map.put("name", String.valueOf(cardbagEt.getText()));
+							String s = String.valueOf(cardbagEt.getText());
+							String s1 = URLEncoder.encode(s, "utf-8");
+							map.put("name", s1);
 							String json = ExerciseBookTool.sendGETRequest(
-									get_knowledges_card, map);
+									search_tag_card, map);
 							pageAdapter = new GuidePageAdapter();
 							parsejson(json, false);
 							handler.sendEmptyMessage(1);
@@ -272,19 +275,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 					String resource_url = jsonobject2.getString("resource_url");
 					String types = jsonobject2.getString("types");
 					String answer = jsonobject2.getString("answer");
-					if ("5".equals(types)) {
-						JSONArray answerarray = jsonobject2 // 完形填空选项
-								.getJSONArray("answer");
-						for (int j = 0; j < answerarray.length(); j++) {
-							JSONObject ob = answerarray.getJSONObject(j);
-							String contentStr = ob.getString("content");
-							if (content.equals(contentStr)) {
-								answer = ob.getString("answer");
-								break;
-							}
-						}
-					}
-					
+
 					String options = jsonobject2.getString("options");
 					String full_text = jsonobject2.getString("full_text");
 					JSONArray tagsarray = jsonobject2 // 当前卡片 已选中的 标签 id
@@ -349,6 +340,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 				break;
 			case 1:
 				// page = 0;
+				cardbagEt.setText("");
 				setViewPager();
 				progressDialog.dismiss();
 				GuidePageAdapter gpa = new GuidePageAdapter();
@@ -476,36 +468,46 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 		}
 		String[] strarr;
 		switch (types2) {
-		case 0:  //  "your_answer": "where;||;Where?", 
+		case 0: // "your_answer": "where;||;Where?",
 			if (str.indexOf(";||;") != -1) {
 				strarr = str.split(";\\|\\|;");
-				for (int i = 0; i < strarr.length; i++) {
-					content += strarr[i] + " ";
-				}
-				content = content.substring(4, content.length() );
+				// for (int i = 0; i < strarr.length; i++) {
+				content += strarr[0] + " ";
+				// }
+				content = content.substring(4, content.length());
 			} else {
 				content = str.substring(0, str.lastIndexOf(";&&;"));
 			}
 			Log.i("asd", "正面听力case0:" + content);
 			return content;
-		case 1:   //   "your_answer": "Dad;||;come;||;and;||;sit;||;here;||;", 
+		case 1: // "your_answer": "Dad;||;come;||;and;||;sit;||;here;||;",
 			strarr = str.split(";\\|\\|;");
-			for (int i = 0; i < strarr.length; i++) {
-				content += strarr[i] + " ";
-			}
-			content = content.substring(4, content.length() );
+			// for (int i = 0; i < strarr.length; i++) {
+			// content += strarr[i] + " ";
+			// }
+			content += strarr[0] + " ";
+			content = content.substring(4, content.length());
 			return content;
 		case 2:
 			return str;
 		case 3:
-			return str;
-		case 4:  // "your_answer": "333<=>555;||;555<=>333;||;444<=>444",   
-//			"your_answer": "</><=>%$&!@#$;||;%$&!@#$<=>***;||;***<=></>", 
+			if (str.indexOf(";||;") != -1) {
+			strarr = str.split(";\\|\\|;");
+			for (int i = 0; i < strarr.length; i++) {
+				content += strarr[i] + " ";
+			}
+			}else {
+				content += str;
+			}
+			content = content.substring(4, content.length());
+			return content;
+		case 4: // "your_answer": "333<=>555;||;555<=>333;||;444<=>444",
+			// "your_answer": "</><=>%$&!@#$;||;%$&!@#$<=>***;||;***<=></>",
 			strarr = str.split(";\\|\\|;");
 			for (int i = 0; i < strarr.length; i++) {
 				content += strarr[i].replace("<=>", "  ") + " \n";
 			}
-			content = content.substring(4, content.length() );
+			content = content.substring(4, content.length());
 			return content;
 		case 5:
 			return str;
@@ -514,10 +516,29 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 			for (int i = 0; i < strarr.length; i++) {
 				content += strarr[i] + " ";
 			}
-			content = content.substring(4, content.length() );
+			content = content.substring(4, content.length());
 			return content;
 		}
 		return null;
+	}
+	
+	
+	public String FormatAns(String str) {
+		String content = "";
+	
+		String[] strarr;
+		
+			if (str.indexOf(";||;") != -1) {
+			strarr = str.split(";\\|\\|;");
+			for (int i = 0; i < strarr.length; i++) {
+				content += strarr[i] + " ";
+			}
+			}else {
+				content += str;
+			}
+			content = content.substring(0, content.length());
+			return content;
+		
 	}
 
 	public void oneClick() {
@@ -540,7 +561,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 		}
 	}
 
-//	MISTAKE_TYPES_NAME = {0 => "默认", 1 => "读错",2 => '写错',3 => '选错'}
+	// MISTAKE_TYPES_NAME = {0 => "默认", 1 => "读错",2 => '写错',3 => '选错'}
 	public String setWrong(String miskatype) {
 		switch (Integer.valueOf(miskatype)) {
 		case 1:
@@ -598,18 +619,35 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 	}
 
 	// 完形填空
-	public String settypes5(String full_text, String options) {
+	public String settypes5(String full_text, String answer) {
+		List arrs = new ArrayList<String>();
+		JSONArray answerarray;
+		try {
+			answerarray = new JSONArray(answer);
+			for (int j = 0; j < answerarray.length(); j++) {
+				JSONObject ob = answerarray.getJSONObject(j);
+				String contentStr = ob.getString("content");
+				arrs.add(ob.getString("answer"));
+				Log.i("22----------", ob.getString("answer") + "");
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		String content = "";
-		String[] arrs = options.split(";\\|\\|;");
+		full_text = full_text.replaceAll("\\[\\[sign\\]\\]", " \\[\\[sign\\]\\] ");
 		full_text = ExerciseBookTool.del_tag(full_text);
-//		String[] textarr = full_text.split("[[sign]]");
-//		for (int i = 0; i < textarr.length; i++) {
-//			content += textarr[i];
-//			for (int j = 0; j < arrs.length; j++) {
-//				content += (Html.fromHtml("<u>" + arrs[j] + "</u>"));
-//			}
-//		}
-		content = full_text.replace("[[sign]]", "___");
+		 String[] textarr = full_text.split("\\[\\[sign\\]\\]");
+		 for (int i = 0; i < textarr.length; i++) {
+		 content += textarr[i];
+		 if (i<=arrs.size()-1) {
+			 content += arrs.get(i);
+		}
+//		 for (int j = 0; j < arrs.length; j++) {
+//		 content += (Html.fromHtml("<u>" + arrs[j] + "</u>"));
+//		 }
+		 }
+//		content = full_text.replace("[[sign]]", "___");
 		return content;
 	}
 
@@ -626,7 +664,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 		ImageView rightIv;
 		if (PageBool[page][index]) {
 			bqtv = (TextView) v.findViewById(R.id.bqtv1);
-			String bqtvStr = " v.";
+			String bqtvStr = "  ";
 			for (int i = 0; i < tagsList.size(); i++) {
 				for (int j = 0; j < card.getTagsarr().size(); j++) {
 					if (card.getTagsarr().get(j) == Integer.valueOf(tagsList
@@ -636,7 +674,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 				}
 			}
 
-			if (bqtvStr.length() > 3) {
+			if (bqtvStr.length() > 2) {
 				bqtvStr = bqtvStr.substring(0, bqtvStr.length() - 1);
 				bqtv.setVisibility(View.VISIBLE);
 				bqtv.setText(bqtvStr);
@@ -647,25 +685,48 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 			fontIv = (ImageView) v.findViewById(R.id.fontIv);
 			rightanswer = (TextView) v.findViewById(R.id.rightanswer);
 			answer = (TextView) v.findViewById(R.id.answer);
-//			reson.setText(setWrong(card.getMistake_types())); // 错误类型
-			reson.setText(setWrong(card.getMistake_types())+card.getTypes()); // 错误类型
-			if (card.getTypes().equals("1") ) {
+			// reson.setText(setWrong(card.getMistake_types())); // 错误类型
+			reson.setText(setWrong(card.getMistake_types()) + card.getTypes()); // 错误类型
+			wronganswer.setText(checkAns(card.getYour_answer(), // 你的错误
+					card.getTypes()));
+			if (card.getTypes().equals("1")) {
 				rightanswer.setVisibility(View.GONE);
 				answer.setVisibility(View.GONE);
 			} else {
 				rightanswer.setText("正确答案");
-				answer.setText(card.getAnswer());
-				if ("null".equals(card.getAnswer())) {
+
+				if (card.getTypes().equals("0")||card.getTypes().equals("4")) {
 					answer.setText(setback(card.getContent(), card.getTypes()));
+				} else if (card.getTypes().equals("5")) {
+
+					JSONArray answerarray;
+					try {
+						answerarray = new JSONArray(card.getAnswer());
+						for (int j = 0; j < answerarray.length(); j++) {
+							JSONObject ob = answerarray.getJSONObject(j);
+							String contentStr = ob.getString("content");
+							if (card.getContent().equals(contentStr)) {
+								answer.setText(ob.getString("answer"));
+								break;
+							}
+						}
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+				} else {
+					String ans = FormatAns(card.getAnswer());
+					answer.setText(ans);
 				}
+
 			}
 
-			wronganswer.setText(checkAns(card.getYour_answer(), // 你的错误
-					card.getTypes()));
+			
 			fontIv.setOnClickListener(new OnClickListener() { // 标签按钮监听
-			// Integer.valueOf((card.getTypes() == null || card.getTypes()
-			// .equals("null")) ? "0" : card.getTypes())));
-			// fontIv.setOnClickListener(new OnClickListener() {
+				// Integer.valueOf((card.getTypes() == null || card.getTypes()
+				// .equals("null")) ? "0" : card.getTypes())));
+				// fontIv.setOnClickListener(new OnClickListener() {
 				public void onClick(View arg0) {
 					Log.i("asd", "page:" + page + "index:" + index);
 					Intent intent = new Intent(MCardBagActivity.this,
@@ -683,30 +744,54 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 				}
 			});
 		} else {
+			int type3_yinpin= 0;
 			ImageView cardbatread;
 			ImageView cardbatdel;
+			Button button1;
+			button1 = (Button) v.findViewById(R.id.button1);
+			button1.setOnClickListener(new OnClickListener() { // 标签按钮监听
+				// Integer.valueOf((card.getTypes() == null || card.getTypes()
+				// .equals("null")) ? "0" : card.getTypes())));
+				// fontIv.setOnClickListener(new OnClickListener() {
+				public void onClick(View arg0) {
+					Log.i("asd", "page:" + page + "index:" + index);
+					Intent intent = new Intent(MCardBagActivity.this,
+							LookAllContentActivity.class);
+					intent.putExtra("content", card.getContent());
+					intent.putExtra("types", card.getTypes());
+					intent.putExtra("full_text", card.getFull_text());
+					intent.putExtra("answer", card.getAnswer());
+					startActivity(intent);
+				}
+			});
 			reson = (TextView) v.findViewById(R.id.backreson);
 			rightanswers = (TextView) v.findViewById(R.id.rightanswerb);
 			cardbatread = (ImageView) v.findViewById(R.id.cardbatread);
 			cardbatdel = (ImageView) v.findViewById(R.id.cardbatdel);
 			rightIv = (ImageView) v.findViewById(R.id.rightIv);
+			if (card.getResource_url().equals("")||card.getResource_url().equals("null"))
+				cardbatread.setVisibility(View.GONE);
 			String playerIP = IP + card.getResource_url();
 			reson.setText("原题:");
-			if (card.getTypes().equals("5")) {
-				rightanswers.setText(settypes5(card.getFull_text(), card.getOptions()));
-			}else {
-				rightanswers.setText(setback(card.getContent(), card.getTypes()));
+			if (card.getTypes().equals("5")) { //  完形填空  显示 查看全部 按钮
+				rightanswers.setText(settypes5(card.getFull_text(),
+						card.getAnswer()));
+				button1.setVisibility(View.VISIBLE);
+			} else {
+				rightanswers
+						.setText(setback(card.getContent(), card.getTypes()));
 			}
-			
-			if (card.getTypes().equals("1")
-					|| card.getTypes().equals("0")) {
-				cardbatread.setVisibility(View.VISIBLE);
+
+			if (card.getTypes().equals("1") || card.getTypes().equals("0")) {  // 0 => "听力", 1 => "朗读"
+				cardbatread.setVisibility(View.VISIBLE);           //   小喇叭  出现
 			}
 			if (card.getTypes().equals("3")) {
-				if ((card.getContent().indexOf("<file>") != -1)) {
+				if ((card.getContent().indexOf("<file>") != -1)) {  //  包含文件 信息，处理后再显示
 					if ((card.getContent().indexOf(".mp3") != -1)
 							|| (card.getContent().indexOf(".amr") != -1)
 							|| (card.getContent().indexOf(".wav") != -1)) {
+						type3_yinpin= 1;
+						cardbatread.setVisibility(View.VISIBLE);
 						playerIP = IP
 								+ card.getContent().substring(
 										"<file>".length(),
@@ -728,18 +813,21 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 						}
 						cardbatread.setVisibility(View.GONE);
 					}
-					rightanswers.setText(card.getContent().substring(
+					String st = card.getContent().substring(
 							card.getContent().lastIndexOf("</file>")
-									+ "</file>".length(),
-							card.getContent().length())
-							+ setback(card.getOptions(), card.getTypes()));
-				} else {
-					rightanswers.setText(card.getContent() + "\n"
-							+ setback(card.getOptions(), card.getTypes()));
+							+ "</file>".length(),
+					card.getContent().length());
+					rightanswers.setText(st);
+					if (st.length()==0) {  
+						rightanswers.setText(setback(card.getOptions(), card.getTypes()));
+					}
+					
+				} else {    //  不包含文件 信息，直接显示原题
+					rightanswers.setText(card.getContent());
+					// + setback(card.getOptions(), card.getTypes()));
 				}
-			} else if (card.getResource_url().equals(""))
-				cardbatread.setVisibility(View.GONE);
-		
+			}  
+
 			final String IP2 = playerIP;
 			cardbatread.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
@@ -748,12 +836,12 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 						mediaplay.setDataSource(IP2);
 						mediaplay.prepare();
 						mediaplay.start();
-//						mediaplay
-//								.setOnCompletionListener(new OnCompletionListener() {
-//									public void onCompletion(MediaPlayer mp) {
-//										mediaplay.release();
-//									}
-//								});
+						// mediaplay
+						// .setOnCompletionListener(new OnCompletionListener() {
+						// public void onCompletion(MediaPlayer mp) {
+						// mediaplay.release();
+						// }
+						// });
 					} catch (IllegalArgumentException e) {
 						e.printStackTrace();
 					} catch (SecurityException e) {
@@ -909,7 +997,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 		// 设置监听
 		rotation.setAnimationListener(new DisplayNextView());
 		selectview.startAnimation(rotation);
-		
+
 	}
 
 	private final class DisplayNextView implements Animation.AnimationListener {
