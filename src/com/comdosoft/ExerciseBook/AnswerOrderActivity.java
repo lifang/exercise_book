@@ -19,10 +19,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.comdosoft.ExerciseBook.pojo.AnswerBasePojo;
 
-/** 
-* @作者 马龙 
-* @时间 2014-4-11 下午4:42:18 
-*/ 
+/**
+ * @作者 马龙
+ * @时间 2014-4-11 下午4:42:18
+ */
 public class AnswerOrderActivity extends AnswerBaseActivity {
 
 	// private String json =
@@ -205,7 +205,7 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 		mSubjectIndex = 0;
 		mOptionIndex = 0;
 
-		if (status == 0) {
+		if (status == 0 && eb.getTrue_number() > 0) {
 			setTruePropShow();
 		}
 

@@ -19,7 +19,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Display;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +29,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
-import android.widget.PopupWindow.OnDismissListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +44,9 @@ import com.comdosoft.ExerciseBook.tools.MyspinnerAdapter;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 import com.google.gson.Gson;
 
+/**
+ * 作者: 张秀楠 时间：2014-4-11 下午5:22:00
+ */
 public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		OnClickListener {
 
@@ -77,6 +78,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 			switch (msg.what) {
 			case 0:
 				Log.i("aaa", "---");
+				setPage(index, list.size());
 				setButtonOver();
 				myLayout.removeAllViews();
 				content = cloze.getContent();
@@ -99,7 +101,6 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		// 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
 		super.mQuestionType = 5;
 		setStart();
-		// super.type = 0;
 		findViewById(R.id.base_back_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_propTrue).setOnClickListener(this);
@@ -122,6 +123,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		SetJson(json);
 		SetAnswer();
 		setButtonOver();
+
 	}
 
 	private void SetAnswer() {
