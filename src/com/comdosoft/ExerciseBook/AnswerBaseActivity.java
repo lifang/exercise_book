@@ -256,8 +256,8 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 			base_answer_linearlayout.setVisibility(View.GONE);
 		} else if (status == 2) {
 			setCheckText("下一个");
-			propTrue.setImageResource(R.drawable.base_prop3);
-			propTime.setImageResource(R.drawable.base_prop4);
+			propTrue.setImageResource(R.drawable.base_prop4);
+			propTime.setImageResource(R.drawable.base_prop3);
 			base_time_linearlayout.setVisibility(View.GONE);
 			base_history_linearlayout.setVisibility(View.VISIBLE);
 			base_answer_linearlayout.setVisibility(View.VISIBLE);
@@ -333,6 +333,12 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		propTrue.setClickable(false);
 	}
 
+	// 正确道具显示
+	public void setTruePropShow() {
+		propTrue.setImageResource(R.drawable.base_prop1);
+		propTrue.setClickable(true);
+	}
+
 	public String[] getRecordMes() {
 		return recordMesArr;
 	}
@@ -404,17 +410,19 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 				PropJson(0, mQuestList.get(mQindex).get(mBindex)
 						.getBranch_questions_id());
 			} else {
+				setTimePropEnd();
 				Toast.makeText(getApplicationContext(), "道具数量不足!", 0).show();
 			}
 			break;
 		case R.id.base_propTrue:
-			// if (eb.getTrue_number() > 0) {
-			rightAnswer();
-			PropJson(1, mQuestList.get(mQindex).get(mBindex)
-					.getBranch_questions_id());
-			// } else {
-			// Toast.makeText(getApplicationContext(), "道具数量不足!", 0).show();
-			// }
+			if (eb.getTrue_number() > 0) {
+				rightAnswer();
+				PropJson(1, mQuestList.get(mQindex).get(mBindex)
+						.getBranch_questions_id());
+			} else {
+				setTruePropEnd();
+				Toast.makeText(getApplicationContext(), "道具数量不足!", 0).show();
+			}
 			break;
 		}
 	}
