@@ -41,10 +41,10 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 import com.google.gson.Gson;
 
-/**
- * @作者 马龙
- * @时间 2014-4-10 下午3:50:20
- */
+/** 
+* @作者 马龙 
+* @时间 2014-4-11 下午4:42:27 
+*/ 
 public class AnswerBaseActivity extends Activity implements OnClickListener,
 		OnPreparedListener, Urlinterface {
 	public ExerciseBook eb;
@@ -172,6 +172,12 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		// 禁用道具
 		if (status != 0) {
 			setTruePropEnd();
+			setTimePropEnd();
+		}
+		if (eb.getTrue_number() <= 0) {
+			setTruePropEnd();
+		}
+		if (eb.getTime_number() <= 0) {
 			setTimePropEnd();
 		}
 	}
@@ -754,6 +760,12 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 			eb.setTime_number(eb.getTime_number() - 1);
 		} else {
 			eb.setTrue_number(eb.getTrue_number() - 1);
+		}
+		if (eb.getTrue_number() == 0) {
+			setTruePropEnd();
+		}
+		if (eb.getTime_number() == 0) {
+			setTimePropEnd();
 		}
 		Log.i("Ax", "type-bid:" + type + "--" + branch_id);
 		try {
