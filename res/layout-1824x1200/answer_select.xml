@@ -35,6 +35,7 @@
         android:layout_height="fill_parent"
         android:orientation="horizontal"
         android:paddingLeft="58px"
+         android:paddingRight="58px"
         android:paddingTop="58px" >
 
         <ImageView

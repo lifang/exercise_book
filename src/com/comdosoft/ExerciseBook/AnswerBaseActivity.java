@@ -41,10 +41,10 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 import com.google.gson.Gson;
 
-/**
- * @作者 马龙
- * @时间 2014-4-11 下午4:42:27
- */
+/** 
+* @作者 马龙 
+* @时间 2014-4-11 下午6:16:14 
+*/ 
 public class AnswerBaseActivity extends Activity implements OnClickListener,
 		OnPreparedListener, Urlinterface {
 	public ExerciseBook eb;
@@ -102,7 +102,11 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case 1:
-				timeText.setText(timeSecondToString(second));
+				if (flag) {
+					timeText.setText(timeSecondToString(second));
+				} else {
+					second--;
+				}
 				break;
 			case 2:
 				prodialog.dismiss();
@@ -369,7 +373,9 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 
 	// 暂停计时
 	public void setPause() {
-		flag = false;
+		synchronized (this) {
+			flag = false;
+		}
 	}
 
 	// 继续计时
@@ -858,6 +864,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 				status = 1;
 				mQindex = 0;
 				mBindex = 0;
+				setCheckText("检查");
 				setTruePropEnd();
 				setTimePropEnd();
 				setUseTime(0);

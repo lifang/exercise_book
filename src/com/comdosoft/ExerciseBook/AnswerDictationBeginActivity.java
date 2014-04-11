@@ -44,10 +44,10 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Soundex_Levenshtein;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
-/**
- * @作者 马龙
- * @时间 2014-4-10 下午3:50:29
- */
+/** 
+* @作者 马龙 
+* @时间 2014-4-11 下午6:16:37 
+*/ 
 public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		OnClickListener, ExerciseBookParams, OnPreparedListener,
 		OnCompletionListener, Urlinterface {
@@ -374,6 +374,7 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		rightCount = 0;
 		// 检查
 		if (getCheckText().equals("检查")) {
+			setPause();
 			for (int i = 0; i < etList.size(); i++) {
 				String s = etList.get(i).getText().toString();
 				if (s != null && !s.equals("")) {
@@ -473,6 +474,7 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 			}
 		} else {
 			// Next
+			setStart();
 			setCheckText("检查");
 			if (status == 0) {
 				AnswerBasePojo aop = mQuestList.get(mQindex).get(mBindex);
