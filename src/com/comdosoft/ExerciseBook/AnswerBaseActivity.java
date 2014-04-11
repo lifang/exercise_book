@@ -41,10 +41,10 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 import com.google.gson.Gson;
 
-/** 
-* @作者 马龙 
-* @时间 2014-4-11 下午4:42:27 
-*/ 
+/**
+ * @作者 马龙
+ * @时间 2014-4-11 下午4:42:27
+ */
 public class AnswerBaseActivity extends Activity implements OnClickListener,
 		OnPreparedListener, Urlinterface {
 	public ExerciseBook eb;
