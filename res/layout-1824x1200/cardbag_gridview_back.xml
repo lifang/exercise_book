@@ -29,6 +29,7 @@
                 android:layout_width="120px"
                 android:layout_height="120px"
                 android:layout_below="@id/backreson"
+                android:layout_marginLeft="38px"
                 android:visibility="gone" />
 
             <TextView
@@ -37,6 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/rightIv"
                 android:layout_marginLeft="38px"
+                android:layout_marginRight="38px"
                 android:layout_marginTop="30px"
                 android:ellipsize="end"
                 android:lines="4"
@@ -69,6 +71,17 @@
                     android:layout_marginRight="38px"
                     android:src="@drawable/cardbagdel" />
             </LinearLayout>
+              <Button
+                android:id="@+id/button1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/backreson"
+                android:layout_alignBottom="@+id/backreson"
+                android:background="@drawable/cardchoice"
+                android:layout_marginLeft="30dp"
+                android:layout_toRightOf="@+id/backreson"
+                android:visibility="gone"
+                android:text="查看全文" />
         </RelativeLayout>
     </LinearLayout>
 

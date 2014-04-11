@@ -328,6 +328,11 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
+            <activity
+            android:name=".LookAllContentActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MyDialogStyleTop" >
+        </activity>
     </application>
 
 </manifest>

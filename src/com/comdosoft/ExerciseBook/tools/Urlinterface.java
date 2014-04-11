@@ -55,7 +55,7 @@ public interface Urlinterface {
 	String get_my_achievements = IP + "/api/students/get_my_archivements"; // 获得成就
 	String get_knowledges_card=IP+"/api/students/get_knowledges_card";			//获取卡包信息
 	String delete_knowledges_card=IP+"/api/students/delete_knowledges_card";		//删除卡片
-	String search_tag_card=IP+"/api/students/search_tag_card";
+	String search_tag_card=IP+"/api/students/search_tag_card";//根据标签搜索卡片
 	String knoledge_tag_relation=IP+"/api/students/knoledge_tag_relation";
 	String create_card_tag=IP+"/api/students/create_card_tag";
 
