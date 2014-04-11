@@ -50,9 +50,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cn.jpush.android.api.JPushInterface;
 
+import com.comdosoft.ExerciseBook.HomepageAllActivity.get_class_info;
 import com.comdosoft.ExerciseBook.pojo.knowledges_card;
 import com.comdosoft.ExerciseBook.pojo.tags;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
+import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
@@ -63,7 +65,6 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 	public Map<Integer, List<View>> FontCard;
 	public Map<Integer, List<View>> BackCard;
 	private List<knowledges_card> cardList;
-	private int allsize;
 	private ViewPager viewPager;
 	private ImageView imageView;
 	private ImageView[] imageViews;
@@ -110,10 +111,10 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 		btnList = new ArrayList<Button>();
 		cardbagEt = (EditText) findViewById(R.id.cardbagEt);
 		cardbatFind = (ImageView) findViewById(R.id.cardbatFind);
-		button1 = (Button) findViewById(R.id.button1);
-		button2 = (Button) findViewById(R.id.button2);
-		button3 = (Button) findViewById(R.id.button3);
-		button4 = (Button) findViewById(R.id.button4);
+		button1 = (Button) findViewById(R.id.button1);// 读错
+		button2 = (Button) findViewById(R.id.button2);// 拼错
+		button3 = (Button) findViewById(R.id.button3);// 选错
+		button4 = (Button) findViewById(R.id.button4); // 默认
 		btnList.add(button4);
 		btnList.add(button1);
 		btnList.add(button2);
@@ -124,10 +125,9 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 	}
 
 	public void initbtn() {
-		
+
 		mindex = 0;
 		fanzhuan = true;
-
 		Allmap = new HashMap<Integer, List<knowledges_card>>();
 		cardList = new ArrayList<knowledges_card>();
 		tagsList = new ArrayList<tags>();
@@ -144,7 +144,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 	public void btnlistClick() {
 		cardbatFind.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				showdialog();
+
 				Thread thread = new Thread() {
 					public void run() {
 						try {
@@ -159,7 +159,6 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 									search_tag_card, map);
 							page = 0;
 							initbtn();
-
 							pageAdapter = new GuidePageAdapter();
 							parsejson(json, false);
 							handler.sendEmptyMessage(1);
@@ -168,7 +167,18 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 						}
 					}
 				};
-				thread.start();
+
+				if (ExerciseBookTool.isConnect(MCardBagActivity.this)) {
+					if (cardbagEt.getText().toString().length() == 0) {
+						Toast.makeText(getApplicationContext(), "搜索框不能为空",
+								Toast.LENGTH_SHORT).show();
+					} else {
+						showdialog();
+						thread.start();
+					}
+				} else {
+					handler.sendEmptyMessage(7);
+				}
 			}
 		});
 		btnList.get(0).setOnClickListener(new OnClickListener() {
@@ -269,7 +279,6 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 			if (jsonobject.getString("status").equals("success")) {
 				JSONArray jsonarray = jsonobject
 						.getJSONArray("knowledges_card");
-				allsize = jsonarray.length();
 				for (int i = 0; i < jsonarray.length(); i++) {
 					JSONObject jsonobject2 = jsonarray.getJSONObject(i);
 					String id = jsonobject2.getString("id");
@@ -352,7 +361,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 			case 1:
 				// page = 0;
 				cardbagEt.setText("");
-				
+
 				setViewPager();
 				progressDialog.dismiss();
 				GuidePageAdapter gpa = new GuidePageAdapter();
@@ -368,6 +377,10 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 				viewPager.setCurrentItem(page);
 				viewPager
 						.setOnPageChangeListener(new GuidePageChangeListener());
+				break;
+			case 7:
+				Toast.makeText(getApplicationContext(),
+						ExerciseBookParams.INTERNET, Toast.LENGTH_SHORT).show();
 				break;
 			default:
 				break;
@@ -488,7 +501,8 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 				// }
 				content = content.substring(4, content.length());
 			} else {
-				content = str.substring(0, str.lastIndexOf(";&&;"));
+//				content = str.substring(0, str.lastIndexOf(";&&;"));
+				content = str.substring(0, str.length());
 			}
 			Log.i("asd", "正面听力case0:" + content);
 			return content;
