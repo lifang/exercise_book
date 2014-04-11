@@ -307,21 +307,21 @@ public class ExerciseBookTool implements Urlinterface {
 			JSONObject js = obj.getJSONObject(key);
 			Log.i("Ax", js.toString());
 			JSONArray arr = js.getJSONArray("questions");
-			Log.i("Ax", arr.length() + "-ratio-arr-size");
 			if (arr.length() == 0) {
 				return -10;
 			}
 			for (int i = 0; i < arr.length(); i++) {
 				JSONObject item = arr.getJSONObject(i);
 				JSONArray ar = item.getJSONArray("branch_questions");
-				Log.i("aaa", ar.length() + "-ar");
 				for (int j = 0; j < ar.length(); j++) {
 					JSONObject o = ar.getJSONObject(j);
+					Log.i("Ax",
+							"ratio:" + Integer.parseInt(o.getString("ratio")));
 					ratio.add(Integer.parseInt(o.getString("ratio")));
 				}
 			}
 		} catch (JSONException e) {
-			Log.i("Ax", "JSONException-" + e.toString() + "--" + e.getMessage());
+			Log.i("Ax", "JSONException-" + e.getMessage());
 			return -20;
 		}
 		int size = 0;

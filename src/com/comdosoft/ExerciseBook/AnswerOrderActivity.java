@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.comdosoft.ExerciseBook.pojo.AnswerBasePojo;
 
 /**
@@ -30,6 +30,7 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 	private int mAnswerIndex = 0;
 	private int mSubjectIndex = 0;
 	private int mOptionIndex = 0;
+	public boolean truePropFlag = false;
 	private String[] answerArr = new String[] {};
 	private String mAnswerStr;
 	private StringBuffer mAnswer = new StringBuffer();
@@ -47,6 +48,8 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 	private LayoutParams layoutlp;
 	private LinearLayout mSubjectLinearLayout;
 	private LinearLayout mOptionLinearLayout;
+	private LinearLayout mOrderLinearLayout;
+	private LinearLayout mOrderBnLinearLayout;
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -55,8 +58,12 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 		super.setContentView(R.layout.answer_order);
 		mSubjectLinearLayout = (LinearLayout) findViewById(R.id.answer_order_subject_linearLayout);
 		mOptionLinearLayout = (LinearLayout) findViewById(R.id.answer_order_option_linearLayout);
+		mOrderLinearLayout = (LinearLayout) findViewById(R.id.answer_order_scrollview);
+		mOrderBnLinearLayout = (LinearLayout) findViewById(R.id.answer_order_bn_linearlayout);
 		answer_order_back = (TextView) findViewById(R.id.answer_order_back);
 		answer_order_again = (TextView) findViewById(R.id.answer_order_again);
+		findViewById(R.id.base_propTrue).setOnClickListener(new MyOnClick());
+		findViewById(R.id.base_propTime).setOnClickListener(new MyOnClick());
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(
 				new MyOnClick());
 		answer_order_again.setOnClickListener(new MyOnClick());
@@ -74,13 +81,28 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 		analysisJSON(json);
 
 		updateView();
+
+		if (status == 2) {
+			DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+			int height = displayMetrics.heightPixels;
+			LayoutParams lp = new LayoutParams(LayoutParams.FILL_PARENT,
+					LayoutParams.WRAP_CONTENT);
+			if (height == 1205 || height == 1216) {
+				lp.bottomMargin = 250;
+			} else {
+				lp.bottomMargin = 420;
+			}
+			mOrderLinearLayout.setLayoutParams(lp);
+			mOrderBnLinearLayout.setVisibility(View.GONE);
+		}
 	}
 
 	public void rightAnswer() {
+		mAnswerList.clear();
 		for (int i = 0; i < mSubjectEditList.size(); i++) {
 			EditText et = mSubjectEditList.get(i);
 			et.setText(answerArr[i]);
-			et.setBackgroundResource(R.drawable.answer_wire_item_check_style);
+			// et.setBackgroundResource(R.drawable.answer_wire_item_check_style);
 
 			TextView tv = mOptionTextList.get(i);
 			tv.setBackgroundResource(R.drawable.answer_order_item_check_style);
@@ -168,6 +190,7 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 	}
 
 	public void updateView() {
+		truePropFlag = false;
 		mAnswerList.clear();
 		answerList.clear();
 		mSubjectList.clear();
@@ -182,9 +205,8 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 		mSubjectIndex = 0;
 		mOptionIndex = 0;
 
-		if (status == 2) {
-			answer_order_back.setVisibility(View.GONE);
-			answer_order_again.setVisibility(View.GONE);
+		if(status==0){
+			setTruePropShow();
 		}
 
 		answerArr = mQuestList.get(mQindex).get(mBindex).getContent()
@@ -335,6 +357,15 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 				} else {
 					calculateIndexAndUpdateView();
 					nextRecord();
+				}
+				break;
+			case R.id.base_propTrue:
+				if (!truePropFlag) {
+					truePropFlag = true;
+					setTruePropEnd();
+					rightAnswer();
+					PropJson(0, mQuestList.get(mQindex).get(mBindex)
+							.getBranch_questions_id());
 				}
 				break;
 			}

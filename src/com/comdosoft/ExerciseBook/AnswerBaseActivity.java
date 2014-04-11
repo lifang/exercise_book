@@ -48,6 +48,7 @@ import com.google.gson.Gson;
 public class AnswerBaseActivity extends Activity implements OnClickListener,
 		OnPreparedListener, Urlinterface {
 	public ExerciseBook eb;
+	private int aveRatio = 0;
 	public int mQindex = 0;
 	public int mBindex = 0;
 	public int mRecordIndex = 0;
@@ -221,8 +222,8 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 			base_answer_linearlayout.setVisibility(View.GONE);
 		} else if (status == 2) {
 			setCheckText("下一个");
-			propTrue.setImageResource(R.drawable.base_prop3);
-			propTime.setImageResource(R.drawable.base_prop4);
+			propTrue.setImageResource(R.drawable.base_prop4);
+			propTime.setImageResource(R.drawable.base_prop3);
 			base_time_linearlayout.setVisibility(View.GONE);
 			base_history_linearlayout.setVisibility(View.VISIBLE);
 			base_answer_linearlayout.setVisibility(View.VISIBLE);
@@ -281,7 +282,6 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	public void setMyAnswer(String s) {
 		if (s == null || s.equals("")) {
 			base_answer_text.setText("没有答题记录!");
-			setAccuracyAndUseTime(0, 0);
 		} else {
 			base_answer_text.setText(answerArr[mQuestionType] + s);
 		}
@@ -297,6 +297,12 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	public void setTruePropEnd() {
 		propTrue.setImageResource(R.drawable.base_prop4);
 		propTrue.setClickable(false);
+	}
+
+	// 正确道具显示
+	public void setTruePropShow() {
+		propTrue.setImageResource(R.drawable.base_prop1);
+		propTrue.setClickable(true);
 	}
 
 	public String[] getRecordMes() {
@@ -370,17 +376,19 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 				PropJson(1, mQuestList.get(mQindex).get(mBindex)
 						.getBranch_questions_id());
 			} else {
+				setTimePropEnd();
 				Toast.makeText(getApplicationContext(), "道具数量不足!", 0).show();
 			}
 			break;
 		case R.id.base_propTrue:
-			// if (eb.getTrue_number() > 0) {
-			rightAnswer();
-			PropJson(0, mQuestList.get(mQindex).get(mBindex)
-					.getBranch_questions_id());
-			// } else {
-			// Toast.makeText(getApplicationContext(), "道具数量不足!", 0).show();
-			// }
+			if (eb.getTrue_number() > 0) {
+				rightAnswer();
+				PropJson(0, mQuestList.get(mQindex).get(mBindex)
+						.getBranch_questions_id());
+			} else {
+				setTruePropEnd();
+				Toast.makeText(getApplicationContext(), "道具数量不足!", 0).show();
+			}
 			break;
 		}
 	}
@@ -416,11 +424,9 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		if (mRecoirdRatio != null && mRecoirdAnswer != null) {
 			if (mRecordIndex < mRecoirdRatio.size()
 					&& mRecordIndex < mRecoirdAnswer.size()) {
-				setAccuracyAndUseTime(mRecoirdRatio.get(mRecordIndex),
-						amp.getUse_time());
+				setAccuracyAndUseTime(aveRatio, amp.getUse_time());
 				setMyAnswer(mRecoirdAnswer.get(mRecordIndex));
-				setAccuracyAndUseTime(mRecoirdRatio.get(mRecordIndex),
-						amp.getUse_time());
+				setAccuracyAndUseTime(aveRatio, amp.getUse_time());
 				if (mQuestionType == 0) {
 					String s[] = mRecoirdAnswer.get(mRecordIndex).split(
 							";\\|\\|;");
@@ -431,10 +437,8 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 							.replaceAll(";\\|\\|;", "    ")
 							.replaceAll("<=>", " "));
 				} else if (mQuestionType == 5) {
-					int myratio = 0;
 					StringBuffer sb = new StringBuffer("");
 					for (int i = 0; i < mRecoirdRatio.size(); i++) {
-						myratio += mRecoirdRatio.get(i);
 						if (!mRecoirdAnswer.get(i).equals("")) {
 							sb.append(mRecoirdAnswer.get(i)).append(",");
 						}
@@ -442,10 +446,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 					if (sb.length() > 0) {
 						sb.deleteCharAt(sb.length() - 1);
 					}
-					if (myratio != 0) {
-						myratio = myratio / mRecoirdRatio.size();
-					}
-					setAccuracyAndUseTime(myratio, amp.getUse_time());
+					setAccuracyAndUseTime(aveRatio, amp.getUse_time());
 					setMyAnswer(sb.toString());
 				} else {
 					setMyAnswer(mRecoirdAnswer.get(mRecordIndex).replaceAll(
@@ -706,6 +707,8 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 							ratio.add(jArr.getJSONObject(j).getInt("ratio"));
 						}
 					}
+					aveRatio = ExerciseBookTool.getRatio(path,
+							questionArr[mQuestionType]);
 					return new AnswerMyPojo(status, use_time, answer, ratio);
 				}
 			}
