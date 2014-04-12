@@ -55,12 +55,12 @@ public class LoginActivity extends Activity implements OnClickListener,
 			case 1:
 				intent.putExtra("open_id", openid);
 				intent.setClass(getApplicationContext(),
-						RegistrationActivity.class);
+						InputKeyActivity.class);
 				break;
 			case 2:
 				LoginActivity.this.finish();
 				intent.setClass(getApplicationContext(),
-						HomePageMainActivity.class);
+						Appstart.class);
 				break;
 			}
 			LoginActivity.this.finish();
@@ -88,7 +88,7 @@ public class LoginActivity extends Activity implements OnClickListener,
 			if (vt) { // 当前时间小于 有效期
 				LoginActivity.this.finish();
 				Intent intent = new Intent(getApplicationContext(),
-						HomePageMainActivity.class);
+						Appstart.class);
 				startActivity(intent);
 			}
 

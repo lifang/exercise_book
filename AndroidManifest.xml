@@ -88,7 +88,7 @@
             android:enabled="true" >
             <intent-filter android:priority="1000" >
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" />
-               <!-- Required  显示通知栏 -->
+                <!-- Required  显示通知栏 -->
                 <category android:name="com.comdosoft.ExerciseBook" />
             </intent-filter>
             <intent-filter>
@@ -216,10 +216,11 @@
         </activity>
         <activity
             android:name=".ReplyListViewActivity"
-            android:label="@string/app_name" 
+            android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>
-        <activity android:name=".MessageActivity" 
+        <activity
+            android:name=".MessageActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".HomeWorkIngActivity"
@@ -330,10 +331,25 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
-           <activity
+        <activity
             android:name=".LookAllContentActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MyDialogStyleTop" >
+        </activity>
+        <activity
+            android:name=".Appstart"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+        </activity>
+        <activity
+            android:name=".InputKeyActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+        </activity>
+        <activity
+            android:name=".InputClassCodeActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
         </activity>
     </application>
 

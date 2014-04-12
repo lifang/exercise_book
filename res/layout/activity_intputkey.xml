@@ -1,0 +1,52 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/reg_bg"
+    android:gravity="center_horizontal"
+    android:paddingBottom="160.8px"
+    android:paddingTop="184.25px"
+    tools:context=".MainActivity" >
+
+    <ImageView
+        android:id="@+id/reg1_logo"
+        android:layout_width="400px"
+        android:layout_height="400px"
+        android:src="@drawable/logo_1" />
+
+    <EditText
+        android:id="@+id/reg_inputkey"
+        android:layout_width="372.52px"
+        android:layout_height="71.7px"
+        android:layout_marginTop="390px"
+        android:background="@drawable/input1"
+        android:gravity="center"
+        android:hint="@string/inputkey"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textColor="#217145"
+        android:textSize="26px" />
+
+    <Button
+        android:id="@+id/inputkey_queren"
+        android:layout_width="372.52px"
+        android:layout_height="71.7px"
+        android:layout_below="@+id/reg_inputkey"
+        android:background="@drawable/queren1"
+        android:gravity="center"
+        android:layout_marginTop="20px"
+        android:text="@string/queren"
+        android:textColor="@color/white"
+        android:textSize="26px" />
+   <Button
+        android:id="@+id/inputkey_nextstep"
+        android:layout_width="372.52px"
+        android:layout_height="71.7px"
+        android:layout_below="@+id/inputkey_queren"
+        android:background="@drawable/queren1"
+        android:layout_marginTop="20px"
+        android:gravity="center"
+        android:text="@string/nextstep"
+        android:textColor="@color/white"
+        android:textSize="26px" />
+</RelativeLayout>
