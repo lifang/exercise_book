@@ -262,19 +262,11 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 			type = 1;
 			answerJson.time_limit.setStatus("1");// 0表示未完成 1表示完成
 			String str = gson.toJson(answerJson);
-			try {
-				ExerciseBookTool.writeFile(path, str);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			ExerciseBookTool.writeFile(path, str);
 		}
 
 		String str = gson.toJson(answerJson);
-		try {
-			ExerciseBookTool.writeFile(path, str);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		ExerciseBookTool.writeFile(path, str);
 		Log.i("linshi", str);
 		return type;
 	}
@@ -294,10 +286,15 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 			Intent intent = new Intent();
 			switch (resultCode) {
 			case 0:
-				TenSpeedActivity.this.finish();
-				intent.setClass(TenSpeedActivity.this,
-						HomeWorkIngActivity.class);
+				if (eb.getActivity_item() == 0) {
+					intent.setClass(TenSpeedActivity.this,
+							HomeWorkIngActivity.class);
+				} else {
+					intent.setClass(TenSpeedActivity.this,
+							RecordMainActivity.class);
+				}
 				startActivity(intent);
+				TenSpeedActivity.this.finish();
 				break;
 			case 1:
 				index = 0;// 题目索引

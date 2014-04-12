@@ -78,6 +78,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	private ProgressBar mProgress;
 	private String download_name;
 	private boolean out_time;
+	private int layout_index;// 记录点击
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			Builder builder = new Builder(HomeWorkIngActivity.this);
@@ -143,6 +144,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 				ExerciseBookTool.UpdateJsonTime(work_list.get(0)
 						.getUpdated_at(), path + "/student_" + eb.getUid()
 						+ ".json");
+				startDekaron(layout_index);
 				break;
 			}
 		};
@@ -226,6 +228,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 						.getTimeIng(), work_list.get(0).getEnd_time());
 				Log.i("suanfa", ExerciseBookTool.getTimeIng() + "/"
 						+ work_list.get(0).getEnd_time() + "/" + out_time);
+				layout_index = i;
 				startDekaron(i);// 跳转到答题页面
 			}
 		});

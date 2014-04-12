@@ -87,6 +87,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 			switch (msg.what) {
 			case 0:
 				index += 1;
+				question_speak_tishi.setVisibility(View.GONE);
 				setPage(index + 1, branch_questions.size());
 				PredicateLayout.removeAllViews();
 				Speak_type = false;
@@ -397,10 +398,15 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 			case 0:
 				eb.setQuestion_item(0);
 				eb.setUsertime(0);
-				SpeakBeginActivity.this.finish();
-				intent.setClass(SpeakBeginActivity.this,
-						HomeWorkIngActivity.class);
+				if (eb.getActivity_item() == 0) {
+					intent.setClass(SpeakBeginActivity.this,
+							HomeWorkIngActivity.class);
+				} else {
+					intent.setClass(SpeakBeginActivity.this,
+							RecordMainActivity.class);
+				}
 				startActivity(intent);
+				SpeakBeginActivity.this.finish();
 				break;
 			case 1:
 				eb.setQuestion_item(0);
@@ -572,11 +578,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 		}
 
 		String str = gson.toJson(answerJson);
-		try {
-			ExerciseBookTool.writeFile(path, str);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		ExerciseBookTool.writeFile(path, str);
 		Log.i("linshi", str);
 		return type;
 	}

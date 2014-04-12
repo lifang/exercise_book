@@ -289,11 +289,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 			type = 1;
 		}
 		String str = gson.toJson(answerJson);
-		try {
-			ExerciseBookTool.writeFile(path, str);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		ExerciseBookTool.writeFile(path, str);
 		return type;
 	}
 
@@ -484,9 +480,15 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 			Intent intent = new Intent();
 			switch (resultCode) {
 			case 0:
-				ClozeActivity.this.finish();
-				intent.setClass(ClozeActivity.this, HomeWorkIngActivity.class);
+				if (eb.getActivity_item() == 0) {
+					intent.setClass(ClozeActivity.this,
+							HomeWorkIngActivity.class);
+				} else {
+					intent.setClass(ClozeActivity.this,
+							RecordMainActivity.class);
+				}
 				startActivity(intent);
+				ClozeActivity.this.finish();
 				break;
 			case 1:
 				index = 0;

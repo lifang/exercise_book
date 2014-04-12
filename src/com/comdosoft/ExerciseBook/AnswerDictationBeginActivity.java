@@ -12,6 +12,8 @@ import java.util.regex.Pattern;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import android.content.Context;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -29,6 +31,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -82,6 +85,7 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 	private ImageView mPlayImg;
 	private MediaPlayer mediaPlayer = new MediaPlayer();
 	private LayoutParams etlp;
+	private InputMethodManager imm;
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
@@ -106,6 +110,8 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		mesText = (TextView) findViewById(R.id.question_dictation_mes);
 		mPlayImg = (ImageView) findViewById(R.id.question_dictation_play);
 		mPlayImg.setOnClickListener(this);
+
+		imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
 		setQuestionType(0);
 
@@ -191,6 +197,9 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 			et.setText(value);
 			et.setTextColor(Color.rgb(53, 207, 143));
 		}
+		imm.setInputMethod(et.getWindowToken(),
+				"com.android.inputmethod.pinyin/.PinyinIME");
+		;
 		et.setInputType(InputType.TYPE_TEXT_VARIATION_URI
 				| InputType.TYPE_TEXT_FLAG_MULTI_LINE
 				| InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
@@ -381,7 +390,7 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 						errorMap.put(dictationList.get(i).getValue(), 1);
 						dictationList.get(i).setFlag(0);
 						tvList.get(i).setVisibility(View.INVISIBLE);
-						etList.get(i).setTextColor(Color.rgb(255, 0, 0));
+						etList.get(i).setTextColor(Color.rgb(245, 21, 58));
 					}
 					String answerStr = filterString(dictationList.get(i)
 							.getValue());
@@ -390,12 +399,12 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 							rightCount++;
 							dictationList.get(i).setFlag(1);
 							tvList.get(i).setVisibility(View.INVISIBLE);
-							etList.get(i).setTextColor(Color.rgb(146, 184, 27));
+							etList.get(i).setTextColor(Color.rgb(53, 207, 143));
 						} else {
 							errorMap.put(dictationList.get(i).getValue(), 1);
 							dictationList.get(i).setFlag(0);
 							tvList.get(i).setVisibility(View.INVISIBLE);
-							etList.get(i).setTextColor(Color.rgb(255, 0, 0));
+							etList.get(i).setTextColor(Color.rgb(245, 21, 58));
 						}
 					} else {
 						int value = Soundex_Levenshtein.dragonEngine(
@@ -463,7 +472,12 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 					mesText.setText(QUESTION_DICTATION_ERROR_MES_ONE);
 				}
 				setPause();
-				setCheckText("下一题");
+				if (mQindex == mQuestList.size() - 1
+						&& mBindex == mQuestList.get(mQindex).size() - 1) {
+					setCheckText("完成");
+				} else {
+					setCheckText("下一题");
+				}
 			}
 
 			// 计算正确率 只计算第一次检查
@@ -475,7 +489,12 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		} else {
 			// Next
 			setStart();
-			setCheckText("检查");
+			if (mQindex == mQuestList.size() - 1
+					&& mBindex == mQuestList.get(mQindex).size() - 1) {
+				setCheckText("完成");
+			} else {
+				setCheckText("检查");
+			}
 			if (status == 0) {
 				AnswerBasePojo aop = mQuestList.get(mQindex).get(mBindex);
 				saveAnswerJson(getAnswer(), ratio, aop.getQuestions_id(),
