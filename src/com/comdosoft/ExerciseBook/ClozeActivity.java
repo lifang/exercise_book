@@ -78,7 +78,6 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 			case 0:
 				Log.i("aaa", "---");
 				setPage(index + 1, list.size());
-				setButtonOver();
 				myLayout.removeAllViews();
 				content = cloze.getContent();
 				content = ExerciseBookTool.del_tag(content);
@@ -113,6 +112,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		path = intent.getStringExtra("path");
 		String json = intent.getStringExtra("json");
 		status = intent.getIntExtra("status", 1);
+		Log.i("Max", status + "");
 		if (eb.getTime_number() <= 0 || status == 1) {
 			setTimePropEnd();// 禁用道具
 		}
@@ -405,6 +405,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 					Check = true;
 					setPause();
 					setCheckText("下一题");
+					setButtonOver();
 					int true_number = 0;
 					for (Map.Entry<Integer, String> entry : user_select
 							.entrySet()) {

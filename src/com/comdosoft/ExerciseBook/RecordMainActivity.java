@@ -275,7 +275,6 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 				final List<Integer> questiontype_list = work_list.get(arg1)
 						.getQuestion_types();
 				cardType = work_list.get(arg1).getNumber() < 20 ? true : false;
-				eb.setWork_id(work_list.get(arg1).getId() + "");
 				for (int i = 0; i < work_list.get(arg1).getQuestion_types()
 						.size(); i++) {
 					setlayout(i, mylayout, work_list.get(arg1),
@@ -310,6 +309,8 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 		layout.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View arg0) {
 				eb.setWork_number(number);
+				eb.setWork_id(work_list.get(pager.getCurrentItem()).getId()
+						+ "");
 				eb.setActivity_item(1);
 				List<Boolean> typeList = getTypeList(pojo);
 				Log.i("suanfa", "worknumber:" + number);
@@ -661,7 +662,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 						downloadList.add(downPath);
 						if (work_list.get(i).getUpdated_at().equals("null")) {// 如果Updated_at等于null说明第一次做
 							ExerciseBookTool.initAnswer(pathList.get(i),
-									eb.getWork_id(), eb.getUid());// 初始化answer
+									work_list.get(i).getId() + "", eb.getUid());// 初始化answer
 						}
 					}
 					handler.sendEmptyMessage(0);
@@ -705,7 +706,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 						downloadList.add(downPath);
 						if (work_list.get(i).getUpdated_at().equals("null")) {// 如果Updated_at等于null说明第一次做
 							ExerciseBookTool.initAnswer(pathList.get(i),
-									eb.getWork_id(), eb.getUid());// 初始化answer
+									work_list.get(i).getId() + "", eb.getUid());// 初始化answer
 						}
 					}
 					handler.sendEmptyMessage(0);

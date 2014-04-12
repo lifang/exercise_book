@@ -689,10 +689,10 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 				int b_item = Integer.valueOf(obj.getJSONObject("reading")
 						.getString("branch_item"));
 				Log.i("aaa", q_item + "/" + b_item);
-				if (q_item + 1 >= eb.getList().size()
-						&& b_item + 2 >= eb.getBranch_number()) {
+				if (b_item + 2 >= eb.getBranch_number()) {
 					setCheckText("完成");
 				}
+
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}

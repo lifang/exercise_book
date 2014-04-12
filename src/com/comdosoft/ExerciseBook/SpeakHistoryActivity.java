@@ -64,6 +64,9 @@ public class SpeakHistoryActivity extends AnswerBaseActivity implements
 			switch (msg.what) {
 			case 0:
 				setPage(index + 1, branch_questions.size());
+				if (index + 1 == branch_questions.size()) {
+					setCheckText("完成");
+				}
 				PredicateLayout.removeAllViews();
 				content = eb.getQuestion_list().get(index).getContent();
 				if (answer.getQuestions() != null) {
