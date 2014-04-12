@@ -294,10 +294,15 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 			Intent intent = new Intent();
 			switch (resultCode) {
 			case 0:
-				TenSpeedActivity.this.finish();
-				intent.setClass(TenSpeedActivity.this,
-						HomeWorkIngActivity.class);
+				if (eb.getActivity_item() == 0) {
+					intent.setClass(TenSpeedActivity.this,
+							HomeWorkIngActivity.class);
+				} else {
+					intent.setClass(TenSpeedActivity.this,
+							RecordMainActivity.class);
+				}
 				startActivity(intent);
+				TenSpeedActivity.this.finish();
 				break;
 			case 1:
 				index = 0;// 题目索引

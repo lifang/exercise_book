@@ -857,7 +857,13 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 			switch (resultCode) {
 			case 0:
 				Intent intent = new Intent();
-				intent.setClass(this, HomeWorkIngActivity.class);
+				if (eb.getActivity_item() == 0) {
+					intent.setClass(AnswerBaseActivity.this,
+							HomeWorkIngActivity.class);
+				} else {
+					intent.setClass(AnswerBaseActivity.this,
+							RecordMainActivity.class);
+				}
 				startActivity(intent);
 				finish();
 				break;

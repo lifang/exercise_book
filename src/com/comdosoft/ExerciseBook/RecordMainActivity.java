@@ -105,6 +105,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 	private boolean out_time;// 是否超时
 	private String downPath;
 	private String download_name;
+	private int layout_index;
 	private Handler handler = new Handler() {
 
 		public void handleMessage(android.os.Message msg) {
@@ -169,6 +170,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 						work_list.get(pager.getCurrentItem()).getUpdated_at(),
 						pathList.get(pager.getCurrentItem()) + "/student_"
 								+ eb.getUid() + ".json");
+				startDekaron(layout_index);
 				break;
 			}
 		};
@@ -178,7 +180,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.record_main);
 		eb = (ExerciseBook) getApplication();
-
+		eb.getActivityList().add(this);
 		initialize();
 		initDate();
 		prodialog = new ProgressDialog(RecordMainActivity.this);
@@ -285,6 +287,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 			((ViewPager) arg0).addView(nl, 0);
 			return nl;
 		}
+
 	}
 
 	public void setlayout(final int i, LinearLayout mylayout,
@@ -357,7 +360,6 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 				} else {
 					handler.sendEmptyMessage(4);
 				}
-				Log.i("linshi", IP + pojo.getQuestion_packages_url());
 			}
 		});
 
@@ -416,6 +418,41 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 					work_list.get(pager.getCurrentItem()).getUpdated_at());
 		}
 		return false;
+	}
+
+	public void startDekaron(int i) {
+		// if (ExerciseBookTool.FileExist(pathList.get(pager.getCurrentItem()),
+		// "questions.json")) {// 判断question文件是否存在
+		// getJsonPath();
+		// if (ExerciseBookTool.FileExist(
+		// pathList.get(pager.getCurrentItem()),
+		// "student_" + eb.getUid() + ".json")) {// 判断answer文件是否存在
+		// if (getUpdateTime()) {
+		// handler.sendEmptyMessage(6);
+		// } else {
+		// if (typeList.get(i) || out_time == false) {// 已完成
+		// MyDialog(i, questiontype_list);
+		// } else {
+		// if (cardType) {
+		// status = 0;
+		// Start_Acvivity(i, questiontype_list);
+		// } else {
+		// Builder builder = new Builder(
+		// RecordMainActivity.this);
+		// builder.setTitle("提示");
+		// builder.setMessage("您的卡包已满,先清除几张再回来答题吧");
+		// builder.setNegativeButton("确定", null);
+		// builder.show();
+		// }
+		// }
+		// }
+		// } else {
+		// Log.i("suanfa", "answer文件不存在,正在下载");
+		// handler.sendEmptyMessage(6);
+		// }
+		// } else {
+		// handler.sendEmptyMessage(4);
+		// }
 	}
 
 	public void Start_Acvivity(int i, List<Integer> questiontype_list) {// 做题跳转
