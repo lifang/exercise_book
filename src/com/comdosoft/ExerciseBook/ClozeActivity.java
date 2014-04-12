@@ -289,11 +289,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 			type = 1;
 		}
 		String str = gson.toJson(answerJson);
-		try {
-			ExerciseBookTool.writeFile(path, str);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		ExerciseBookTool.writeFile(path, str);
 		return type;
 	}
 

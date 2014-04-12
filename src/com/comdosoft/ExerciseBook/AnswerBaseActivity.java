@@ -41,10 +41,10 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 import com.google.gson.Gson;
 
-/** 
-* @作者 马龙 
-* @时间 2014-4-11 下午6:16:14 
-*/ 
+/**
+ * @作者 马龙
+ * @时间 2014-4-11 下午6:16:14
+ */
 public class AnswerBaseActivity extends Activity implements OnClickListener,
 		OnPreparedListener, Urlinterface {
 	public ExerciseBook eb;
@@ -121,8 +121,12 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 				prodialog.dismiss();
 				setPause();
 				Intent intent = new Intent();
-				intent.putExtra("precision", ExerciseBookTool.getRatio(path,
-						questionArr[mQuestionType]));// 正确率100时
+				int a = -20;
+				while (a == -20) {
+					a = ExerciseBookTool.getRatio(path,
+							questionArr[mQuestionType]);
+				}
+				intent.putExtra("precision", a);// 正确率100时
 				if (status == 1) {
 					// 重做正确率
 					intent.putExtra("precision", ratioSum / count);
@@ -137,6 +141,9 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 				break;
 			case 5:
 				MyDialog("确认退出吗？", 0);
+				break;
+			case 6:
+				Toast.makeText(getBaseContext(), "异常", 0).show();
 				break;
 			}
 			super.handleMessage(msg);
@@ -456,11 +463,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		answerJson = gson.fromJson(answer_history, AnswerJson.class);
 		answerJson.update = updated_time;
 		String str = gson.toJson(answerJson);
-		try {
-			ExerciseBookTool.writeFile(path, str);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		ExerciseBookTool.writeFile(path, str);
 	}
 
 	// 切换下一历史记录
@@ -678,12 +681,8 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		String str = gson.toJson(answerJson);
 		this.ratio = 0;
 		firstRatioFlag = true;
-		try {
-			ExerciseBookTool.writeFile(path, str);
-			uploadJSON(ap.getStatus());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		ExerciseBookTool.writeFile(path, str);
+		uploadJSON(ap.getStatus());
 	}
 
 	public void uploadJSON(String type) {
@@ -790,11 +789,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		if (number == eb.getWork_number()) {
 			answerJson.status = "1";
 			String str = gson.toJson(answerJson);
-			try {
-				ExerciseBookTool.writeFile(path, str);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			ExerciseBookTool.writeFile(path, str);
 		}
 	}
 
@@ -827,11 +822,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 			answerJson.props.add(new PropPojo(type + "", list));
 		}
 		String str = gson.toJson(answerJson);
-		try {
-			ExerciseBookTool.writeFile(path, str);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		ExerciseBookTool.writeFile(path, str);
 	}
 
 	public void Del_Prop() {
@@ -839,11 +830,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		answerJson = gson.fromJson(answer_history, AnswerJson.class);
 		answerJson.props = new ArrayList<PropPojo>();
 		String str = gson.toJson(answerJson);
-		try {
-			ExerciseBookTool.writeFile(path, str);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		ExerciseBookTool.writeFile(path, str);
 	}
 
 	public void yinCang() {

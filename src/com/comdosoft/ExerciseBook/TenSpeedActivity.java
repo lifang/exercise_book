@@ -262,19 +262,11 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 			type = 1;
 			answerJson.time_limit.setStatus("1");// 0表示未完成 1表示完成
 			String str = gson.toJson(answerJson);
-			try {
-				ExerciseBookTool.writeFile(path, str);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			ExerciseBookTool.writeFile(path, str);
 		}
 
 		String str = gson.toJson(answerJson);
-		try {
-			ExerciseBookTool.writeFile(path, str);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		ExerciseBookTool.writeFile(path, str);
 		Log.i("linshi", str);
 		return type;
 	}

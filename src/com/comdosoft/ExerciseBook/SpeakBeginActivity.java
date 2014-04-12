@@ -571,11 +571,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 		}
 
 		String str = gson.toJson(answerJson);
-		try {
-			ExerciseBookTool.writeFile(path, str);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		ExerciseBookTool.writeFile(path, str);
 		Log.i("linshi", str);
 		return type;
 	}
