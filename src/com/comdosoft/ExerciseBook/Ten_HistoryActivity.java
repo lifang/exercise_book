@@ -153,6 +153,9 @@ public class Ten_HistoryActivity extends AnswerBaseActivity implements
 		case R.id.base_check_linearlayout:
 			if (index + 1 < branch_questions.size()) {
 				index += 1;
+				if (index + 1 >= branch_questions.size()) {
+					setCheckText("完成");
+				}
 				img_index -= 1;
 				nextRecord();
 				handler.sendEmptyMessage(1);

@@ -52,6 +52,7 @@ public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 			switch (msg.what) {
 			case 0:
 				setPage(index + 1, list.size());
+				setButtonOver();
 				cloze = list.get(index);
 				myLayout.removeAllViews();
 				content = cloze.getContent();
@@ -189,6 +190,12 @@ public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 				MyDialog("没有更多历史记录了,点击确定退出!", 1);
 			}
 			break;
+		}
+	}
+
+	public void setButtonOver() {
+		if (index + 1 >= list.size()) {
+			setCheckText("完成");
 		}
 	}
 

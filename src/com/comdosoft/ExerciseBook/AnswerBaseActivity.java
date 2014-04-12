@@ -41,10 +41,10 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 import com.google.gson.Gson;
 
-/** 
-* @作者 马龙 
-* @时间 2014-4-11 下午6:16:14 
-*/ 
+/**
+ * @作者 马龙
+ * @时间 2014-4-11 下午6:16:14
+ */
 public class AnswerBaseActivity extends Activity implements OnClickListener,
 		OnPreparedListener, Urlinterface {
 	public ExerciseBook eb;
@@ -533,6 +533,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 					entity.addPart("publish_question_package_id",
 							new StringBody(eb.getWork_id()));
 					entity.addPart("answer_file", new FileBody(new File(path)));
+
 					Log.i("linshi", eb.getUid() + "/" + eb.getClass_id() + "/"
 							+ eb.getWork_id() + "/" + path);
 					String answer_json = ExerciseBookTool.sendPhostimg(
