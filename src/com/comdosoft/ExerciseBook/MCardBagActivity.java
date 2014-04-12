@@ -501,8 +501,11 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 				// }
 				content = content.substring(4, content.length());
 			} else {
-//				content = str.substring(0, str.lastIndexOf(";&&;"));
-				content = str.substring(0, str.length());
+				if (str.indexOf(";&&;") != -1) {
+					content = str.substring(0, str.lastIndexOf(";&&;"));
+				} else {
+					content = str.substring(0, str.length());}
+				
 			}
 			Log.i("asd", "正面听力case0:" + content);
 			return content;
