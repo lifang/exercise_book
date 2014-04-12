@@ -1,6 +1,5 @@
 package com.comdosoft.ExerciseBook;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimerTask;
@@ -21,11 +20,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.comdosoft.ExerciseBook.pojo.AnswerPojo;
 import com.comdosoft.ExerciseBook.pojo.Time_LimitPojo;
-import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
-import com.google.gson.Gson;
 
 public class Ten_HistoryActivity extends AnswerBaseActivity implements
 		Urlinterface, OnClickListener {
@@ -38,17 +34,14 @@ public class Ten_HistoryActivity extends AnswerBaseActivity implements
 	private List<Time_LimitPojo> branch_questions;
 	private int index = 0;// 题目索引
 	private int img_index = 1;// 图片索引
-	private int user_boolean = 0;
 	public String path = "";
-	private String user_select = "";
-	private Gson gson;
-	private AnswerPojo answer;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case 0:
 				break;
 			case 1:
+				setPage(index + 1, branch_questions.size());
 				int imgid = 0;
 				question_number.setBackgroundResource(0);
 				try {// 利用java反射动态设置图片
@@ -88,20 +81,10 @@ public class Ten_HistoryActivity extends AnswerBaseActivity implements
 		setCheckText("下一题");
 		initialize();
 		branch_questions = new ArrayList<Time_LimitPojo>();
-		gson = new Gson();
 		Intent intent = getIntent();
 		path = intent.getStringExtra("path");
 		json = intent.getStringExtra("json");
 		SetJson(json);
-		SetAnswer();
-	}
-
-	private void SetAnswer() {
-		File answer_file = new File(path);
-		if (answer_file.exists()) {
-			String json2 = ExerciseBookTool.getJson(path);
-			answer = ExerciseBookTool.getAnswer(json2, "cloze");
-		}
 		handler.sendEmptyMessage(1);
 	}
 
@@ -153,19 +136,16 @@ public class Ten_HistoryActivity extends AnswerBaseActivity implements
 			case R.id.one_btn:
 				one_btn.setBackgroundResource(R.drawable.loginbtn_lv);
 				two_btn.setBackgroundResource(R.drawable.loginbtn_hui);
-				user_select = branch_questions.get(index).getOpption()[0];
 				break;
 			case R.id.two_btn:
 				two_btn.setBackgroundResource(R.drawable.loginbtn_lv);
 				one_btn.setBackgroundResource(R.drawable.loginbtn_hui);
-				user_select = branch_questions.get(index).getOpption()[1];
 				break;
 			}
 		}
 	}
 
 	public void onClick(View v) {
-		Intent intent = new Intent();
 		switch (v.getId()) {
 		case R.id.base_back_linearlayout:
 			super.onClick(v);
@@ -173,6 +153,9 @@ public class Ten_HistoryActivity extends AnswerBaseActivity implements
 		case R.id.base_check_linearlayout:
 			if (index + 1 < branch_questions.size()) {
 				index += 1;
+				if (index + 1 >= branch_questions.size()) {
+					setCheckText("完成");
+				}
 				img_index -= 1;
 				nextRecord();
 				handler.sendEmptyMessage(1);

@@ -13,7 +13,6 @@ import org.json.JSONObject;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.StaticLayout;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -57,6 +56,7 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 			case 0:
 				break;
 			case 1:
+				setPage(index + 1, branch_questions.size());
 				int imgid = 0;
 				question_number.setBackgroundResource(0);
 				try {// 利用java反射动态设置图片

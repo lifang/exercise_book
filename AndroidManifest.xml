@@ -217,9 +217,12 @@
         </activity>
         <activity
             android:name=".ReplyListViewActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
         </activity>
-        <activity android:name=".MessageActivity" />
+        <activity
+            android:name=".MessageActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".HomeWorkIngActivity"
             android:screenOrientation="portrait" >
@@ -328,11 +331,6 @@
             android:name=".Ten_HistoryActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
-        </activity>
-        <activity
-            android:name=".LookAllContentActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/MyDialogStyleTop" >
         </activity>
     </application>
 

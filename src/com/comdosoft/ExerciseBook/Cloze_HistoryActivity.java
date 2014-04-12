@@ -51,6 +51,8 @@ public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case 0:
+				setPage(index + 1, list.size());
+				setButtonOver();
 				cloze = list.get(index);
 				myLayout.removeAllViews();
 				content = cloze.getContent();
@@ -100,13 +102,6 @@ public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 			if (str[i].equals("[[sign]]")) {
 				view1 = View.inflate(this, R.layout.text_spinner, null);
 				spinner = (TextView) view1.findViewById(R.id.spinner);
-				String Opption = cloze.getList().get(select_item).getOpption();
-				final String[] Opption_str = Opption.split(";\\|\\|;");
-				spinner.setOnClickListener(new OnClickListener() {
-					public void onClick(View v) {
-						// showWindow(spinner, Opption_str);
-					}
-				});
 				spinner.setText(cloze.getList().get(select_item).getAnswer());
 				if (select_item + 1 < cloze.getList().size()) {
 					select_item += 1;
@@ -120,6 +115,7 @@ public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	public void showWindow(final View position, final String[] Opption_str) {
 
 		LinearLayout layout = (LinearLayout) LayoutInflater.from(this).inflate(
@@ -194,6 +190,12 @@ public class Cloze_HistoryActivity extends AnswerBaseActivity implements
 				MyDialog("没有更多历史记录了,点击确定退出!", 1);
 			}
 			break;
+		}
+	}
+
+	public void setButtonOver() {
+		if (index + 1 >= list.size()) {
+			setCheckText("完成");
 		}
 	}
 

@@ -190,9 +190,8 @@
                 android:layout_below="@id/classback"
                 android:layout_marginLeft="32.94px"
                 android:layout_marginTop="44.48px"
-                android:textColor="@color/selecttextview"
                 android:text="我的班主任"
-                />
+                android:textColor="@color/selecttextview" />
 
             <LinearLayout
                 android:id="@+id/teachll"
@@ -216,8 +215,8 @@
                     android:layout_marginLeft="15.41px"
                     android:layout_marginTop="48px"
                     android:layout_toRightOf="@id/teacherIm"
-                    android:textColor="@color/white"
-                    android:text="李达达" />
+                    android:text="李达达"
+                    android:textColor="@color/white" />
             </LinearLayout>
 
             <TextView
@@ -227,16 +226,17 @@
                 android:layout_below="@id/teachll"
                 android:layout_marginLeft="32.94px"
                 android:layout_marginTop="40px"
-                android:textColor="@color/selecttextview"
-                android:text="我的同学" />
+                android:text="我的同学"
+                android:textColor="@color/selecttextview" />
 
             <GridView
                 android:id="@+id/classstugv"
                 android:layout_width="339.94px"
-                android:layout_height="match_parent"
+                android:layout_height="1320px"
                 android:layout_below="@id/classstu"
                 android:layout_marginTop="0px"
-                android:listSelector="@null" >
+                android:listSelector="@null"
+                android:scrollbars="none" >
             </GridView>
         </RelativeLayout>
     </LinearLayout>

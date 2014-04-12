@@ -71,15 +71,13 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 	private boolean Check = false;
 	private PopupWindow popupWindow;
 	private int select_item = 0;
-	private static final String regEx_html = "<[^>]+>";
 	private int width;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case 0:
 				Log.i("aaa", "---");
-				setPage(index, list.size());
-				setButtonOver();
+				setPage(index + 1, list.size());
 				myLayout.removeAllViews();
 				content = cloze.getContent();
 				content = ExerciseBookTool.del_tag(content);
@@ -93,6 +91,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		};
 	};
 
+	@SuppressWarnings("deprecation")
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.cloze);
@@ -113,6 +112,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		path = intent.getStringExtra("path");
 		String json = intent.getStringExtra("json");
 		status = intent.getIntExtra("status", 1);
+		Log.i("Max", status + "");
 		if (eb.getTime_number() <= 0 || status == 1) {
 			setTimePropEnd();// 禁用道具
 		}
@@ -312,6 +312,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		return type;
 	}
 
+	@SuppressWarnings("deprecation")
 	public void showWindow(final View position, final String[] Opption_str,
 			final int item) {
 
@@ -365,6 +366,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 			} else {
 				if (Check) {
 					Check = false;
+					setStart();
 					setCheckText("检查");
 					propItem = 0;
 					int type = 0;
@@ -397,7 +399,9 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 					}
 				} else {
 					Check = true;
+					setPause();
 					setCheckText("下一题");
+					setButtonOver();
 					int true_number = 0;
 					for (Map.Entry<Integer, String> entry : user_select
 							.entrySet()) {

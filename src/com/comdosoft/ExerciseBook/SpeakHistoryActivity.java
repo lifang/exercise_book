@@ -35,6 +35,7 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.PredicateLayout;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
+@SuppressWarnings("deprecation")
 public class SpeakHistoryActivity extends AnswerBaseActivity implements
 		Urlinterface, OnPreparedListener, OnCompletionListener, OnInitListener,
 		OnUtteranceCompletedListener, OnClickListener {
@@ -53,8 +54,6 @@ public class SpeakHistoryActivity extends AnswerBaseActivity implements
 	private int index = 0;
 	public String error_str = "";// 记录错误的词
 	private String path;
-	private int ratio = 0;
-	private List<Integer> ratio_list;
 	private String json;
 	private AnswerPojo answer;
 	private ImageView question_speak_img;
@@ -64,6 +63,10 @@ public class SpeakHistoryActivity extends AnswerBaseActivity implements
 			builder.setTitle("提示");
 			switch (msg.what) {
 			case 0:
+				setPage(index + 1, branch_questions.size());
+				if (index + 1 == branch_questions.size()) {
+					setCheckText("完成");
+				}
 				PredicateLayout.removeAllViews();
 				content = eb.getQuestion_list().get(index).getContent();
 				if (answer.getQuestions() != null) {
@@ -110,7 +113,6 @@ public class SpeakHistoryActivity extends AnswerBaseActivity implements
 		yinCang();// 隐藏"你的作答"布局
 		eb = (ExerciseBook) getApplication();
 
-		ratio_list = new ArrayList<Integer>();
 		Intent intent = getIntent();
 		path = intent.getStringExtra("path");
 		json = intent.getStringExtra("json");

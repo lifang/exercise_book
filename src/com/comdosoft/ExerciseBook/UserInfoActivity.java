@@ -38,6 +38,10 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
+/**
+ * @作者 丁作强
+ * @时间 2014-4-12 上午9:34:09
+ */
 public class UserInfoActivity extends Activity {
 	// private MyDialog dialog;
 	private LinearLayout layout;

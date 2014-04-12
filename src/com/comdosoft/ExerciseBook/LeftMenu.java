@@ -16,7 +16,6 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -61,6 +60,7 @@ public class LeftMenu extends Activity implements Urlinterface {
 	ExerciseBook eb;
 	String student_id;
 	String school_class_id;
+	public List<Boolean> gk_list;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -76,7 +76,7 @@ public class LeftMenu extends Activity implements Urlinterface {
 		Invit();
 		linear = (LinearLayout) findViewById(R.id.linear);
 		ClickLis();
-
+		gk_list = new ArrayList<Boolean>();
 		eb.getActivityList().add(this);
 	}
 
@@ -188,7 +188,7 @@ public class LeftMenu extends Activity implements Urlinterface {
 				startActivity(intent);
 				eb.setMneu(true);
 				Editor editor = userInfo.edit();// 获取编辑器
-//				editor.putBoolean("ReplyMenu", true);
+				// editor.putBoolean("ReplyMenu", true);
 				editor.putString(school_class_id + "ReplyMenu", "none");
 				editor.commit();
 			}
@@ -287,6 +287,7 @@ public class LeftMenu extends Activity implements Urlinterface {
 						}
 					}
 					classStu.add(stu);
+
 				}
 				handler1.sendEmptyMessage(0);
 			}
@@ -394,7 +395,7 @@ public class LeftMenu extends Activity implements Urlinterface {
 			return position;
 		}
 
-		public View getView(int position, View convertView, ViewGroup parent) {
+		public View getView(final int position, View convertView, ViewGroup parent) {
 			LayoutInflater inflater = LayoutInflater
 					.from(getApplicationContext());
 			ViewHolder holder = null;
@@ -418,12 +419,14 @@ public class LeftMenu extends Activity implements Urlinterface {
 						.findViewById(R.id.teacherIm);
 				holder.iteam_stu.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {
-						if (isStu_cj) {
+						if (gk_list.get(position)==true) {
 							iteam_cj.setVisibility(View.VISIBLE);
-							isStu_cj = false;
+							gk_list.add(position, false);
+//							isStu_cj = false;
 						} else {
 							iteam_cj.setVisibility(View.GONE);
-							isStu_cj = true;
+//							isStu_cj = true;
+							gk_list.add(position, true);
 						}
 
 					}
@@ -432,7 +435,7 @@ public class LeftMenu extends Activity implements Urlinterface {
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 			}
-
+			gk_list.add(true);
 			holder.tv1.setText(classStu.get(position).getName());
 			if (teacher_avatar_url.length() > 4) {
 				ExerciseBookTool.set_background(

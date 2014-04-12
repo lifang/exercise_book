@@ -536,6 +536,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 					entity.addPart("publish_question_package_id",
 							new StringBody(eb.getWork_id()));
 					entity.addPart("answer_file", new FileBody(new File(path)));
+
 					Log.i("linshi", eb.getUid() + "/" + eb.getClass_id() + "/"
 							+ eb.getWork_id() + "/" + path);
 					String answer_json = ExerciseBookTool.sendPhostimg(

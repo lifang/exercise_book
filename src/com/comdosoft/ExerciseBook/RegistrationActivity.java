@@ -30,6 +30,10 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
+/**
+ * @作者 丁作强
+ * @时间 2014-4-12 上午9:35:32
+ */
 public class RegistrationActivity extends Activity implements Urlinterface {
 	private EditText reg_nicheng;//
 	private EditText reg_xingming; //
