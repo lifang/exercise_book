@@ -42,6 +42,10 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
+/**
+ * @作者 丁作强
+ * @时间 2014-4-12 下午1:53:23
+ */
 public class MCardTag extends Activity implements Urlinterface, Serializable {
 	LinearLayout biaoqian;
 	RelativeLayout tagll;
@@ -114,6 +118,7 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 		}
 		return true;
 	}
+
 	public void show() {
 		if (width == 800) {
 			switch (index) {
@@ -191,15 +196,20 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 		biaoqianet.addTextChangedListener(new TextWatcher() {
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
+				if (biaoqianet.getText().length() > 0) {
+					newTv.setVisibility(View.VISIBLE);
+				} else {
+					newTv.setVisibility(View.GONE);
+				}
 
-				newTv.setVisibility(View.VISIBLE);
 				String reply_edit = biaoqianet.getText().toString();
 				String kongge = reply_edit.replaceAll(" ", "");
 				if (isExist(kongge)) {
 					newTv.setText("新建'" + biaoqianet.getText().toString() + "'");
+				}else {
+					newTv.setVisibility(View.GONE);
 				}
-				
-				
+
 				newTv.setOnClickListener(new OnClickListener() { // 新建标签
 					public void onClick(View v) {
 						Thread thread = new Thread() {
