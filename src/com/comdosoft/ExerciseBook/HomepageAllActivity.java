@@ -56,9 +56,10 @@ import com.comdosoft.ExerciseBook.tools.PullToRefreshView.OnFooterRefreshListene
 import com.comdosoft.ExerciseBook.tools.PullToRefreshView.OnHeaderRefreshListener;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
+
 /**
  * @作者 丁作强
- * @时间 2014-4-9 上午11:54:45
+ * @时间 2014-4-12 上午9:33:02
  */
 public class HomepageAllActivity extends Activity implements
 		OnHeaderRefreshListener, OnFooterRefreshListener, Urlinterface,
@@ -111,6 +112,9 @@ public class HomepageAllActivity extends Activity implements
 	public static HomepageAllActivity instance = null;
 
 	private Handler handler = new Handler() {
+		/* (non-Javadoc)
+		 * @see android.os.Handler#handleMessage(android.os.Message)
+		 */
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case 0:

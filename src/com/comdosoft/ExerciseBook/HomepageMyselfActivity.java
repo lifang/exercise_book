@@ -55,6 +55,10 @@ import com.comdosoft.ExerciseBook.tools.PullToRefreshView.OnFooterRefreshListene
 import com.comdosoft.ExerciseBook.tools.PullToRefreshView.OnHeaderRefreshListener;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
+/**
+ * @作者 丁作强
+ * @时间 2014-4-12 上午9:33:36
+ */
 public class HomepageMyselfActivity extends Activity implements
 		OnHeaderRefreshListener, OnFooterRefreshListener, Urlinterface,
 		OnGestureListener {

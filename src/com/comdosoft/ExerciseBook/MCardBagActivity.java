@@ -58,6 +58,10 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
+/**
+ * @作者 丁作强
+ * @时间 2014-4-12 上午9:31:51
+ */
 public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 		Serializable {
 	public List<tags> tagsList;
@@ -647,7 +651,14 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 	}
 
 	// 完形填空
-	public String settypes5(String full_text, String answer) {
+	public String settypes5(String full_text, String answer,
+			TextView Lookcontent) {
+//		tv_msg.append(content.substring(count, start));
+
+//		tv_msg.append(Html.fromHtml("<a href=" + start + " ><u>" + key
+
+//		+ "</u></a>"));
+
 		List arrs = new ArrayList<String>();
 		JSONArray answerarray;
 		try {
@@ -655,7 +666,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 			for (int j = 0; j < answerarray.length(); j++) {
 				JSONObject ob = answerarray.getJSONObject(j);
 				String contentStr = ob.getString("content");
-				arrs.add(ob.getString("answer"));
+				arrs.add("<u>" + ob.getString("answer") + "</u>");
 				Log.i("22----------", ob.getString("answer") + "");
 			}
 		} catch (JSONException e) {
@@ -668,10 +679,16 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 		full_text = ExerciseBookTool.del_tag(full_text);
 		String[] textarr = full_text.split("\\[\\[sign\\]\\]");
 		for (int i = 0; i < textarr.length; i++) {
-			content += textarr[i];
+			
+			Lookcontent.append(textarr[i]);
 			if (i <= arrs.size() - 1) {
-				content += arrs.get(i);
+				Lookcontent.append(Html.fromHtml("<u>" + arrs.get(i)+ "</u>"));
+//				content += arrs.get(i);
 			}
+//			content += textarr[i];
+//			if (i <= arrs.size() - 1) {
+//				content += arrs.get(i);
+//			}
 			// for (int j = 0; j < arrs.length; j++) {
 			// content += (Html.fromHtml("<u>" + arrs[j] + "</u>"));
 			// }
@@ -679,7 +696,6 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 		// content = full_text.replace("[[sign]]", "___");
 		return content;
 	}
-
 	public void setFontCard(ViewGroup v1, final knowledges_card card,
 			final int index, final int page) {
 		TextView reson = null;
@@ -714,8 +730,8 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 			fontIv = (ImageView) v.findViewById(R.id.fontIv);
 			rightanswer = (TextView) v.findViewById(R.id.rightanswer);
 			answer = (TextView) v.findViewById(R.id.answer);
-			// reson.setText(setWrong(card.getMistake_types())); // 错误类型
-			reson.setText(setWrong(card.getMistake_types()) + card.getTypes()); // 错误类型
+			 reson.setText(setWrong(card.getMistake_types())); // 错误类型
+//			reson.setText(setWrong(card.getMistake_types()) + card.getTypes()); // 错误类型
 			wronganswer.setText(checkAns(card.getYour_answer(), // 你的错误
 					card.getTypes()));
 			if (card.getTypes().equals("1")) {
@@ -802,8 +818,10 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 			String playerIP = IP + card.getResource_url();
 			reson.setText("原题:");
 			if (card.getTypes().equals("5")) { // 完形填空 显示 查看全部 按钮
-				rightanswers.setText(settypes5(card.getFull_text(),
-						card.getAnswer()));
+				rightanswers.setText("");
+//				settypes5(full_text, answer, Lookcontent);
+				settypes5(card.getFull_text(),
+						card.getAnswer(),rightanswers);
 				button1.setVisibility(View.VISIBLE);
 			} else {
 				rightanswers
