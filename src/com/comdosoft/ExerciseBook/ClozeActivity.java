@@ -370,6 +370,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 			} else {
 				if (Check) {
 					Check = false;
+					setStart();
 					setCheckText("检查");
 					propItem = 0;
 					int type = 0;
@@ -402,6 +403,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 					}
 				} else {
 					Check = true;
+					setPause();
 					setCheckText("下一题");
 					int true_number = 0;
 					for (Map.Entry<Integer, String> entry : user_select
