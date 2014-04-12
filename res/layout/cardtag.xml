@@ -45,7 +45,7 @@
             </LinearLayout>
         </LinearLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="343.71px"
             android:layout_height="wrap_content"
             android:background="@color/top_qianlv"
@@ -63,9 +63,12 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textColor="@color/white"
+                android:layout_marginTop="35px"
+                android:textSize="23px"
+                android:text="aaaa"
                 android:padding="10px"
-                android:visibility="gone" />
-        </LinearLayout>
+               android:visibility="gone" />
+        </RelativeLayout>
     </LinearLayout>
 
 </RelativeLayout>

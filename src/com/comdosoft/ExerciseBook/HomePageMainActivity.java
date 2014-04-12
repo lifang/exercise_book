@@ -47,6 +47,10 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.ImageMemoryCache;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
+/**
+ * @作者 丁作强
+ * @时间 2014-4-12 上午9:33:30
+ */
 public class HomePageMainActivity extends TabActivity implements Urlinterface {
 	TabHost tabhost;
 	TabHost.TabSpec spec1, spec2, spec3, spec4;

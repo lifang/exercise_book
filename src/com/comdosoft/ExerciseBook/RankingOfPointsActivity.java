@@ -35,6 +35,10 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.ImageMemoryCache;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
+/**
+ * @作者 丁作强
+ * @时间 2014-4-12 上午9:35:26
+ */
 public class RankingOfPointsActivity extends Activity {
 	private ListView rankingLv;
 	private ExerciseBook exerciseBook;
