@@ -58,6 +58,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.comdosoft.ExerciseBook.pojo.AnswerJson;
 import com.comdosoft.ExerciseBook.pojo.AnswerPojo;
@@ -78,11 +79,7 @@ public class ExerciseBookTool implements Urlinterface {
 		AnswerJson answerJson = gson.fromJson(answer_history, AnswerJson.class);
 		answerJson.update = time;
 		String str = gson.toJson(answerJson);
-		try {
-			ExerciseBookTool.writeFile(url, str);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		ExerciseBookTool.writeFile(url, str);
 	}
 
 	// 判断是否包含标点符号
@@ -298,10 +295,14 @@ public class ExerciseBookTool implements Urlinterface {
 	public static int getRatio(String path, String key) {
 		List<Integer> ratio = new ArrayList<Integer>();
 		String answer_history = getJson(path);
+		while (answer_history == null || answer_history.equals("")) {
+			answer_history = getJson(path);
+		}
+		Log.i("Ax", path + "--" + key);
+		Log.i("Ax", "json--" + answer_history);
 		try {
 			JSONObject obj = new JSONObject(answer_history);
 			JSONObject js = obj.getJSONObject(key);
-			Log.i("Ax", js.toString());
 			JSONArray arr = js.getJSONArray("questions");
 			if (arr.length() == 0) {
 				return -10;
@@ -311,21 +312,18 @@ public class ExerciseBookTool implements Urlinterface {
 				JSONArray ar = item.getJSONArray("branch_questions");
 				for (int j = 0; j < ar.length(); j++) {
 					JSONObject o = ar.getJSONObject(j);
-					Log.i("Ax",
-							"ratio:" + Integer.parseInt(o.getString("ratio")));
 					ratio.add(Integer.parseInt(o.getString("ratio")));
 				}
 			}
 		} catch (JSONException e) {
 			getRatio(path, key);
 			Log.i("Ax", "JSONException-" + e.toString() + "--" + e.getMessage());
-			// return -20;
 		}
 		int size = 0;
 		for (int i = 0; i < ratio.size(); i++) {
 			size += ratio.get(i);
 		}
-		Log.i("Ax", size + "--" + ratio.size() + "-ratio-size");
+		Log.i("Ax", size + "--" + ratio.size() + "-ratio-size-");
 		return size / ratio.size();
 	}
 
@@ -349,14 +347,17 @@ public class ExerciseBookTool implements Urlinterface {
 	 * @param sets
 	 * @throws IOException
 	 */
-	public static void writeFile(String filePath, String sets)
-			throws IOException {
-		FileWriter fw = new FileWriter(filePath);
-		PrintWriter out = new PrintWriter(fw);
-		out.write(sets);
-		out.println();
-		fw.close();
-		out.close();
+	public static void writeFile(String filePath, String sets) {
+		try {
+			FileWriter fw = new FileWriter(filePath);
+			PrintWriter out = new PrintWriter(fw);
+			out.write(sets);
+			out.println();
+			fw.close();
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	// 读取本地json文件
@@ -375,6 +376,7 @@ public class ExerciseBookTool implements Urlinterface {
 			bf.close();
 			in.close();
 		} catch (IOException e) {
+			Log.i("Ax", e.getMessage());
 			Log.i("Ax", "读取json文件发生错误");
 		}
 		return stringBuilder.toString();
