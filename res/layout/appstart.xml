@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:background="@drawable/reg_bg" >
+        <ImageView
+        android:id="@+id/reg_logo"
+        android:layout_width="372.52px"
+        android:layout_height="396.64px"
+        android:layout_marginTop="270px"
+        android:src="@drawable/login_logo" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="70px"
+            android:text="@string/set3"
+            android:textColor="#ffffff"
+            android:textSize="18px" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            
+            android:layout_marginTop="8px"
+            android:text="@string/set4"
+            android:textColor="#ffffff"
+            android:textSize="18px" />
+
+    </LinearLayout>

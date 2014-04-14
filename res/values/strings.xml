@@ -82,5 +82,12 @@
     <string name="work_end_str11">再次挑战</string>
     <string name="prop_number_error">道具数量不足,无法使用道具</string>
     <string name="nulls"></string>
+    <string name="set3">阳光翰文（北京）国际教育科技中心 发行</string>
+    <string name="set4">苏州协创软件技术有限公司 提供技术支持</string>
+    <string name="inputbanjiyanzhengma">输入班级验证码</string>
+    <string name="inputkey">输入激活码</string>
+    <string name="nextstep">跳过下一步</string>
+    <string name="classcode1">你还没有加入任何班级，进入后将不能使用任何</string>
+    <string name="classcode2">功能，首先请加入一个班级方能正常使用全部功能。</string>
 
 </resources>

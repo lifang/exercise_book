@@ -1,6 +1,7 @@
 package com.comdosoft.ExerciseBook.tools;
 
 public interface ExerciseBookParams {
+	public static String MES_ISNULL = "输入框不能为空";
 	public static String MES_NAME_NICKNAME_ISNULL = "姓名或昵称不能为空";
 	public static String MES_CAPTURE = "调用相机失败";
 	public static String INTERNET = "未开启网络";
