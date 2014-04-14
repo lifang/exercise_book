@@ -19,10 +19,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.comdosoft.ExerciseBook.pojo.AnswerBasePojo;
 
-/** 
-* @作者 马龙 
-* @时间 2014-4-11 下午6:16:31 
-*/ 
+/**
+ * @作者 马龙
+ * @时间 2014-4-11 下午6:16:31
+ */
 public class AnswerOrderActivity extends AnswerBaseActivity {
 
 	// private String json =
@@ -109,9 +109,8 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 			if (status != 2) {
 				mOptionOrderTextList.add(tv);
 				mAnswerList.add(answerArr[i]);
-			} else {
-				tv.setClickable(false);
 			}
+			tv.setClickable(false);
 		}
 	}
 
@@ -364,7 +363,6 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 				break;
 			case R.id.base_propTrue:
 				if (eb.getTrue_number() > 0) {
-					rightAnswer();
 					if (!truePropFlag) {
 						truePropFlag = true;
 						setTruePropEnd();
