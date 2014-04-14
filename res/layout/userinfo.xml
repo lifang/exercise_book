@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="445px"
+    android:layout_height="500px"
     android:gravity="center_vertical" >
 
     <RelativeLayout
@@ -305,6 +305,57 @@
 
                     <TextView
                         android:id="@+id/userinfo_jiezu2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="6.7px"
+                        android:layout_marginTop="4.69px"
+                        android:text="LV0"
+                        android:textColor="#074f31"
+                        android:textSize="18.2px" />
+                </RelativeLayout>
+            </LinearLayout>
+             <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16px"
+                android:gravity="center_horizontal" >
+
+                <ImageView
+                    android:layout_width="32.83px"
+                    android:layout_height="30.15px"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5.36px"
+                    android:src="@drawable/us_chengjiu5" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6.7px"
+                    android:padding="5.36px"
+                    android:text="牛气"
+                    android:textColor="#074f31"
+                    android:textSize="18.2px" />
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6.7px" >
+
+                     <ImageView
+                        android:layout_width="135px"
+                        android:layout_height="21.44px"
+                        android:layout_marginTop="5.36px"
+                        android:background="@drawable/chengjiu_danhuang" />
+
+                    <ImageView
+                        android:id="@+id/userinfo_niuqi1"
+                        android:layout_width="0.01px"
+                        android:layout_height="20.1px"
+                        android:layout_marginTop="6.7px"
+                        android:background="@drawable/chengjiu_huang" />
+
+                    <TextView
+                        android:id="@+id/userinfo_niuqi2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="6.7px"

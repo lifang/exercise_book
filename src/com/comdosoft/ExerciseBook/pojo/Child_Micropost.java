@@ -18,14 +18,14 @@ public class Child_Micropost {
 	private String reciver_name;
 
 	private String created_at ;
-	
+	private String good ;
 	
 	public Child_Micropost(){};
 	
 	public Child_Micropost(String id, String sender_id, String sender_types,
 			String sender_name, 
 			String sender_avatar_url, String content, String reciver_name,
-			String created_at) {
+			String created_at,String good) {
 		super();
 		this.id = id;
 		this.sender_id = sender_id;
@@ -37,6 +37,15 @@ public class Child_Micropost {
 		this.reciver_name = reciver_name;
 		
 		this.created_at = created_at;
+		this.good = good;
+	}
+
+	public String getGood() {
+		return good;
+	}
+
+	public void setGood(String good) {
+		this.good = good;
 	}
 
 	public String getId() {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="227.75px"
+    android:layout_width="282.75px"
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
@@ -30,7 +30,7 @@
 
     <LinearLayout
         android:id="@+id/stu_cj"
-        android:layout_width="227.75px"
+        android:layout_width="282.75px"
         android:layout_height="wrap_content"
         android:background="@drawable/stucj"
         android:gravity="center"
@@ -110,6 +110,25 @@
 
             <TextView
                 android:id="@+id/success_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lv 0"
+                android:textColor="#ded467"
+                android:textSize="10.51px" />
+        </LinearLayout>
+         <LinearLayout
+            android:layout_width="52.59px"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/achievement5" />
+
+            <TextView
+                android:id="@+id/success_5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Lv 0"

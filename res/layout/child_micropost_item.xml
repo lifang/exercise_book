@@ -83,6 +83,12 @@
                         android:text="2013/02/22  12:12"
                         android:textColor="#cacaca"
                         android:textSize="21px" />
+                    <ImageView
+                        android:id="@+id/good_item"
+                        android:layout_width="30px"
+                        android:layout_height="30px"
+                        android:layout_marginLeft="30px"
+                        android:background="@drawable/good" />
                 </LinearLayout>
 
                 <TextView

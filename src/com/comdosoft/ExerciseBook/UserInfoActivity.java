@@ -55,9 +55,9 @@ public class UserInfoActivity extends Activity {
 	private String school_class_id = "15";
 	private ProgressDialog prodialog;
 	private TextView userinfo_youyi2, userinfo_jingzhun2, userinfo_xunsu2,
-			userinfo_jiezu2;
+			userinfo_jiezu2, userinfo_niuqi2;
 	private ImageView userinfo_youyi1, userinfo_jingzhun1, userinfo_xunsu1,
-			userinfo_jiezu1;
+			userinfo_jiezu1, userinfo_niuqi1;
 
 	ArrayList list;
 	private int width;
@@ -97,12 +97,14 @@ public class UserInfoActivity extends Activity {
 		userinfo_jingzhun2 = (TextView) findViewById(R.id.userinfo_jingzhun2); // 精准
 		userinfo_xunsu2 = (TextView) findViewById(R.id.userinfo_xunsu2); // 迅速
 		userinfo_jiezu2 = (TextView) findViewById(R.id.userinfo_jiezu2); // 捷足
-
+		userinfo_niuqi2 = (TextView) findViewById(R.id.userinfo_niuqi2); // 牛气
+		
 		userinfo_youyi1 = (ImageView) findViewById(R.id.userinfo_youyi1); // 优异
 		userinfo_jingzhun1 = (ImageView) findViewById(R.id.userinfo_jingzhun1); // 精准
 		userinfo_xunsu1 = (ImageView) findViewById(R.id.userinfo_xunsu1); // 迅速
 		userinfo_jiezu1 = (ImageView) findViewById(R.id.userinfo_jiezu1); // 捷足
-
+		userinfo_niuqi1 = (ImageView) findViewById(R.id.userinfo_niuqi1); // 牛气
+		
 		userinfo_username = (TextView) findViewById(R.id.userinfo_username); // 用户昵称
 		userinfo_classname = (TextView) findViewById(R.id.userinfo_classname); // 班级名
 		userinfo_username.setText(nickName);
@@ -149,6 +151,7 @@ public class UserInfoActivity extends Activity {
 			try {
 
 				list = new ArrayList();
+				list.add(0);
 				list.add(0);
 				list.add(0);
 				list.add(0);
@@ -245,6 +248,17 @@ public class UserInfoActivity extends Activity {
 			laParams3.width = (int) ((num3 % 100) * 1.35);
 		}
 		userinfo_jiezu1.setLayoutParams(laParams3);
+		
+		int num4 = (Integer) list.get(4); // 牛气
+		userinfo_niuqi2.setText("LV" + num4 / 100);
+		LayoutParams laParams4 = (LayoutParams) userinfo_niuqi1
+				.getLayoutParams();
+		if (width==1200) {
+			laParams4.width = (int) ((num4 % 100) * 2.01);
+		}else {
+			laParams4.width = (int) ((num4 % 100) * 1.35);
+		}
+		userinfo_niuqi1.setLayoutParams(laParams4);
 
 	}
 
