@@ -9,14 +9,16 @@ public class ClassStu
 	private int success_2;
 	private int success_3;
 	private int success_4;
+	private int success_5;
 	public ClassStu(String name, String avatar_url, int success_1,
-			int success_2, int success_3, int success_4) {
+			int success_2, int success_3, int success_4, int success_5) {
 		Name = name;
 		Avatar_url = avatar_url;
 		this.success_1 = success_1;
 		this.success_2 = success_2;
 		this.success_3 = success_3;
 		this.success_4 = success_4;
+		this.success_5 = success_5;
 	}
 	public String getId() {
 		return id;
@@ -58,7 +60,7 @@ public class ClassStu
 	public ClassStu() {
 	}
 	public ClassStu(String id, String name, String avatar_url, int success_1,
-			int success_2, int success_3, int success_4) {
+			int success_2, int success_3, int success_4, int success_5) {
 		this.id = id;
 		Name = name;
 		Avatar_url = avatar_url;
@@ -66,12 +68,19 @@ public class ClassStu
 		this.success_2 = success_2;
 		this.success_3 = success_3;
 		this.success_4 = success_4;
+		this.success_5 = success_5;
 	}
 	public int getSuccess_4() {
 		return success_4;
 	}
 	public void setSuccess_4(int success_4) {
 		this.success_4 = success_4;
+	}
+	public int getSuccess_5() {
+		return success_5;
+	}
+	public void setSuccess_5(int success_5) {
+		this.success_5 = success_5;
 	}
 
 }

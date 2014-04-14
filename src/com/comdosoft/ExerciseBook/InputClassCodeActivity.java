@@ -3,6 +3,7 @@ package com.comdosoft.ExerciseBook;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.List;
 
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.StringBody;
@@ -51,6 +52,7 @@ public class InputClassCodeActivity extends Activity implements Urlinterface {
 
 		setContentView(R.layout.activity_intpukclasscode);
 		exerciseBook = (ExerciseBook) getApplication();
+		exerciseBook.getActivityList().add(this);
 		// Date d = new Date();
 		// open_id = d.toString();
 		// 上面两句代码 用来获得不一样的 qq_uid，，，测试 用，，后期删除
@@ -62,7 +64,14 @@ public class InputClassCodeActivity extends Activity implements Urlinterface {
 		ClassCode = (EditText) findViewById(R.id.reg_inputclasscode);
 
 	}
-
+	// 关闭界面
+	public void clearActivity() {
+		List<Activity> activityList = exerciseBook.getActivityList();
+		for (int i = 0; i < activityList.size(); i++) {
+			activityList.get(i).finish();
+		}
+		exerciseBook.setActivityList();
+	}
 	protected void onResume() {
 		super.onResume();
 		JPushInterface.onResume(this);
@@ -126,7 +135,8 @@ public class InputClassCodeActivity extends Activity implements Urlinterface {
 									InputClassCodeActivity.this,
 									com.comdosoft.ExerciseBook.Appstart.class);//
 							startActivity(intent);
-							InputClassCodeActivity.this.finish();
+//							InputClassCodeActivity.this.finish();
+							clearActivity();
 
 						} else {
 
@@ -172,8 +182,9 @@ public class InputClassCodeActivity extends Activity implements Urlinterface {
 								.toString();
 						MultipartEntity entity = new MultipartEntity();
 						entity.addPart("open_id", new StringBody(open_id));
-						entity.addPart("key",
-								new StringBody(key, Charset.forName("UTF-8")));
+						entity.addPart("key", new StringBody(key));
+//						entity.addPart("key",
+//								new StringBody(key, Charset.forName("UTF-8")));
 						entity.addPart("verification_code", new StringBody(
 								verification_code));
 

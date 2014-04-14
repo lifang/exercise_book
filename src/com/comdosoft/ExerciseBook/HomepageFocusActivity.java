@@ -502,13 +502,19 @@ public class HomepageFocusActivity extends Activity implements
 					.findViewById(R.id.child_micropost_delete); // 删除
 			ImageView reply = (ImageView) child_view
 					.findViewById(R.id.child_micropost_huifu); // 回复
-
+			ImageView good = (ImageView) child_view
+					.findViewById(R.id.good_item); // 点赞
+			final Child_Micropost child_Micropost = child_list.get(position2);
+			if (child_Micropost.getGood().equals("1")) {
+				good.setVisibility(View.VISIBLE);
+			}else {
+				good.setVisibility(View.GONE);
+			}
 			if (position2 != 0) {
 				ImageView child_bottom = (ImageView) child_view
 						.findViewById(R.id.child_jiantou);
 				child_bottom.setVisibility(View.GONE);
 			}
-			final Child_Micropost child_Micropost = child_list.get(position2);
 			if (child_Micropost.getSender_avatar_url() != null) { // 设置头像
 				String url = IP + child_Micropost.getSender_avatar_url();
 				// ExerciseBookTool.set_background(url, face);
@@ -742,10 +748,10 @@ public class HomepageFocusActivity extends Activity implements
 						// String reciver_avatar_url = o
 						// .getString("reciver_avatar_url");
 						String created_at = o.getString("new_created_at");
-						Child_Micropost child = new Child_Micropost(id,
-								sender_id, sender_types, sender_name,
-								sender_avatar_url, content, reciver_name,
-								created_at);
+						String good = o.getString("praise");
+						Child_Micropost child = new Child_Micropost(id, sender_id,
+								sender_types, sender_name, sender_avatar_url, content,
+								reciver_name, created_at,good);
 						child_list.add(child);
 					}
 				} else {
@@ -931,10 +937,10 @@ public class HomepageFocusActivity extends Activity implements
 											.getString("reciver_name");
 									String created_at = o
 											.getString("new_created_at");
-									Child_Micropost child = new Child_Micropost(
-											id, sender_id, sender_types,
-											sender_name, sender_avatar_url,
-											content, reciver_name, created_at);
+									String good = o.getString("praise");
+									Child_Micropost child = new Child_Micropost(id, sender_id,
+											sender_types, sender_name, sender_avatar_url, content,
+											reciver_name, created_at,good);
 									child_list.add(0, child);
 								}
 								reply_gk_list.add(true);

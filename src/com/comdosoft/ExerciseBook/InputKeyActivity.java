@@ -46,7 +46,7 @@ public class InputKeyActivity extends Activity implements Urlinterface {
 
 		setContentView(R.layout.activity_intputkey);
 		exerciseBook = (ExerciseBook) getApplication();
-
+		exerciseBook.getActivityList().add(this);
 		Intent intent = getIntent();//
 		open_id = intent.getStringExtra("open_id"); // 获得上个页面传过来的 QQ openid
 
@@ -84,7 +84,7 @@ public class InputKeyActivity extends Activity implements Urlinterface {
 				it.putExtra("key", inputKeyStr);
 				it.putExtra("open_id", open_id);
 				startActivity(it);
-				InputKeyActivity.this.finish();
+//				InputKeyActivity.this.finish();
 			}
 
 		}

@@ -169,7 +169,7 @@
 
         <RelativeLayout
             android:id="@+id/menuclassll"
-            android:layout_width="227.75px"
+            android:layout_width="282.75px"
             android:layout_height="fill_parent"
             android:background="#363e47"
             android:visibility="gone" >
@@ -232,7 +232,7 @@
 
             <GridView
                 android:id="@+id/classstugv"
-                android:layout_width="227.75px"
+                android:layout_width="282.75px"
                 android:layout_height="880px"
                 android:layout_below="@id/classstu"
                 android:scrollbars="none"
