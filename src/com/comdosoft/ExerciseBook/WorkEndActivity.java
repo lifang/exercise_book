@@ -12,11 +12,9 @@ import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.comdosoft.ExerciseBook.pojo.AnswerJson;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
-import com.google.gson.Gson;
 
 public class WorkEndActivity extends Activity implements Urlinterface {
 
@@ -100,12 +98,13 @@ public class WorkEndActivity extends Activity implements Urlinterface {
 			// a比c大,返回1
 			int zhi = Window_day.compareTo(ExerciseBookTool
 					.getCalender_time(end_time));
-			if (zhi == 1 && precision >= 60) {
+			Log.i("Max", zhi + "/" + end_time + "/" + Window_day.getTime());
+			if (zhi == 1) {
 				work_jiezu.setText(R.string.work_end_str8);
-			} else if (zhi != 1 && precision < 60) {
-				work_jiezu.setText(R.string.work_end_str13);
 			} else {
-				work_jiezu.setText(R.string.work_end_str9);
+				int str = precision >= 60 ? R.string.work_end_str9
+						: R.string.work_end_str13;
+				work_jiezu.setText(str);
 			}
 		} else {
 			cj.setVisibility(View.GONE);
@@ -113,7 +112,6 @@ public class WorkEndActivity extends Activity implements Urlinterface {
 	}
 
 	public void onclick(View v) {
-		Intent intent = new Intent();
 		switch (v.getId()) {
 		case R.id.ok:
 			WorkEndActivity.this.setResult(0);
