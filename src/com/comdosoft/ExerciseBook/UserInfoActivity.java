@@ -328,9 +328,14 @@ public class UserInfoActivity extends Activity {
 										 editor.putString("nickname", content);
 										 editor.commit();
 								userinfo_username.setText(content);
-								HomePageMainActivity.instance.userName
-										.setText(content);
-								Table_TabHost.instance.userName.setText(content);
+								
+								if (eb.getMenu_num()==0) {
+									HomePageMainActivity.instance.userName
+									.setText(content);
+								}else {
+									Table_TabHost.instance.userName.setText(content);
+								}
+								
 
 							}
 							Toast.makeText(getApplicationContext(), notice,
@@ -366,7 +371,7 @@ public class UserInfoActivity extends Activity {
 				} catch (Exception e) {
 					Toast.makeText(getApplicationContext(),
 							"修改昵称失败", 0).show();
-					mHandler.sendEmptyMessage(7);
+					handler.sendEmptyMessage(7);
 				}
 			}
 		}
