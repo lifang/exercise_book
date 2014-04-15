@@ -2,6 +2,7 @@ package com.comdosoft.ExerciseBook;
 
 
 
+import cn.jpush.android.api.JPushInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.app.Activity;
@@ -28,4 +29,14 @@ public class Appstart extends Activity{
 		}
 	}, 3000);
    }
+	
+	protected void onResume() {
+		super.onResume();
+		JPushInterface.onResume(this);
+	}
+
+	protected void onPause() {
+		super.onPause();
+		JPushInterface.onPause(this);
+	}
 }

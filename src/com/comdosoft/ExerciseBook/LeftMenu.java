@@ -28,6 +28,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import cn.jpush.android.api.JPushInterface;
+
 import com.comdosoft.ExerciseBook.pojo.ClassStu;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
@@ -457,5 +459,14 @@ public class LeftMenu extends Activity implements Urlinterface {
 			return convertView;
 		}
 
+	}
+	protected void onResume() {
+		super.onResume();
+		JPushInterface.onResume(this);
+	}
+
+	protected void onPause() {
+		super.onPause();
+		JPushInterface.onPause(this);
 	}
 }

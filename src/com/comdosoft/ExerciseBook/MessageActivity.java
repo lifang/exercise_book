@@ -33,6 +33,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import cn.jpush.android.api.JPushInterface;
+
 import com.comdosoft.ExerciseBook.ReplyListView.IXListViewListener;
 import com.comdosoft.ExerciseBook.pojo.SysMessage;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
@@ -159,6 +161,15 @@ IXListViewListener, Urlinterface, OnGestureListener {
 		mHandler = new Handler();
 	}
 
+	protected void onResume() {
+		super.onResume();
+		JPushInterface.onResume(this);
+	}
+
+	protected void onPause() {
+		super.onPause();
+		JPushInterface.onPause(this);
+	}
 	 // 构建Runnable对象，在runnable中更新界面  
     Runnable   runnableUi=new  Runnable(){  
         @Override  

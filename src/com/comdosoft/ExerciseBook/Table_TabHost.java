@@ -261,5 +261,13 @@ public class Table_TabHost extends Activity
 		}
 	}
 	
+	protected void onResume() {
+		super.onResume();
+		JPushInterface.onResume(this);
+	}
 
+	protected void onPause() {
+		super.onPause();
+		JPushInterface.onPause(this);
+	}
 }

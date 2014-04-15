@@ -13,6 +13,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import cn.jpush.android.api.JPushInterface;
+
 import com.comdosoft.ExerciseBook.R;
 
 public class OpenInputMethod_size8 extends Activity {
@@ -62,7 +64,15 @@ public class OpenInputMethod_size8 extends Activity {
 		});
 	}
 
+	protected void onResume() {
+		super.onResume();
+		JPushInterface.onResume(this);
+	}
 
+	protected void onPause() {
+		super.onPause();
+		JPushInterface.onPause(this);
+	}
 	private View.OnClickListener listener = new View.OnClickListener() {
 
 		@Override
