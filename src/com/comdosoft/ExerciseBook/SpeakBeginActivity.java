@@ -1,6 +1,5 @@
 package com.comdosoft.ExerciseBook;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -127,7 +126,6 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 			setTimePropEnd();// 禁用道具
 		}
 		setTruePropEnd();// 禁用道具
-
 		qid = eb.getQuestion_id();
 		gson = new Gson();
 		Intent intent = getIntent();

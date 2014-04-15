@@ -422,7 +422,7 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 				// 这三种情况都表明数据有错,重新下载安装需要的数据
 				install_tts();
 			}
-			break;
+				break;
 			case TextToSpeech.Engine.CHECK_VOICE_DATA_FAIL:
 				// 检查失败
 				Log.i("Max", "检查失败");
@@ -439,7 +439,7 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 	public void onInit(int status) {
 		if (status == TextToSpeech.SUCCESS) {
 			int result = mTts.setLanguage(Locale.US);
-//			mTts.setSpeechRate(0.8f);
+			// mTts.setSpeechRate(0.8f);
 
 			// 设置发音语言
 			if (result == TextToSpeech.LANG_MISSING_DATA
