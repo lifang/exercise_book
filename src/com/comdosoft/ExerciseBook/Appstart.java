@@ -29,12 +29,12 @@ public class Appstart extends Activity{
 		}
 	}, 3000);
    }
-	
+	@Override
 	protected void onResume() {
 		super.onResume();
 		JPushInterface.onResume(this);
 	}
-
+	@Override
 	protected void onPause() {
 		super.onPause();
 		JPushInterface.onPause(this);
