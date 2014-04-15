@@ -40,6 +40,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import cn.jpush.android.api.JPushInterface;
 
 import com.comdosoft.ExerciseBook.pojo.WorkPoJo;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
@@ -586,4 +587,14 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 		intent.setClass(HomeWorkIngActivity.this, RecordMainActivity.class);
 		startActivity(intent);
 	}
+	protected void onResume() {
+		super.onResume();
+		JPushInterface.onResume(this);
+	}
+
+	protected void onPause() {
+		super.onPause();
+		JPushInterface.onPause(this);
+	}
+
 }

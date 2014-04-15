@@ -54,13 +54,11 @@ public class LoginActivity extends Activity implements OnClickListener,
 			switch (msg.what) {
 			case 1:
 				intent.putExtra("open_id", openid);
-				intent.setClass(getApplicationContext(),
-						InputKeyActivity.class);
+				intent.setClass(getApplicationContext(), InputKeyActivity.class);
 				break;
 			case 2:
 				LoginActivity.this.finish();
-				intent.setClass(getApplicationContext(),
-						Appstart.class);
+				intent.setClass(getApplicationContext(), Appstart.class);
 				break;
 			}
 			LoginActivity.this.finish();
@@ -212,6 +210,16 @@ public class LoginActivity extends Activity implements OnClickListener,
 
 	public void onClick(View v) {
 		onClickLogin();
+	}
+
+	protected void onResume() {
+		super.onResume();
+		JPushInterface.onResume(this);
+	}
+
+	protected void onPause() {
+		super.onPause();
+		JPushInterface.onPause(this);
 	}
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {

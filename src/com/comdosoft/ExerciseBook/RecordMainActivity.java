@@ -56,6 +56,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import cn.jpush.android.api.JPushInterface;
 
 import com.comdosoft.ExerciseBook.calendar_item.CalendarAdapter;
 import com.comdosoft.ExerciseBook.pojo.WorkPoJo;
@@ -1003,4 +1004,14 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 			break;
 		}
 	}
+	protected void onResume() {
+		super.onResume();
+		JPushInterface.onResume(this);
+	}
+
+	protected void onPause() {
+		super.onPause();
+		JPushInterface.onPause(this);
+	}
+
 }
