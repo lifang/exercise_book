@@ -404,27 +404,29 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 			case TextToSpeech.Engine.CHECK_VOICE_DATA_PASS:
 			// 这个返回结果表明TTS Engine可以用
 			{
+				Log.i("Max", "TTS可用");
 				mTts = new TextToSpeech(this, this);
 			}
 				break;
 			case TextToSpeech.Engine.CHECK_VOICE_DATA_BAD_DATA:
 				// 需要的语音数据已损坏
+				install_tts();
+				break;
 			case TextToSpeech.Engine.CHECK_VOICE_DATA_MISSING_DATA:
 				// 缺少需要语言的语音数据
+				install_tts();
+				break;
 			case TextToSpeech.Engine.CHECK_VOICE_DATA_MISSING_VOLUME:
 			// 缺少需要语言的发音数据
 			{
 				// 这三种情况都表明数据有错,重新下载安装需要的数据
-				Toast.makeText(SpeakPrepareActivity.this, "您需要安装TTS框架",
-						Toast.LENGTH_SHORT).show();
-				Intent dataIntent = new Intent();
-				dataIntent
-						.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
-				startActivity(dataIntent);
+				install_tts();
 			}
 				break;
 			case TextToSpeech.Engine.CHECK_VOICE_DATA_FAIL:
 				// 检查失败
+				Log.i("Max", "检查失败");
+				break;
 			default:
 				Toast.makeText(SpeakPrepareActivity.this, "TTS语音启动失败..",
 						Toast.LENGTH_SHORT).show();
@@ -437,7 +439,7 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 	public void onInit(int status) {
 		if (status == TextToSpeech.SUCCESS) {
 			int result = mTts.setLanguage(Locale.US);
-			mTts.setSpeechRate(0.8f);
+			// mTts.setSpeechRate(0.8f);
 
 			// 设置发音语言
 			if (result == TextToSpeech.LANG_MISSING_DATA

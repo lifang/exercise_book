@@ -12,8 +12,6 @@ import java.util.regex.Pattern;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.content.Context;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -31,7 +29,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -43,7 +40,6 @@ import com.comdosoft.ExerciseBook.pojo.AnswerBasePojo;
 import com.comdosoft.ExerciseBook.pojo.DictationPojo;
 import com.comdosoft.ExerciseBook.pojo.MoveLRPojo;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
-import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Soundex_Levenshtein;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
@@ -85,7 +81,6 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 	private ImageView mPlayImg;
 	private MediaPlayer mediaPlayer = new MediaPlayer();
 	private LayoutParams etlp;
-	private InputMethodManager imm;
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
@@ -110,8 +105,6 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		mesText = (TextView) findViewById(R.id.question_dictation_mes);
 		mPlayImg = (ImageView) findViewById(R.id.question_dictation_play);
 		mPlayImg.setOnClickListener(this);
-
-		imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
 		setQuestionType(0);
 
@@ -197,12 +190,10 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 			et.setText(value);
 			et.setTextColor(Color.rgb(53, 207, 143));
 		}
-		imm.setInputMethod(et.getWindowToken(),
-				"com.android.inputmethod.pinyin/.PinyinIME");
-		;
 		et.setInputType(InputType.TYPE_TEXT_VARIATION_URI
 				| InputType.TYPE_TEXT_FLAG_MULTI_LINE
-				| InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+				| InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
+				| InputType.TYPE_CLASS_TEXT);
 		et.setImeOptions(EditorInfo.IME_ACTION_NEXT);
 		et.setId(R.id.aa);
 		et.setOnTouchListener(new MyTouch(i));
@@ -386,12 +377,12 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 			for (int i = 0; i < etList.size(); i++) {
 				String s = etList.get(i).getText().toString();
 				if (s != null && !s.equals("")) {
-					if (ExerciseBookTool.isChinese(s)) {
-						errorMap.put(dictationList.get(i).getValue(), 1);
-						dictationList.get(i).setFlag(0);
-						tvList.get(i).setVisibility(View.INVISIBLE);
-						etList.get(i).setTextColor(Color.rgb(245, 21, 58));
-					}
+					// if (ExerciseBookTool.isChinese(s)) {
+					// errorMap.put(dictationList.get(i).getValue(), 1);
+					// dictationList.get(i).setFlag(0);
+					// tvList.get(i).setVisibility(View.INVISIBLE);
+					// etList.get(i).setTextColor(Color.rgb(245, 21, 58));
+					// }
 					String answerStr = filterString(dictationList.get(i)
 							.getValue());
 					if (hasDigit(answerStr)) {

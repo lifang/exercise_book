@@ -1,7 +1,6 @@
 package com.comdosoft.ExerciseBook;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -424,7 +423,6 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 				}
 			}
 			break;
-
 		case R.id.base_propTrue:
 			if (eb.getTrue_number() > 0) {// 判断显示答案的道具数量是否大于0
 				if (propItem < tv_list.size()) {

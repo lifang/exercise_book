@@ -218,18 +218,17 @@ public class SpeakHistoryActivity extends AnswerBaseActivity implements
 				break;
 			case TextToSpeech.Engine.CHECK_VOICE_DATA_BAD_DATA:
 				// 需要的语音数据已损坏
+				install_tts();
+				break;
 			case TextToSpeech.Engine.CHECK_VOICE_DATA_MISSING_DATA:
 				// 缺少需要语言的语音数据
+				install_tts();
+				break;
 			case TextToSpeech.Engine.CHECK_VOICE_DATA_MISSING_VOLUME:
 			// 缺少需要语言的发音数据
 			{
 				// 这三种情况都表明数据有错,重新下载安装需要的数据
-				Toast.makeText(SpeakHistoryActivity.this, "您需要安装TTS框架",
-						Toast.LENGTH_SHORT).show();
-				Intent dataIntent = new Intent();
-				dataIntent
-						.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
-				startActivity(dataIntent);
+				install_tts();
 			}
 				break;
 			case TextToSpeech.Engine.CHECK_VOICE_DATA_FAIL:
