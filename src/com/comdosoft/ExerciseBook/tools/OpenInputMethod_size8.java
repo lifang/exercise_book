@@ -74,7 +74,7 @@ public class OpenInputMethod_size8 extends Activity {
 				Toast.makeText(getApplicationContext(), R.string.edit_null,
 						Toast.LENGTH_SHORT).show();
 			} else {
-				exerciseBook.setRefresh(0);
+//				exerciseBook.setRefresh(0);
 				Intent intent2 = new Intent();
 
 				intent2.putExtra("content", reply_edit);

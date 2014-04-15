@@ -29,13 +29,13 @@ import com.comdosoft.ExerciseBook.tools.Urlinterface;
  * @时间 2014-4-12 上午9:35:32
  */
 public class InputKeyActivity extends Activity implements Urlinterface {
-	private EditText inputKey;//  激活码
-	private Button   queren;  //    确认 
-	private Button   nextStep;  //    跳过
+	private EditText inputKey;// 激活码
+	private Button queren; // 确认
+	private Button nextStep; // 跳过
 	private ProgressDialog prodialog;
 	private ExerciseBook exerciseBook;
 	private String open_id = "asfds"; // QQ 的 open id
-
+	private String notice = "";
 	/* 请求码 */
 
 	private String json = "";
@@ -46,9 +46,15 @@ public class InputKeyActivity extends Activity implements Urlinterface {
 
 		setContentView(R.layout.activity_intputkey);
 		exerciseBook = (ExerciseBook) getApplication();
-		exerciseBook.getActivityList().add(this);
+		// exerciseBook.getActivityList().add(this);
 		Intent intent = getIntent();//
 		open_id = intent.getStringExtra("open_id"); // 获得上个页面传过来的 QQ openid
+		notice = intent.getStringExtra("notice");
+		if ("".equals(notice) || notice == null) {
+
+		} else {
+			Toast.makeText(getApplicationContext(), notice, 1).show();
+		}
 
 		inputKey = (EditText) findViewById(R.id.reg_inputkey);
 		queren = (Button) findViewById(R.id.inputkey_queren);
@@ -56,10 +62,12 @@ public class InputKeyActivity extends Activity implements Urlinterface {
 		queren.setOnClickListener(listener);
 		nextStep.setOnClickListener(listener2);
 	}
+
 	protected void onResume() {
 		super.onResume();
 		JPushInterface.onResume(this);
 	}
+
 	protected void onPause() {
 		super.onPause();
 		JPushInterface.onPause(this);
@@ -72,11 +80,11 @@ public class InputKeyActivity extends Activity implements Urlinterface {
 
 			String inputKeyStr = inputKey.getText().toString();
 			String inputKeyStr2 = inputKeyStr.replaceAll(" ", "");
-			
-			if (inputKeyStr.length() == 0|| inputKeyStr2.equals("")) {
+
+			if (inputKeyStr.length() == 0 || inputKeyStr2.equals("")) {
 				Toast.makeText(getApplicationContext(),
-						ExerciseBookParams.MES_ISNULL, Toast.LENGTH_SHORT).show();
-				
+						ExerciseBookParams.MES_ISNULL, Toast.LENGTH_SHORT)
+						.show();
 
 			} else {
 				Intent it = new Intent(InputKeyActivity.this,
@@ -84,7 +92,7 @@ public class InputKeyActivity extends Activity implements Urlinterface {
 				it.putExtra("key", inputKeyStr);
 				it.putExtra("open_id", open_id);
 				startActivity(it);
-//				InputKeyActivity.this.finish();
+				InputKeyActivity.this.finish();
 			}
 
 		}
@@ -100,9 +108,6 @@ public class InputKeyActivity extends Activity implements Urlinterface {
 			InputKeyActivity.this.finish();
 		}
 	};
-
-	
-	
 
 	public String inStream2String(InputStream is) throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();

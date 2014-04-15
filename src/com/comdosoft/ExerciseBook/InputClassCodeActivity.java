@@ -64,14 +64,6 @@ public class InputClassCodeActivity extends Activity implements Urlinterface {
 		ClassCode = (EditText) findViewById(R.id.reg_inputclasscode);
 
 	}
-	// 关闭界面
-	public void clearActivity() {
-		List<Activity> activityList = exerciseBook.getActivityList();
-		for (int i = 0; i < activityList.size(); i++) {
-			activityList.get(i).finish();
-		}
-		exerciseBook.setActivityList();
-	}
 	protected void onResume() {
 		super.onResume();
 		JPushInterface.onResume(this);
@@ -135,16 +127,22 @@ public class InputClassCodeActivity extends Activity implements Urlinterface {
 									InputClassCodeActivity.this,
 									com.comdosoft.ExerciseBook.Appstart.class);//
 							startActivity(intent);
-//							InputClassCodeActivity.this.finish();
-							clearActivity();
+							InputClassCodeActivity.this.finish();
 
-						} else {
+						} else if("error".equals(status)) {
 
+							Toast.makeText(getApplicationContext(), notice, 0)
+							.show();
+
+						}else if("error_code".equals(status)){
+							Toast.makeText(getApplicationContext(), notice, 0)
+							.show();
+							InputClassCodeActivity.this.finish();
 							Intent it = new Intent(InputClassCodeActivity.this,
-									ErrorDisplay.class);
+									InputKeyActivity.class);
+							it.putExtra("open_id", open_id);
 							it.putExtra("notice", notice);
 							startActivity(it);
-
 						}
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
