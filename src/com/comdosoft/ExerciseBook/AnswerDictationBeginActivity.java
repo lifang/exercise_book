@@ -191,9 +191,7 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 			et.setTextColor(Color.rgb(53, 207, 143));
 		}
 		et.setInputType(InputType.TYPE_TEXT_VARIATION_URI
-				| InputType.TYPE_TEXT_FLAG_MULTI_LINE
-				| InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
-				| InputType.TYPE_CLASS_TEXT);
+				| InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
 		et.setImeOptions(EditorInfo.IME_ACTION_NEXT);
 		et.setId(R.id.aa);
 		et.setOnTouchListener(new MyTouch(i));

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.view.Window;
 import android.widget.LinearLayout;
@@ -29,25 +30,15 @@ public class WorkEndActivity extends Activity implements Urlinterface {
 	private TextView work_jiezu;
 	private LinearLayout cj;
 	private int status;
-	private Handler handler = new Handler() {
-		public void handleMessage(android.os.Message msg) {
-			switch (msg.what) {
-			case 0:
-				break;
-			case 1:
-				break;
-			case 2:
-				break;
-			}
-		};
-	};
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.work_end);
 		eb = (ExerciseBook) getApplication();
-
+		Display display = this.getWindowManager().getDefaultDisplay();
+		@SuppressWarnings("deprecation")
+		int width = display.getWidth();
 		Intent intent = getIntent();
 		precision = intent.getIntExtra("precision", 0);
 		use_time = intent.getIntExtra("use_time", 0);
@@ -55,12 +46,22 @@ public class WorkEndActivity extends Activity implements Urlinterface {
 		specified_time = intent.getIntExtra("specified_time", 0);
 		Log.i("suanfa", "specified_time:" + specified_time);
 		android.view.WindowManager.LayoutParams p = getWindow().getAttributes(); // 获取对话框当前的参数值
-		if (status == 0) {
-			p.height = 850; // 高度设置为屏幕的
-			p.width = 740; // 宽度设置为屏幕的
+		if (width == 1200) {
+			if (status == 0) {
+				p.height = 850; // 高度设置为屏幕的
+				p.width = 740; // 宽度设置为屏幕的
+			} else {
+				p.height = 450; // 高度设置为屏幕的
+				p.width = 740; // 宽度设置为屏幕的
+			}
 		} else {
-			p.height = 450; // 高度设置为屏幕的
-			p.width = 740; // 宽度设置为屏幕的
+			if (status == 0) {
+				p.height = 650; // 高度设置为屏幕的
+				p.width = 640; // 宽度设置为屏幕的
+			} else {
+				p.height = 380; // 高度设置为屏幕的
+				p.width = 600; // 宽度设置为屏幕的
+			}
 		}
 		getWindow().setAttributes(p);
 		initialize();
@@ -73,7 +74,7 @@ public class WorkEndActivity extends Activity implements Urlinterface {
 		work_ratio = (TextView) findViewById(R.id.work_ratio);
 		work_ratio.setText(precision + "%");
 		work_time = (TextView) findViewById(R.id.work_time);
-		work_time.setText(use_time + "");
+		work_time.setText(ExerciseBookTool.timeSecondToString(use_time));
 		if (status == 0) {
 			work_jz = (TextView) findViewById(R.id.work_jz);
 			if (precision == 100) {

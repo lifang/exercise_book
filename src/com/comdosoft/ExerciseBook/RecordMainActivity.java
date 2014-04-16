@@ -1004,6 +1004,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 			break;
 		}
 	}
+
 	protected void onResume() {
 		super.onResume();
 		JPushInterface.onResume(this);

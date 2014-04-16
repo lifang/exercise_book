@@ -80,6 +80,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	private String download_name;
 	private boolean out_time;
 	private int layout_index;// 记录点击
+	private int width;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			Builder builder = new Builder(HomeWorkIngActivity.this);
@@ -151,6 +152,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 		};
 	};
 
+	@SuppressWarnings("deprecation")
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.homework_ing);
@@ -166,14 +168,8 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 		eb.setClass_id(school_class_id);
 		initialize();// 初始化
 		instance = this;
-
 		Display display = this.getWindowManager().getDefaultDisplay();
-		@SuppressWarnings("deprecation")
-		int width = display.getWidth();
-		@SuppressWarnings("deprecation")
-		int height = display.getHeight();
-		Log.i(id, width + "/" + height);
-
+		width = display.getWidth();
 		prodialog = new ProgressDialog(HomeWorkIngActivity.this);
 		prodialog.setMessage("正在获取最新作业");
 		prodialog.setCanceledOnTouchOutside(false);
@@ -262,6 +258,9 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 		}
 		imageView.setBackgroundResource(imgid);
 
+		if (width == 1200) {
+
+		}
 		AbsListView.LayoutParams param = new AbsListView.LayoutParams(210, 220);
 		layout.setLayoutParams(param);
 		if (i == 0 || i % 3 == 0) {
@@ -587,6 +586,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 		intent.setClass(HomeWorkIngActivity.this, RecordMainActivity.class);
 		startActivity(intent);
 	}
+
 	protected void onResume() {
 		super.onResume();
 		JPushInterface.onResume(this);
