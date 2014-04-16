@@ -15,13 +15,13 @@ public class ImageMemoryCache {
      * 从内存读取数据速度是最快的，为了更大限度使用内存，这里使用了两层缓存。 
      * 硬引用缓存不会轻易被回收，用来保存常用数据，不常用的转入软引用缓存。 
      */  
-    private static final int SOFT_CACHE_SIZE = 15;  //软引用缓存容量  
+    private static final int SOFT_CACHE_SIZE = 20;  //软引用缓存容量  
     private static LruCache<String, Bitmap> mLruCache;  //硬引用缓存  
     private static LinkedHashMap<String, SoftReference<Bitmap>> mSoftCache;  //软引用缓存  
                                                                                             
     public ImageMemoryCache(Context context) {  
         int memClass = ((ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();  
-        int cacheSize = 1024 * 1024 * memClass / 5;  //硬引用缓存容量，为系统可用内存的1/8  
+        int cacheSize = 1024 * 1024 * memClass / 8;  //硬引用缓存容量，为系统可用内存的1/8  
         mLruCache = new LruCache<String, Bitmap>(cacheSize) {  
             @Override  
             protected int sizeOf(String key, Bitmap value) {  

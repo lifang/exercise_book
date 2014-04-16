@@ -145,9 +145,10 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 		id = preferences.getString("id", null);
 		 name = preferences.getString("name", "");
 		edu_number =preferences.getInt("edu_number", -1);
-		memoryCache = new ImageMemoryCache(this);
+//		memoryCache = new ImageMemoryCache(this);
 		active = true;
 		exerciseBook = (ExerciseBook) getApplication();
+		memoryCache = exerciseBook.getMemoryCache();
 		exerciseBook.getActivityList().add(this);
 		instance = this;
 		tabhost = getTabHost();

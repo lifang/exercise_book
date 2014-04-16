@@ -150,7 +150,8 @@ public class HomepageFocusActivity extends Activity implements
 		setContentView(R.layout.class_middle);
 		exerciseBook = (ExerciseBook) getApplication();
 		gd = new GestureDetector(this);
-		memoryCache = HomePageMainActivity.instance.memoryCache;
+//		memoryCache = HomePageMainActivity.instance.memoryCache;
+		memoryCache = exerciseBook.getMemoryCache();
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
 

@@ -43,6 +43,7 @@ import com.comdosoft.ExerciseBook.pojo.Reply;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
+import com.comdosoft.ExerciseBook.tools.ImageMemoryCache;
 import com.comdosoft.ExerciseBook.tools.OpenInputMethod;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -79,6 +80,7 @@ public class ReplyListViewActivity extends Table_TabHost implements
 	private ProgressDialog prodialog;
 	static boolean active = false;
 	String json;
+	ImageMemoryCache memoryCache;
 	public static ReplyListViewActivity instance = null;
 	List<Boolean> listbool = new ArrayList<Boolean>();
 	private Handler handler1 = new Handler() {
@@ -139,11 +141,13 @@ public class ReplyListViewActivity extends Table_TabHost implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.reply_listview);
 		gd = new GestureDetector(this);
+		exerciseBook = (ExerciseBook) getApplication();
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
 		user_id = preferences.getString("user_id", "121");
 		school_class_id = preferences.getString("school_class_id", "106");
 		handler = new Handler();
+		memoryCache = exerciseBook.getMemoryCache();
 		mListView = (ReplyListView) findViewById(R.id.xListView);
 		mListView.setPullLoadEnable(true);
 		topTv2 = (TextView) findViewById(R.id.topTv2);
@@ -522,22 +526,22 @@ public class ReplyListViewActivity extends Table_TabHost implements
 				holder.hSView.scrollTo(0, 0);
 			}
 			if (rep.getSender_avatar_url().length() > 4) {
-				// // ExerciseBookTool.set_background(Urlinterface.IP
-				// // + replyList.get(position).getSender_avatar_url(),
-				// // holder.use_face);
-				// String url = IP + rep.getSender_avatar_url();
-				// // ExerciseBookTool.set_background(url, face);
-				// Bitmap result = memoryCache.getBitmapFromCache(url);
-				// if (result == null) {
-				// ExerciseBookTool.set_bk(url, holder.use_face, memoryCache);
-				// } else {
-				//
-				// holder.use_face
-				// .setImageDrawable(new BitmapDrawable(result));
-				// }
-				String url = IP + rep.getSender_avatar_url();
-				imageLoader.displayImage(url, holder.use_face, options,
-						animateFirstListener);
+				 // ExerciseBookTool.set_background(Urlinterface.IP
+				 // + replyList.get(position).getSender_avatar_url(),
+				 // holder.use_face);
+				 String url = IP + rep.getSender_avatar_url();
+				 Bitmap result = memoryCache.getBitmapFromCache(url);
+				 if (result == null) {
+				 ExerciseBookTool.set_bk(url, holder.use_face, memoryCache);
+				 Log.i("aa", " 适配器    网络网络   " +position);
+				 } else {
+					 Log.i("aa", " 缓存缓存缓存缓存   "+position);
+				 holder.use_face
+				 .setImageDrawable(new BitmapDrawable(result));
+				 }
+//				String url = IP + rep.getSender_avatar_url();
+//				imageLoader.displayImage(url, holder.use_face, options,
+//						animateFirstListener);
 			}
 			holder.imgbtn1.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {

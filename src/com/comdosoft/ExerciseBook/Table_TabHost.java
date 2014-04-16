@@ -123,7 +123,8 @@ public class Table_TabHost extends Activity {
 		super.onCreate(savedInstanceState);
 		super.setContentView(R.layout.table);
 		eb = (ExerciseBook) getApplication();
-		memoryCache = new ImageMemoryCache(this);
+//		memoryCache = new ImageMemoryCache(this);
+		memoryCache = eb.getMemoryCache();
 		SharedPreferences preferences = getSharedPreferences(
 				Urlinterface.SHARED, Context.MODE_PRIVATE);
 		avatar_url = preferences.getString("avatar_url", "");

@@ -31,7 +31,7 @@
                     android:layout_width="106.53px"
                     android:layout_height="106.53px"
                     android:background="@drawable/moren"
-                    android:scaleType="fitCenter" />
+                    android:scaleType="fitXY" />
 
                 <RelativeLayout
                     android:id="@+id/relativeLayout1"

@@ -44,6 +44,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
@@ -57,7 +58,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.comdosoft.ExerciseBook.MCardBagActivity;
 import com.comdosoft.ExerciseBook.pojo.AnswerJson;
 import com.comdosoft.ExerciseBook.pojo.AnswerPojo;
 import com.comdosoft.ExerciseBook.pojo.Answer_QuestionsPojo;
@@ -850,12 +853,35 @@ public class ExerciseBookTool implements Urlinterface {
 			public void run() {
 				HttpClient hc = new DefaultHttpClient();
 
-				HttpGet hg = new HttpGet(url);//
+//				HttpGet hg = new HttpGet(url);//
 				Drawable face_drawable;
 				try {
-					HttpResponse hr = hc.execute(hg);
-					Bitmap bm = BitmapFactory.decodeStream(hr.getEntity()
-							.getContent());
+//					HttpResponse hr = hc.execute(hg);
+//					Bitmap bm = BitmapFactory.decodeStream(hr.getEntity()
+//							.getContent());
+					 Bitmap bm = getURLimage(url);  
+					int itemw=159;
+					int itemh=159;
+					int zoom = 2;
+//					if (bm != null)
+//					{
+//						int h = bm.getHeight();
+//						int w = bm.getWidth();
+//
+//						float ft = (float) ((float) w / (float) h);
+//						float fs = (float) ((float) itemw / (float) itemh);
+//
+//						int neww = ft >= fs ? itemw * zoom : (int) (itemh * zoom * ft);
+//						int newh = ft >= fs ? (int) (itemw * zoom / ft) : itemh * zoom;
+//
+//						float scaleWidth = ((float) neww) / w;
+//						float scaleHeight = ((float) newh) / h;
+//
+//						Matrix matrix = new Matrix();
+//						matrix.postScale(scaleWidth, scaleHeight);
+//						bm = Bitmap.createBitmap(bm, 0, 0, w, h, matrix, true);
+//
+//					}
 					memoryCache.addBitmapToCache(url, bm);
 					face_drawable = new BitmapDrawable(bm);
 					Message msg = new Message();// 创建Message 对象
@@ -863,7 +889,8 @@ public class ExerciseBookTool implements Urlinterface {
 					msg.obj = face_drawable;
 					mHandler.sendMessage(msg);
 				} catch (Exception e) {
-
+					Toast.makeText(null, "aa",
+							Toast.LENGTH_SHORT).show();
 				}
 
 			}
@@ -890,4 +917,24 @@ public class ExerciseBookTool implements Urlinterface {
 
 	}
 
+	
+	 //加载图片  
+    public static Bitmap getURLimage(String url) {  
+        Bitmap bmp = null;  
+        try {  
+            URL myurl = new URL(url);  
+            // 获得连接  
+            HttpURLConnection conn = (HttpURLConnection) myurl.openConnection();  
+            conn.setConnectTimeout(6000);//设置超时  
+            conn.setDoInput(true);  
+            conn.setUseCaches(false);//不缓存  
+            conn.connect();  
+            InputStream is = conn.getInputStream();//获得图片的数据流  
+            bmp = BitmapFactory.decodeStream(is);  
+            is.close();  
+        } catch (Exception e) {  
+            e.printStackTrace();  
+        }  
+        return bmp;  
+    }  
 }

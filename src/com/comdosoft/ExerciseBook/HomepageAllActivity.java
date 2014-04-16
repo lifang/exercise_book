@@ -163,7 +163,8 @@ public class HomepageAllActivity extends Activity implements
 		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		instance = this;
 		gd = new GestureDetector(this);
-		memoryCache = HomePageMainActivity.instance.memoryCache;
+//		memoryCache = HomePageMainActivity.instance.memoryCache;
+		memoryCache = exerciseBook.getMemoryCache();
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
 		exerciseBook.setMenu_num(0);
