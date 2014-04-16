@@ -738,7 +738,13 @@ public class HomepageAllActivity extends Activity implements
 				// id = student.getString("id");
 				// user_id = student.getString("user_id");
 				avatar_url = student.getString("avatar_url"); // 获取本人头像昂所有在地址
-
+				String edunumber = student.getString("s_no");//  学号
+				int edu_number=0;
+				if ("null".equals(edunumber)||edunumber.equals("")) {
+					edu_number=-1;
+				}else {
+					edu_number=Integer.parseInt(edunumber);
+				}
 				user_name = student.getString("name");
 				nick_name = student.getString("nickname");
 				JSONObject microposts = obj.getJSONObject("microposts");
@@ -765,6 +771,7 @@ public class HomepageAllActivity extends Activity implements
 				editor.putString("user_id", user_id);
 				editor.putString("school_class_id", school_class_id);
 				editor.putString("validtime", validtime);
+				editor.putInt("edu_number", edu_number);
 				editor.commit();
 				care = new ArrayList<String>();
 				JSONArray follow_microposts_id = obj
