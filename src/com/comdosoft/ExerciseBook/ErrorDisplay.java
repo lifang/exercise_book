@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 
+import cn.jpush.android.api.JPushInterface;
+
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
 public class ErrorDisplay extends Activity implements Urlinterface {
@@ -25,7 +27,15 @@ public class ErrorDisplay extends Activity implements Urlinterface {
 		error.setText(notice);
 
 	}
+	protected void onResume() {
+		super.onResume();
+		JPushInterface.onResume(this);
+	}
 
+	protected void onPause() {
+		super.onPause();
+		JPushInterface.onPause(this);
+	}
 	// 班级验证码错误 时    fanhui 触发的方法
 	public String button_fanhui(View v) throws Exception {
 		ErrorDisplay.this.finish();

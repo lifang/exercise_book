@@ -19,6 +19,8 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
+import cn.jpush.android.api.JPushInterface;
+
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
@@ -57,7 +59,15 @@ public class SettingPhoto extends Activity implements Urlinterface {
 			file2.delete();
 		}
 	}
+	protected void onResume() {
+		super.onResume();
+		JPushInterface.onResume(this);
+	}
 
+	protected void onPause() {
+		super.onPause();
+		JPushInterface.onPause(this);
+	}
 	/**
 	 * 拍照上传
 	 */

@@ -40,6 +40,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import cn.jpush.android.api.JPushInterface;
 
 import com.comdosoft.ExerciseBook.pojo.WorkPoJo;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
@@ -78,6 +79,8 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	private ProgressBar mProgress;
 	private String download_name;
 	private boolean out_time;
+	private int layout_index;// 记录点击
+	private int width;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			Builder builder = new Builder(HomeWorkIngActivity.this);
@@ -143,11 +146,13 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 				ExerciseBookTool.UpdateJsonTime(work_list.get(0)
 						.getUpdated_at(), path + "/student_" + eb.getUid()
 						+ ".json");
+				startDekaron(layout_index);
 				break;
 			}
 		};
 	};
 
+	@SuppressWarnings("deprecation")
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.homework_ing);
@@ -163,14 +168,8 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 		eb.setClass_id(school_class_id);
 		initialize();// 初始化
 		instance = this;
-
 		Display display = this.getWindowManager().getDefaultDisplay();
-		@SuppressWarnings("deprecation")
-		int width = display.getWidth();
-		@SuppressWarnings("deprecation")
-		int height = display.getHeight();
-		Log.i(id, width + "/" + height);
-
+		width = display.getWidth();
 		prodialog = new ProgressDialog(HomeWorkIngActivity.this);
 		prodialog.setMessage("正在获取最新作业");
 		prodialog.setCanceledOnTouchOutside(false);
@@ -226,6 +225,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 						.getTimeIng(), work_list.get(0).getEnd_time());
 				Log.i("suanfa", ExerciseBookTool.getTimeIng() + "/"
 						+ work_list.get(0).getEnd_time() + "/" + out_time);
+				layout_index = i;
 				startDekaron(i);// 跳转到答题页面
 			}
 		});
@@ -258,6 +258,9 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 		}
 		imageView.setBackgroundResource(imgid);
 
+		if (width == 1200) {
+
+		}
 		AbsListView.LayoutParams param = new AbsListView.LayoutParams(210, 220);
 		layout.setLayoutParams(param);
 		if (i == 0 || i % 3 == 0) {
@@ -583,4 +586,15 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 		intent.setClass(HomeWorkIngActivity.this, RecordMainActivity.class);
 		startActivity(intent);
 	}
+
+	protected void onResume() {
+		super.onResume();
+		JPushInterface.onResume(this);
+	}
+
+	protected void onPause() {
+		super.onPause();
+		JPushInterface.onPause(this);
+	}
+
 }

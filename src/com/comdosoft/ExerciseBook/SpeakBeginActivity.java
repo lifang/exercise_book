@@ -1,6 +1,5 @@
 package com.comdosoft.ExerciseBook;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -87,6 +86,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 			switch (msg.what) {
 			case 0:
 				index += 1;
+				question_speak_tishi.setVisibility(View.GONE);
 				setPage(index + 1, branch_questions.size());
 				PredicateLayout.removeAllViews();
 				Speak_type = false;
@@ -126,7 +126,6 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 			setTimePropEnd();// 禁用道具
 		}
 		setTruePropEnd();// 禁用道具
-
 		qid = eb.getQuestion_id();
 		gson = new Gson();
 		Intent intent = getIntent();
@@ -212,7 +211,6 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 				}
 			}
 			break;
-
 		case R.id.speak:// 语音
 			try {
 				number += 1;
@@ -367,18 +365,17 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 				break;
 			case TextToSpeech.Engine.CHECK_VOICE_DATA_BAD_DATA:
 				// 需要的语音数据已损坏
+				install_tts();
+				break;
 			case TextToSpeech.Engine.CHECK_VOICE_DATA_MISSING_DATA:
 				// 缺少需要语言的语音数据
+				install_tts();
+				break;
 			case TextToSpeech.Engine.CHECK_VOICE_DATA_MISSING_VOLUME:
 			// 缺少需要语言的发音数据
 			{
 				// 这三种情况都表明数据有错,重新下载安装需要的数据
-				Toast.makeText(SpeakBeginActivity.this, "您需要安装TTS框架",
-						Toast.LENGTH_SHORT).show();
-				Intent dataIntent = new Intent();
-				dataIntent
-						.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
-				startActivity(dataIntent);
+				install_tts();
 			}
 				break;
 			case TextToSpeech.Engine.CHECK_VOICE_DATA_FAIL:
@@ -397,10 +394,15 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 			case 0:
 				eb.setQuestion_item(0);
 				eb.setUsertime(0);
-				SpeakBeginActivity.this.finish();
-				intent.setClass(SpeakBeginActivity.this,
-						HomeWorkIngActivity.class);
+				if (eb.getActivity_item() == 0) {
+					intent.setClass(SpeakBeginActivity.this,
+							HomeWorkIngActivity.class);
+				} else {
+					intent.setClass(SpeakBeginActivity.this,
+							RecordMainActivity.class);
+				}
 				startActivity(intent);
+				SpeakBeginActivity.this.finish();
 				break;
 			case 1:
 				eb.setQuestion_item(0);

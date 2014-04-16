@@ -4,19 +4,25 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import android.app.Activity;
+import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnPreparedListener;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -29,6 +35,8 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
+import cn.jpush.android.api.JPushInterface;
+
 import com.comdosoft.ExerciseBook.pojo.AnswerBasePojo;
 import com.comdosoft.ExerciseBook.pojo.AnswerJson;
 import com.comdosoft.ExerciseBook.pojo.AnswerMyPojo;
@@ -845,7 +853,13 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 			switch (resultCode) {
 			case 0:
 				Intent intent = new Intent();
-				intent.setClass(this, HomeWorkIngActivity.class);
+				if (eb.getActivity_item() == 0) {
+					intent.setClass(AnswerBaseActivity.this,
+							HomeWorkIngActivity.class);
+				} else {
+					intent.setClass(AnswerBaseActivity.this,
+							RecordMainActivity.class);
+				}
 				startActivity(intent);
 				finish();
 				break;
@@ -897,6 +911,32 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		}
 	}
 
+	// 安装tts数据包
+	public void install_tts() {
+		Builder builder = new Builder(AnswerBaseActivity.this);
+		builder.setTitle("提示");
+		builder.setMessage("您的设备未安装语音引擎,点击确定开始安装。");
+		builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				if (ExerciseBookTool.copyApkFromAssets(AnswerBaseActivity.this,
+						"google_tts.apk", Environment
+								.getExternalStorageDirectory()
+								.getAbsolutePath()
+								+ "/google_tts.apk")) {
+					Intent intent = new Intent(Intent.ACTION_VIEW);
+					intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					intent.setDataAndType(Uri.parse("file://"
+							+ Environment.getExternalStorageDirectory()
+									.getAbsolutePath() + "/google_tts.apk"),
+							"application/vnd.android.package-archive");
+					AnswerBaseActivity.this.startActivity(intent);
+				}
+			}
+		});
+		builder.setNegativeButton("取消", null);
+		builder.show();
+	}
+
 	public void onPrepared(MediaPlayer mp) {
 		mp.start();
 	}
@@ -924,4 +964,15 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		}
 		super.onDestroy();
 	}
+
+	protected void onResume() {
+		super.onResume();
+		JPushInterface.onResume(this);
+	}
+
+	protected void onPause() {
+		super.onPause();
+		JPushInterface.onPause(this);
+	}
+
 }

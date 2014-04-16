@@ -52,6 +52,7 @@
                 android:layout_marginTop="27.135px"
                 android:maxLines="1"
                 android:text="丁作强"
+                android:gravity="center"
                 android:textColor="@color/white"
                 android:textSize="21px" />
 

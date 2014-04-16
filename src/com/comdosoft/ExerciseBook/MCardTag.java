@@ -34,6 +34,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import cn.jpush.android.api.JPushInterface;
+
 import com.comdosoft.ExerciseBook.HomepageAllActivity.get_class_info;
 import com.comdosoft.ExerciseBook.pojo.knowledges_card;
 import com.comdosoft.ExerciseBook.pojo.tags;
@@ -99,7 +101,15 @@ public class MCardTag extends Activity implements Urlinterface, Serializable {
 		show();
 		set(); // 搜索知识点 文本框 biaoqianet 设置监听
 	}
+	protected void onResume() {
+		super.onResume();
+		JPushInterface.onResume(this);
+	}
 
+	protected void onPause() {
+		super.onPause();
+		JPushInterface.onPause(this);
+	}
 	public List<tags> findbiaoqian(String et) {
 		findlist = new ArrayList<tags>();
 		for (int i = 0; i < tagsList.size(); i++) {

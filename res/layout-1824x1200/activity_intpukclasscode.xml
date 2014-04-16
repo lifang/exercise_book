@@ -1,0 +1,58 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/reg_bg"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:context=".MainActivity" >
+
+    <ImageView
+        android:id="@+id/reg1_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+         android:layout_marginTop="465px"
+        android:gravity="center"
+        android:src="@drawable/input_tishi" />
+
+    <TextView
+        android:id="@+id/inputcode1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/classcode1"
+        android:layout_marginTop="75px"
+        android:textColor="@color/white"
+        android:textSize="30px" />
+    <TextView
+        android:id="@+id/inputcode2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/classcode2"
+        android:textColor="@color/white"
+        android:textSize="30px" />
+    <EditText
+        android:id="@+id/reg_inputclasscode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="75px"
+        android:background="@drawable/input1"
+        android:gravity="center"
+        android:hint="@string/inputbanjiyanzhengma"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textColor="#217145"
+        android:textSize="37px" />
+
+    <Button
+        android:id="@+id/inputkey_queren"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/queren1"
+        android:gravity="center"
+        android:layout_marginTop="75px"
+        android:onClick="regqueren"
+        android:text="@string/queren"
+        android:textColor="@color/white"
+        android:textSize="37px" />
+
+</LinearLayout>

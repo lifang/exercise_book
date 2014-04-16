@@ -565,13 +565,21 @@ public class HomepageAllActivity extends Activity implements
 					.findViewById(R.id.child_micropost_delete); // 删除
 			ImageView reply = (ImageView) child_view
 					.findViewById(R.id.child_micropost_huifu); // 回复
+			ImageView good = (ImageView) child_view
+					.findViewById(R.id.good_item); // 点赞
+			final Child_Micropost child_Micropost = child_list.get(position2);
+			if (child_Micropost.getGood().equals("1")) {
+				good.setVisibility(View.VISIBLE);
+			}else {
+				good.setVisibility(View.GONE);
+			}
 
 			if (position2 != 0) {
 				ImageView child_bottom = (ImageView) child_view
 						.findViewById(R.id.child_jiantou);
 				child_bottom.setVisibility(View.GONE);
 			}
-			final Child_Micropost child_Micropost = child_list.get(position2);
+			
 			if (child_Micropost.getSender_avatar_url() != null) { // 设置头像
 				// ExerciseBookTool.set_background(
 				// IP + child_Micropost.getSender_avatar_url(), face);
@@ -730,7 +738,13 @@ public class HomepageAllActivity extends Activity implements
 				// id = student.getString("id");
 				// user_id = student.getString("user_id");
 				avatar_url = student.getString("avatar_url"); // 获取本人头像昂所有在地址
-
+				String edunumber = student.getString("s_no");//  学号
+				int edu_number=0;
+				if ("null".equals(edunumber)||edunumber.equals("")) {
+					edu_number=-1;
+				}else {
+					edu_number=Integer.parseInt(edunumber);
+				}
 				user_name = student.getString("name");
 				nick_name = student.getString("nickname");
 				JSONObject microposts = obj.getJSONObject("microposts");
@@ -757,6 +771,7 @@ public class HomepageAllActivity extends Activity implements
 				editor.putString("user_id", user_id);
 				editor.putString("school_class_id", school_class_id);
 				editor.putString("validtime", validtime);
+				editor.putInt("edu_number", edu_number);
 				editor.commit();
 				care = new ArrayList<String>();
 				JSONArray follow_microposts_id = obj
@@ -894,9 +909,10 @@ public class HomepageAllActivity extends Activity implements
 				String content = o.getString("content");
 				String reciver_name = o.getString("reciver_name");
 				String created_at = o.getString("new_created_at");
+				String good = o.getString("praise");
 				Child_Micropost child = new Child_Micropost(id, sender_id,
 						sender_types, sender_name, sender_avatar_url, content,
-						reciver_name, created_at);
+						reciver_name, created_at,good);
 				child_list.add(child);
 			}
 		} catch (Exception e) {
@@ -1113,10 +1129,10 @@ public class HomepageAllActivity extends Activity implements
 											.getString("reciver_name");
 									String created_at = o
 											.getString("new_created_at");
-									Child_Micropost child = new Child_Micropost(
-											id, sender_id, sender_types,
-											sender_name, sender_avatar_url,
-											content, reciver_name, created_at);
+									String good = o.getString("praise");
+									Child_Micropost child = new Child_Micropost(id, sender_id,
+											sender_types, sender_name, sender_avatar_url, content,
+											reciver_name, created_at,good);
 									child_list.add(0, child);
 								}
 								reply_gk_list.add(true);

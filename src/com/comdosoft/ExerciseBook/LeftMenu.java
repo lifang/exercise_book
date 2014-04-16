@@ -28,6 +28,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import cn.jpush.android.api.JPushInterface;
+
 import com.comdosoft.ExerciseBook.pojo.ClassStu;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
@@ -123,12 +125,12 @@ public class LeftMenu extends Activity implements Urlinterface {
 					T1 = new Thread(thread);
 					T1.start();
 					LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-							546, 1718);
+							631, 1718);
 					allLL.setLayoutParams(params);
 				} else {
 					ll5.setVisibility(View.GONE);
 					LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-							206, 1718);
+							291, 1718);
 					allLL.setLayoutParams(params);
 					isClass = true;
 				}
@@ -223,6 +225,8 @@ public class LeftMenu extends Activity implements Urlinterface {
 				editor.putString("student_id", "");
 				editor.putString("school_class_id", "");
 				editor.putString("id", "");
+				editor.putInt("edu_number", -1);
+				
 				editor.commit();
 
 				Intent intent = new Intent(LeftMenu.this, LoginActivity.class);
@@ -284,6 +288,9 @@ public class LeftMenu extends Activity implements Urlinterface {
 						case 3:
 							stu.setSuccess_4(insertArchivement(archivement_score));
 							break;
+						case 4:
+							stu.setSuccess_5(insertArchivement(archivement_score));
+							break;
 						}
 					}
 					classStu.add(stu);
@@ -324,7 +331,7 @@ public class LeftMenu extends Activity implements Urlinterface {
 		}
 	};
 
-	// 关闭上个主界面
+	// 关闭界面
 	public void clearActivity() {
 		List<Activity> activityList = eb.getActivityList();
 		for (int i = 0; i < activityList.size(); i++) {
@@ -377,6 +384,7 @@ public class LeftMenu extends Activity implements Urlinterface {
 		public TextView tv3;
 		public TextView tv4;
 		public TextView tv5;
+		public TextView tv6;
 		public ImageView Ib;
 		public View iteam_stu;
 	}
@@ -415,6 +423,8 @@ public class LeftMenu extends Activity implements Urlinterface {
 						.findViewById(R.id.success_3);
 				holder.tv5 = (TextView) convertView
 						.findViewById(R.id.success_4);
+				holder.tv6 = (TextView) convertView
+						.findViewById(R.id.success_5);
 				holder.Ib = (ImageView) convertView
 						.findViewById(R.id.teacherIm);
 				holder.iteam_stu.setOnClickListener(new OnClickListener() {
@@ -447,8 +457,18 @@ public class LeftMenu extends Activity implements Urlinterface {
 			holder.tv3.setText("Lv " + classStu.get(position).getSuccess_2());
 			holder.tv4.setText("Lv " + classStu.get(position).getSuccess_3());
 			holder.tv5.setText("Lv " + classStu.get(position).getSuccess_4());
+			holder.tv6.setText("Lv " + classStu.get(position).getSuccess_5());
 			return convertView;
 		}
 
+	}
+	protected void onResume() {
+		super.onResume();
+		JPushInterface.onResume(this);
+	}
+
+	protected void onPause() {
+		super.onPause();
+		JPushInterface.onPause(this);
 	}
 }

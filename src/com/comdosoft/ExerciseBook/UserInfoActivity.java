@@ -44,20 +44,22 @@ import com.comdosoft.ExerciseBook.tools.Urlinterface;
  */
 public class UserInfoActivity extends Activity {
 	// private MyDialog dialog;
-	private LinearLayout layout;
-	private RelativeLayout imageView1,imageView2;
+	private LinearLayout layout, userinfo_yincang;
+	private RelativeLayout imageView1, imageView2;
 	private TextView userinfo_username;
 	private TextView userinfo_classname;
 	public static UserInfoActivity instance = null;
 	private String nickName = "丁作强";// 用户昵称
 	private String classname = "三年级二班";
+	private String name = "丁作";
 	private String id = "73";
 	private String school_class_id = "15";
+	private int edu_number = -1;
 	private ProgressDialog prodialog;
 	private TextView userinfo_youyi2, userinfo_jingzhun2, userinfo_xunsu2,
-			userinfo_jiezu2;
+			userinfo_jiezu2, userinfo_niuqi2;
 	private ImageView userinfo_youyi1, userinfo_jingzhun1, userinfo_xunsu1,
-			userinfo_jiezu1;
+			userinfo_jiezu1, userinfo_niuqi1;
 
 	ArrayList list;
 	private int width;
@@ -76,6 +78,7 @@ public class UserInfoActivity extends Activity {
 		}
 	};
 	ExerciseBook eb;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -86,10 +89,12 @@ public class UserInfoActivity extends Activity {
 				Urlinterface.SHARED, Context.MODE_PRIVATE);
 		classname = preferences.getString("school_class_name", "");
 		nickName = preferences.getString("nickname", "");
-		 id = preferences.getString("id", null);
-		 school_class_id = preferences.getString("school_class_id", null);
-		 Display display = this.getWindowManager().getDefaultDisplay();
-			width = display.getWidth();
+		name = preferences.getString("name", "");
+		id = preferences.getString("id", null);
+		school_class_id = preferences.getString("school_class_id", null);
+		edu_number =preferences.getInt("edu_number", -1);
+		Display display = this.getWindowManager().getDefaultDisplay();
+		width = display.getWidth();
 		list = new ArrayList();
 		eb.getActivityList().add(this);
 
@@ -97,18 +102,28 @@ public class UserInfoActivity extends Activity {
 		userinfo_jingzhun2 = (TextView) findViewById(R.id.userinfo_jingzhun2); // 精准
 		userinfo_xunsu2 = (TextView) findViewById(R.id.userinfo_xunsu2); // 迅速
 		userinfo_jiezu2 = (TextView) findViewById(R.id.userinfo_jiezu2); // 捷足
+		userinfo_niuqi2 = (TextView) findViewById(R.id.userinfo_niuqi2); // 牛气
 
 		userinfo_youyi1 = (ImageView) findViewById(R.id.userinfo_youyi1); // 优异
 		userinfo_jingzhun1 = (ImageView) findViewById(R.id.userinfo_jingzhun1); // 精准
 		userinfo_xunsu1 = (ImageView) findViewById(R.id.userinfo_xunsu1); // 迅速
 		userinfo_jiezu1 = (ImageView) findViewById(R.id.userinfo_jiezu1); // 捷足
+		userinfo_niuqi1 = (ImageView) findViewById(R.id.userinfo_niuqi1); // 牛气
 
 		userinfo_username = (TextView) findViewById(R.id.userinfo_username); // 用户昵称
 		userinfo_classname = (TextView) findViewById(R.id.userinfo_classname); // 班级名
-		userinfo_username.setText(nickName);
+		userinfo_yincang = (LinearLayout) findViewById(R.id.userinfo_yincang); // 该学生属于学校时，隐藏修改图标
+		
+//		userinfo_username.setText(nickName);		
 		userinfo_classname.setText(classname);
 		imageView1 = (RelativeLayout) findViewById(R.id.imageView1);// 修改用户名图标
-		imageView1.setOnClickListener(listener);
+		if (edu_number==-1) {
+			imageView1.setOnClickListener(listener);
+		}else {
+			userinfo_yincang.setVisibility(View.GONE);
+			userinfo_username.setText(name+"("+edu_number+")");
+		}
+		
 		imageView2 = (RelativeLayout) findViewById(R.id.imageView2);// 切换班级图标
 		imageView2.setOnClickListener(listener2);
 		layout = (LinearLayout) findViewById(R.id.main_dialog_layout);
@@ -132,15 +147,16 @@ public class UserInfoActivity extends Activity {
 
 	}
 
-	
 	protected void onResume() {
 		super.onResume();
 		JPushInterface.onResume(this);
 	}
+
 	protected void onPause() {
 		super.onPause();
 		JPushInterface.onPause(this);
 	}
+
 	/*
 	 * 获得当前成就
 	 */
@@ -149,6 +165,7 @@ public class UserInfoActivity extends Activity {
 			try {
 
 				list = new ArrayList();
+				list.add(0);
 				list.add(0);
 				list.add(0);
 				list.add(0);
@@ -188,7 +205,7 @@ public class UserInfoActivity extends Activity {
 					int archivement_score2 = list.size();
 					list.remove(archivement_types);
 					list.add(archivement_types, archivement_score);
-				
+
 				}
 
 			} else {
@@ -206,9 +223,9 @@ public class UserInfoActivity extends Activity {
 		userinfo_youyi2.setText("LV" + num0 / 100);
 		LayoutParams laParams0 = (LayoutParams) userinfo_youyi1
 				.getLayoutParams();
-		if (width==1200) {
+		if (width == 1200) {
 			laParams0.width = (int) ((num0 % 100) * 2.01);
-		}else {
+		} else {
 			laParams0.width = (int) ((num0 % 100) * 1.35);
 		}
 		userinfo_youyi1.setLayoutParams(laParams0);
@@ -217,9 +234,9 @@ public class UserInfoActivity extends Activity {
 		userinfo_jingzhun2.setText("LV" + num1 / 100);
 		LayoutParams laParams1 = (LayoutParams) userinfo_jingzhun1
 				.getLayoutParams();
-		if (width==1200) {
+		if (width == 1200) {
 			laParams1.width = (int) ((num1 % 100) * 2.01);
-		}else {
+		} else {
 			laParams1.width = (int) ((num1 % 100) * 1.35);
 		}
 		userinfo_jingzhun1.setLayoutParams(laParams1);
@@ -228,9 +245,9 @@ public class UserInfoActivity extends Activity {
 		userinfo_xunsu2.setText("LV" + num2 / 100);
 		LayoutParams laParams2 = (LayoutParams) userinfo_xunsu1
 				.getLayoutParams();
-		if (width==1200) {
+		if (width == 1200) {
 			laParams2.width = (int) ((num2 % 100) * 2.01);
-		}else {
+		} else {
 			laParams2.width = (int) ((num2 % 100) * 1.35);
 		}
 		userinfo_xunsu1.setLayoutParams(laParams2);
@@ -239,12 +256,23 @@ public class UserInfoActivity extends Activity {
 		userinfo_jiezu2.setText("LV" + num3 / 100);
 		LayoutParams laParams3 = (LayoutParams) userinfo_jiezu1
 				.getLayoutParams();
-		if (width==1200) {
+		if (width == 1200) {
 			laParams3.width = (int) ((num3 % 100) * 2.01);
-		}else {
+		} else {
 			laParams3.width = (int) ((num3 % 100) * 1.35);
 		}
 		userinfo_jiezu1.setLayoutParams(laParams3);
+
+		int num4 = (Integer) list.get(4); // 牛气
+		userinfo_niuqi2.setText("LV" + num4 / 100);
+		LayoutParams laParams4 = (LayoutParams) userinfo_niuqi1
+				.getLayoutParams();
+		if (width == 1200) {
+			laParams4.width = (int) ((num4 % 100) * 2.01);
+		} else {
+			laParams4.width = (int) ((num4 % 100) * 1.35);
+		}
+		userinfo_niuqi1.setLayoutParams(laParams4);
 
 	}
 
@@ -280,9 +308,9 @@ public class UserInfoActivity extends Activity {
 
 		switch (resultCode) {
 		case 8:
-			 Bundle bundle = data.getExtras();
-			 String content = bundle.getString("content");
-			 modifyName(content);
+			Bundle bundle = data.getExtras();
+			String content = bundle.getString("content");
+			modifyName(content);
 			break;
 		default:
 			break;
@@ -308,15 +336,21 @@ public class UserInfoActivity extends Activity {
 							String notice = array2.getString("notice");
 
 							if (status == true) {
-								SharedPreferences preferences = getSharedPreferences(Urlinterface.SHARED,
-										 Context.MODE_PRIVATE);
-										 Editor editor = preferences.edit();
-										 editor.putString("nickname", content);
-										 editor.commit();
+								SharedPreferences preferences = getSharedPreferences(
+										Urlinterface.SHARED,
+										Context.MODE_PRIVATE);
+								Editor editor = preferences.edit();
+								editor.putString("nickname", content);
+								editor.commit();
 								userinfo_username.setText(content);
-								HomePageMainActivity.instance.userName
-										.setText(content);
-								Table_TabHost.instance.userName.setText(content);
+
+								if (eb.getMenu_num() == 0) {
+									HomePageMainActivity.instance.userName
+											.setText(content);
+								} else {
+									Table_TabHost.instance.userName
+											.setText(content);
+								}
 
 							}
 							Toast.makeText(getApplicationContext(), notice,
@@ -336,23 +370,22 @@ public class UserInfoActivity extends Activity {
 		class mod_nickname implements Runnable {
 			public void run() {
 				try {
-					
+
 					MultipartEntity entity = new MultipartEntity();
 
 					entity.addPart("student_id", new StringBody(id));
-					entity.addPart("nickname", new StringBody(content,
-							Charset.forName("UTF-8")));
+					entity.addPart("nickname",
+							new StringBody(content, Charset.forName("UTF-8")));
 
-					 String js1 = ExerciseBookTool.sendPhostimg(
-								Urlinterface.MODIFY_PERSON_INFO, entity);
-					 Message msg = new Message();// 创建Message 对象
-					 msg.what = 0;
-					 msg.obj = js1;
-					 mHandler.sendMessage(msg);
+					String js1 = ExerciseBookTool.sendPhostimg(
+							Urlinterface.MODIFY_PERSON_INFO, entity);
+					Message msg = new Message();// 创建Message 对象
+					msg.what = 0;
+					msg.obj = js1;
+					mHandler.sendMessage(msg);
 				} catch (Exception e) {
-					Toast.makeText(getApplicationContext(),
-							"修改昵称失败", 0).show();
-					mHandler.sendEmptyMessage(7);
+					Toast.makeText(getApplicationContext(), "修改昵称失败", 0).show();
+					handler.sendEmptyMessage(7);
 				}
 			}
 		}
@@ -368,7 +401,5 @@ public class UserInfoActivity extends Activity {
 					ExerciseBookParams.INTERNET, 0).show();
 		}
 	}
-	
 
-	
 }

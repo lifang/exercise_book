@@ -41,7 +41,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -58,7 +57,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.comdosoft.ExerciseBook.pojo.AnswerJson;
 import com.comdosoft.ExerciseBook.pojo.AnswerPojo;
@@ -72,6 +70,22 @@ public class ExerciseBookTool implements Urlinterface {
 	private static int connectTimeOut = 5000;
 	private static int readTimeOut = 10000;
 	private static String requestEncoding = "UTF-8";
+
+	public static String timeSecondToString(int t) {
+		StringBuffer sb = new StringBuffer();
+		if (t >= 60) {
+			sb.append(t / 60);
+			sb.append("'");
+			if (t % 60 < 10) {
+				sb.append(0);
+			}
+			sb.append(t % 60);
+		} else {
+			sb.append(t);
+		}
+		sb.append("\"");
+		return sb.toString();
+	}
 
 	public static void UpdateJsonTime(String time, String url) {
 		Gson gson = new Gson();
@@ -316,8 +330,8 @@ public class ExerciseBookTool implements Urlinterface {
 				}
 			}
 		} catch (JSONException e) {
-			Log.i("Ax", "JSONException-" + "--" + e.getMessage());
-			return -20;
+			getRatio(path, key);
+			Log.i("Ax", "JSONException-" + e.toString() + "--" + e.getMessage());
 		}
 		int size = 0;
 		for (int i = 0; i < ratio.size(); i++) {

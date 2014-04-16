@@ -1,7 +1,6 @@
 package com.comdosoft.ExerciseBook;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -77,6 +76,16 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 			switch (msg.what) {
 			case 0:
 				Log.i("aaa", "---");
+				if (eb.getTime_number() <= 0 || status == 1) {
+					setTimePropEnd();// 禁用道具
+				} else {
+					setTruePropShow();
+				}
+				if (eb.getTrue_number() <= 0 || status == 1) {
+					setTruePropEnd();// 禁用道具
+				} else {
+					setTruePropShow();
+				}
 				setPage(index + 1, list.size());
 				myLayout.removeAllViews();
 				content = cloze.getContent();
@@ -113,12 +122,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 		String json = intent.getStringExtra("json");
 		status = intent.getIntExtra("status", 1);
 		Log.i("Max", status + "");
-		if (eb.getTime_number() <= 0 || status == 1) {
-			setTimePropEnd();// 禁用道具
-		}
-		if (eb.getTrue_number() <= 0 || status == 1) {
-			setTruePropEnd();// 禁用道具
-		}
+
 		Log.i("suanfa", eb.getTrue_number() + "/" + eb.getTime_number());
 		SetJson(json);
 		SetAnswer();
@@ -138,8 +142,8 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 					cloze = list.get(0);
 					question_id = list.get(0).getId();
 				} else {
-					cloze = list.get(index);
-					question_id = list.get(index).getId();
+					cloze = list.get(questions_item + 1);
+					question_id = list.get(questions_item + 1).getId();
 				}
 				break;
 			case 1:
@@ -215,6 +219,7 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 			try {
 				JSONObject time_limit = new JSONObject(json);
 				specified_time = time_limit.getInt("specified_time");
+
 				Log.i("aaa", specified_time + "--");
 				JSONArray questions = time_limit.getJSONArray("questions");
 				if (questions.length() > 0) {
@@ -424,7 +429,6 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 				}
 			}
 			break;
-
 		case R.id.base_propTrue:
 			if (eb.getTrue_number() > 0) {// 判断显示答案的道具数量是否大于0
 				if (propItem < tv_list.size()) {
@@ -442,7 +446,8 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 							.getAnswer());
 					if (propItem + 1 == tv_list.size()) {
 						Check = true;
-						setCheckText("下一题");
+						setButtonOver();
+						setTruePropEnd();// 禁用道具
 					} else {
 						propItem += 1;
 					}
@@ -471,6 +476,8 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 	public void setButtonOver() {
 		if (index + 1 >= list.size()) {
 			setCheckText("完成");
+		} else {
+			setCheckText("下一题");
 		}
 	}
 
@@ -480,9 +487,15 @@ public class ClozeActivity extends AnswerBaseActivity implements Urlinterface,
 			Intent intent = new Intent();
 			switch (resultCode) {
 			case 0:
-				ClozeActivity.this.finish();
-				intent.setClass(ClozeActivity.this, HomeWorkIngActivity.class);
+				if (eb.getActivity_item() == 0) {
+					intent.setClass(ClozeActivity.this,
+							HomeWorkIngActivity.class);
+				} else {
+					intent.setClass(ClozeActivity.this,
+							RecordMainActivity.class);
+				}
 				startActivity(intent);
+				ClozeActivity.this.finish();
 				break;
 			case 1:
 				index = 0;

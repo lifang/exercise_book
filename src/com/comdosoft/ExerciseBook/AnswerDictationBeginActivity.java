@@ -211,7 +211,6 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 			et.setTextColor(Color.rgb(53, 207, 143));
 		}
 
-		Log.i("Ax", model + "--model");
 		if (model.equals("K00U")) {
 			et.setInputType(InputType.TYPE_CLASS_TEXT
 					| InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS

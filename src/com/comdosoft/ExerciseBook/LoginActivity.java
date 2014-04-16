@@ -54,13 +54,11 @@ public class LoginActivity extends Activity implements OnClickListener,
 			switch (msg.what) {
 			case 1:
 				intent.putExtra("open_id", openid);
-				intent.setClass(getApplicationContext(),
-						RegistrationActivity.class);
+				intent.setClass(getApplicationContext(), InputKeyActivity.class);
 				break;
 			case 2:
 				LoginActivity.this.finish();
-				intent.setClass(getApplicationContext(),
-						HomePageMainActivity.class);
+				intent.setClass(getApplicationContext(), Appstart.class);
 				break;
 			}
 			LoginActivity.this.finish();
@@ -88,7 +86,7 @@ public class LoginActivity extends Activity implements OnClickListener,
 			if (vt) { // 当前时间小于 有效期
 				LoginActivity.this.finish();
 				Intent intent = new Intent(getApplicationContext(),
-						HomePageMainActivity.class);
+						Appstart.class);
 				startActivity(intent);
 			}
 
@@ -144,6 +142,14 @@ public class LoginActivity extends Activity implements OnClickListener,
 				String avatar_url = student.getString("avatar_url"); // 获取本人头像昂所有在地址
 				String name = student.getString("name");
 				String nick_name = student.getString("nickname");
+				String edunumber = student.getString("s_no");//  学号
+				int edu_number=0;
+				if ("null".equals(edunumber)||edunumber.equals("")) {
+					edu_number=-1;
+				}else {
+					edu_number=Integer.parseInt(edunumber);
+				}
+				
 				JSONObject class1 = jo.getJSONObject("class"); // 或得班级信息
 
 				String school_class_id = class1.getString("id");
@@ -162,6 +168,7 @@ public class LoginActivity extends Activity implements OnClickListener,
 				editor.putString("school_class_id", school_class_id);
 				editor.putString("school_class_name", school_class_name);
 				editor.putString("validtime", validtime);
+				editor.putInt("edu_number", edu_number);
 				editor.commit();
 				eb.setClass_id(school_class_id);
 				eb.setUser_id(Integer.parseInt(user_id));
@@ -212,6 +219,16 @@ public class LoginActivity extends Activity implements OnClickListener,
 
 	public void onClick(View v) {
 		onClickLogin();
+	}
+
+	protected void onResume() {
+		super.onResume();
+		JPushInterface.onResume(this);
+	}
+
+	protected void onPause() {
+		super.onPause();
+		JPushInterface.onPause(this);
 	}
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
