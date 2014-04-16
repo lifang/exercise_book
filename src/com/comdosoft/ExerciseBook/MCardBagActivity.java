@@ -706,7 +706,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 		TextView rightanswers;
 		ViewGroup v = v1;
 		TextView bqtv; // 显示已添加的标签
-		ImageView rightIv;
+		ImageView rightIv;  // 显示图片
 		if (PageBool[page][index]) {
 			bqtv = (TextView) v.findViewById(R.id.bqtv1);
 			String bqtvStr = "  ";
@@ -812,6 +812,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 			cardbatread = (ImageView) v.findViewById(R.id.cardbatread);
 			cardbatdel = (ImageView) v.findViewById(R.id.cardbatdel);
 			rightIv = (ImageView) v.findViewById(R.id.rightIv);
+			
 			if (card.getResource_url().equals("")
 					|| card.getResource_url().equals("null"))
 				cardbatread.setVisibility(View.GONE);

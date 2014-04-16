@@ -42,9 +42,9 @@
             android:layout_marginLeft="76.38px"
             android:layout_marginTop="33.43px"
             android:layout_toRightOf="@id/cardbatll1"
-            android:background="@drawable/cardchoice"
+            android:background="@drawable/button_selector"
             android:text="读错"
-            android:textColor="@color/cardchoice"
+            android:textColor="@drawable/button_color"
             android:textSize="21px" />
 
         <Button
@@ -54,9 +54,9 @@
             android:layout_marginLeft="18.09px"
             android:layout_marginTop="33.45px"
             android:layout_toRightOf="@id/button1"
-            android:background="@drawable/cardchoice"
+            android:background="@drawable/button_selector"
             android:text="拼错"
-            android:textColor="@color/cardchoice"
+            android:textColor="@drawable/button_color"
             android:textSize="21px" />
 
         <Button
@@ -66,9 +66,9 @@
             android:layout_marginLeft="18.09px"
             android:layout_marginTop="33.45px"
             android:layout_toRightOf="@id/button2"
-            android:background="@drawable/cardchoice"
+            android:background="@drawable/button_selector"
             android:text="选错"
-            android:textColor="@color/cardchoice"
+            android:textColor="@drawable/button_color"
             android:textSize="21px" />
 
         <Button
@@ -78,9 +78,9 @@
             android:layout_marginLeft="18.09px"
             android:layout_marginTop="33.45px"
             android:layout_toRightOf="@id/button3"
-            android:background="@drawable/cardchoice"
+            android:background="@drawable/button_selector"
             android:text="默认"
-            android:textColor="@color/cardchoice"
+            android:textColor="@drawable/button_color"
             android:textSize="21px" />
     </RelativeLayout>
 

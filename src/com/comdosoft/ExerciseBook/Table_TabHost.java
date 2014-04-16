@@ -45,13 +45,14 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Table_TabHost extends Activity
-{
+public class Table_TabHost extends Activity {
 	private LinearLayout middleLayout;
 	private LinearLayout img_tab_now;
 	private ExerciseBook eb;
 	private String nickName = "丁作"; // 用户昵称
+	private String name = "丁作";
 	TextView userName;//
+	private int edu_number = -1;
 	private ImageView faceImage;
 	private LinearLayout userInfo;
 	private String avatar_url = "/avatars/students/2014-02/student_73.jpg"; // 用户头像
@@ -89,7 +90,7 @@ public class Table_TabHost extends Activity
 							memoryCache.addBitmapToCache(Urlinterface.IP
 									+ avatar_url, bm);
 							faceImage.setImageDrawable(new BitmapDrawable(bm));
-							
+
 							File file = new File(uri);
 							if (file.exists()) {
 								file.delete();
@@ -116,43 +117,51 @@ public class Table_TabHost extends Activity
 			}
 		}
 	};
+
 	@Override
-	protected void onCreate(Bundle savedInstanceState)
-	{
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		super.setContentView(R.layout.table);
-		eb=(ExerciseBook) getApplication();
+		eb = (ExerciseBook) getApplication();
 		memoryCache = new ImageMemoryCache(this);
-		SharedPreferences preferences = getSharedPreferences(Urlinterface.SHARED,
-				Context.MODE_PRIVATE);
+		SharedPreferences preferences = getSharedPreferences(
+				Urlinterface.SHARED, Context.MODE_PRIVATE);
 		avatar_url = preferences.getString("avatar_url", "");
 		nickName = preferences.getString("nickname", "");
+		name = preferences.getString("name", "");
+		edu_number = preferences.getInt("edu_number", -1);
 		id = preferences.getString("id", null);
-		instance=this;
-		active=true;
-		img_tab_now=(LinearLayout) findViewById(R.id.img_tab_now);
-		img_tab_now.setOnClickListener(new OnClickListener(){
+		instance = this;
+		active = true;
+		img_tab_now = (LinearLayout) findViewById(R.id.img_tab_now);
+		img_tab_now.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-//				if(eb.isMneu())
-//				{
-					
-					Intent  intent = new Intent(Table_TabHost.this,LeftMenu.class);
-					startActivity(intent);
-//					eb.setMneu(false);
-					overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right); 
-//				}
+				// if(eb.isMneu())
+				// {
+
+				Intent intent = new Intent(Table_TabHost.this, LeftMenu.class);
+				startActivity(intent);
+				// eb.setMneu(false);
+				overridePendingTransition(R.anim.slide_in_left,
+						R.anim.slide_out_right);
+				// }
 			}
-	});
-		middleLayout = (LinearLayout)findViewById(R.id.middle_layout);
+		});
+		middleLayout = (LinearLayout) findViewById(R.id.middle_layout);
 		userName = (TextView) findViewById(R.id.user_name);
-		userName.setText(nickName);
+		if (edu_number == -1) {
+			userName.setText(nickName);
+		} else {
+			userName.setText(name );
+
+		}
 
 		userInfo = (LinearLayout) findViewById(R.id.user_button);
 		faceImage = (CircularImage) findViewById(R.id.user_face);
 		if (ExerciseBookTool.isConnect(getApplicationContext())) {
 			if (avatar_url != null || avatar_url.length() != 0) { // 设置头像
-//				ExerciseBookTool.set_background(Urlinterface.IP + avatar_url,
-//						faceImage);
+			// ExerciseBookTool.set_background(Urlinterface.IP + avatar_url,
+			// faceImage);
 				String url = Urlinterface.IP + avatar_url;
 				Bitmap result = memoryCache.getBitmapFromCache(url);
 				if (result == null) {
@@ -168,16 +177,16 @@ public class Table_TabHost extends Activity
 		faceImage.setOnClickListener(listener);
 		userInfo.setOnClickListener(listener2);
 	}
-	public void setContentView(int layoutId)
-	{
+
+	public void setContentView(int layoutId) {
 		View middleView = getLayoutInflater().inflate(layoutId, null);
-		if (null != middleLayout)
-		{
+		if (null != middleLayout) {
 			middleLayout.removeAllViews();
-			middleLayout.addView(middleView, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+			middleLayout.addView(middleView, LayoutParams.MATCH_PARENT,
+					LayoutParams.MATCH_PARENT);
 		}
 	}
-	
+
 	private View.OnClickListener listener = new View.OnClickListener() {
 
 		@Override
@@ -197,7 +206,7 @@ public class Table_TabHost extends Activity
 			startActivityForResult(intentp, 0);
 		}
 	};
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -230,7 +239,6 @@ public class Table_TabHost extends Activity
 
 	}
 
-	
 	class mod_avatar implements Runnable {
 		public void run() {
 			try {
@@ -254,12 +262,19 @@ public class Table_TabHost extends Activity
 				mHandler.sendMessage(msg);
 
 			} catch (Exception e) {
-				Toast.makeText(getApplicationContext(),
-						"修改头像失败", 0).show();
+				Toast.makeText(getApplicationContext(), "修改头像失败", 0).show();
 				mHandler.sendEmptyMessage(7);
 			}
 		}
 	}
-	
 
+	protected void onResume() {
+		super.onResume();
+		JPushInterface.onResume(this);
+	}
+
+	protected void onPause() {
+		super.onPause();
+		JPushInterface.onPause(this);
+	}
 }

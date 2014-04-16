@@ -81,6 +81,7 @@ public class InputClassCodeActivity extends Activity implements Urlinterface {
 			case 0:
 				prodialog.dismiss();
 				final String res = (String) msg.obj;
+				Log.i("linshi",  res);
 				if (json.length() != 0) {
 					JSONObject array;
 
@@ -185,9 +186,10 @@ public class InputClassCodeActivity extends Activity implements Urlinterface {
 //								new StringBody(key, Charset.forName("UTF-8")));
 						entity.addPart("verification_code", new StringBody(
 								verification_code));
-
+						Log.i("linshi",  "------");
 						json = ExerciseBookTool.sendPhostimg(
 								Urlinterface.RECORD_PERSON_INFO, entity);
+						Log.i("linshi", json + "------");
 						Message msg = new Message();// 创建Message 对象
 						msg.what = 0;
 						msg.obj = json;

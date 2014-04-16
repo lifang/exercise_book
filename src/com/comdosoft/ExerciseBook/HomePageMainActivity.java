@@ -77,7 +77,9 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 	private String uri;
 	private String avatar_url = "/avatars/students/2014-02/student_73.jpg"; // 用户头像
 	private String nickName = "丁作"; // 用户昵称
+	private String name = "丁作";
 	TextView userName;//
+	private int edu_number = -1;
 	static boolean active = false;
 	ImageMemoryCache memoryCache;
 	Handler mHandler = new Handler() {
@@ -141,6 +143,8 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 		avatar_url = preferences.getString("avatar_url", "");
 		nickName = preferences.getString("nickname", "");
 		id = preferences.getString("id", null);
+		 name = preferences.getString("name", "");
+		edu_number =preferences.getInt("edu_number", -1);
 		memoryCache = new ImageMemoryCache(this);
 		active = true;
 		exerciseBook = (ExerciseBook) getApplication();
@@ -154,7 +158,13 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 		focusbottom = (ImageView) findViewById(R.id.focus_bottom);
 		senderbottom = (ImageView) findViewById(R.id.sender_bottom);
 		userName = (TextView) findViewById(R.id.user_name);
-		userName.setText(nickName);
+		if (edu_number==-1) {
+			userName.setText(nickName);
+		}else {
+			userName.setText(name);
+
+		}
+		
 
 		userInfo = (LinearLayout) findViewById(R.id.user_button);
 		faceImage = (CircularImage) findViewById(R.id.user_face);
