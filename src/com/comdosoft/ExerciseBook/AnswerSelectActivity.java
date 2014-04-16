@@ -10,11 +10,17 @@ import java.util.Map.Entry;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import android.app.AlertDialog;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -30,10 +36,11 @@ import com.comdosoft.ExerciseBook.tools.AnswerTools;
 
 /** 
 * @作者 马龙 
-* @时间 2014-4-11 下午6:16:25 
+* @时间 2014-4-16 下午3:43:59 
 */ 
 public class AnswerSelectActivity extends AnswerBaseActivity implements
-		OnItemClickListener, OnClickListener, OnPreparedListener {
+		OnItemClickListener, OnClickListener, OnPreparedListener,
+		OnCompletionListener {
 
 	// private String json =
 	// "{  \"selecting\": {\"specified_time\": \"100\", \"question_types\": \"6\", \"questions\": [{\"id\": \"284\",\"branch_questions\": [ {\"id\": \"181\", \"content\": \"This is ___ apple!\", \"option\": \"a;||;an\", \"answer\": \"an;||;a\" },{\"id\": \"181\", \"content\": \"<file>apple.jpg</file>Why he is ___ Google!\", \"option\": \"apple;||;banana;||;orange;||;pear\", \"answer\": \"apple;||;banana\"},{\"id\": \"181\", \"content\": \"<file>apple.mp3</file>\", \"option\": \"one;||;two;||;three\", \"answer\": \"two\"}, {\"id\": \"181\", \"content\": \"<file>apple.jpg</file>Pears have white flesh and thin green or yellow skin.\", \"option\": \"iPhone;||;S5;||;Xperia\", \"answer\": \"iPhone\"},{\"id\": \"181\", \"content\": \"Dad.come set here!\", \"option\": \"ZhangDaCa;||;ChenLong\", \"answer\": \"ZhangDaCa\"}]}]}}";
@@ -50,6 +57,19 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 	private TextView answerText;
 	private LinearLayout answer_select_answerLinearLayout;
 	private MediaPlayer mediaPlayer = new MediaPlayer();
+	private Handler handler = new Handler() {
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			switch (msg.what) {
+			case 1:
+				answerLaba.setImageResource(R.drawable.xiao1);
+				break;
+			case 2:
+				answerLaba.setImageResource(R.drawable.xiao2);
+				break;
+			}
+		}
+	};
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -60,6 +80,7 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 		answerImg = (ImageView) findViewById(R.id.answer_select_img);
 		answerLaba = (ImageView) findViewById(R.id.answer_select_laba);
 		answerLaba.setOnClickListener(this);
+		answerImg.setOnClickListener(this);
 		answerText = (TextView) findViewById(R.id.answer_select_text);
 		answer_select_answerLinearLayout = (LinearLayout) findViewById(R.id.answer_select_answerLinearLayout);
 
@@ -81,6 +102,10 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 		switch (i) {
 		// 听力
 		case 0:
+			if (content != null && !content.equals("")) {
+				answerText.setText(content);
+				answer_select_answerLinearLayout.setVisibility(View.VISIBLE);
+			}
 			answer_select_answerLinearLayout.setVisibility(View.GONE);
 			answerLaba.setVisibility(View.VISIBLE);
 			break;
@@ -265,8 +290,10 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 				new MyMediaPlay().start();
 				playFlag = true;
 			} else if (mediaPlayer.isPlaying()) {
+				handler.sendEmptyMessage(2);
 				mediaPlayer.pause();
 			} else {
+				handler.sendEmptyMessage(1);
 				mediaPlayer.start();
 			}
 			break;
@@ -288,7 +315,28 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 				Toast.makeText(getApplicationContext(), "道具数量不足!", 0).show();
 			}
 			break;
+		case R.id.answer_select_img:
+			showBigImage();
+			break;
 		}
+	}
+
+	public void showBigImage() {
+		LayoutInflater inflater = LayoutInflater.from(this);
+		View imgEntryView = inflater.inflate(R.layout.answer_select_dialog,
+				null); // 加载自定义的布局文件
+		final AlertDialog dialog = new AlertDialog.Builder(this).create();
+		ImageView img = (ImageView) imgEntryView.findViewById(R.id.large_image);
+		img.setImageDrawable(Drawable.createFromPath(mQuestList.get(mQindex)
+				.get(mBindex).getPath()));
+		dialog.setView(imgEntryView); // 自定义dialog
+		dialog.show();
+		// 点击布局文件（也可以理解为点击大图）后关闭dialog，这里的dialog不需要按钮
+		imgEntryView.setOnClickListener(new OnClickListener() {
+			public void onClick(View paramView) {
+				dialog.cancel();
+			}
+		});
 	}
 
 	@Override
@@ -318,6 +366,7 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 					.getPath());
 			mediaPlayer.prepare();
 			mediaPlayer.setOnPreparedListener(this);
+			mediaPlayer.setOnCompletionListener(this);
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		} catch (IllegalStateException e) {
@@ -343,7 +392,13 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 
 	@Override
 	public void onPrepared(MediaPlayer mp) {
+		handler.sendEmptyMessage(1);
 		mp.start();
+	}
+
+	@Override
+	public void onCompletion(MediaPlayer mp) {
+		handler.sendEmptyMessage(2);
 	}
 
 	// 销毁音频
