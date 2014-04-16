@@ -21,7 +21,7 @@ public class ImageMemoryCache {
                                                                                             
     public ImageMemoryCache(Context context) {  
         int memClass = ((ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();  
-        int cacheSize = 1024 * 1024 * memClass / 8;  //硬引用缓存容量，为系统可用内存的1/8  
+        int cacheSize = 1024 * 1024 * memClass / 5;  //硬引用缓存容量，为系统可用内存的1/8  
         mLruCache = new LruCache<String, Bitmap>(cacheSize) {  
             @Override  
             protected int sizeOf(String key, Bitmap value) {  

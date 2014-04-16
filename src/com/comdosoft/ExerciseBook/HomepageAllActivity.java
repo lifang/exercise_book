@@ -601,7 +601,7 @@ public class HomepageAllActivity extends Activity implements
 			Micropost_date
 					.setText(ExerciseBookTool.divisionTime2(child_Micropost.getCreated_at())); // 时间
 			Micropost_content.setText(child_Micropost.getContent()); // 消息内容
-			if (user_id.equals(child_Micropost.getSender_id())) {// 自己回复的帖子现实删除按钮
+			if (user_id.equals(child_Micropost.getSender_id())||user_id.equals(list.get(focus).getUser_id())) {// 自己回复的帖子现实删除按钮
 				delete.setVisibility(View.VISIBLE);
 			}
 			delete.setOnClickListener(new View.OnClickListener() {

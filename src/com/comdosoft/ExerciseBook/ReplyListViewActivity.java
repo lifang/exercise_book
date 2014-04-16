@@ -1,7 +1,9 @@
 package com.comdosoft.ExerciseBook;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -34,7 +36,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import cn.jpush.android.api.JPushInterface;
 
 import com.comdosoft.ExerciseBook.ReplyListView.IXListViewListener;
@@ -44,6 +45,12 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.OpenInputMethod;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
+import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
 public class ReplyListViewActivity extends Table_TabHost implements
 		IXListViewListener, Urlinterface, OnGestureListener {
@@ -114,14 +121,17 @@ public class ReplyListViewActivity extends Table_TabHost implements
 				} else {
 					getNewsJson(json4);
 				}
-				 handler.post(runnableUi);  
-//				madapter.notifyDataSetChanged();
-//				onLoad();
+				handler.post(runnableUi);
+				// madapter.notifyDataSetChanged();
+				// onLoad();
 				break;
 			}
 		}
 	};
-	private Handler handler=null;
+	private Handler handler = null;
+	private ImageLoadingListener animateFirstListener = new AnimateFirstDisplayListener();
+	private DisplayImageOptions options;
+	public ImageLoader imageLoader;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -133,7 +143,7 @@ public class ReplyListViewActivity extends Table_TabHost implements
 				Context.MODE_PRIVATE);
 		user_id = preferences.getString("user_id", "121");
 		school_class_id = preferences.getString("school_class_id", "106");
-		handler=new Handler();  
+		handler = new Handler();
 		mListView = (ReplyListView) findViewById(R.id.xListView);
 		mListView.setPullLoadEnable(true);
 		topTv2 = (TextView) findViewById(R.id.topTv2);
@@ -146,6 +156,13 @@ public class ReplyListViewActivity extends Table_TabHost implements
 				overridePendingTransition(R.anim.fade, R.anim.hold);
 			}
 		});
+		imageLoader = ImageLoader.getInstance();
+		options = new DisplayImageOptions.Builder()
+				.showImageOnLoading(R.drawable.moren)
+				.showImageForEmptyUri(R.drawable.moren)
+				.showImageOnFail(R.drawable.moren).considerExifParams(true)
+				.displayer(new RoundedBitmapDisplayer(0)).cacheInMemory(false)
+				.cacheOnDisc(false).build();
 		if (ExerciseBookTool.isConnect(ReplyListViewActivity.this)) {
 			page = 1;
 			prodialog = new ProgressDialog(ReplyListViewActivity.this);
@@ -167,7 +184,7 @@ public class ReplyListViewActivity extends Table_TabHost implements
 		mListView.setDividerHeight(0);
 		mHandler = new Handler();
 	}
-	
+
 	protected void onResume() {
 		super.onResume();
 		JPushInterface.onResume(this);
@@ -177,17 +194,17 @@ public class ReplyListViewActivity extends Table_TabHost implements
 		super.onPause();
 		JPushInterface.onPause(this);
 	}
-	
-	 // 构建Runnable对象，在runnable中更新界面  
-    Runnable   runnableUi=new  Runnable(){  
-        @Override  
-        public void run() {  
-            //更新界面  
+
+	// 构建Runnable对象，在runnable中更新界面
+	Runnable runnableUi = new Runnable() {
+		@Override
+		public void run() {
+			// 更新界面
 			madapter.notifyDataSetChanged();
 			onLoad();
-        }  
-          
-    }; 
+		}
+
+	};
 
 	// 解析获取到的Json
 	public int getNewsJson(String json) {
@@ -279,7 +296,7 @@ public class ReplyListViewActivity extends Table_TabHost implements
 				msg.what = 4;
 				msg.obj = json;
 				handler1.sendMessage(msg);
-				
+
 			} catch (Exception e) {
 				onLoad();
 				handler1.sendEmptyMessage(1);
@@ -291,7 +308,7 @@ public class ReplyListViewActivity extends Table_TabHost implements
 	public List<String> divisionStr(String str) {
 		// "content":"[[ding]]回复了您的消息：;||;we we"
 		// "content":"[[ding]]回复了您的消息：沃尔沃","reciver_types":0,"sender_avatar_url":"\/avatars\/students\/2014-04\/student_17.jpg","reciver_id":115,"created_at":"2014-04-01T16:57:20+08:00","user_id":130,"sender_name":"ding","micropost_id":604}
-//		[[若相守]]回复了您：;||;兔兔啦咯了
+		// [[若相守]]回复了您：;||;兔兔啦咯了
 		List<String> list = new ArrayList<String>();
 		int temp1 = str.indexOf("[[");
 		int temp2 = str.indexOf("]]");
@@ -304,7 +321,7 @@ public class ReplyListViewActivity extends Table_TabHost implements
 		// list.add(str.substring(temp3 + 3, str.length()));
 		// }
 		String st1 = str.substring(temp3 + 1, temp3 + 2);
-		list.add(str.substring(temp2 + 5, temp3 ));
+		list.add(str.substring(temp2 + 5, temp3));
 		if (";".equals(st1)) {
 			list.add(str.substring(temp3 + 5, str.length()));
 		} else {
@@ -505,19 +522,22 @@ public class ReplyListViewActivity extends Table_TabHost implements
 				holder.hSView.scrollTo(0, 0);
 			}
 			if (rep.getSender_avatar_url().length() > 4) {
-				// ExerciseBookTool.set_background(Urlinterface.IP
-				// + replyList.get(position).getSender_avatar_url(),
-				// holder.use_face);
+				// // ExerciseBookTool.set_background(Urlinterface.IP
+				// // + replyList.get(position).getSender_avatar_url(),
+				// // holder.use_face);
+				// String url = IP + rep.getSender_avatar_url();
+				// // ExerciseBookTool.set_background(url, face);
+				// Bitmap result = memoryCache.getBitmapFromCache(url);
+				// if (result == null) {
+				// ExerciseBookTool.set_bk(url, holder.use_face, memoryCache);
+				// } else {
+				//
+				// holder.use_face
+				// .setImageDrawable(new BitmapDrawable(result));
+				// }
 				String url = IP + rep.getSender_avatar_url();
-				// ExerciseBookTool.set_background(url, face);
-				Bitmap result = memoryCache.getBitmapFromCache(url);
-				if (result == null) {
-					ExerciseBookTool.set_bk(url, holder.use_face, memoryCache);
-				} else {
-
-					holder.use_face
-							.setImageDrawable(new BitmapDrawable(result));
-				}
+				imageLoader.displayImage(url, holder.use_face, options,
+						animateFirstListener);
 			}
 			holder.imgbtn1.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
@@ -673,6 +693,28 @@ public class ReplyListViewActivity extends Table_TabHost implements
 	@Override
 	public boolean onScroll(MotionEvent e1, MotionEvent e2, float dX, float dY) {
 		return false;
+	}
+
+	/*
+	 * 加载 头像
+	 */
+	private static class AnimateFirstDisplayListener extends
+			SimpleImageLoadingListener {
+
+		static final List<String> displayedImages = Collections
+				.synchronizedList(new LinkedList<String>());
+
+		public void onLoadingComplete(String imageUri, View view,
+				Bitmap loadedImage) {
+			if (loadedImage != null) {
+				ImageView imageView = (ImageView) view;
+				boolean firstDisplay = !displayedImages.contains(imageUri);
+				if (firstDisplay) {
+					FadeInBitmapDisplayer.animate(imageView, 500);
+					displayedImages.add(imageUri);
+				}
+			}
+		}
 	}
 
 }
