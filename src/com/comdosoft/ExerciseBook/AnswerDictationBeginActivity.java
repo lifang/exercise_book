@@ -33,6 +33,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -45,7 +46,7 @@ import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
 /**
  * @作者 马龙
- * @时间 2014-4-11 下午6:16:37
+ * @时间 2014-4-16 下午6:15:25
  */
 public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		OnClickListener, ExerciseBookParams, OnPreparedListener,
@@ -65,6 +66,7 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 	private String vowelREG = "[aeiouAEIOU]";
 	private String symbol;
 	private String mp3URL;
+	private String model = "";
 
 	private List<Integer> indexList = new ArrayList<Integer>();
 	private List<DictationPojo> dictationList = new ArrayList<DictationPojo>();
@@ -114,9 +116,27 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 				LayoutParams.WRAP_CONTENT);
 		etlp.leftMargin = 10;
 
+		// 获取型号
+		try {
+			try {
+				Class<android.os.Build> build_class = android.os.Build.class;
+				java.lang.reflect.Field field2 = build_class.getField("MODEL");
+				model = (String) field2.get(new android.os.Build());
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			}
+		} catch (NoSuchFieldException e) {
+			e.printStackTrace();
+		}
+
 		analysisJSON(json);
 
 		updateView();
+
+		Toast.makeText(getApplicationContext(), "model:" + model, 0).show();
+
 	}
 
 	// 多写提示
@@ -190,10 +210,16 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 			et.setText(value);
 			et.setTextColor(Color.rgb(53, 207, 143));
 		}
-		et.setInputType(InputType.TYPE_TEXT_VARIATION_URI
-				| InputType.TYPE_TEXT_FLAG_MULTI_LINE
-				| InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
-				| InputType.TYPE_CLASS_TEXT);
+
+		if (model.equals("K00U")) {
+			et.setInputType(InputType.TYPE_CLASS_TEXT
+					| InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
+					| InputType.TYPE_TEXT_VARIATION_URI);
+		} else {
+			et.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
+					| InputType.TYPE_TEXT_VARIATION_URI);
+		}
+
 		et.setImeOptions(EditorInfo.IME_ACTION_NEXT);
 		et.setId(R.id.aa);
 		et.setOnTouchListener(new MyTouch(i));

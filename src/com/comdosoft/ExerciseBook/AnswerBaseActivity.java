@@ -383,6 +383,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		} else {
 			sb.append(t);
 		}
+		sb.append("\"");
 		return sb.toString();
 	}
 

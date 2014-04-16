@@ -211,7 +211,6 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 				}
 			}
 			break;
-
 		case R.id.speak:// 语音
 			try {
 				number += 1;

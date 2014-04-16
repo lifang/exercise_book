@@ -26,7 +26,7 @@ import android.widget.TextView;
 
 /** 
 * @作者 马龙 
-* @时间 2014-4-10 下午3:50:03 
+* @时间 2014-4-16 下午3:44:15 
 */ 
 public class AnswerWireActivity extends AnswerBaseActivity {
 
@@ -97,6 +97,10 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 		last = -1;
 		leftLinearLayout.removeAllViews();
 		rightLinearLayout.removeAllViews();
+
+		if (status == 0 && eb.getTrue_number() > 0) {
+			setTruePropShow();
+		}
 
 		setPage(mBindex + 1, mQuestList.get(mQindex).size());
 
@@ -322,6 +326,9 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 				coordinate.add(arr);
 				imgCanvas.setImageBitmap(drawView());
 				count++;
+				if (coordinateIndex == answerList.size() / 2) {
+					setTruePropEnd();
+				}
 			}
 		}
 	}
@@ -329,9 +336,11 @@ public class AnswerWireActivity extends AnswerBaseActivity {
 	public void calculateCoordinate(Integer[] arr) {
 		for (int i = 0; i < coordinate.size(); i++) {
 			if (coordinate.get(i)[0] == arr[0]
-					|| coordinate.get(i)[1] == arr[1]) {
+					|| coordinate.get(i)[0] == arr[1]
+					|| coordinate.get(i)[1] == arr[1]
+					|| coordinate.get(i)[1] == arr[0]) {
 				coordinate.remove(i);
-				i++;
+				i--;
 			}
 		}
 	}

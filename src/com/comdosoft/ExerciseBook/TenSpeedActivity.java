@@ -100,6 +100,7 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 		status = intent.getIntExtra("status", 1);
 		Log.i("aaa", eb.getWork_id() + ":");
 		SetJson(json);
+
 		File answer_file = new File(path);
 		if (answer_file.exists()) {
 			String json2 = ExerciseBookTool.getJson(path);
@@ -160,7 +161,11 @@ public class TenSpeedActivity extends AnswerBaseActivity implements
 				branch_item = time_limit.getInt("branch_item");
 				status = time_limit.getInt("status");
 				int use_time = time_limit.getInt("use_time");
-				setUseTime(use_time);
+				if (status == 0) {
+					setUseTime(use_time);
+				} else {
+					setUseTime(0);
+				}
 				setStart();
 				Log.i("aaa", branch_item + "/" + branch_questions.size());
 			} catch (JSONException e) {
