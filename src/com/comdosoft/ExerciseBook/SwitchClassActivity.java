@@ -79,6 +79,7 @@ public class SwitchClassActivity extends Activity {
 				Intent intentp = new Intent();
 				intentp.setClass(SwitchClassActivity.this,
 						com.comdosoft.ExerciseBook.tools.CodeInputMethod.class);//
+				intentp.putExtra("hint", "输入班级验证码");
 				startActivityForResult(intentp, 0);
 			}
 		});

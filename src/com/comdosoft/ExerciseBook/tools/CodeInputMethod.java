@@ -30,6 +30,14 @@ public class CodeInputMethod extends Activity {
 		edittext = (EditText) findViewById(R.id.edittext1);
 		queding = (Button) findViewById(R.id.queding1);
 		queding.setOnClickListener(listener);
+		Intent intent = getIntent();//
+		String hint = intent.getStringExtra("hint");
+		if ("".equals(hint) || hint == null) {
+
+		} else {
+			edittext.setHint(hint);
+		}
+		
 
 	}
 
