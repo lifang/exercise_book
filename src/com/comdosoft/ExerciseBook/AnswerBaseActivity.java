@@ -3,6 +3,7 @@ package com.comdosoft.ExerciseBook;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.http.entity.mime.MultipartEntity;
@@ -825,7 +826,11 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		}
 		Log.i("Ax", "type-bid:" + type + "--" + branch_id);
 		try {
-			answerJson.props.get(type).getBranch_id().add(branch_id);
+			if (answerJson.props.get(0).getType().equals(type + "")) {
+				answerJson.props.get(0).getBranch_id().add(branch_id);
+			} else {
+				answerJson.props.get(1).getBranch_id().add(branch_id);
+			}
 		} catch (Exception e) {
 			List<Integer> list = new ArrayList<Integer>();
 			list.add(branch_id);

@@ -588,7 +588,6 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 			break;
 		case R.id.base_check_linearlayout:
 			int type;
-
 			if (Speak_type == true || number >= 4) {
 				stop();
 				try {

@@ -257,11 +257,12 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 			imgid = 0;
 		}
 		imageView.setBackgroundResource(imgid);
-
+		AbsListView.LayoutParams param;
 		if (width == 1200) {
-
+			param = new AbsListView.LayoutParams(290, 300);
+		} else {
+			param = new AbsListView.LayoutParams(210, 220);
 		}
-		AbsListView.LayoutParams param = new AbsListView.LayoutParams(210, 220);
 		layout.setLayoutParams(param);
 		if (i == 0 || i % 3 == 0) {
 			LinearLayout linear = new LinearLayout(getApplicationContext());
