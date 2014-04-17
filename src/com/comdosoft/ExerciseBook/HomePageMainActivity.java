@@ -171,9 +171,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 		userInfo = (LinearLayout) findViewById(R.id.user_button);
 		faceImage = (CircularImage) findViewById(R.id.user_face);
 		if (ExerciseBookTool.isConnect(getApplicationContext())) {
-			if (avatar_url != null || avatar_url.length() != 0) { // 设置头像
-			// ExerciseBookTool.set_background(Urlinterface.IP + avatar_url,
-			// faceImage);
+			if ( avatar_url.length() > 4) { // 设置头像
 				String url = Urlinterface.IP + avatar_url;
 				Bitmap result = memoryCache.getBitmapFromCache(url);
 				if (result == null) {
@@ -182,10 +180,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 					faceImage.setImageDrawable(new BitmapDrawable(result));
 				}
 			}
-		} else {
-			Toast.makeText(getApplicationContext(),
-					ExerciseBookParams.INTERNET, 0).show();
-		}
+		} 
 		faceImage.setOnClickListener(listener);
 		userInfo.setOnClickListener(listener2);
 		logo.setOnClickListener(listener3);

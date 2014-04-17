@@ -516,7 +516,7 @@ public class HomepageFocusActivity extends Activity implements
 						.findViewById(R.id.child_jiantou);
 				child_bottom.setVisibility(View.GONE);
 			}
-			if (child_Micropost.getSender_avatar_url() != null) { // 设置头像
+			if (child_Micropost.getSender_avatar_url().length()>4) { // 设置头像
 				String url = IP + child_Micropost.getSender_avatar_url();
 				// ExerciseBookTool.set_background(url, face);
 
