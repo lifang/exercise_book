@@ -80,7 +80,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 	private String nickName = "丁作"; // 用户昵称
 	private String name = "丁作";
 	TextView userName;//
-	private int edu_number = -1;
+	private String edu_number = "";
 	static boolean active = false;
 	ImageMemoryCache memoryCache;
 	Handler mHandler = new Handler() {
@@ -145,7 +145,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 		nickName = preferences.getString("nickname", "");
 		id = preferences.getString("id", null);
 		 name = preferences.getString("name", "");
-		edu_number =preferences.getInt("edu_number", -1);
+		edu_number =preferences.getString("edu_number", "");
 //		memoryCache = new ImageMemoryCache(this);
 		active = true;
 		exerciseBook = (ExerciseBook) getApplication();
@@ -161,11 +161,10 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 		focusbottom = (ImageView) findViewById(R.id.focus_bottom);
 		senderbottom = (ImageView) findViewById(R.id.sender_bottom);
 		userName = (TextView) findViewById(R.id.user_name);
-		if (edu_number==-1) {
+		if (edu_number.equals("")) {
 			userName.setText(nickName);
 		}else {
 			userName.setText(name);
-
 		}
 		
 
