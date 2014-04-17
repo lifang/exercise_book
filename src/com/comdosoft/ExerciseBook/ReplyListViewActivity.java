@@ -53,6 +53,11 @@ import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
+
+/**
+ * @作者 丁作强
+ * @时间 2014-4-17 下午12:12:51
+ */
 public class ReplyListViewActivity extends Table_TabHost implements
 		IXListViewListener, Urlinterface, OnGestureListener {
 	private ReplyListView mListView;
@@ -108,6 +113,11 @@ public class ReplyListViewActivity extends Table_TabHost implements
 			case 1:
 				Toast.makeText(ReplyListViewActivity.this, "未开启网络",
 						Toast.LENGTH_SHORT).show();
+				break;
+			case 2:
+				Log.i("aa", String.valueOf(msg.obj));
+				Toast.makeText(ReplyListViewActivity.this,
+						String.valueOf(msg.obj), Toast.LENGTH_SHORT).show();
 				break;
 			case 3:
 				prodialog.dismiss();
@@ -526,22 +536,22 @@ public class ReplyListViewActivity extends Table_TabHost implements
 				holder.hSView.scrollTo(0, 0);
 			}
 			if (rep.getSender_avatar_url().length() > 4) {
-				 // ExerciseBookTool.set_background(Urlinterface.IP
-				 // + replyList.get(position).getSender_avatar_url(),
-				 // holder.use_face);
-				 String url = IP + rep.getSender_avatar_url();
-				 Bitmap result = memoryCache.getBitmapFromCache(url);
-				 if (result == null) {
-				 ExerciseBookTool.set_bk(url, holder.use_face, memoryCache);
-				 Log.i("aa", " 适配器    网络网络   " +position);
-				 } else {
-					 Log.i("aa", " 缓存缓存缓存缓存   "+position);
-				 holder.use_face
-				 .setImageDrawable(new BitmapDrawable(result));
-				 }
-//				String url = IP + rep.getSender_avatar_url();
-//				imageLoader.displayImage(url, holder.use_face, options,
-//						animateFirstListener);
+				// ExerciseBookTool.set_background(Urlinterface.IP
+				// + replyList.get(position).getSender_avatar_url(),
+				// holder.use_face);
+				String url = IP + rep.getSender_avatar_url();
+				Bitmap result = memoryCache.getBitmapFromCache(url);
+				if (result == null) {
+					ExerciseBookTool.set_bk(url, holder.use_face, memoryCache);
+					Log.i("aa", " 适配器    网络网络   " + position);
+				} else {
+					Log.i("aa", " 缓存缓存缓存缓存   " + position);
+					holder.use_face
+							.setImageDrawable(new BitmapDrawable(result));
+				}
+				// String url = IP + rep.getSender_avatar_url();
+				// imageLoader.displayImage(url, holder.use_face, options,
+				// animateFirstListener);
 			}
 			holder.imgbtn1.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {

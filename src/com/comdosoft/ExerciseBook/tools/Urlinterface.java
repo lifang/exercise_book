@@ -7,9 +7,9 @@ public interface Urlinterface {
 	static String[] namearr = new String[] { "听写任务", "朗读任务", "十速挑战", "选择挑战",
 		"连线挑战", "完形填空", "排序挑战" };
 	// static final String IP = "http://192.168.199.196:3004";
-	static final String IP = "http://58.240.210.42:3004";
+//	static final String IP = "http://58.240.210.42:3004";
 //	 static final String IP = "http://192.168.0.250:3004";
-	// static final String IP = "http://192.168.199.196:3004";
+	 static final String IP = "http://116.255.202.123:3014";
 
 	// 获取新作业数量
 	static final String NEW_HOMEWORK = IP + "/api/students/new_homework";
