@@ -18,8 +18,7 @@
             android:id="@+id/answer_select_img"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:layout_marginRight="10dp"
-            android:src="@drawable/test" />
+            android:layout_marginRight="10dp" />
 
         <TextView
             android:id="@+id/answer_select_text"
