@@ -59,9 +59,10 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
+
 /**
  * @作者 丁作强
- * @时间 2014-4-12 上午9:31:51
+ * @时间 2014-4-17 下午12:52:08
  */
 public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 		Serializable {
@@ -868,7 +869,12 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 										null); // 加载自定义的布局文件
 								final AlertDialog dialog = new AlertDialog.Builder(MCardBagActivity.this).create();
 								ImageView img = (ImageView) imgEntryView.findViewById(R.id.large_image);
-								ExerciseBookTool.set_background(url, img);
+								Bitmap result = memoryCache.getBitmapFromCache(url);
+								if (result == null) {
+									ExerciseBookTool.set_bk(url, img, memoryCache);
+								} else {
+									img.setImageDrawable(new BitmapDrawable(result));
+								}
 //								img.setImageDrawable(Drawable.createFromPath(url));
 								dialog.setView(imgEntryView); // 自定义dialog
 								dialog.show();

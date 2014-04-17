@@ -47,9 +47,10 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.ImageMemoryCache;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
+
 /**
  * @作者 丁作强
- * @时间 2014-4-12 上午9:33:30
+ * @时间 2014-4-17 上午11:34:27
  */
 public class HomePageMainActivity extends TabActivity implements Urlinterface {
 	TabHost tabhost;
@@ -150,6 +151,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 		exerciseBook = (ExerciseBook) getApplication();
 		memoryCache = exerciseBook.getMemoryCache();
 		exerciseBook.getActivityList().add(this);
+		exerciseBook.setMainItem(0);
 		instance = this;
 		tabhost = getTabHost();
 		res = getResources();

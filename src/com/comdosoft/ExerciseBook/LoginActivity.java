@@ -143,11 +143,11 @@ public class LoginActivity extends Activity implements OnClickListener,
 				String name = student.getString("name");
 				String nick_name = student.getString("nickname");
 				String edunumber = student.getString("s_no");//  学号
-				int edu_number=0;
+				String edu_number="";
 				if ("null".equals(edunumber)||edunumber.equals("")) {
-					edu_number=-1;
+					edu_number="";
 				}else {
-					edu_number=Integer.parseInt(edunumber);
+					edu_number=edunumber;
 				}
 				
 				JSONObject class1 = jo.getJSONObject("class"); // 或得班级信息
@@ -168,7 +168,7 @@ public class LoginActivity extends Activity implements OnClickListener,
 				editor.putString("school_class_id", school_class_id);
 				editor.putString("school_class_name", school_class_name);
 				editor.putString("validtime", validtime);
-				editor.putInt("edu_number", edu_number);
+				editor.putString("edu_number", edu_number);
 				editor.commit();
 				eb.setClass_id(school_class_id);
 				eb.setUser_id(Integer.parseInt(user_id));
