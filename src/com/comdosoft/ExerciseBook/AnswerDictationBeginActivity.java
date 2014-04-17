@@ -135,8 +135,6 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 
 		updateView();
 
-		Toast.makeText(getApplicationContext(), "model:" + model, 0).show();
-
 	}
 
 	// 多写提示

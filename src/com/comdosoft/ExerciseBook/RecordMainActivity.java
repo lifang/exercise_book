@@ -130,7 +130,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 			case 2:
 				prodialog.dismiss();
 				tishi.setVisibility(View.VISIBLE);
-				Toast.makeText(RecordMainActivity.this, "解析数据出现问题",
+				Toast.makeText(RecordMainActivity.this, "网络发生异常",
 						Toast.LENGTH_SHORT).show();
 				break;
 			case 3:
