@@ -59,7 +59,7 @@ import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
 /**
  * @作者 丁作强
- * @时间 2014-4-12 上午9:33:02
+ * @时间 2014-4-17 下午4:18:16
  */
 public class HomepageAllActivity extends Activity implements
 		OnHeaderRefreshListener, OnFooterRefreshListener, Urlinterface,
@@ -581,7 +581,7 @@ public class HomepageAllActivity extends Activity implements
 				child_bottom.setVisibility(View.GONE);
 			}
 			
-			if (child_Micropost.getSender_avatar_url() != null) { // 设置头像
+			if (child_Micropost.getSender_avatar_url().length()>4) { // 设置头像
 				// ExerciseBookTool.set_background(
 				// IP + child_Micropost.getSender_avatar_url(), face);
 				String url = IP + child_Micropost.getSender_avatar_url();

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<lint>
-    <issue id="HandlerLeak" severity="ignore" />
-    <issue id="ProtectedPermissions">
-        <ignore path="AndroidManifest.xml" />
-    </issue>
-    <issue id="ShowToast" severity="ignore" />
-    <issue id="UseSparseArrays" severity="ignore" />
-</lint>
