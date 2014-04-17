@@ -99,11 +99,11 @@ public class RegistrationActivity extends Activity implements Urlinterface {
 							String name = student.getString("name");
 							String nick_name = student.getString("nickname");
 							String edunumber = student.getString("s_no");//  学号
-							int edu_number=0;
+							String edu_number="";
 							if ("null".equals(edunumber)||edunumber.equals("")) {
-								edu_number=-1;
+								edu_number="";
 							}else {
-								edu_number=Integer.parseInt(edunumber);
+								edu_number=edunumber;
 							}
 							// service.save(id, user_id, nick_name, nick_name,
 							// avatar_url);
@@ -122,7 +122,7 @@ public class RegistrationActivity extends Activity implements Urlinterface {
 							editor.putString("nickname", nick_name);
 							editor.putString("school_class_id", school_class_id);
 							editor.putString("school_class_name",school_class_name);
-							editor.putInt("edu_number", edu_number);
+							editor.putString("edu_number", edu_number);
 							editor.commit();
 							exerciseBook.setClass_id(school_class_id);
 							exerciseBook.setUser_id(Integer.parseInt(user_id));
