@@ -122,6 +122,13 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 				} else {
 					tishi.setVisibility(View.VISIBLE);
 				}
+				if (work_list.size() < 2) {
+					left.setVisibility(View.GONE);
+					right.setVisibility(View.GONE);
+				} else {
+					left.setVisibility(View.VISIBLE);
+					right.setVisibility(View.VISIBLE);
+				}
 				break;
 			case 1:
 				prodialog.dismiss();
@@ -179,6 +186,8 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 		};
 	};
 	private int width;
+	private ImageView left;
+	private ImageView right;
 
 	@SuppressWarnings("deprecation")
 	protected void onCreate(Bundle savedInstanceState) {
@@ -205,6 +214,8 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 		date_ll = (LinearLayout) findViewById(R.id.date_ll);
 		findViewById(R.id.btn_prev_month).setOnClickListener(this);
 		findViewById(R.id.btn_next_month).setOnClickListener(this);
+		left = (ImageView) findViewById(R.id.left);
+		right = (ImageView) findViewById(R.id.right);
 		date_ll.setVisibility(View.GONE);
 		tishi = (TextView) findViewById(R.id.tishis);
 	}
