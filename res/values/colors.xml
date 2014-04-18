@@ -37,6 +37,6 @@
     <color name="green">#0f0</color>
 
     <drawable name="green">#0f0</drawable>
-    <drawable name="cardchoice_c">#9a9d9e</drawable>
+    <color name="cardchoice_c">#9a9d9e</color>
 
 </resources>

@@ -257,6 +257,7 @@ public class SwitchClassActivity extends Activity {
 									String.valueOf(id));
 							editor.putString("school_class_name", name);
 							editor.putString("validtime", validtime);
+							editor.putString("edu_number", "");
 							editor.commit();
 							exerciseBook.setMainItem(0);
 							exerciseBook.setRefresh(1);

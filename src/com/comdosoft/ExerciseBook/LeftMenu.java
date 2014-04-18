@@ -225,7 +225,7 @@ public class LeftMenu extends Activity implements Urlinterface {
 				editor.putString("student_id", "");
 				editor.putString("school_class_id", "");
 				editor.putString("id", "");
-				editor.putInt("edu_number", -1);
+				editor.putString("edu_number", "");
 				
 				editor.commit();
 
