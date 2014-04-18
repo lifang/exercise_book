@@ -34,10 +34,10 @@ import com.comdosoft.ExerciseBook.pojo.AnswerBasePojo;
 import com.comdosoft.ExerciseBook.pojo.AnswerSelectItemPojo;
 import com.comdosoft.ExerciseBook.tools.AnswerTools;
 
-/** 
-* @作者 马龙 
-* @时间 2014-4-16 下午3:43:59 
-*/ 
+/**
+ * @作者 马龙
+ * @时间 2014-4-16 下午3:43:59
+ */
 public class AnswerSelectActivity extends AnswerBaseActivity implements
 		OnItemClickListener, OnClickListener, OnPreparedListener,
 		OnCompletionListener {
@@ -102,12 +102,12 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 		switch (i) {
 		// 听力
 		case 0:
+			answer_select_answerLinearLayout.setVisibility(View.GONE);
+			answerLaba.setVisibility(View.VISIBLE);
 			if (content != null && !content.equals("")) {
 				answerText.setText(content);
 				answer_select_answerLinearLayout.setVisibility(View.VISIBLE);
 			}
-			answer_select_answerLinearLayout.setVisibility(View.GONE);
-			answerLaba.setVisibility(View.VISIBLE);
 			break;
 		// 文本
 		case 1:

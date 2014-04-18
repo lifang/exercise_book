@@ -31,7 +31,6 @@ import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
 
-// 登录    马龙    2014年2月12日
 public class LoginActivity extends Activity implements OnClickListener,
 		Urlinterface {
 
@@ -57,7 +56,6 @@ public class LoginActivity extends Activity implements OnClickListener,
 				intent.setClass(getApplicationContext(), InputKeyActivity.class);
 				break;
 			case 2:
-				LoginActivity.this.finish();
 				intent.setClass(getApplicationContext(), Appstart.class);
 				break;
 			}
@@ -142,14 +140,14 @@ public class LoginActivity extends Activity implements OnClickListener,
 				String avatar_url = student.getString("avatar_url"); // 获取本人头像昂所有在地址
 				String name = student.getString("name");
 				String nick_name = student.getString("nickname");
-				String edunumber = student.getString("s_no");//  学号
-				int edu_number=0;
-				if ("null".equals(edunumber)||edunumber.equals("")) {
-					edu_number=-1;
-				}else {
-					edu_number=Integer.parseInt(edunumber);
+				String edunumber = student.getString("s_no");// 学号
+				int edu_number = 0;
+				if ("null".equals(edunumber) || edunumber.equals("")) {
+					edu_number = -1;
+				} else {
+					edu_number = Integer.parseInt(edunumber);
 				}
-				
+
 				JSONObject class1 = jo.getJSONObject("class"); // 或得班级信息
 
 				String school_class_id = class1.getString("id");

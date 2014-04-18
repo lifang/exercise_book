@@ -239,11 +239,11 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		et.setMaxLines(1);
 		et.setSingleLine(true);
 		int width = value.length() * 20 + 80;
-		et.setWidth(width > 200 ? 200 : width);
+		et.setWidth(200);
 		et.setHeight(40);
 		et.setGravity(Gravity.CENTER);
 		et.setLayoutParams(etlp);
-		if (i == 0 || i % 4 == 0) {
+		if (i == 0 || i % 3 == 0) {
 			LinearLayout linear = new LinearLayout(getApplicationContext());
 			linear.setOrientation(LinearLayout.HORIZONTAL);
 			LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT,
@@ -299,8 +299,7 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		et.setText(value);
 		et.setTextSize(16);
 
-		LayoutParams rllp = new LayoutParams(dictationList.get(i).getValue()
-				.length() * 20 + 80, LayoutParams.WRAP_CONTENT);
+		LayoutParams rllp = new LayoutParams(200, LayoutParams.WRAP_CONTENT);
 		r.setLayoutParams(rllp);
 
 		left.setOnClickListener(this);
@@ -310,7 +309,7 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		left.setVisibility(View.INVISIBLE);
 		et.setVisibility(View.INVISIBLE);
 
-		if (i == 0 || i % 4 == 0) {
+		if (i == 0 || i % 3 == 0) {
 			LinearLayout linear = new LinearLayout(getApplicationContext());
 			linear.setOrientation(LinearLayout.HORIZONTAL);
 			mesLinearLayoutList.add(linear);
