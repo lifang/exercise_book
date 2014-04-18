@@ -182,6 +182,7 @@ public class LoginActivity extends Activity implements OnClickListener,
 			super.run();
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("open_id", openid);
+			Log.i("linshi","linshi----"+ openid);
 			json = ExerciseBookTool.doPost(QQ_LOGIN, map);
 			Log.i("linshi", json);
 			analyzeJson(json);

@@ -684,15 +684,17 @@ public class ExerciseBookTool implements Urlinterface {
 			url_con.getOutputStream().write(b, 0, b.length);
 			url_con.getOutputStream().flush();
 			url_con.getOutputStream().close();
-
+			Log.i("linshi","linshi-------dopost---try" 
+					);
 			InputStream in = url_con.getInputStream();
 			BufferedReader rd = new BufferedReader(new InputStreamReader(in,
 					"UTF-8"));
 			tempLine = rd.readLine();
 			rd.close();
 			in.close();
+			Log.i("linshi", tempLine);
 		} catch (IOException e) {
-			// Log.i("linshi", "发生异常");
+			 Log.i("linshi", "发生异常");
 			e.printStackTrace();
 		}
 		Log.i("linshi", tempLine);
