@@ -114,7 +114,7 @@ public class UserInfoActivity extends Activity {
 		userinfo_classname = (TextView) findViewById(R.id.userinfo_classname); // 班级名
 		userinfo_yincang = (LinearLayout) findViewById(R.id.userinfo_yincang); // 该学生属于学校时，隐藏修改图标
 		
-//		userinfo_username.setText(nickName);		
+		userinfo_username.setText(nickName);		
 		userinfo_classname.setText(classname);
 		imageView1 = (RelativeLayout) findViewById(R.id.imageView1);// 修改用户名图标
 		if (edu_number.equals("")) {

@@ -12,6 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -59,7 +60,6 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
-
 /**
  * @作者 丁作强
  * @时间 2014-4-17 下午12:52:08
@@ -99,6 +99,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 	List<View> visList;
 	int width;
 	Boolean fanzhuan = true;
+	int btnNum = -1;
 
 	@Override
 	@SuppressWarnings("rawtypes")
@@ -125,6 +126,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 		btnList.add(button1);
 		btnList.add(button2);
 		btnList.add(button3);
+		changeBtn(0);
 		initbtn();
 		getKonwledges();
 		btnlistClick();
@@ -180,6 +182,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 								Toast.LENGTH_SHORT).show();
 					} else {
 						showdialog();
+						 changeBtn(-1);
 						thread.start();
 					}
 				} else {
@@ -190,15 +193,18 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 		btnList.get(0).setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				initbtn();
+				 changeBtn(0);
 				page = 0;
 				getKonwledges();
 			}
 		});
 		for (int i = 1; i < btnList.size(); i++) {
 			final String mistype = String.valueOf(i);
+			btnNum = i;
 			btnList.get(i).setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
 					showdialog();
+					changeBtn(Integer.parseInt(mistype));
 					Thread thread = new Thread() {
 						String json;
 
@@ -209,6 +215,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 								map.put("student_id", student_id);
 								map.put("school_class_id", school_class_id);
 								map.put("mistake_types", mistype);
+								
 								json = ExerciseBookTool.sendGETRequest(
 										get_knowledges_card, map);
 								initbtn();
@@ -220,9 +227,11 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 							}
 						}
 					};
+					// 
 					thread.start();
 				}
 			});
+
 		}
 	}
 
@@ -510,8 +519,9 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 				if (str.indexOf(";&&;") != -1) {
 					content = str.substring(0, str.lastIndexOf(";&&;"));
 				} else {
-					content = str.substring(0, str.length());}
-				
+					content = str.substring(0, str.length());
+				}
+
 			}
 			Log.i("asd", "正面听力case0:" + content);
 			return content;
@@ -655,11 +665,11 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 	// 完形填空
 	public String settypes5(String full_text, String answer,
 			TextView Lookcontent) {
-//		tv_msg.append(content.substring(count, start));
+		// tv_msg.append(content.substring(count, start));
 
-//		tv_msg.append(Html.fromHtml("<a href=" + start + " ><u>" + key
+		// tv_msg.append(Html.fromHtml("<a href=" + start + " ><u>" + key
 
-//		+ "</u></a>"));
+		// + "</u></a>"));
 
 		List arrs = new ArrayList<String>();
 		JSONArray answerarray;
@@ -681,16 +691,16 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 		full_text = ExerciseBookTool.del_tag(full_text);
 		String[] textarr = full_text.split("\\[\\[sign\\]\\]");
 		for (int i = 0; i < textarr.length; i++) {
-			
+
 			Lookcontent.append(textarr[i]);
 			if (i <= arrs.size() - 1) {
-				Lookcontent.append(Html.fromHtml("<u>" + arrs.get(i)+ "</u>"));
-//				content += arrs.get(i);
+				Lookcontent.append(Html.fromHtml("<u>" + arrs.get(i) + "</u>"));
+				// content += arrs.get(i);
 			}
-//			content += textarr[i];
-//			if (i <= arrs.size() - 1) {
-//				content += arrs.get(i);
-//			}
+			// content += textarr[i];
+			// if (i <= arrs.size() - 1) {
+			// content += arrs.get(i);
+			// }
 			// for (int j = 0; j < arrs.length; j++) {
 			// content += (Html.fromHtml("<u>" + arrs[j] + "</u>"));
 			// }
@@ -698,6 +708,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 		// content = full_text.replace("[[sign]]", "___");
 		return content;
 	}
+
 	public void setFontCard(ViewGroup v1, final knowledges_card card,
 			final int index, final int page) {
 		TextView reson = null;
@@ -708,7 +719,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 		TextView rightanswers;
 		ViewGroup v = v1;
 		TextView bqtv; // 显示已添加的标签
-		ImageView rightIv;  // 显示图片
+		ImageView rightIv; // 显示图片
 		if (PageBool[page][index]) {
 			bqtv = (TextView) v.findViewById(R.id.bqtv1);
 			String bqtvStr = "  ";
@@ -732,8 +743,9 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 			fontIv = (ImageView) v.findViewById(R.id.fontIv);
 			rightanswer = (TextView) v.findViewById(R.id.rightanswer);
 			answer = (TextView) v.findViewById(R.id.answer);
-			 reson.setText(setWrong(card.getMistake_types())); // 错误类型
-//			reson.setText(setWrong(card.getMistake_types()) + card.getTypes()); // 错误类型
+			reson.setText(setWrong(card.getMistake_types())); // 错误类型
+			// reson.setText(setWrong(card.getMistake_types()) +
+			// card.getTypes()); // 错误类型
 			wronganswer.setText(checkAns(card.getYour_answer(), // 你的错误
 					card.getTypes()));
 			if (card.getTypes().equals("1")) {
@@ -814,7 +826,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 			cardbatread = (ImageView) v.findViewById(R.id.cardbatread);
 			cardbatdel = (ImageView) v.findViewById(R.id.cardbatdel);
 			rightIv = (ImageView) v.findViewById(R.id.rightIv);
-			
+
 			if (card.getResource_url().equals("")
 					|| card.getResource_url().equals("null"))
 				cardbatread.setVisibility(View.GONE);
@@ -822,9 +834,8 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 			reson.setText("原题:");
 			if (card.getTypes().equals("5")) { // 完形填空 显示 查看全部 按钮
 				rightanswers.setText("");
-//				settypes5(full_text, answer, Lookcontent);
-				settypes5(card.getFull_text(),
-						card.getAnswer(),rightanswers);
+				// settypes5(full_text, answer, Lookcontent);
+				settypes5(card.getFull_text(), card.getAnswer(), rightanswers);
 				button1.setVisibility(View.VISIBLE);
 			} else {
 				rightanswers
@@ -861,33 +872,40 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 												.lastIndexOf("</file>"));
 						rightIv.setVisibility(View.VISIBLE);
 						rightIv.setOnClickListener(new OnClickListener() {
-							
+
 							@Override
 							public void onClick(View v) {
-								LayoutInflater inflater = LayoutInflater.from(MCardBagActivity.this);
-								View imgEntryView = inflater.inflate(R.layout.answer_select_dialog,
-										null); // 加载自定义的布局文件
-								final AlertDialog dialog = new AlertDialog.Builder(MCardBagActivity.this).create();
-								ImageView img = (ImageView) imgEntryView.findViewById(R.id.large_image);
-								Bitmap result = memoryCache.getBitmapFromCache(url);
+								LayoutInflater inflater = LayoutInflater
+										.from(MCardBagActivity.this);
+								View imgEntryView = inflater.inflate(
+										R.layout.answer_select_dialog, null); // 加载自定义的布局文件
+								final AlertDialog dialog = new AlertDialog.Builder(
+										MCardBagActivity.this).create();
+								ImageView img = (ImageView) imgEntryView
+										.findViewById(R.id.large_image);
+								Bitmap result = memoryCache
+										.getBitmapFromCache(url);
 								if (result == null) {
-									ExerciseBookTool.set_bk(url, img, memoryCache);
+									ExerciseBookTool.set_bk(url, img,
+											memoryCache);
 								} else {
-									img.setImageDrawable(new BitmapDrawable(result));
+									img.setImageDrawable(new BitmapDrawable(
+											result));
 								}
-//								img.setImageDrawable(Drawable.createFromPath(url));
+								// img.setImageDrawable(Drawable.createFromPath(url));
 								dialog.setView(imgEntryView); // 自定义dialog
 								dialog.show();
 								// 点击布局文件（也可以理解为点击大图）后关闭dialog，这里的dialog不需要按钮
-								imgEntryView.setOnClickListener(new OnClickListener() {
-									public void onClick(View paramView) {
-										dialog.cancel();
-									}
-								});
-								
+								imgEntryView
+										.setOnClickListener(new OnClickListener() {
+											public void onClick(View paramView) {
+												dialog.cancel();
+											}
+										});
+
 							}
 						});
-						
+
 						Bitmap result = memoryCache.getBitmapFromCache(url);
 						if (result == null) {
 							ExerciseBookTool.set_bk(url, rightIv, memoryCache);
@@ -1156,4 +1174,23 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 		super.onActivityResult(requestCode, resultCode, data);
 
 	}
+
+	@SuppressLint("ResourceAsColor")
+	public void changeBtn(int num) {
+
+		for (int i = 0; i < btnList.size(); i++) {
+			if (i == num) {
+				btnList.get(i).setBackgroundResource(
+						R.drawable.cardchoice_pressed);
+				int b = getResources().getColor(R.color.white);// 得到配置文件里的颜色
+				btnList.get(i).setTextColor(b);
+			} else {
+				btnList.get(i).setBackgroundResource(R.drawable.cardchoice);
+				int b = getResources().getColor(R.color.cardchoice_c);// 得到配置文件里的颜色
+				btnList.get(i).setTextColor(b);
+			}
+		}
+
+	}
+
 }

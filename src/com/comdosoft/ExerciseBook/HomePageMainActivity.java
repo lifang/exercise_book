@@ -1,9 +1,17 @@
 package com.comdosoft.ExerciseBook;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
@@ -11,27 +19,36 @@ import org.apache.http.entity.mime.content.StringBody;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.TabActivity;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
@@ -47,7 +64,6 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.ImageMemoryCache;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
-
 /**
  * @作者 丁作强
  * @时间 2014-4-17 上午11:34:27
@@ -62,17 +78,9 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 	public Field mBottomLeftStrip;
 	public Field mBottomRightStrip;
 	private ExerciseBook exerciseBook;
-	private int count;
-	private boolean flag = true;
-	private boolean flag_hw = true;
-	private int lastCount;
-	private int Size;
-	private String num = "0";
-	private int hw_num = 0;
 	private int width;
 	private ProgressDialog prodialog;
 	/* 头像名称 */
-	private static final String IMAGE_FILE_NAME = "faceImage.jpg";
 	private String id = "73"; // 用户 id，，切记 不是 user_id
 	private String json = "";
 	private String uri;
@@ -83,6 +91,14 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 	private String edu_number = "";
 	static boolean active = false;
 	ImageMemoryCache memoryCache;
+	/* 更新进度条 */
+	private ProgressBar mProgress;
+	private Dialog mDownloadDialog;
+	private boolean cancelUpdate = false;
+	/* 下载保存路径 */
+	private String mSavePath;
+	/* 记录进度条数量 */
+	private int progress;
 	Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -128,6 +144,34 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 				Toast.makeText(getApplicationContext(),
 						ExerciseBookParams.INTERNET, Toast.LENGTH_SHORT).show();
 				break;
+			case 8:
+
+				Builder builder = new Builder(HomePageMainActivity.this);
+				builder.setTitle("提示");
+				builder.setMessage("检测到新版本,您需要更新吗？");
+				builder.setPositiveButton("确定",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int which) {
+								showDownloadDialog();
+							}
+						});
+				builder.setNegativeButton("下次再说",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int which) {
+								exerciseBook.setUpdate(false);
+							}
+						}).show();
+				break;
+			case 9:
+				// 设置进度条位置
+				mProgress.setProgress(progress);
+				break;
+			case 10:
+				// 安装文件
+				installApk();
+				break;
 			default:
 				break;
 			}
@@ -144,9 +188,9 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 		avatar_url = preferences.getString("avatar_url", "");
 		nickName = preferences.getString("nickname", "");
 		id = preferences.getString("id", null);
-		 name = preferences.getString("name", "");
-		edu_number =preferences.getString("edu_number", "");
-//		memoryCache = new ImageMemoryCache(this);
+		name = preferences.getString("name", "");
+		edu_number = preferences.getString("edu_number", "");
+		// memoryCache = new ImageMemoryCache(this);
 		active = true;
 		exerciseBook = (ExerciseBook) getApplication();
 		memoryCache = exerciseBook.getMemoryCache();
@@ -163,15 +207,14 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 		userName = (TextView) findViewById(R.id.user_name);
 		if (edu_number.equals("")) {
 			userName.setText(nickName);
-		}else {
+		} else {
 			userName.setText(name);
 		}
-		
 
 		userInfo = (LinearLayout) findViewById(R.id.user_button);
 		faceImage = (CircularImage) findViewById(R.id.user_face);
 		if (ExerciseBookTool.isConnect(getApplicationContext())) {
-			if ( avatar_url.length() > 4) { // 设置头像
+			if (avatar_url.length() > 4) { // 设置头像
 				String url = Urlinterface.IP + avatar_url;
 				Bitmap result = memoryCache.getBitmapFromCache(url);
 				if (result == null) {
@@ -180,7 +223,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 					faceImage.setImageDrawable(new BitmapDrawable(result));
 				}
 			}
-		} 
+		}
 		faceImage.setOnClickListener(listener);
 		userInfo.setOnClickListener(listener2);
 		logo.setOnClickListener(listener3);
@@ -214,12 +257,19 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 		tabhost.setCurrentTab(exerciseBook.getMainItem());
 		updateTabStyle(tabhost);
 
+		if (ExerciseBookTool.isConnect(HomePageMainActivity.this)) {
+			if (exerciseBook.isUpdate()) {
+				GetCurrent_Version.start();
+			}
+		}
+
 	}
 
 	protected void onResume() {
 		super.onResume();
 		JPushInterface.onResume(this);
 	}
+
 	protected void onPause() {
 		super.onPause();
 		JPushInterface.onPause(this);
@@ -526,6 +576,138 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 				mHandler.sendEmptyMessage(7);
 			}
 		}
+	}
+
+	Thread GetCurrent_Version = new Thread() {
+		public void run() {
+			Map<String, String> mp = new HashMap<String, String>();
+			try {
+				String json = ExerciseBookTool.sendGETRequest(version, mp);
+				if (!json.equals("")) {
+					JSONObject obj = new JSONObject(json);
+					double version = obj.getDouble("current_version");
+					if (version > Urlinterface.current_version) {
+						mHandler.sendEmptyMessage(8);
+					}
+				}
+			} catch (Exception e) {
+			}
+		}
+	};
+
+	public void showDownloadDialog() {
+		// 构造软件下载对话框
+		AlertDialog.Builder builder = new Builder(HomePageMainActivity.this);
+		builder.setTitle("正在更新");
+		// 给下载对话框增加进度条
+		final LayoutInflater inflater = LayoutInflater
+				.from(HomePageMainActivity.this);
+		View v = inflater.inflate(R.layout.softupdate_progress, null);
+		mProgress = (ProgressBar) v.findViewById(R.id.update_progress);
+		builder.setView(v);
+		// 取消更新
+		builder.setNegativeButton("取消", new OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+				// 设置取消状态
+				cancelUpdate = true;
+			}
+		});
+		mDownloadDialog = builder.create();
+		mDownloadDialog.show();
+		// 现在文件
+		downloadApk();
+	}
+
+	/**
+	 * 下载文件线程
+	 * 
+	 * @author coolszy
+	 * @date 2012-4-26
+	 * @blog http://blog.92coding.com
+	 */
+	public class downloadApkThread extends Thread {
+		@Override
+		public void run() {
+			try {
+				// 判断SD卡是否存在，并且是否具有读写权限
+				if (Environment.getExternalStorageState().equals(
+						Environment.MEDIA_MOUNTED)) {
+					// 获得存储卡的路径
+					String sdpath = Environment.getExternalStorageDirectory()
+							+ "/";
+					mSavePath = sdpath + "download";
+					URL url = new URL(fileurl);
+					// 创建连接
+					HttpURLConnection conn = (HttpURLConnection) url
+							.openConnection();
+					conn.connect();
+					// 获取文件大小
+					int length = conn.getContentLength();
+					// 创建输入流
+					InputStream is = conn.getInputStream();
+
+					File file = new File(mSavePath);
+					// 判断文件目录是否存在
+					if (!file.exists()) {
+						file.mkdir();
+					}
+					File apkFile = new File(mSavePath, filename);
+					FileOutputStream fos = new FileOutputStream(apkFile);
+					int count = 0;
+					// 缓存
+					byte buf[] = new byte[1024];
+					// 写入到文件中
+					do {
+						int numread = is.read(buf);
+						count += numread;
+						// 计算进度条位置
+						progress = (int) (((float) count / length) * 100);
+						// 更新进度
+						mHandler.sendEmptyMessage(9);
+						if (numread <= 0) {
+							// 下载完成
+							mHandler.sendEmptyMessage(10);
+							break;
+						}
+						// 写入文件
+						fos.write(buf, 0, numread);
+					} while (!cancelUpdate);// 点击取消就停止下载.
+					fos.close();
+					is.close();
+				}
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			// 取消下载对话框显示
+			mDownloadDialog.dismiss();
+		}
+	};
+
+	/**
+	 * 下载apk文件
+	 */
+	public void downloadApk() {
+		// 启动新线程下载软件
+		new downloadApkThread().start();
+	}
+
+	/**
+	 * 安装APK文件
+	 */
+	private void installApk() {
+		File apkfile = new File(mSavePath, filename);
+		if (!apkfile.exists()) {
+			return;
+		}
+		// 通过Intent安装APK文件
+		Intent i = new Intent(Intent.ACTION_VIEW);
+		i.setDataAndType(Uri.parse("file://" + apkfile.toString()),
+				"application/vnd.android.package-archive");
+		startActivity(i);
 	}
 
 }
