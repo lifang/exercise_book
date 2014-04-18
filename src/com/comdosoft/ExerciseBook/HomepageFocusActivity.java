@@ -150,7 +150,8 @@ public class HomepageFocusActivity extends Activity implements
 		setContentView(R.layout.class_middle);
 		exerciseBook = (ExerciseBook) getApplication();
 		gd = new GestureDetector(this);
-		memoryCache = HomePageMainActivity.instance.memoryCache;
+//		memoryCache = HomePageMainActivity.instance.memoryCache;
+		memoryCache = exerciseBook.getMemoryCache();
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
 
@@ -515,7 +516,7 @@ public class HomepageFocusActivity extends Activity implements
 						.findViewById(R.id.child_jiantou);
 				child_bottom.setVisibility(View.GONE);
 			}
-			if (child_Micropost.getSender_avatar_url() != null) { // 设置头像
+			if (child_Micropost.getSender_avatar_url().length()>4) { // 设置头像
 				String url = IP + child_Micropost.getSender_avatar_url();
 				// ExerciseBookTool.set_background(url, face);
 
@@ -534,7 +535,7 @@ public class HomepageFocusActivity extends Activity implements
 			Micropost_date
 					.setText(ExerciseBookTool.divisionTime2(child_Micropost.getCreated_at())); // 时间
 			Micropost_content.setText(child_Micropost.getContent()); // 消息内容
-			if (user_id.equals(child_Micropost.getSender_id())) {// 自己回复的帖子现实删除按钮
+			if (user_id.equals(child_Micropost.getSender_id())||user_id.equals(list.get(focus).getUser_id())) {// 自己回复的帖子现实删除按钮
 				delete.setVisibility(View.VISIBLE);
 			}
 			delete.setOnClickListener(new View.OnClickListener() {

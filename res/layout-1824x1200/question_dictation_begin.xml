@@ -26,7 +26,7 @@
 	</LinearLayout>
 
 	<TextView android:id="@+id/question_dictation_mes"
-		android:layout_width="400dp" android:layout_height="wrap_content"
+		android:layout_width="400dp" android:layout_height="150dp"
 		android:layout_marginTop="30dp" android:background="@drawable/dictation_mes_bg"
 		android:gravity="center_vertical" android:padding="20dp"
 		android:textColor="@color/question_title_bg1" android:textSize="16sp"

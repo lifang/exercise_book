@@ -59,7 +59,7 @@ import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
 /**
  * @作者 丁作强
- * @时间 2014-4-12 上午9:33:02
+ * @时间 2014-4-17 下午4:18:16
  */
 public class HomepageAllActivity extends Activity implements
 		OnHeaderRefreshListener, OnFooterRefreshListener, Urlinterface,
@@ -163,7 +163,8 @@ public class HomepageAllActivity extends Activity implements
 		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		instance = this;
 		gd = new GestureDetector(this);
-		memoryCache = HomePageMainActivity.instance.memoryCache;
+//		memoryCache = HomePageMainActivity.instance.memoryCache;
+		memoryCache = exerciseBook.getMemoryCache();
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
 		exerciseBook.setMenu_num(0);
@@ -580,7 +581,7 @@ public class HomepageAllActivity extends Activity implements
 				child_bottom.setVisibility(View.GONE);
 			}
 			
-			if (child_Micropost.getSender_avatar_url() != null) { // 设置头像
+			if (child_Micropost.getSender_avatar_url().length()>4) { // 设置头像
 				// ExerciseBookTool.set_background(
 				// IP + child_Micropost.getSender_avatar_url(), face);
 				String url = IP + child_Micropost.getSender_avatar_url();
@@ -601,7 +602,7 @@ public class HomepageAllActivity extends Activity implements
 			Micropost_date
 					.setText(ExerciseBookTool.divisionTime2(child_Micropost.getCreated_at())); // 时间
 			Micropost_content.setText(child_Micropost.getContent()); // 消息内容
-			if (user_id.equals(child_Micropost.getSender_id())) {// 自己回复的帖子现实删除按钮
+			if (user_id.equals(child_Micropost.getSender_id())||user_id.equals(list.get(focus).getUser_id())) {// 自己回复的帖子现实删除按钮
 				delete.setVisibility(View.VISIBLE);
 			}
 			delete.setOnClickListener(new View.OnClickListener() {
@@ -739,11 +740,11 @@ public class HomepageAllActivity extends Activity implements
 				// user_id = student.getString("user_id");
 				avatar_url = student.getString("avatar_url"); // 获取本人头像昂所有在地址
 				String edunumber = student.getString("s_no");//  学号
-				int edu_number=0;
+				String edu_number="";
 				if ("null".equals(edunumber)||edunumber.equals("")) {
-					edu_number=-1;
+					edu_number="";
 				}else {
-					edu_number=Integer.parseInt(edunumber);
+					edu_number=edunumber;
 				}
 				user_name = student.getString("name");
 				nick_name = student.getString("nickname");
@@ -771,7 +772,7 @@ public class HomepageAllActivity extends Activity implements
 				editor.putString("user_id", user_id);
 				editor.putString("school_class_id", school_class_id);
 				editor.putString("validtime", validtime);
-				editor.putInt("edu_number", edu_number);
+				editor.putString("edu_number", edu_number);
 				editor.commit();
 				care = new ArrayList<String>();
 				JSONArray follow_microposts_id = obj

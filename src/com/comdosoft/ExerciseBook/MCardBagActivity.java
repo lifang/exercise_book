@@ -21,6 +21,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
@@ -58,9 +59,10 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
+
 /**
  * @作者 丁作强
- * @时间 2014-4-12 上午9:31:51
+ * @时间 2014-4-17 下午12:52:08
  */
 public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 		Serializable {
@@ -852,12 +854,40 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 												.lastIndexOf("</file>"));
 					} else if ((card.getContent().indexOf(".png") != -1)
 							|| (card.getContent().indexOf(".jpg") != -1)) {
-						rightIv.setVisibility(View.VISIBLE);
-						String url = IP
+						final String url = IP
 								+ card.getContent().substring(
 										"<file>".length(),
 										card.getContent()
 												.lastIndexOf("</file>"));
+						rightIv.setVisibility(View.VISIBLE);
+						rightIv.setOnClickListener(new OnClickListener() {
+							
+							@Override
+							public void onClick(View v) {
+								LayoutInflater inflater = LayoutInflater.from(MCardBagActivity.this);
+								View imgEntryView = inflater.inflate(R.layout.answer_select_dialog,
+										null); // 加载自定义的布局文件
+								final AlertDialog dialog = new AlertDialog.Builder(MCardBagActivity.this).create();
+								ImageView img = (ImageView) imgEntryView.findViewById(R.id.large_image);
+								Bitmap result = memoryCache.getBitmapFromCache(url);
+								if (result == null) {
+									ExerciseBookTool.set_bk(url, img, memoryCache);
+								} else {
+									img.setImageDrawable(new BitmapDrawable(result));
+								}
+//								img.setImageDrawable(Drawable.createFromPath(url));
+								dialog.setView(imgEntryView); // 自定义dialog
+								dialog.show();
+								// 点击布局文件（也可以理解为点击大图）后关闭dialog，这里的dialog不需要按钮
+								imgEntryView.setOnClickListener(new OnClickListener() {
+									public void onClick(View paramView) {
+										dialog.cancel();
+									}
+								});
+								
+							}
+						});
+						
 						Bitmap result = memoryCache.getBitmapFromCache(url);
 						if (result == null) {
 							ExerciseBookTool.set_bk(url, rightIv, memoryCache);

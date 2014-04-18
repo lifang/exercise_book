@@ -36,6 +36,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -130,7 +131,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 			case 2:
 				prodialog.dismiss();
 				tishi.setVisibility(View.VISIBLE);
-				Toast.makeText(RecordMainActivity.this, "解析数据出现问题",
+				Toast.makeText(RecordMainActivity.this, "网络发生异常",
 						Toast.LENGTH_SHORT).show();
 				break;
 			case 3:
@@ -176,7 +177,9 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 			}
 		};
 	};
+	private int width;
 
+	@SuppressWarnings("deprecation")
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.record_main);
@@ -184,6 +187,8 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 		eb.getActivityList().add(this);
 		initialize();
 		initDate();
+		Display display = this.getWindowManager().getDefaultDisplay();
+		width = display.getWidth();
 		prodialog = new ProgressDialog(RecordMainActivity.this);
 		prodialog.setMessage("正在获取过往作业记录");
 		prodialog.setCanceledOnTouchOutside(false);
@@ -382,8 +387,12 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 			over_img.setVisibility(View.GONE);
 			top.setVisibility(View.GONE);
 		}
-
-		AbsListView.LayoutParams param = new AbsListView.LayoutParams(210, 220);
+		AbsListView.LayoutParams param;
+		if (width == 1200) {
+			param = new AbsListView.LayoutParams(290, 300);
+		} else {
+			param = new AbsListView.LayoutParams(210, 220);
+		}
 		layout.setLayoutParams(param);
 		if (i == 0 || i % 3 == 0) {
 			LinearLayout linear = new LinearLayout(RecordMainActivity.this);

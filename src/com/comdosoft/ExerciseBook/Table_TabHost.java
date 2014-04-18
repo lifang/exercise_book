@@ -52,7 +52,7 @@ public class Table_TabHost extends Activity {
 	private String nickName = "丁作"; // 用户昵称
 	private String name = "丁作";
 	TextView userName;//
-	private int edu_number = -1;
+	private String edu_number = "";
 	private ImageView faceImage;
 	private LinearLayout userInfo;
 	private String avatar_url = "/avatars/students/2014-02/student_73.jpg"; // 用户头像
@@ -123,13 +123,14 @@ public class Table_TabHost extends Activity {
 		super.onCreate(savedInstanceState);
 		super.setContentView(R.layout.table);
 		eb = (ExerciseBook) getApplication();
-		memoryCache = new ImageMemoryCache(this);
+//		memoryCache = new ImageMemoryCache(this);
+		memoryCache = eb.getMemoryCache();
 		SharedPreferences preferences = getSharedPreferences(
 				Urlinterface.SHARED, Context.MODE_PRIVATE);
 		avatar_url = preferences.getString("avatar_url", "");
 		nickName = preferences.getString("nickname", "");
 		name = preferences.getString("name", "");
-		edu_number = preferences.getInt("edu_number", -1);
+		edu_number = preferences.getString("edu_number", "");
 		id = preferences.getString("id", null);
 		instance = this;
 		active = true;
@@ -149,7 +150,7 @@ public class Table_TabHost extends Activity {
 		});
 		middleLayout = (LinearLayout) findViewById(R.id.middle_layout);
 		userName = (TextView) findViewById(R.id.user_name);
-		if (edu_number == -1) {
+		if (edu_number.equals("")) {
 			userName.setText(nickName);
 		} else {
 			userName.setText(name );
@@ -159,9 +160,7 @@ public class Table_TabHost extends Activity {
 		userInfo = (LinearLayout) findViewById(R.id.user_button);
 		faceImage = (CircularImage) findViewById(R.id.user_face);
 		if (ExerciseBookTool.isConnect(getApplicationContext())) {
-			if (avatar_url != null || avatar_url.length() != 0) { // 设置头像
-			// ExerciseBookTool.set_background(Urlinterface.IP + avatar_url,
-			// faceImage);
+			if ( avatar_url.length() >4) { // 设置头像
 				String url = Urlinterface.IP + avatar_url;
 				Bitmap result = memoryCache.getBitmapFromCache(url);
 				if (result == null) {
@@ -170,10 +169,7 @@ public class Table_TabHost extends Activity {
 					faceImage.setImageDrawable(new BitmapDrawable(result));
 				}
 			}
-		} else {
-			Toast.makeText(getApplicationContext(),
-					ExerciseBookParams.INTERNET, Toast.LENGTH_SHORT).show();
-		}
+		} 
 		faceImage.setOnClickListener(listener);
 		userInfo.setOnClickListener(listener2);
 	}

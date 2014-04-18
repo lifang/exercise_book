@@ -26,6 +26,7 @@
                 android:layout_width="159px"
                 android:layout_height="159px"
                 android:layout_marginTop="77px"
+                android:scaleType="fitXY"
                 android:background="@drawable/moren" />
 
             <ImageView

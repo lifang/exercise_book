@@ -50,6 +50,7 @@ public class ExerciseBook extends Application {
 	private int True_number;
 	Map<Integer, List<View>> FontCard;
 	private int usertime;
+	ImageMemoryCache memoryCache;
 
 	public Map<Integer, List<View>> getFontCard() {
 		return FontCard;
@@ -70,6 +71,7 @@ public class ExerciseBook extends Application {
 		this.setHistory_type(false);
 		this.setPropTime_Number(0);
 		this.setUsertime(0);
+		
 	}
 
 	public int getWork_number() {
@@ -293,13 +295,21 @@ public class ExerciseBook extends Application {
 		this.usertime = usertime;
 	}
 
+	public ImageMemoryCache getMemoryCache() {
+		return memoryCache;
+	}
+
+	public void setMemoryCache(ImageMemoryCache memoryCache) {
+		this.memoryCache = memoryCache;
+	}
+
 	public void onCreate() {
 		super.onCreate();
 		initImageLoader(getApplicationContext());
+		memoryCache = new ImageMemoryCache(getApplicationContext());
 	}
 
 	public static void initImageLoader(Context context) {
-		ImageLoaderConfiguration.createDefault(context);
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
 				context).threadPriority(Thread.NORM_PRIORITY - 2)
 				.denyCacheImageMultipleSizesInMemory()

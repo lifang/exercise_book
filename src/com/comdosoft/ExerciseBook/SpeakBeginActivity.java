@@ -78,6 +78,8 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 	private String json;
 	private AnswerJson answerJson;
 	private int qid;
+	private String mp3path;
+	private List<int[]> code_list;
 	private boolean playFlag = false;
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
@@ -89,6 +91,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 				question_speak_tishi.setVisibility(View.GONE);
 				setPage(index + 1, branch_questions.size());
 				PredicateLayout.removeAllViews();
+				playFlag = false;
 				Speak_type = false;
 				number = 0;
 				Log.i("aaa", branch_questions.get(index).getContent());
@@ -154,7 +157,8 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 	// 设置textview
 	public void SetTextView() {
 		text_list = new ArrayList<TextView>();
-		String[] str = content.split(" ");
+		String del_content = content.replaceAll("\\s", " ");
+		String[] str = del_content.split(" ");
 		for (int i = 0; i < str.length; i++) {
 			View view1 = View.inflate(this, R.layout.question_speak_begin_item,
 					null);
@@ -165,6 +169,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 			text_list.add(text);
 			PredicateLayout.addView(layout);
 		}
+		Log.i("suanfa", text_list.size() + "===" + content);
 	}
 
 	public void onclicks(View v) {
@@ -172,8 +177,9 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 		switch (v.getId()) {
 		case R.id.question_speak_img:// 播放音频
 			if (branch_questions.get(index).getUrl() != "null") {
-				path = eb.getPath() + "/"
+				mp3path = eb.getPath() + "/"
 						+ branch_questions.get(index).getUrl();
+				Log.i("suanfa", mp3path);
 				if (player.isPlaying()) {// 正在播放
 					stop();
 				} else {
@@ -278,23 +284,25 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 				String speak = getSpeakStr(results);
 				Log.i("suanfa", "语音返回--->" + speak);
 				str_list = new ArrayList<String>();
-				content = content.replaceAll(
+				String del_con = content.replaceAll(
 						"(?i)[^a-zA-Z0-9\u4E00-\u9FA5\\s]", "");// 去除标点符号
-				content = content.replaceAll("\\s", " ");
-				String[] ok_arr = content.split(" ");
-				Log.i("suanfa", "正确答案->" + content);
+				String str_content = del_con.replaceAll("\\s", " ");
+				String[] ok_arr = str_content.split(" ");
+				Log.i("suanfa", "正确答案->" + str_content);
 				String[] item = speak.split(" ");
 				for (int i = 0; i < item.length; i++) {
 					str_list.add(item[i]);
 				}
 
 				if (!speak.equals("")) {
-					List<int[]> code_list = Soundex_Levenshtein.Engine2(
-							content, str_list);
+					code_list = Soundex_Levenshtein.Engine2(str_content,
+							str_list);
 
-					Log.i("suanfa", code_list.size() + "");
+					Log.i("suanfa", code_list.size() + "*ok_arr："
+							+ ok_arr.length);
 					if (code_list.size() > 0) {
 						for (int i = 0; i < code_list.size(); i++) {
+							Log.i("suanfa", code_list.get(i)[1] + "");
 							if (code_list.get(i)[1] >= 7) {
 								ok_speak.put(code_list.get(i)[0],
 										ok_arr[code_list.get(i)[0]]);
@@ -422,7 +430,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 
 	class setPlay implements Runnable {
 		public void run() {
-			play(path);
+			play(mp3path);
 		}
 	}
 
@@ -431,22 +439,15 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 	 * 
 	 * @param playPosition
 	 */
-	private void play(String path) {
+	private void play(String mp3path) {
 		try {
-			Log.i("linshi", path + "/" + index);
-			player.reset();// 把各项参数恢复到初始状态
-			/**
-			 * 通过MediaPlayer.setDataSource()
-			 * 的方法,将URL或文件路径以字符串的方式传入.使用setDataSource ()方法时,要注意以下三点:
-			 * 1.构建完成的MediaPlayer 必须实现Null 对像的检查.
-			 * 2.必须实现接收IllegalArgumentException 与IOException
-			 * 等异常,在很多情况下,你所用的文件当下并不存在. 3.若使用URL 来播放在线媒体文件,该文件应该要能支持pragressive
-			 * 下载.
-			 */
-			player.setDataSource(path);
-			player.prepare();// 进行缓冲
+			Log.i("linshi", mp3path + "/" + index);
+			player.reset();
+			player.setDataSource(mp3path);
+			player.prepare();
 			player.setOnPreparedListener(this);
 			player.setOnCompletionListener(this);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -461,7 +462,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 	public void stop() {
 		handler.sendEmptyMessage(8);
 		if (player.isPlaying()) {
-			player.pause();
+			player.stop();// 停止
 		}
 	}
 
@@ -537,14 +538,16 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 	// 0为继续 1为全部做完 2为本小题做完
 	public int setAnswerJson(String answer_history, String answer, int ratio,
 			int id) {
-
+		Log.i("suanfa", 1 + "-" + answer_history);
 		int type = 0;
 		answerJson = gson.fromJson(answer_history, AnswerJson.class);
-		answerJson.update = ExerciseBookTool.getTimeIng();
+		Log.i("suanfa", 1.1 + "-");
 		answerJson.reading.setUpdate_time(ExerciseBookTool.getTimeIng());
+		Log.i("suanfa", 1.2 + "-");
 		int q_item = Integer.valueOf(answerJson.reading.getQuestions_item());
+		Log.i("suanfa", 1.3 + "-");
 		int b_item = Integer.valueOf(answerJson.reading.getBranch_item());
-
+		Log.i("suanfa", 2 + "");
 		b_item += 1;
 		answerJson.reading.setBranch_item(b_item + "");
 		answerJson.reading.setUse_time(getUseTime() + "");
@@ -555,7 +558,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 			q_item += 1;
 			answerJson.reading.setQuestions_item(q_item + "");
 		}
-
+		Log.i("suanfa", 3 + "");
 		answerJson.reading.getQuestions().get(q_item).getBranch_questions()
 				.add(new Branch_AnswerPoJo(id + "", answer, ratio + ""));
 		if (q_item + 1 == eb.getList().size()
@@ -572,7 +575,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 			answerJson.reading.getQuestions().add(aq);
 			type = 2;
 		}
-
+		Log.i("suanfa", 3 + "");
 		String str = gson.toJson(answerJson);
 		ExerciseBookTool.writeFile(path, str);
 		Log.i("linshi", str);
@@ -588,7 +591,6 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 			break;
 		case R.id.base_check_linearlayout:
 			int type;
-
 			if (Speak_type == true || number >= 4) {
 				stop();
 				try {

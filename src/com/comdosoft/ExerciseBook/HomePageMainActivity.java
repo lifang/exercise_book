@@ -47,9 +47,10 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.ImageMemoryCache;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
+
 /**
  * @作者 丁作强
- * @时间 2014-4-12 上午9:33:30
+ * @时间 2014-4-17 上午11:34:27
  */
 public class HomePageMainActivity extends TabActivity implements Urlinterface {
 	TabHost tabhost;
@@ -79,7 +80,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 	private String nickName = "丁作"; // 用户昵称
 	private String name = "丁作";
 	TextView userName;//
-	private int edu_number = -1;
+	private String edu_number = "";
 	static boolean active = false;
 	ImageMemoryCache memoryCache;
 	Handler mHandler = new Handler() {
@@ -144,11 +145,13 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 		nickName = preferences.getString("nickname", "");
 		id = preferences.getString("id", null);
 		 name = preferences.getString("name", "");
-		edu_number =preferences.getInt("edu_number", -1);
-		memoryCache = new ImageMemoryCache(this);
+		edu_number =preferences.getString("edu_number", "");
+//		memoryCache = new ImageMemoryCache(this);
 		active = true;
 		exerciseBook = (ExerciseBook) getApplication();
+		memoryCache = exerciseBook.getMemoryCache();
 		exerciseBook.getActivityList().add(this);
+		exerciseBook.setMainItem(0);
 		instance = this;
 		tabhost = getTabHost();
 		res = getResources();
@@ -158,20 +161,17 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 		focusbottom = (ImageView) findViewById(R.id.focus_bottom);
 		senderbottom = (ImageView) findViewById(R.id.sender_bottom);
 		userName = (TextView) findViewById(R.id.user_name);
-		if (edu_number==-1) {
+		if (edu_number.equals("")) {
 			userName.setText(nickName);
 		}else {
 			userName.setText(name);
-
 		}
 		
 
 		userInfo = (LinearLayout) findViewById(R.id.user_button);
 		faceImage = (CircularImage) findViewById(R.id.user_face);
 		if (ExerciseBookTool.isConnect(getApplicationContext())) {
-			if (avatar_url != null || avatar_url.length() != 0) { // 设置头像
-			// ExerciseBookTool.set_background(Urlinterface.IP + avatar_url,
-			// faceImage);
+			if ( avatar_url.length() > 4) { // 设置头像
 				String url = Urlinterface.IP + avatar_url;
 				Bitmap result = memoryCache.getBitmapFromCache(url);
 				if (result == null) {
@@ -180,10 +180,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 					faceImage.setImageDrawable(new BitmapDrawable(result));
 				}
 			}
-		} else {
-			Toast.makeText(getApplicationContext(),
-					ExerciseBookParams.INTERNET, 0).show();
-		}
+		} 
 		faceImage.setOnClickListener(listener);
 		userInfo.setOnClickListener(listener2);
 		logo.setOnClickListener(listener3);

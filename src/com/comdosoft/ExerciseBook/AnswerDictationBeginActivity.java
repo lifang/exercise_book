@@ -33,7 +33,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -134,8 +133,6 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		analysisJSON(json);
 
 		updateView();
-
-		Toast.makeText(getApplicationContext(), "model:" + model, 0).show();
 
 	}
 
@@ -238,8 +235,10 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		});
 		et.setMaxLines(1);
 		et.setSingleLine(true);
-		int width = value.length() * 20 + 80;
-		et.setWidth(200);
+		et.setWidth(250);
+		if (model.equals("K00U")) {
+			et.setWidth(200);
+		}
 		et.setHeight(40);
 		et.setGravity(Gravity.CENTER);
 		et.setLayoutParams(etlp);
@@ -248,7 +247,7 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 			linear.setOrientation(LinearLayout.HORIZONTAL);
 			LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT,
 					LayoutParams.WRAP_CONTENT);
-			lp.topMargin = 10;
+			// lp.topMargin = 10;
 			linear.setLayoutParams(lp);
 			linearLayoutList.add(linear);
 			if (i > 0) {
@@ -274,8 +273,7 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		tv.setTextSize(24);
 		LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT,
 				LayoutParams.WRAP_CONTENT);
-		lp.topMargin = 10;
-		lp.leftMargin = 10;
+		// lp.topMargin = 10;
 		tv.setLayoutParams(lp);
 		linearLayoutList.get(linearLayoutIndex).addView(tv);
 	}
@@ -299,7 +297,20 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		et.setText(value);
 		et.setTextSize(16);
 
-		LayoutParams rllp = new LayoutParams(200, LayoutParams.WRAP_CONTENT);
+		LayoutParams rllp = new LayoutParams(250, LayoutParams.WRAP_CONTENT);
+		if (model.equals("K00U")) {
+			rllp = new LayoutParams(200, LayoutParams.WRAP_CONTENT);
+			rllp.bottomMargin = 5;
+		}
+		if (i > 0) {
+			String val = dictationList.get(i - 1).getValue();
+			String symbol = val.substring(val.length() - 1, val.length());
+			if (isEnglistPunctuation(symbol)
+					|| isChinesePunctuation(symbol.charAt(0))) {
+				rllp.leftMargin = 5;
+			}
+		}
+
 		r.setLayoutParams(rllp);
 
 		left.setOnClickListener(this);

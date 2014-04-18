@@ -54,7 +54,7 @@ public class UserInfoActivity extends Activity {
 	private String name = "丁作";
 	private String id = "73";
 	private String school_class_id = "15";
-	private int edu_number = -1;
+	private String edu_number = "";
 	private ProgressDialog prodialog;
 	private TextView userinfo_youyi2, userinfo_jingzhun2, userinfo_xunsu2,
 			userinfo_jiezu2, userinfo_niuqi2;
@@ -92,7 +92,7 @@ public class UserInfoActivity extends Activity {
 		name = preferences.getString("name", "");
 		id = preferences.getString("id", null);
 		school_class_id = preferences.getString("school_class_id", null);
-		edu_number =preferences.getInt("edu_number", -1);
+		edu_number =preferences.getString("edu_number", "");
 		Display display = this.getWindowManager().getDefaultDisplay();
 		width = display.getWidth();
 		list = new ArrayList();
@@ -117,7 +117,7 @@ public class UserInfoActivity extends Activity {
 //		userinfo_username.setText(nickName);		
 		userinfo_classname.setText(classname);
 		imageView1 = (RelativeLayout) findViewById(R.id.imageView1);// 修改用户名图标
-		if (edu_number==-1) {
+		if (edu_number.equals("")) {
 			imageView1.setOnClickListener(listener);
 		}else {
 			userinfo_yincang.setVisibility(View.GONE);

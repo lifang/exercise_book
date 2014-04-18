@@ -4,14 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
@@ -36,7 +34,6 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 import cn.jpush.android.api.JPushInterface;
-
 import com.comdosoft.ExerciseBook.pojo.AnswerBasePojo;
 import com.comdosoft.ExerciseBook.pojo.AnswerJson;
 import com.comdosoft.ExerciseBook.pojo.AnswerMyPojo;
@@ -367,6 +364,9 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	}
 
 	public String[] getRecordMes() {
+		if (recordMesArr == null) {
+			recordMesArr = new String[1];
+		}
 		return recordMesArr;
 	}
 
@@ -825,7 +825,11 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		}
 		Log.i("Ax", "type-bid:" + type + "--" + branch_id);
 		try {
-			answerJson.props.get(type).getBranch_id().add(branch_id);
+			if (answerJson.props.get(0).getType().equals(type + "")) {
+				answerJson.props.get(0).getBranch_id().add(branch_id);
+			} else {
+				answerJson.props.get(1).getBranch_id().add(branch_id);
+			}
 		} catch (Exception e) {
 			List<Integer> list = new ArrayList<Integer>();
 			list.add(branch_id);
