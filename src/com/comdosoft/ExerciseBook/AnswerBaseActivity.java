@@ -855,30 +855,32 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == 1) {
-			switch (resultCode) {
-			case 0:
-				Intent intent = new Intent();
-				if (eb.getActivity_item() == 0) {
-					intent.setClass(AnswerBaseActivity.this,
-							HomeWorkIngActivity.class);
-				} else {
-					intent.setClass(AnswerBaseActivity.this,
-							RecordMainActivity.class);
+			if (mQuestionType != 5 && mQuestionType != 1 && mQuestionType != 2) {
+				switch (resultCode) {
+				case 0:
+					Intent intent = new Intent();
+					if (eb.getActivity_item() == 0) {
+						intent.setClass(AnswerBaseActivity.this,
+								HomeWorkIngActivity.class);
+					} else {
+						intent.setClass(AnswerBaseActivity.this,
+								RecordMainActivity.class);
+					}
+					startActivity(intent);
+					AnswerBaseActivity.this.finish();
+					break;
+				case 1:
+					status = 1;
+					setCheckText("检查");
+					setTruePropEnd();
+					setTimePropEnd();
+					setUseTime(0);
+					mQindex = 0;
+					mBindex = 0;
+					setStart();
+					updateView();
+					break;
 				}
-				startActivity(intent);
-				finish();
-				break;
-			case 1:
-				status = 1;
-				mQindex = 0;
-				mBindex = 0;
-				setCheckText("检查");
-				setTruePropEnd();
-				setTimePropEnd();
-				setUseTime(0);
-				setStart();
-				updateView();
-				break;
 			}
 		}
 	}
