@@ -51,6 +51,7 @@ public class ExerciseBook extends Application {
 	Map<Integer, List<View>> FontCard;
 	private int usertime;
 	ImageMemoryCache memoryCache;
+	private boolean Update;
 
 	public Map<Integer, List<View>> getFontCard() {
 		return FontCard;
@@ -71,7 +72,7 @@ public class ExerciseBook extends Application {
 		this.setHistory_type(false);
 		this.setPropTime_Number(0);
 		this.setUsertime(0);
-		
+		this.setUpdate(true);
 	}
 
 	public int getWork_number() {
@@ -301,6 +302,14 @@ public class ExerciseBook extends Application {
 
 	public void setMemoryCache(ImageMemoryCache memoryCache) {
 		this.memoryCache = memoryCache;
+	}
+
+	public boolean isUpdate() {
+		return Update;
+	}
+
+	public void setUpdate(boolean update) {
+		Update = update;
 	}
 
 	public void onCreate() {
