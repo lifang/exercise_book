@@ -116,11 +116,12 @@ public class SwitchClassActivity extends Activity {
 		}
 
 	}
-	
+
 	protected void onResume() {
 		super.onResume();
 		JPushInterface.onResume(this);
 	}
+
 	protected void onPause() {
 		super.onPause();
 		JPushInterface.onPause(this);
@@ -206,9 +207,9 @@ public class SwitchClassActivity extends Activity {
 							editor.commit();
 							exerciseBook.setMenu_num(0);
 							clearActivity();
-//							UserInfoActivity.instance.finish();
+							// UserInfoActivity.instance.finish();
 							startActivity(intent);
-//							SwitchClassActivity.this.finish();
+							// SwitchClassActivity.this.finish();
 						}
 					}.start();
 				}
@@ -249,7 +250,8 @@ public class SwitchClassActivity extends Activity {
 									.getJSONObject("class");
 							int id = jsonobject2.getInt("id");
 							String name = jsonobject2.getString("name");
-							String validtime = jsonobject2.getString("period_of_validity");
+							String validtime = jsonobject2
+									.getString("period_of_validity");
 							SharedPreferences preferences = getSharedPreferences(
 									Urlinterface.SHARED, Context.MODE_PRIVATE);
 							Editor editor = preferences.edit();
@@ -257,6 +259,7 @@ public class SwitchClassActivity extends Activity {
 									String.valueOf(id));
 							editor.putString("school_class_name", name);
 							editor.putString("validtime", validtime);
+							editor.putString("edu_number", "");
 							editor.commit();
 							exerciseBook.setMainItem(0);
 							exerciseBook.setRefresh(1);
