@@ -406,7 +406,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 		Log.i("aaa", json_list.get(questiontype_list.get(i)));
 		eb.setWork_end_dath(work_list.get(0).getEnd_time());
 		startActivity(intent);
-		this.finish();
+		HomeWorkIngActivity.this.finish();
 	}
 
 	public void Start_History_Acvivity(int i) {// 历史记录跳转
@@ -440,7 +440,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 		Log.i("aaa", json_list.get(questiontype_list.get(i)));
 		eb.setWork_end_dath(work_list.get(0).getEnd_time());
 		startActivity(intent);
-		this.finish();
+		HomeWorkIngActivity.this.finish();
 	}
 
 	// 自定义dialog设置
@@ -495,6 +495,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 			}
 		});
 		mDownloadDialog = builder.create();
+		mDownloadDialog.setCanceledOnTouchOutside(false);
 		mDownloadDialog.show();
 		// 下载文件
 		downloadApk();
@@ -583,9 +584,9 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	}
 
 	public void onclick(View v) {
-		this.finish();
 		intent.setClass(HomeWorkIngActivity.this, RecordMainActivity.class);
 		startActivity(intent);
+		HomeWorkIngActivity.this.finish();
 	}
 
 	protected void onResume() {

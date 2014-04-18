@@ -3,16 +3,13 @@ package com.comdosoft.ExerciseBook;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
@@ -37,7 +34,6 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 import cn.jpush.android.api.JPushInterface;
-
 import com.comdosoft.ExerciseBook.pojo.AnswerBasePojo;
 import com.comdosoft.ExerciseBook.pojo.AnswerJson;
 import com.comdosoft.ExerciseBook.pojo.AnswerMyPojo;
@@ -368,6 +364,9 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	}
 
 	public String[] getRecordMes() {
+		if (recordMesArr == null) {
+			recordMesArr = new String[1];
+		}
 		return recordMesArr;
 	}
 
@@ -855,30 +854,32 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == 1) {
-			switch (resultCode) {
-			case 0:
-				Intent intent = new Intent();
-				if (eb.getActivity_item() == 0) {
-					intent.setClass(AnswerBaseActivity.this,
-							HomeWorkIngActivity.class);
-				} else {
-					intent.setClass(AnswerBaseActivity.this,
-							RecordMainActivity.class);
+			if (mQuestionType != 5 && mQuestionType != 1 && mQuestionType != 2) {
+				switch (resultCode) {
+				case 0:
+					Intent intent = new Intent();
+					if (eb.getActivity_item() == 0) {
+						intent.setClass(AnswerBaseActivity.this,
+								HomeWorkIngActivity.class);
+					} else {
+						intent.setClass(AnswerBaseActivity.this,
+								RecordMainActivity.class);
+					}
+					startActivity(intent);
+					AnswerBaseActivity.this.finish();
+					break;
+				case 1:
+					status = 1;
+					setCheckText("检查");
+					setTruePropEnd();
+					setTimePropEnd();
+					setUseTime(0);
+					mQindex = 0;
+					mBindex = 0;
+					setStart();
+					updateView();
+					break;
 				}
-				startActivity(intent);
-				finish();
-				break;
-			case 1:
-				status = 1;
-				mQindex = 0;
-				mBindex = 0;
-				setCheckText("检查");
-				setTruePropEnd();
-				setTimePropEnd();
-				setUseTime(0);
-				setStart();
-				updateView();
-				break;
 			}
 		}
 	}

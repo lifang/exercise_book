@@ -615,6 +615,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 			}
 		});
 		mDownloadDialog = builder.create();
+		mDownloadDialog.setCanceledOnTouchOutside(false);
 		mDownloadDialog.show();
 		// 现在文件
 		downloadApk();

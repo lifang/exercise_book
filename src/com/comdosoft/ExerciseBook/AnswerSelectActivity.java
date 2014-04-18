@@ -103,12 +103,12 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 		// 听力
 		case 0:
 			answer_select_answerLinearLayout.setVisibility(View.GONE);
+			answerLaba.setVisibility(View.VISIBLE);
 			if (content != null && !content.equals("")) {
 				answerText.setText(content);
 				answerImg.setVisibility(View.GONE);
 				answer_select_answerLinearLayout.setVisibility(View.VISIBLE);
 			}
-			answerLaba.setVisibility(View.VISIBLE);
 			break;
 		// 文本
 		case 1:

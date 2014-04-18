@@ -31,7 +31,6 @@ import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
 
-// 登录    马龙    2014年2月12日
 public class LoginActivity extends Activity implements OnClickListener,
 		Urlinterface {
 
@@ -57,7 +56,6 @@ public class LoginActivity extends Activity implements OnClickListener,
 				intent.setClass(getApplicationContext(), InputKeyActivity.class);
 				break;
 			case 2:
-				LoginActivity.this.finish();
 				intent.setClass(getApplicationContext(), Appstart.class);
 				break;
 			}
@@ -149,7 +147,7 @@ public class LoginActivity extends Activity implements OnClickListener,
 				}else {
 					edu_number=edunumber;
 				}
-				
+
 				JSONObject class1 = jo.getJSONObject("class"); // 或得班级信息
 
 				String school_class_id = class1.getString("id");
@@ -184,6 +182,7 @@ public class LoginActivity extends Activity implements OnClickListener,
 			super.run();
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("open_id", openid);
+			Log.i("linshi","linshi----"+ openid);
 			json = ExerciseBookTool.doPost(QQ_LOGIN, map);
 			Log.i("linshi", json);
 			analyzeJson(json);
