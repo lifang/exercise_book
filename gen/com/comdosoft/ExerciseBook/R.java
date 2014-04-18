@@ -28,6 +28,7 @@ public final class R {
         public static final int black=0x7f070020;
         public static final int button_hui=0x7f07000e;
         public static final int cardchoice=0x7f070015;
+        public static final int cardchoice_c=0x7f070022;
         public static final int dialog_text=0x7f07001b;
         public static final int green=0x7f070021;
         public static final int history=0x7f07001e;
@@ -44,7 +45,7 @@ public final class R {
         public static final int question_title_bg1=0x7f070018;
         public static final int red=0x7f070005;
         public static final int select_menu=0x7f070007;
-        public static final int selecttextview=0x7f070022;
+        public static final int selecttextview=0x7f070023;
         public static final int shenhui=0x7f07000a;
         public static final int spinner_color=0x7f07000f;
         public static final int top_huise=0x7f070002;
@@ -110,7 +111,6 @@ public final class R {
         public static final int cardbagdel=0x7f020025;
         public static final int cardbatread=0x7f020026;
         public static final int cardchoice=0x7f020027;
-        public static final int cardchoice_c=0x7f0200ad;
         public static final int cardchoice_pressed=0x7f020028;
         public static final int cardet=0x7f020029;
         public static final int cardfind=0x7f02002a;

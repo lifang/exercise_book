@@ -56,7 +56,6 @@ import com.comdosoft.ExerciseBook.tools.PullToRefreshView.OnFooterRefreshListene
 import com.comdosoft.ExerciseBook.tools.PullToRefreshView.OnHeaderRefreshListener;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
-
 /**
  * @作者 丁作强
  * @时间 2014-4-17 下午4:18:16
@@ -110,9 +109,11 @@ public class HomepageAllActivity extends Activity implements
 	private final char FLING_RIGHT = 2;
 	private char flingState = FLING_CLICK;
 	public static HomepageAllActivity instance = null;
-
+	int errS = 0;
 	private Handler handler = new Handler() {
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see android.os.Handler#handleMessage(android.os.Message)
 		 */
 		public void handleMessage(Message msg) {
@@ -121,7 +122,10 @@ public class HomepageAllActivity extends Activity implements
 				prodialog.dismiss();
 				final String json = (String) msg.obj;
 				setJson(json);
-				init();
+				if (errS==1) {
+					init();
+				}
+				
 				break;
 			case 2:
 				focus = -1;
@@ -163,7 +167,7 @@ public class HomepageAllActivity extends Activity implements
 		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		instance = this;
 		gd = new GestureDetector(this);
-//		memoryCache = HomePageMainActivity.instance.memoryCache;
+		// memoryCache = HomePageMainActivity.instance.memoryCache;
 		memoryCache = exerciseBook.getMemoryCache();
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
@@ -174,23 +178,23 @@ public class HomepageAllActivity extends Activity implements
 
 		initialize(); // 初始化参数
 		page = 1;
-//		if (ExerciseBookTool.isConnect(HomepageAllActivity.this)) {
-//			prodialog = new ProgressDialog(HomepageAllActivity.this);
-//			prodialog.setMessage(ExerciseBookParams.PD_CLASS_INFO);
-//			prodialog.setCanceledOnTouchOutside(false);
-//			prodialog.show();
-//			Thread thread = new Thread(new get_class_info());
-//			thread.start();
-//
-//		} else {
-//			handler.sendEmptyMessage(7);
-//		}
+		// if (ExerciseBookTool.isConnect(HomepageAllActivity.this)) {
+		// prodialog = new ProgressDialog(HomepageAllActivity.this);
+		// prodialog.setMessage(ExerciseBookParams.PD_CLASS_INFO);
+		// prodialog.setCanceledOnTouchOutside(false);
+		// prodialog.show();
+		// Thread thread = new Thread(new get_class_info());
+		// thread.start();
+		//
+		// } else {
+		// handler.sendEmptyMessage(7);
+		// }
 	}
 
 	protected void onResume() {
 		super.onResume();
 		JPushInterface.onResume(this);
-//		page = 1;
+		// page = 1;
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
 
@@ -212,7 +216,6 @@ public class HomepageAllActivity extends Activity implements
 			}
 		}
 	}
-
 
 	protected void onPause() {
 		super.onPause();
@@ -319,7 +322,8 @@ public class HomepageAllActivity extends Activity implements
 
 		Micropost_senderName.setText(mess.getName()); // 发消息的人
 		Micropost_content.setText(mess.getContent()); // 消息内容
-		Micropost_date.setText(ExerciseBookTool.divisionTime2(mess.getCreated_at())); // 消息日期
+		Micropost_date.setText(ExerciseBookTool.divisionTime2(mess
+				.getCreated_at())); // 消息日期
 		String mic_id = mess.getId();
 		for (int j = 0; j < care.size(); j++) {
 			String a = (String) care.get(j);
@@ -571,7 +575,7 @@ public class HomepageAllActivity extends Activity implements
 			final Child_Micropost child_Micropost = child_list.get(position2);
 			if (child_Micropost.getGood().equals("1")) {
 				good.setVisibility(View.VISIBLE);
-			}else {
+			} else {
 				good.setVisibility(View.GONE);
 			}
 
@@ -580,8 +584,8 @@ public class HomepageAllActivity extends Activity implements
 						.findViewById(R.id.child_jiantou);
 				child_bottom.setVisibility(View.GONE);
 			}
-			
-			if (child_Micropost.getSender_avatar_url().length()>4) { // 设置头像
+
+			if (child_Micropost.getSender_avatar_url().length() > 4) { // 设置头像
 				// ExerciseBookTool.set_background(
 				// IP + child_Micropost.getSender_avatar_url(), face);
 				String url = IP + child_Micropost.getSender_avatar_url();
@@ -599,10 +603,11 @@ public class HomepageAllActivity extends Activity implements
 			}
 			Micropost_who.setText(child_Micropost.getSender_name()); // 回复人
 			Micropost_ToWho.setText(child_Micropost.getReciver_name()); // 接收人
-			Micropost_date
-					.setText(ExerciseBookTool.divisionTime2(child_Micropost.getCreated_at())); // 时间
+			Micropost_date.setText(ExerciseBookTool
+					.divisionTime2(child_Micropost.getCreated_at())); // 时间
 			Micropost_content.setText(child_Micropost.getContent()); // 消息内容
-			if (user_id.equals(child_Micropost.getSender_id())||user_id.equals(list.get(focus).getUser_id())) {// 自己回复的帖子现实删除按钮
+			if (user_id.equals(child_Micropost.getSender_id())
+					|| user_id.equals(list.get(focus).getUser_id())) {// 自己回复的帖子现实删除按钮
 				delete.setVisibility(View.VISIBLE);
 			}
 			delete.setOnClickListener(new View.OnClickListener() {
@@ -732,22 +737,26 @@ public class HomepageAllActivity extends Activity implements
 
 			String status = obj.getString("status");
 			String notice = obj.getString("notice");
-			
+
 			if ("success".equals(status)) {
+				errS=1;
 				// // 学生信息
 				JSONObject student = obj.getJSONObject("student"); // 获得学生的信息
 				// id = student.getString("id");
 				// user_id = student.getString("user_id");
 				avatar_url = student.getString("avatar_url"); // 获取本人头像昂所有在地址
-				String edunumber = student.getString("s_no");//  学号
-				String edu_number="";
-				if ("null".equals(edunumber)||edunumber.equals("")) {
-					edu_number="";
-				}else {
-					edu_number=edunumber;
-				}
+				String edunumber = student.getString("s_no");// 学号
+				String edu_number = "";
+
 				user_name = student.getString("name");
 				nick_name = student.getString("nickname");
+				if ("null".equals(edunumber) || edunumber.equals("")) {
+					edu_number = "";
+					HomePageMainActivity.instance.userName.setText(nick_name);
+				} else {
+					edu_number = edunumber;
+					HomePageMainActivity.instance.userName.setText(user_name);
+				}
 				JSONObject microposts = obj.getJSONObject("microposts");
 				page = Integer.parseInt(microposts.getString("page"));
 				pages_count = Integer.parseInt(microposts
@@ -781,11 +790,28 @@ public class HomepageAllActivity extends Activity implements
 					String fmi = follow_microposts_id.getInt(i) + "";
 					care.add(fmi);
 				}
-
-			} 
-
 				Toast.makeText(getApplicationContext(), notice,
 						Toast.LENGTH_SHORT).show();
+			} else {
+				SharedPreferences preferences = getSharedPreferences(SHARED,
+						Context.MODE_PRIVATE);
+				Editor editor = preferences.edit();
+				editor.putString("user_id", "");
+				editor.putString("student_id", "");
+				editor.putString("school_class_id", "");
+				editor.putString("id", "");
+				editor.putString("edu_number", "");
+
+				editor.commit();
+				HomePageMainActivity.instance.finish();
+				Intent it = new Intent(HomepageAllActivity.this,
+						LoginActivity.class);
+				it.putExtra("notice", notice);
+				startActivity(it);
+				Toast.makeText(getApplicationContext(), notice,
+						Toast.LENGTH_SHORT).show();
+			}
+
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -913,14 +939,12 @@ public class HomepageAllActivity extends Activity implements
 				String good = o.getString("praise");
 				Child_Micropost child = new Child_Micropost(id, sender_id,
 						sender_types, sender_name, sender_avatar_url, content,
-						reciver_name, created_at,good);
+						reciver_name, created_at, good);
 				child_list.add(child);
 			}
 		} catch (Exception e) {
 		}
 	}
-
-
 
 	/*
 	 * 添加关注
@@ -1131,9 +1155,11 @@ public class HomepageAllActivity extends Activity implements
 									String created_at = o
 											.getString("new_created_at");
 									String good = o.getString("praise");
-									Child_Micropost child = new Child_Micropost(id, sender_id,
-											sender_types, sender_name, sender_avatar_url, content,
-											reciver_name, created_at,good);
+									Child_Micropost child = new Child_Micropost(
+											id, sender_id, sender_types,
+											sender_name, sender_avatar_url,
+											content, reciver_name, created_at,
+											good);
 									child_list.add(0, child);
 								}
 								reply_gk_list.add(true);
@@ -1370,8 +1396,8 @@ public class HomepageAllActivity extends Activity implements
 				msg.what = 0;
 				msg.obj = json;
 				handler.sendMessage(msg);
-				
-//				handler.sendEmptyMessage(0);
+
+				// handler.sendEmptyMessage(0);
 			} catch (Exception e) {
 				prodialog.dismiss();
 				handler.sendEmptyMessage(7);

@@ -44,7 +44,7 @@
     <TextView
         android:id="@+id/question_dictation_mes"
         android:layout_width="400dp"
-        android:layout_height="wrap_content"
+        android:layout_height="150dp"
         android:layout_marginTop="30dp"
         android:background="@drawable/dictation_mes_bg"
         android:gravity="center_vertical"
