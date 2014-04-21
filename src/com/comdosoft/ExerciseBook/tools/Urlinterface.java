@@ -10,7 +10,7 @@ public interface Urlinterface {
 	// static final String IP = "http://192.168.199.196:3004";
 //	static final String IP = "http://116.255.202.123:3014";
 
-	
+
 	// static final String IP = "http://192.168.0.250:3004";
 	// static final String IP = "http://192.168.199.196:3004";
 	static String fileurl = IP + "/cjzyb.apk";

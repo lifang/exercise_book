@@ -90,6 +90,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 				index += 1;
 				question_speak_tishi.setVisibility(View.GONE);
 				setPage(index + 1, branch_questions.size());
+				ok_speak.clear();
 				PredicateLayout.removeAllViews();
 				playFlag = false;
 				Speak_type = false;
@@ -131,6 +132,7 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 		setTruePropEnd();// 禁用道具
 		qid = eb.getQuestion_id();
 		gson = new Gson();
+		ok_speak = new HashMap<Integer, String>();// 用于记录正确的词
 		Intent intent = getIntent();
 		path = intent.getStringExtra("path");
 		json = intent.getStringExtra("json");
@@ -277,7 +279,6 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 			if (resultCode == RESULT_OK) {
 				// stopService(service_intent);
 				// 取得语音的字符
-				ok_speak = new HashMap<Integer, String>();// 用于记录正确的词
 				ArrayList<String> results = data
 						.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 				Log.i("suanfa", "->" + results);
@@ -303,23 +304,28 @@ public class SpeakBeginActivity extends AnswerBaseActivity implements
 					if (code_list.size() > 0) {
 						for (int i = 0; i < code_list.size(); i++) {
 							Log.i("suanfa", code_list.get(i)[1] + "");
-							if (code_list.get(i)[1] >= 7) {
-								ok_speak.put(code_list.get(i)[0],
-										ok_arr[code_list.get(i)[0]]);
-								text_list.get(code_list.get(i)[0])
-										.setTextColor(
-												getResources().getColor(
-														R.color.work_end));
-							} else {
-								if (!error_str
-										.contains(ok_arr[code_list.get(i)[0]])) {
-									error_str += ok_arr[code_list.get(i)[0]]
-											+ ";||;";
+							Log.i("Ax",
+									ok_speak.containsKey(code_list.get(i)[0])
+											+ "");
+							if (!ok_speak.containsKey(code_list.get(i)[0])) {
+								if (code_list.get(i)[1] >= 7) {
+									ok_speak.put(code_list.get(i)[0],
+											ok_arr[code_list.get(i)[0]]);
+									text_list.get(code_list.get(i)[0])
+											.setTextColor(
+													getResources().getColor(
+															R.color.work_end));
+								} else {
+									if (!error_str.contains(ok_arr[code_list
+											.get(i)[0]])) {
+										error_str += ok_arr[code_list.get(i)[0]]
+												+ ";||;";
+									}
+									text_list.get(code_list.get(i)[0])
+											.setTextColor(
+													getResources().getColor(
+															R.color.juhuang));
 								}
-								text_list.get(code_list.get(i)[0])
-										.setTextColor(
-												getResources().getColor(
-														R.color.juhuang));
 							}
 						}
 
