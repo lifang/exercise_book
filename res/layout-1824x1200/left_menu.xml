@@ -130,7 +130,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="68px"
                     android:layout_marginTop="95px"
-                    android:src="@drawable/leftmenu_11" />
+                    android:src="@drawable/leftmenu_wenda" />
 
                 <TextView
                     android:layout_width="fill_parent"

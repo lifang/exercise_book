@@ -66,7 +66,7 @@ public class ExerciseBook extends Application {
 		this.setMneu(true);
 		this.setMainItem(0);
 		this.setRefresh(1);
-		this.setMenu_num(4);
+		this.setMenu_num(1);
 		this.setQuestion_item(0);
 		this.setMneu(true);
 		this.setHistory_type(false);
