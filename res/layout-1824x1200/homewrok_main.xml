@@ -38,7 +38,7 @@
             android:maxLines="1"
             android:text="丁作强"
             android:textColor="@color/white"
-            android:textSize="21px" />
+            android:textSize="30px" />
         <LinearLayout
             android:layout_width="341.67px"
             android:layout_height="fill_parent"

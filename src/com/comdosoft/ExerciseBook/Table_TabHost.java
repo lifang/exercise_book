@@ -24,6 +24,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -173,6 +174,17 @@ public class Table_TabHost extends Activity {
 		} 
 		faceImage.setOnClickListener(listener);
 		userInfo.setOnClickListener(listener2);
+		String  guide = preferences.getString("guide", "");
+		if (guide.equals("")) {
+			
+			Editor editor = preferences.edit();
+			editor.putString("guide", "guide");
+			editor.commit();
+			Intent intentp = new Intent();
+			intentp.setClass(Table_TabHost.this, GuidePageActivity.class);//
+			startActivityForResult(intentp, 0);
+		}
+		
 	}
 
 	public void setContentView(int layoutId) {
