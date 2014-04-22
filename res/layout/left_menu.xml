@@ -17,33 +17,12 @@
             android:background="#3f4853"
             android:orientation="vertical" >
 
-            <LinearLayout
-                android:id="@+id/ll1"
-                android:layout_width="138.08px"
-                android:layout_height="94.47px"
-                android:background="#3f4853"
-                android:orientation="vertical" >
-
-                <ImageView
-                    android:id="@+id/leftmenu_11"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="45.56px"
-                    android:layout_marginTop="22.73px"
-                    android:src="@drawable/leftmenu_11" />
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="问答"
-                    android:textSize="14.96px" />
-            </LinearLayout>
+            
 
             <LinearLayout
-                android:id="@+id/ll2"
+                android:id="@+id/left_menu_ll1"
                 android:layout_width="138.08px"
-                android:layout_height="136.68px"
+                android:layout_height="100px"
                 android:background="#3f4853"
                 android:orientation="vertical" >
 
@@ -56,7 +35,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="45.56px"
-                        android:layout_marginTop="63.65px"
+                        android:layout_marginTop="22.73px"
                         android:src="@drawable/leftmenu_12" />
 
                     <ImageView
@@ -64,7 +43,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="13.4px"
-                        android:layout_marginTop="63.65px"
+                        android:layout_marginTop="22.73px"
                         android:layout_toRightOf="@id/leftmenu_12"
                         android:src="@drawable/smallred"
                         android:visibility="gone" />
@@ -79,7 +58,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/ll3"
+                android:id="@+id/left_menu_ll2"
                 android:layout_width="138.08px"
                 android:layout_height="136.68px"
                 android:background="#3f4853"
@@ -117,7 +96,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/ll4"
+                android:id="@+id/left_menu_ll3"
                 android:layout_width="138.08px"
                 android:layout_height="136.68px"
                 android:background="#3f4853"
@@ -137,6 +116,28 @@
                     android:gravity="center"
                     android:text="卡包"
                     android:textSize="14.32px" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/left_menu_ll4"
+                android:layout_width="138.08px"
+                android:layout_height="136.68px"
+                android:background="#3f4853"
+                android:orientation="vertical" >
+
+                <ImageView
+                    android:id="@+id/leftmenu_11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="45.56px"
+                    android:layout_marginTop="63.65px"
+                    android:src="@drawable/leftmenu_11" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="问答"
+                    android:textSize="14.96px" />
             </LinearLayout>
 
             <ImageView

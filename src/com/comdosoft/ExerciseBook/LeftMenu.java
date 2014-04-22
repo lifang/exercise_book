@@ -84,16 +84,16 @@ public class LeftMenu extends Activity implements Urlinterface {
 
 	public void setBackColor() {
 		switch (eb.getMenu_num()) {
-		case 0:
+		case 1:
 			ll1.setBackgroundColor(getResources().getColor(R.color.select_menu));
 			break;
-		case 1:
+		case 2:
 			ll2.setBackgroundColor(getResources().getColor(R.color.select_menu));
 			break;
-		case 2:
+		case 3:
 			ll3.setBackgroundColor(getResources().getColor(R.color.select_menu));
 			break;
-		case 3:
+		case 4:
 			ll4.setBackgroundColor(getResources().getColor(R.color.select_menu));
 			break;
 		default:
@@ -146,20 +146,8 @@ public class LeftMenu extends Activity implements Urlinterface {
 
 			}
 		});
+
 		ll1.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				LeftMenu.this.finish();
-				overridePendingTransition(R.anim.slide_in_left,
-						R.anim.slide_out_right);
-				eb.setMneu(true);
-				eb.setMenu_num(0);
-				clearActivity();
-				Intent intent = new Intent(LeftMenu.this,
-						HomePageMainActivity.class);
-				startActivity(intent);
-			}
-		});
-		ll2.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
 				LeftMenu.this.finish();
@@ -177,7 +165,7 @@ public class LeftMenu extends Activity implements Urlinterface {
 				startActivity(intent);
 			}
 		});
-		ll3.setOnClickListener(new OnClickListener() {
+		ll2.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
 				LeftMenu.this.finish();
@@ -196,7 +184,7 @@ public class LeftMenu extends Activity implements Urlinterface {
 			}
 
 		});
-		ll4.setOnClickListener(new OnClickListener() {
+		ll3.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
 				LeftMenu.this.finish();
@@ -210,13 +198,26 @@ public class LeftMenu extends Activity implements Urlinterface {
 				startActivity(intent);
 			}
 		});
+		ll4.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				LeftMenu.this.finish();
+				overridePendingTransition(R.anim.slide_in_left,
+						R.anim.slide_out_right);
+				eb.setMneu(true);
+				eb.setMenu_num(4);
+				clearActivity();
+				Intent intent = new Intent(LeftMenu.this,
+						HomePageMainActivity.class);
+				startActivity(intent);
+			}
+		});
 		ll6.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				LeftMenu.this.finish();
 				overridePendingTransition(R.anim.slide_in_left,
 						R.anim.slide_out_right);
 				eb.setMneu(true);
-				eb.setMenu_num(0);
+				eb.setMenu_num(4);
 				clearActivity();
 				SharedPreferences preferences = getSharedPreferences(SHARED,
 						Context.MODE_PRIVATE);
@@ -342,11 +343,10 @@ public class LeftMenu extends Activity implements Urlinterface {
 
 	// 初始化参数
 	public void Invit() {
-		eb = (ExerciseBook) getApplication();
-		ll1 = findViewById(R.id.ll1);
-		ll2 = findViewById(R.id.ll2);
-		ll3 = findViewById(R.id.ll3);
-		ll4 = findViewById(R.id.ll4);
+		ll1 = findViewById(R.id.left_menu_ll1);
+		ll2 = findViewById(R.id.left_menu_ll2);
+		ll3 = findViewById(R.id.left_menu_ll3);
+		ll4 = findViewById(R.id.left_menu_ll4);
 		allLL = (LinearLayout) findViewById(R.id.allLinear);
 		ll5 = findViewById(R.id.menuclassll);
 		hwImg = (ImageView) findViewById(R.id.leftmenu_12red);

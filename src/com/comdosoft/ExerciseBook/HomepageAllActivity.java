@@ -171,7 +171,7 @@ public class HomepageAllActivity extends Activity implements
 		memoryCache = exerciseBook.getMemoryCache();
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
-		exerciseBook.setMenu_num(0);
+//		exerciseBook.setMenu_num(3);
 		user_id = preferences.getString("user_id", "130");
 		id = preferences.getString("id", "73");
 		school_class_id = preferences.getString("school_class_id", "83");

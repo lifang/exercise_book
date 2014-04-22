@@ -30,6 +30,18 @@
                 android:src="@drawable/logo" />
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/activity_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="150px"
+            android:layout_marginTop="45px"
+            android:gravity="center"
+            android:maxLines="1"
+            android:text="丁作强"
+            android:textColor="@color/white"
+            android:textSize="21px" />
+
         <LinearLayout
             android:layout_width="341.67px"
             android:layout_height="fill_parent"
@@ -51,8 +63,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15px"
                 android:layout_marginTop="40.5px"
-                android:maxLines="1"
                 android:gravity="center"
+                android:maxLines="1"
                 android:text="丁作强"
                 android:textColor="@color/white"
                 android:textSize="30px" />
@@ -61,15 +73,14 @@
                 android:id="@+id/user_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="0.05px"
-                >
+                android:layout_marginRight="0.05px" >
 
                 <ImageView
-                    android:layout_marginTop="62.5px"
-                    android:layout_marginRight="28.5px"
-                    android:layout_marginLeft="15px"
                     android:layout_width="26px"
                     android:layout_height="15px"
+                    android:layout_marginLeft="15px"
+                    android:layout_marginRight="28.5px"
+                    android:layout_marginTop="62.5px"
                     android:background="@drawable/userinfo_button" />
             </LinearLayout>
         </LinearLayout>
