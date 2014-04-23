@@ -36,9 +36,10 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
+
 /**
  * @作者 丁作强
- * @时间 2014-4-12 上午9:34:15
+ * @时间 2014-4-23 上午9:43:21
  */
 public class SwitchClassActivity extends Activity {
 	private LinearLayout layout;
@@ -195,7 +196,7 @@ public class SwitchClassActivity extends Activity {
 
 							Intent intent = new Intent(
 									SwitchClassActivity.this,
-									HomePageMainActivity.class);
+									HomeWorkIngActivity.class);
 							SharedPreferences preferences = getSharedPreferences(
 									Urlinterface.SHARED, Context.MODE_PRIVATE);
 							Editor editor = preferences.edit();
@@ -205,7 +206,7 @@ public class SwitchClassActivity extends Activity {
 							editor.putString("school_class_name", String
 									.valueOf(classlist.get(position).getName()));
 							editor.commit();
-							exerciseBook.setMenu_num(0);
+							exerciseBook.setMenu_num(1);
 							clearActivity();
 							// UserInfoActivity.instance.finish();
 							startActivity(intent);
@@ -264,10 +265,10 @@ public class SwitchClassActivity extends Activity {
 							exerciseBook.setMainItem(0);
 							exerciseBook.setRefresh(1);
 							clearActivity();
-							exerciseBook.setMenu_num(0);
+							exerciseBook.setMenu_num(1);
 							Intent intent = new Intent(
 									SwitchClassActivity.this,
-									HomePageMainActivity.class);
+									HomeWorkIngActivity.class);
 							startActivity(intent);
 						}
 
