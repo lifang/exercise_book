@@ -3,12 +3,16 @@ package com.comdosoft.ExerciseBook;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -133,33 +137,89 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 				mOptionIndex++;
 			}
 		}
+		String value = answerArr[i];
+		if (!isEnglistPunctuation(value)) {
+			EditText et = new EditText(this);
+			et.setWidth(240);
+			et.setHeight(97);
+			et.setSingleLine(true);
+			et.setFocusable(false);
+			et.setFocusableInTouchMode(false);
+			et.setLayoutParams(etlp);
+			et.setGravity(Gravity.CENTER);
+			et.setTextSize(28);
+			et.setBackgroundResource(R.drawable.answer_order_item_style);
+			mSubjectEditList.add(et);
+			mSubjectList.get(mSubjectIndex).addView(et);
 
-		EditText et = new EditText(this);
-		et.setWidth(240);
-		et.setHeight(97);
-		et.setSingleLine(true);
-		et.setFocusable(false);
-		et.setFocusableInTouchMode(false);
-		et.setLayoutParams(etlp);
-		et.setGravity(Gravity.CENTER);
-		et.setTextSize(28);
-		et.setBackgroundResource(R.drawable.answer_order_item_style);
-		mSubjectEditList.add(et);
-		mSubjectList.get(mSubjectIndex).addView(et);
+			TextView tv = new TextView(this);
+			tv.setId(R.id.aa);
+			tv.setText(isEndSymbol(answerList.get(i)));
+			tv.setWidth(216);
+			tv.setHeight(82);
+			tv.setLayoutParams(etlp);
+			tv.setGravity(Gravity.CENTER);
+			tv.setTextColor(Color.rgb(255, 255, 255));
+			tv.setTextSize(28);
+			tv.setBackgroundResource(R.drawable.answer_wire_item_style);
+			tv.setOnClickListener(new MyOnClick(i));
+			mOptionTextList.add(tv);
+			mOptionList.get(mOptionIndex).addView(tv);
+		}
 
+		String symbol = value.substring(value.length() - 1, value.length());
+		if (isEnglistPunctuation(symbol)
+				|| isChinesePunctuation(symbol.charAt(0))
+				|| isEnglistPunctuation(value)) {
+			initSymbol(symbol);
+		}
+	}
+
+	// 添加标点符号
+	public void initSymbol(String symbol) {
 		TextView tv = new TextView(this);
-		tv.setId(R.id.aa);
-		tv.setText(answerList.get(i));
-		tv.setWidth(216);
-		tv.setHeight(82);
-		tv.setLayoutParams(etlp);
-		tv.setGravity(Gravity.CENTER);
-		tv.setTextColor(Color.rgb(255, 255, 255));
-		tv.setTextSize(28);
-		tv.setBackgroundResource(R.drawable.answer_wire_item_style);
-		tv.setOnClickListener(new MyOnClick(i));
-		mOptionTextList.add(tv);
-		mOptionList.get(mOptionIndex).addView(tv);
+		tv.setText(symbol);
+		tv.setTextSize(24);
+		LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT,
+				LayoutParams.WRAP_CONTENT);
+		lp.leftMargin = 10;
+		lp.topMargin = 10;
+		tv.setLayoutParams(lp);
+		mSubjectList.get(mSubjectIndex).addView(tv);
+	}
+
+	// 判断是否英文符号
+	public boolean isEnglistPunctuation(String s) {
+		Pattern pattern4 = Pattern.compile("\\p{Punct}+");
+		Matcher matcher4 = pattern4.matcher(s);
+		if (matcher4.matches()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	// 判断是否中文符号
+	public boolean isChinesePunctuation(char c) {
+		Character.UnicodeBlock ub = Character.UnicodeBlock.of(c);
+		if (ub == Character.UnicodeBlock.GENERAL_PUNCTUATION
+				|| ub == Character.UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION
+				|| ub == Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS
+				|| ub == Character.UnicodeBlock.CJK_COMPATIBILITY_FORMS) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public String isEndSymbol(String s) {
+		String symbol = s.substring(s.length() - 1, s.length());
+		if (isEnglistPunctuation(symbol)
+				|| isChinesePunctuation(symbol.charAt(0))) {
+			return s.substring(0, s.length() - 1);
+		} else {
+			return s;
+		}
 	}
 
 	public void analysisJSON(String json) {
@@ -213,6 +273,20 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 				.split(" ");
 
 		for (int i = 0; i < answerArr.length; i++) {
+			if (i > 0 && isEnglistPunctuation(answerArr[i])) {
+				answerArr[i - 1] = answerArr[i - 1] + answerArr[i];
+				answerArr[i] = null;
+			}
+		}
+		int j = 0;
+		for (int i = 0; i < answerArr.length; i++) {
+			if (answerArr[i] != null) {
+				answerArr[j++] = answerArr[i];
+			}
+		}
+
+		for (int i = 0; i < j; i++) {
+			Log.i("Ax", answerArr[i]);
 			mAnswer.append(answerArr[i]);
 			answerList.add(answerArr[i]);
 		}
@@ -289,7 +363,7 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 				if (mAnswerIndex < answerList.size()) {
 					EditText et = mSubjectEditList.get(mAnswerIndex++);
 					String text = answerList.get(index);
-					et.setText(text);
+					et.setText(isEndSymbol(text));
 					// et.setBackgroundResource(R.drawable.answer_wire_item_check_style);
 
 					TextView tv = mOptionTextList.get(index);

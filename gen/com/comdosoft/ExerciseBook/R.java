@@ -257,12 +257,12 @@ public final class R {
         public static final int answer_order_option_linearLayout=0x7f0c0021;
         public static final int answer_order_scrollview=0x7f0c001f;
         public static final int answer_order_subject_linearLayout=0x7f0c0020;
-        public static final int answer_select_answerLinearLayout=0x7f0c0025;
-        public static final int answer_select_img=0x7f0c0026;
+        public static final int answer_select_answerLinearLayout=0x7f0c0026;
+        public static final int answer_select_img=0x7f0c0028;
         public static final int answer_select_item_linearLayout=0x7f0c002b;
         public static final int answer_select_item_textImg=0x7f0c002c;
         public static final int answer_select_item_textView=0x7f0c002d;
-        public static final int answer_select_laba=0x7f0c0028;
+        public static final int answer_select_laba=0x7f0c0025;
         public static final int answer_select_listview=0x7f0c0029;
         public static final int answer_select_text=0x7f0c0027;
         public static final int answer_wireLeft=0x7f0c002f;
