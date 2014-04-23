@@ -802,8 +802,8 @@ public class HomepageAllActivity extends Activity implements
 					String fmi = follow_microposts_id.getInt(i) + "";
 					care.add(fmi);
 				}
-				Toast.makeText(getApplicationContext(), notice,
-						Toast.LENGTH_SHORT).show();
+//				Toast.makeText(getApplicationContext(), notice,
+//						Toast.LENGTH_SHORT).show();
 			} else {
 				SharedPreferences preferences = getSharedPreferences(SHARED,
 						Context.MODE_PRIVATE);

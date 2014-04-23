@@ -4,12 +4,12 @@ public interface Urlinterface {
 	static final String tag = "ExerciseBook";
 	static final String SHARED = "EB";
 	static final double current_version = 1.0;// 应用版本号
-	 static final String IP="http://58.240.210.42:3004";
+//	 static final String IP="http://58.240.210.42:3004";
 	static String[] namearr = new String[] { "听写任务", "朗读任务", "十速挑战", "选择挑战",
 			"连线挑战", "完形填空", "排序挑战" };
 	static String[] left_menu = new String[] { "作业", "通知", "卡包", "问答" };
 	// static final String IP = "http://192.168.199.196:3004";
-//	static final String IP = "http://116.255.202.123:3014";
+	static final String IP = "http://116.255.202.123:3014";
 
 
 	// static final String IP = "http://192.168.0.250:3004";

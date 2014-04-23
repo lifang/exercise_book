@@ -6,7 +6,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="94.76px"
+        android:layout_height="100px"
         android:background="#d2d3d4"
         android:orientation="horizontal" >
 
@@ -66,7 +66,7 @@
         android:id="@+id/xListView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="90.07px"
+        android:layout_marginTop="100px"
         android:cacheColorHint="#00000000" >
     </com.comdosoft.ExerciseBook.ReplyListView>
 
