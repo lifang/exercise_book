@@ -129,6 +129,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 					left.setVisibility(View.VISIBLE);
 					right.setVisibility(View.VISIBLE);
 				}
+				initDate();
 				break;
 			case 1:
 				prodialog.dismiss();
@@ -196,7 +197,6 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 		eb = (ExerciseBook) getApplication();
 		eb.getActivityList().add(this);
 		initialize();
-		initDate();
 		Display display = this.getWindowManager().getDefaultDisplay();
 		width = display.getWidth();
 		prodialog = new ProgressDialog(RecordMainActivity.this);
@@ -232,7 +232,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 		day_c = Integer.parseInt(currentDate.split("-")[2]);
 		gestureDetector = new GestureDetector(this);
 		calV = new CalendarAdapter(this, getResources(), jumpMonth, jumpYear,
-				year_c, month_c, day_c);
+				year_c, month_c, day_c, work_list);
 		addGridView();
 		gridView.setAdapter(calV);
 
@@ -388,7 +388,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 		if (width == 1200) {
 			param = new AbsListView.LayoutParams(290, 300);
 		} else {
-			param = new AbsListView.LayoutParams(210, 220);
+			param = new AbsListView.LayoutParams(190, 200);
 		}
 		layout.setLayoutParams(param);
 		if (i == 0 || i % 3 == 0) {
@@ -758,7 +758,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 			jumpMonth++; // 下一个月
 
 			calV = new CalendarAdapter(this, getResources(), jumpMonth,
-					jumpYear, year_c, month_c, day_c);
+					jumpYear, year_c, month_c, day_c, work_list);
 			gridView.setAdapter(calV);
 			addTextToTopTextView(topText);
 
@@ -769,7 +769,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 			jumpMonth--; // 上一个月
 
 			calV = new CalendarAdapter(this, getResources(), jumpMonth,
-					jumpYear, year_c, month_c, day_c);
+					jumpYear, year_c, month_c, day_c, work_list);
 			gridView.setAdapter(calV);
 			addTextToTopTextView(topText);
 
@@ -803,7 +803,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 			month_c = Integer.parseInt(currentDate.split("-")[1]);
 			day_c = Integer.parseInt(currentDate.split("-")[2]);
 			calV = new CalendarAdapter(this, getResources(), jumpMonth,
-					jumpYear, year_c, month_c, day_c);
+					jumpYear, year_c, month_c, day_c, work_list);
 			gridView.setAdapter(calV);
 			addTextToTopTextView(topText);
 
@@ -981,7 +981,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 			jumpMonth++; // 下一个月
 
 			calV = new CalendarAdapter(this, getResources(), jumpMonth,
-					jumpYear, year_c, month_c, day_c);
+					jumpYear, year_c, month_c, day_c, work_list);
 			gridView.setAdapter(calV);
 			addTextToTopTextView(topText);
 			break;
@@ -990,7 +990,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 			jumpMonth--; // 上一个月
 
 			calV = new CalendarAdapter(this, getResources(), jumpMonth,
-					jumpYear, year_c, month_c, day_c);
+					jumpYear, year_c, month_c, day_c, work_list);
 			gridView.setAdapter(calV);
 			addTextToTopTextView(topText);
 			break;

@@ -10,7 +10,7 @@
 
 		<ImageView android:id="@+id/question_dictation_play"
 			android:layout_width="wrap_content" android:layout_height="wrap_content"
-			android:contentDescription="@string/app_name" android:src="@drawable/jzlb" />
+			android:contentDescription="@string/app_name" android:src="@drawable/xiao2" />
 
 		<LinearLayout android:id="@+id/question_dictation_linearLayout"
 			android:layout_width="fill_parent" android:layout_height="wrap_content"

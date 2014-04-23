@@ -2,6 +2,7 @@ package com.comdosoft.ExerciseBook.calendar_item;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -16,9 +17,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.comdosoft.ExerciseBook.R;
+import com.comdosoft.ExerciseBook.pojo.WorkPoJo;
 
 /**
  * 日历gridview中的每一个item显示的textview
@@ -57,6 +60,7 @@ public class CalendarAdapter extends BaseAdapter {
 	private String sys_year = "";
 	private String sys_month = "";
 	private String sys_day = "";
+	private List<WorkPoJo> datelist;
 
 	public CalendarAdapter() {
 		Date date = new Date();
@@ -68,13 +72,14 @@ public class CalendarAdapter extends BaseAdapter {
 	}
 
 	public CalendarAdapter(Context context, Resources rs, int jumpMonth,
-			int jumpYear, int year_c, int month_c, int day_c) {
+			int jumpYear, int year_c, int month_c, int day_c,
+			List<WorkPoJo> datelist) {
 		this();
 		this.context = context;
 		sc = new SpecialCalendar();
 		lc = new LunarCalendar();
 		this.res = rs;
-
+		this.datelist = datelist;
 		int stepYear = year_c + jumpYear;
 		int stepMonth = month_c + jumpMonth;
 		if (stepMonth > 0) {
@@ -143,6 +148,13 @@ public class CalendarAdapter extends BaseAdapter {
 					R.layout.calendar_item, null);
 		}
 		TextView textView = (TextView) convertView.findViewById(R.id.tvtext);
+		ImageView status = (ImageView) convertView.findViewById(R.id.status);
+		for (int i = 0; i < datelist.size(); i++) {
+			Log.i("Ax", datelist.get(i).getStart_time());
+			if (isLeapyear) {
+
+			}
+		}
 		String d = dayNumber[position].split("\\.")[0];
 		String dv = dayNumber[position].split("\\.")[1];
 
