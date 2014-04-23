@@ -11,6 +11,10 @@ import android.view.Menu;
 import android.view.Window;
 import android.view.WindowManager;
 
+/**
+ * @作者 丁作强
+ * @时间 2014-4-23 上午9:44:06
+ */
 public class Appstart extends Activity{
 
 	@Override
@@ -23,7 +27,7 @@ public class Appstart extends Activity{
 	new Handler().postDelayed(new Runnable(){
 		@Override
 		public void run(){
-			Intent intent = new Intent (Appstart.this,HomePageMainActivity.class);			
+			Intent intent = new Intent (Appstart.this,HomeWorkIngActivity.class);			
 			startActivity(intent);			
 			Appstart.this.finish();
 		}

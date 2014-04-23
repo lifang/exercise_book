@@ -1,0 +1,17 @@
+﻿<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/guide_page_l"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/guide_bg"
+    android:orientation="vertical" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="150px"
+        android:layout_marginTop="30px"
+        android:text="@string/guide_page_text"
+        android:textColor="#FFFFFF"
+        android:textSize="21px" />
+
+</LinearLayout>

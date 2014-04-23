@@ -157,6 +157,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 		setContentView(R.layout.homework_ing);
 		eb = (ExerciseBook) getApplication();// 初始化
 		eb.getActivityList().add(this);
+		eb.setMenu_num(1);
 		typeList = new ArrayList<Boolean>();
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);

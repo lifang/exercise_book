@@ -33,6 +33,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -129,6 +130,8 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 		} catch (NoSuchFieldException e) {
 			e.printStackTrace();
 		}
+
+		Toast.makeText(getApplicationContext(), model, 0).show();
 
 		analysisJSON(json);
 
@@ -247,7 +250,6 @@ public class AnswerDictationBeginActivity extends AnswerBaseActivity implements
 			linear.setOrientation(LinearLayout.HORIZONTAL);
 			LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT,
 					LayoutParams.WRAP_CONTENT);
-			// lp.topMargin = 10;
 			linear.setLayoutParams(lp);
 			linearLayoutList.add(linear);
 			if (i > 0) {

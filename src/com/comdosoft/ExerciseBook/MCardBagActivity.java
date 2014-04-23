@@ -182,7 +182,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 								Toast.LENGTH_SHORT).show();
 					} else {
 						showdialog();
-						 changeBtn(-1);
+						changeBtn(-1);
 						thread.start();
 					}
 				} else {
@@ -193,7 +193,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 		btnList.get(0).setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				initbtn();
-				 changeBtn(0);
+				changeBtn(0);
 				page = 0;
 				getKonwledges();
 			}
@@ -215,7 +215,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 								map.put("student_id", student_id);
 								map.put("school_class_id", school_class_id);
 								map.put("mistake_types", mistype);
-								
+
 								json = ExerciseBookTool.sendGETRequest(
 										get_knowledges_card, map);
 								initbtn();
@@ -227,7 +227,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 							}
 						}
 					};
-					// 
+					//
 					thread.start();
 				}
 			});
@@ -260,9 +260,9 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 					if (json == null || "".equals(json)) {
 
 					} else {
-						parsejson(json, true);
+						parsejson(json, false);
 					}
-
+					handler.sendEmptyMessage(1);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -387,9 +387,17 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 						.setOnPageChangeListener(new GuidePageChangeListener());
 				break;
 			case 2:
+				Toast.makeText(MCardBagActivity.this, String.valueOf(msg.obj),
+						Toast.LENGTH_SHORT).show();
 				setViewPager();
 				viewPager.setAdapter(new GuidePageAdapter());
-				viewPager.setCurrentItem(page);
+				int a = 4 * (page - 1);
+				if (a == cardList.size()) {
+					viewPager.setCurrentItem(page - 1);
+				} else {
+					viewPager.setCurrentItem(page);
+				}
+
 				viewPager
 						.setOnPageChangeListener(new GuidePageChangeListener());
 				break;
@@ -998,7 +1006,10 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 																			map1);
 															parsejson(json,
 																	false);
-															handler.sendEmptyMessage(2);
+															
+															msg.what = 2;
+															msg.obj = notice;
+															handler.sendMessage(msg);
 														} else {
 															msg.what = 0;
 															msg.obj = notice;

@@ -89,5 +89,7 @@
     <string name="nextstep">跳过</string>
     <string name="classcode1">你还没有加入任何班级，进入后将不能使用任何</string>
     <string name="classcode2">功能，首先请加入一个班级方能正常使用全部功能。</string>
+    <string name="guide_page_text">点击此按钮，可以展开导航栏</string>
+    <string name="null_message">当前暂无任何问答...</string>
 
 </resources>

@@ -30,9 +30,10 @@ import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
+
 /**
  * @作者 丁作强
- * @时间 2014-4-12 上午9:35:32
+ * @时间 2014-4-23 上午9:43:38
  */
 public class RegistrationActivity extends Activity implements Urlinterface {
 	private EditText reg_nicheng;//
@@ -133,7 +134,7 @@ public class RegistrationActivity extends Activity implements Urlinterface {
 							Intent intent = new Intent();
 							intent.setClass(
 									RegistrationActivity.this,
-									com.comdosoft.ExerciseBook.HomePageMainActivity.class);//
+									com.comdosoft.ExerciseBook.Appstart.class);//
 							startActivity(intent);
 							RegistrationActivity.this.finish();
 
