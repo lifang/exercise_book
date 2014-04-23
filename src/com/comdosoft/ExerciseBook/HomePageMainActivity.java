@@ -87,7 +87,7 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 	private String avatar_url = "/avatars/students/2014-02/student_73.jpg"; // 用户头像
 	private String nickName = "丁作"; // 用户昵称
 	private String name = "丁作";
-	TextView userName;//
+	TextView userName,activity_title;//
 	private String edu_number = "";
 	static boolean active = false;
 	ImageMemoryCache memoryCache;
@@ -210,7 +210,8 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 		} else {
 			userName.setText(name);
 		}
-
+		activity_title = (TextView) findViewById(R.id.activity_title);
+		activity_title.setText(Urlinterface.left_menu[exerciseBook.getMenu_num()-1]);
 		userInfo = (LinearLayout) findViewById(R.id.user_button);
 		faceImage = (CircularImage) findViewById(R.id.user_face);
 		if (ExerciseBookTool.isConnect(getApplicationContext())) {

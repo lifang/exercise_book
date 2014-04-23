@@ -102,7 +102,7 @@ public class HomepageFocusActivity extends Activity implements
 	private final char FLING_LEFT = 1;
 	private final char FLING_RIGHT = 2;
 	private char flingState = FLING_CLICK;
-
+	private TextView class_middle_null_message;//  没有消息时显示  提示信息
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -118,8 +118,13 @@ public class HomepageFocusActivity extends Activity implements
 				click_list();
 				final String json_all = (String) msg.obj;
 				parseJson_MyFocus(json_all);
-				for (int i = 0; i < list.size(); i++) {
-					setlayout(i);
+				if (list.size() != 0) {
+					for (int i = 0; i < list.size(); i++) {
+						setlayout(i);
+					}
+					class_middle_null_message.setVisibility(View.GONE);
+				} else {
+					class_middle_null_message.setVisibility(View.VISIBLE);
 				}
 				mPullToRefreshView.onHeaderRefreshComplete();
 				break;
@@ -128,8 +133,13 @@ public class HomepageFocusActivity extends Activity implements
 
 				parseJson_MyFocus(json_all2);
 
-				for (int i = list_item; i < list.size(); i++) {
-					setlayout(i);
+				if (list.size() != 0) {
+					for (int i = list_item; i < list.size(); i++) {
+						setlayout(i);
+					}
+					class_middle_null_message.setVisibility(View.GONE);
+				} else {
+					class_middle_null_message.setVisibility(View.VISIBLE);
 				}
 				mPullToRefreshView.onFooterRefreshComplete();
 				break;
@@ -158,7 +168,7 @@ public class HomepageFocusActivity extends Activity implements
 		user_id = preferences.getString("user_id", null);
 		id = preferences.getString("id", "73");
 		school_class_id = preferences.getString("school_class_id", null);
-
+		class_middle_null_message = (TextView) findViewById(R.id.class_middle_null_message);
 		initialize(); // 初始化参数
 		page = 1;
 //		if (ExerciseBookTool.isConnect(HomepageFocusActivity.this)) {
@@ -176,6 +186,7 @@ public class HomepageFocusActivity extends Activity implements
 		super.onResume();
 		JPushInterface.onResume(this);
 		page = 1;
+		class_middle_null_message.setVisibility(View.GONE);
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
 
@@ -214,9 +225,9 @@ public class HomepageFocusActivity extends Activity implements
 			for (int i = 0; i < list.size(); i++) {
 				setlayout(i);
 			}
+			class_middle_null_message.setVisibility(View.GONE);
 		} else {
-			Toast.makeText(getApplicationContext(), "暂无记录", Toast.LENGTH_SHORT)
-					.show();
+			class_middle_null_message.setVisibility(View.VISIBLE);
 		}
 
 	}
@@ -785,8 +796,13 @@ public class HomepageFocusActivity extends Activity implements
 							focus = -1;
 							list.remove(i);
 							click_list();
-							for (int i = 0; i < list.size(); i++) {
-								setlayout(i);
+							if (list.size() != 0) {
+								for (int i = 0; i < list.size(); i++) {
+									setlayout(i);
+								}
+								class_middle_null_message.setVisibility(View.GONE);
+							} else {
+								class_middle_null_message.setVisibility(View.VISIBLE);
 							}
 
 						}

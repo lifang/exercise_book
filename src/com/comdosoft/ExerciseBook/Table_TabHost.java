@@ -24,6 +24,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -51,7 +52,7 @@ public class Table_TabHost extends Activity {
 	private ExerciseBook eb;
 	private String nickName = "丁作"; // 用户昵称
 	private String name = "丁作";
-	TextView userName;//
+	TextView userName,activity_title;//
 	private String edu_number = "";
 	private ImageView faceImage;
 	private LinearLayout userInfo;
@@ -156,7 +157,8 @@ public class Table_TabHost extends Activity {
 			userName.setText(name );
 
 		}
-
+		activity_title = (TextView) findViewById(R.id.activity_title);
+		activity_title.setText(Urlinterface.left_menu[eb.getMenu_num()-1]);
 		userInfo = (LinearLayout) findViewById(R.id.user_button);
 		faceImage = (CircularImage) findViewById(R.id.user_face);
 		if (ExerciseBookTool.isConnect(getApplicationContext())) {
@@ -172,6 +174,17 @@ public class Table_TabHost extends Activity {
 		} 
 		faceImage.setOnClickListener(listener);
 		userInfo.setOnClickListener(listener2);
+		String  guide = preferences.getString("guide", "");
+		if (guide.equals("")) {
+			
+			Editor editor = preferences.edit();
+			editor.putString("guide", "guide");
+			editor.commit();
+			Intent intentp = new Intent();
+			intentp.setClass(Table_TabHost.this, GuidePageActivity.class);//
+			startActivityForResult(intentp, 0);
+		}
+		
 	}
 
 	public void setContentView(int layoutId) {
