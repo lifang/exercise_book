@@ -336,7 +336,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 				eb.setWork_id(work_list.get(pager.getCurrentItem()).getId()
 						+ "");
 				eb.setActivity_item(1);
-				typeList = getTypeList(pojo);
+				typeList = ExerciseBookTool.getTypeList(pojo);
 				question_type = questiontype_list;
 				layout_index = i;
 				Log.i("suanfa", "worknumber:" + number);
@@ -527,7 +527,6 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 		final Dialog dialog = new Dialog(this, R.style.Transparent);
 		dialog.setContentView(R.layout.my_dialog_main);
 		dialog.setCancelable(true);
-
 		ImageView close = (ImageView) dialog.findViewById(R.id.close);
 		close.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -947,19 +946,6 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-	}
-
-	public List<Boolean> getTypeList(WorkPoJo pojo) {
-		List<Boolean> list = new ArrayList<Boolean>();
-		for (int i = 0; i < pojo.getQuestion_types().size(); i++) {
-			if (ExerciseBookTool.getExist(pojo.getQuestion_types().get(i),
-					pojo.getFinish_types())) {
-				list.add(true);
-			} else {
-				list.add(false);
-			}
-		}
-		return list;
 	}
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {

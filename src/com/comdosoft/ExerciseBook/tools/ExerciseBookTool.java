@@ -64,6 +64,7 @@ import com.comdosoft.ExerciseBook.pojo.AnswerPojo;
 import com.comdosoft.ExerciseBook.pojo.Answer_QuestionsPojo;
 import com.comdosoft.ExerciseBook.pojo.Branch_AnswerPoJo;
 import com.comdosoft.ExerciseBook.pojo.PropPojo;
+import com.comdosoft.ExerciseBook.pojo.WorkPoJo;
 import com.google.gson.Gson;
 
 public class ExerciseBookTool implements Urlinterface {
@@ -71,6 +72,19 @@ public class ExerciseBookTool implements Urlinterface {
 	private static int connectTimeOut = 5000;
 	private static int readTimeOut = 10000;
 	private static String requestEncoding = "UTF-8";
+
+	public static List<Boolean> getTypeList(WorkPoJo pojo) {
+		List<Boolean> list = new ArrayList<Boolean>();
+		for (int i = 0; i < pojo.getQuestion_types().size(); i++) {
+			if (ExerciseBookTool.getExist(pojo.getQuestion_types().get(i),
+					pojo.getFinish_types())) {
+				list.add(true);
+			} else {
+				list.add(false);
+			}
+		}
+		return list;
+	}
 
 	public static String timeSecondToString(int t) {
 		StringBuffer sb = new StringBuffer();

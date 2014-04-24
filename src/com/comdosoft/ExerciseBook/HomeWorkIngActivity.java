@@ -27,10 +27,14 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Parcelable;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -54,14 +58,11 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	// private String json =
 	// "{\"status\":\"success\",\"notice\":\"\u83b7\u53d6\u6210\u529f\uff01\",\"tasks\":[{\"id\":130,\"name\":\"\",\"start_time\":\"2014-03-12T14:44:45+08:00\",\"question_types\":[0,1,2,3,4,5,6],\"finish_types\":[2],\"end_time\":\"2014-03-13T18:00:00+08:00\",\"question_packages_url\":\"/que_ps/question_p_264/resourse.zip\"}],\"knowledges_cards_count\":10}";
 	private ExerciseBook eb;
-	private LinearLayout mylayout;
 	private int linear_item = 0;
 	private List<LinearLayout> linearList = new ArrayList<LinearLayout>();
 	private Intent intent = new Intent();
 	private ProgressDialog prodialog;
 	private String notice;
-	private List<Integer> questiontype_list = new ArrayList<Integer>();
-	private List<Integer> finish_list = new ArrayList<Integer>();
 	private List<WorkPoJo> work_list = new ArrayList<WorkPoJo>();
 	static HomeWorkIngActivity instance = null;
 	private String path;
@@ -73,15 +74,22 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	private boolean cancelUpdate;
 	private Dialog mDownloadDialog;
 	private int progress;
-	private String url;
 	private ProgressBar mProgress;
 	private String download_name;
 	private boolean out_time;
 	private int layout_index;// 记录点击
 	private int width;
-	private TextView time;
-	private TextView chapter;
+	private ViewPager pager;
+	private ImageView left;
+	private ImageView right;
+	private List<String> pathList;
+	private List<String> downloadList;
+	private int number;
+	private ImagePagerAdapter ipa;
+	private List<Integer> question_type;
+	private LinearLayout ll;
 	private Handler handler = new Handler() {
+
 		public void handleMessage(android.os.Message msg) {
 			Builder builder = new Builder(HomeWorkIngActivity.this);
 			builder.setTitle("提示");
@@ -89,25 +97,17 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 			case 0:
 				prodialog.dismiss();
 				if (work_list.size() != 0) {
-					// start_time.setText("发布时间为"
-					// + work_list.get(0).getStart_time());
-					time.setText(work_list.get(0).getEnd_time());
-					questiontype_list = work_list.get(0).getQuestion_types();
-					finish_list = work_list.get(0).getFinish_types();
-					eb.setToday_newer_id(work_list.get(0).getId());
-					if (questiontype_list.size() != 0) {
-						for (int i = 0; i < questiontype_list.size(); i++) {
-							setlayout(i);
-						}
-					} else {
-						mylayout.setVisibility(View.GONE);
-						time.setVisibility(View.GONE);
-						chapter.setVisibility(View.GONE);
-					}
+					number = work_list.size();
+					pager.setAdapter(ipa);
 				} else {
-					mylayout.setVisibility(View.GONE);
-					time.setVisibility(View.GONE);
-					chapter.setVisibility(View.GONE);
+					ll.setVisibility(View.GONE);
+				}
+				if (work_list.size() < 2) {
+					left.setVisibility(View.GONE);
+					right.setVisibility(View.GONE);
+				} else {
+					left.setVisibility(View.VISIBLE);
+					right.setVisibility(View.VISIBLE);
 				}
 				break;
 			case 1:
@@ -119,7 +119,6 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 				prodialog.dismiss();
 				Toast.makeText(getApplicationContext(), "网络连接异常!",
 						Toast.LENGTH_SHORT).show();
-				mylayout.setVisibility(View.GONE);
 				break;
 			case 3:
 				builder.setMessage("需要下载数据包才可以完成任务,确认下载吗?");
@@ -127,7 +126,8 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog,
 									int which) {
-								downPath = url;
+								downPath = downloadList.get(pager
+										.getCurrentItem());
 								download_name = "resourse.zip";
 								showDownloadDialog();
 							}
@@ -138,7 +138,8 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 				prodialog.setMessage("正在更新答题记录,请稍后...");
 				prodialog.setCanceledOnTouchOutside(false);
 				prodialog.show();
-				downPath = IP + work_list.get(0).getAnswer_url();
+				downPath = IP
+						+ work_list.get(pager.getCurrentItem()).getAnswer_url();
 				download_name = "student_" + eb.getUid() + ".json";
 				downloadApk();
 				break;
@@ -147,9 +148,10 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 				break;
 			case 6:
 				prodialog.dismiss();
-				ExerciseBookTool.UpdateJsonTime(work_list.get(0)
-						.getUpdated_at(), path + "/student_" + eb.getUid()
-						+ ".json");
+				ExerciseBookTool.UpdateJsonTime(
+						work_list.get(pager.getCurrentItem()).getUpdated_at(),
+						pathList.get(pager.getCurrentItem()) + "/student_"
+								+ eb.getUid() + ".json");
 				startDekaron(layout_index);
 				break;
 			}
@@ -185,17 +187,20 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 
 	// 初始化
 	public void initialize() {
-		mylayout = (LinearLayout) findViewById(R.id.mylayout);
-		chapter = (TextView) findViewById(R.id.chapter);
-		time = (TextView) findViewById(R.id.time);
+		ll = (LinearLayout) findViewById(R.id.ll);
+		ipa = new ImagePagerAdapter();
+		pager = (ViewPager) findViewById(R.id.vPager);
+		left = (ImageView) findViewById(R.id.left);
+		right = (ImageView) findViewById(R.id.right);
 	}
 
 	private void getJsonPath() {
-		File file = new File(path + "/questions.json");
+		File file = new File(pathList.get(pager.getCurrentItem())
+				+ "/questions.json");
 		if (file.exists()) {
-			Log.i("linshi", "获取json");
-			String jsons = ExerciseBookTool.getJson(path + "/questions.json");
-			SetJson(jsons);
+			String json = ExerciseBookTool.getJson(pathList.get(pager
+					.getCurrentItem()) + "/questions.json");
+			SetJson(json);
 		}
 	}
 
@@ -215,53 +220,146 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 		}
 	}
 
-	public void setlayout(final int i) {
+	private class ImagePagerAdapter extends PagerAdapter {
+
+		private LayoutInflater inflater;
+
+		ImagePagerAdapter() {
+			inflater = getLayoutInflater();
+		}
+
+		public void finishUpdate(View container) {
+		}
+
+		public int getCount() {
+			return number;
+		}
+
+		public boolean isViewFromObject(View view, Object object) {
+			return view.equals(object);
+		}
+
+		public void restoreState(Parcelable state, ClassLoader loader) {
+		}
+
+		public Parcelable saveState() {
+			return null;
+		}
+
+		public void startUpdate(View container) {
+		}
+
+		public void destroyItem(View arg0, int arg1, Object arg2) {
+			((ViewPager) arg0).removeView((View) arg2);
+
+		}
+
+		public int getItemPosition(Object object) {
+			return POSITION_NONE;
+		}
+
+		public Object instantiateItem(View arg0, int arg1) {
+			View nl = inflater.inflate(R.layout.record_page_item,
+					(ViewGroup) arg0, false);
+			if (work_list.size() > 0) {
+				TextView time = (TextView) nl.findViewById(R.id.start_date);
+				time.setText(work_list.get(arg1).getStart_time() + " 发布");
+				LinearLayout mylayout = (LinearLayout) nl
+						.findViewById(R.id.mylayout);
+				linearList.clear();
+				linear_item = 0;
+				final List<Integer> questiontype_list = work_list.get(arg1)
+						.getQuestion_types();
+				cardType = work_list.get(arg1).getNumber() < 20 ? true : false;
+				for (int i = 0; i < work_list.get(arg1).getQuestion_types()
+						.size(); i++) {
+					setlayout(i, mylayout, work_list.get(arg1),
+							questiontype_list, work_list.get(arg1)
+									.getQuestion_types().size());
+				}
+			}
+			((ViewPager) arg0).addView(nl, 0);
+			return nl;
+		}
+
+	}
+
+	public void setlayout(final int i, LinearLayout mylayout,
+			final WorkPoJo pojo, final List<Integer> questiontype_list,
+			final int number) {
 		View view = View.inflate(this, R.layout.work_item, null);
 		RelativeLayout layout = (RelativeLayout) view.findViewById(R.id.layout);
 		ImageView imageView = (ImageView) view.findViewById(R.id.image);
 		TextView work_name = (TextView) view.findViewById(R.id.work_name);
 		TextView top = (TextView) view.findViewById(R.id.top);
-		top.setVisibility(View.GONE);
 		ImageView over_img = (ImageView) view.findViewById(R.id.over_img);
-		work_name.setText(namearr[questiontype_list.get(i)].toString());
-		layout.setOnClickListener(new View.OnClickListener() {
+		work_name.setText(namearr[pojo.getQuestion_types().get(i)].toString());
+		top.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View arg0) {
-				out_time = ExerciseBookTool.Comparison_Time(ExerciseBookTool
-						.getTimeIng(), work_list.get(0).getEnd_time());
-				Log.i("suanfa", ExerciseBookTool.getTimeIng() + "/"
-						+ work_list.get(0).getEnd_time() + "/" + out_time);
-				layout_index = i;
-				startDekaron(i);// 跳转到答题页面
+				Intent intent = new Intent(HomeWorkIngActivity.this,
+						RankingOfPointsActivity.class);
+				intent.putExtra("types", questiontype_list.get(i));
+				intent.putExtra("pub_id", Integer.valueOf(pojo.getId()));
+				startActivity(intent);
 			}
 		});
-		// top.setOnClickListener(new View.OnClickListener() {
-		// public void onClick(View arg0) {
-		// Intent intent = new Intent(HomeWorkIngActivity.this,
-		// RankingOfPointsActivity.class);
-		// intent.putExtra("types", questiontype_list.get(i));
-		// intent.putExtra("pub_id", Integer.valueOf(eb.getWork_id()));
-		// startActivity(intent);
-		// }
-		// });
-		if (ExerciseBookTool.getExist(questiontype_list.get(i), finish_list)) {
-			typeList.add(true);
-			over_img.setVisibility(View.VISIBLE);
-			// top.setVisibility(View.VISIBLE);
-		} else {
-			typeList.add(false);
-			over_img.setVisibility(View.GONE);
-			// top.setVisibility(View.GONE);
-		}
+
+		layout.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View arg0) {
+				eb.setWork_number(number);
+				eb.setWork_id(work_list.get(pager.getCurrentItem()).getId()
+						+ "");
+				eb.setActivity_item(1);
+				typeList = ExerciseBookTool.getTypeList(pojo);
+				question_type = questiontype_list;
+				layout_index = i;
+				Log.i("suanfa", "worknumber:" + number);
+				Log.i("suanfa", "类型:" + typeList.size());
+				Log.i("suanfa", "任务ID:" + pojo.getId());
+				Log.i("suanfa", "保存路径:" + pathList.get(pager.getCurrentItem()));
+				Log.i("suanfa", "下载路径:" + pojo.getQuestion_packages_url());
+				Log.i("suanfa", "Question_types:"
+						+ pojo.getQuestion_types().size() + "/"
+						+ pojo.getQuestion_types().get(i));
+				Log.i("suanfa", "Finish_types:" + pojo.getFinish_types().size());
+				out_time = ExerciseBookTool.Comparison_Time(
+						ExerciseBookTool.getTimeIng(),
+						work_list.get(pager.getCurrentItem()).getEnd_time());
+				if (ExerciseBookTool.FileExist(
+						pathList.get(pager.getCurrentItem()), "questions.json")) {// 判断question文件是否存在
+					getJsonPath();
+					if (ExerciseBookTool.FileExist(
+							pathList.get(pager.getCurrentItem()), "student_"
+									+ eb.getUid() + ".json")) {// 判断answer文件是否存在
+						startDekaron(i);
+					} else {
+						Log.i("suanfa", "answer文件不存在,正在下载");
+						handler.sendEmptyMessage(4);
+					}
+				} else {
+					handler.sendEmptyMessage(3);
+				}
+			}
+		});
 
 		int imgid = 0;
 		imageView.setBackgroundResource(0);
 		try {// 利用java反射动态设置图片
 			imgid = (Integer) R.drawable.class.getField(
-					"img" + (questiontype_list.get(i) + 1)).get(null);
+					"img" + (pojo.getQuestion_types().get(i) + 1)).get(null);
 		} catch (Exception e) {
 			imgid = 0;
 		}
 		imageView.setBackgroundResource(imgid);
+
+		if (ExerciseBookTool.getExist(pojo.getQuestion_types().get(i),
+				pojo.getFinish_types())) {// 排行标志的隐藏与显示
+			over_img.setVisibility(View.VISIBLE);
+			top.setVisibility(View.VISIBLE);
+		} else {
+			over_img.setVisibility(View.GONE);
+			top.setVisibility(View.GONE);
+		}
 		AbsListView.LayoutParams param;
 		if (width == 1200) {
 			param = new AbsListView.LayoutParams(290, 300);
@@ -270,7 +368,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 		}
 		layout.setLayoutParams(param);
 		if (i == 0 || i % 3 == 0) {
-			LinearLayout linear = new LinearLayout(getApplicationContext());
+			LinearLayout linear = new LinearLayout(HomeWorkIngActivity.this);
 			linear.setOrientation(LinearLayout.HORIZONTAL);
 			LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT,
 					LayoutParams.WRAP_CONTENT);
@@ -288,6 +386,8 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	class get_newer_task implements Runnable {
 
 		public void run() {
+			pathList = new ArrayList<String>();
+			downloadList = new ArrayList<String>();
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("student_id", id);
 			map.put("school_class_id", school_class_id);
@@ -301,21 +401,27 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 					eb.setTrue_number(number.get(1));
 					eb.setTime_number(number.get(0));
 					if (work_list.size() != 0) {
-						eb.setWork_number(work_list.get(0).getQuestion_types()
-								.size());
-						cardType = work_list.get(0).getNumber() < 20 ? true
-								: false;
-						eb.setWork_id(work_list.get(0).getId() + "");
-						path = Environment.getExternalStorageDirectory() + "/"
-								+ "Exercisebook_app/" + eb.getUid() + "/"
-								+ eb.getClass_id() + "/" + eb.getWork_id();
-						eb.setPath(path);
-						url = IP + work_list.get(0).getQuestion_packages_url();
-						getJsonPath();
-						ExerciseBookTool.initAnswer(path, eb.getWork_id(),
-								eb.getUid());// 初始化answer
-
-						Log.i("suanfa", "555");
+						for (int i = 0; i < work_list.size(); i++) {
+							String path = Environment
+									.getExternalStorageDirectory()
+									+ "/"
+									+ "Exercisebook_app/"
+									+ eb.getUid()
+									+ "/"
+									+ eb.getClass_id()
+									+ "/"
+									+ work_list.get(i).getId();
+							String downPath = IP
+									+ work_list.get(i)
+											.getQuestion_packages_url();
+							pathList.add(path);
+							downloadList.add(downPath);
+							if (work_list.get(i).getUpdated_at().equals("null")) {// 如果Updated_at等于null说明第一次做
+								ExerciseBookTool.initAnswer(pathList.get(i),
+										work_list.get(i).getId() + "",
+										eb.getUid());// 初始化answer
+							}
+						}
 					}
 					handler.sendEmptyMessage(0);
 				} else {
@@ -329,61 +435,51 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 		}
 	}
 
-	// 跳转到挑战
-	/**
-	 * 0 =>听力 1=>朗读 2 =>十速 3=>选择 4=>连线 5=>完形 6=>排序
-	 * 
-	 * @param i
-	 */
-
-	public void startDekaron(int i) {
-		if (ExerciseBookTool.FileExist(path, "questions.json")) {// 判断question文件是否存在
-			if (ExerciseBookTool.FileExist(path, "student_" + eb.getUid()
-					+ ".json")) {// 判断answer文件是否存在
-				if (getUpdateTime()) {// 判断更新时间
-					handler.sendEmptyMessage(4);
-				} else {
-					eb.setActivity_item(0);
-					if (typeList.get(i) || out_time == false) {// 已完成
-						MyDialog(i);
-					} else {
-						if (cardType) {// 卡包是否小于20
-							status = 0;
-							Start_Acvivity(i);
-						} else {
-							Builder builder = new Builder(
-									HomeWorkIngActivity.this);
-							builder.setTitle("提示");
-							builder.setMessage("您的卡包已满,先清除几张再回来答题吧");
-							builder.setNegativeButton("确定", null);
-							builder.show();
-						}
-					}
-				}
-			} else {
-				handler.sendEmptyMessage(4);
-			}
-		} else {
-			handler.sendEmptyMessage(3);
-		}
-	}
-
 	public boolean getUpdateTime() {
-		if (!work_list.get(0).getUpdated_at().equals("null")) {// 如果Updated_at等于null说明第一次做
-			String answer_time = ExerciseBookTool.getAnswerTime(path
-					+ "/student_" + eb.getUid() + ".json");
-			Log.i("suanfa", "answertime:" + answer_time + "/"
-					+ work_list.get(0).getUpdated_at());
+		if (!work_list.get(pager.getCurrentItem()).getUpdated_at()
+				.equals("null")) {// 如果Updated_at等于null说明第一次做
+			String answer_time = ExerciseBookTool.getAnswerTime(pathList
+					.get(pager.getCurrentItem())
+					+ "/student_"
+					+ eb.getUid()
+					+ ".json");
+			Log.i("suanfa",
+					"answertime:"
+							+ answer_time
+							+ "/"
+							+ work_list.get(pager.getCurrentItem())
+									.getUpdated_at());
 			return ExerciseBookTool.Comparison_Time(answer_time,
-					work_list.get(0).getUpdated_at());
+					work_list.get(pager.getCurrentItem()).getUpdated_at());
 		}
 		return false;
 	}
 
-	public void Start_Acvivity(int i) {// 做题跳转
+	public void startDekaron(int i) {
+		if (getUpdateTime()) {
+			handler.sendEmptyMessage(4);
+		} else {
+			if (typeList.get(i) || out_time == false) {// 已完成
+				MyDialog(i, question_type);
+			} else {
+				if (cardType) {
+					status = 0;
+					Start_Acvivity(i, question_type);
+				} else {
+					Builder builder = new Builder(HomeWorkIngActivity.this);
+					builder.setTitle("提示");
+					builder.setMessage("您的卡包已满,先清除几张再回来答题吧");
+					builder.setNegativeButton("确定", null);
+					builder.show();
+				}
+			}
+		}
+	}
+
+	public void Start_Acvivity(int i, List<Integer> questiontype_list) {// 做题跳转
 		switch (questiontype_list.get(i)) {
 		case 0:
-			intent.setClass(this, AnswerDictationPrepareActivity.class);
+			intent.setClass(this, AnswerDictationBeginActivity.class);
 			break;
 		case 1:
 			intent.setClass(this, SpeakPrepareActivity.class);
@@ -404,20 +500,23 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 			intent.setClass(this, AnswerOrderActivity.class);
 			break;
 		}
+		Log.i("Max", json_list.size() + "");
+		Log.i("Max", questiontype_list.size() + "-" + questiontype_list.get(i));
 		intent.putExtra("json", json_list.get(questiontype_list.get(i)));
-		intent.putExtra("path", path + "/student_" + eb.getUid() + ".json");
+		intent.putExtra("path", pathList.get(pager.getCurrentItem())
+				+ "/student_" + eb.getUid() + ".json");
 		intent.putExtra("type", 0);// 0 今日任务列表跳转 1历史记录列表跳转
 		intent.putExtra("status", status);// 0表示第一次做 1表示重做 2历史
-		Log.i("aaa", json_list.get(questiontype_list.get(i)));
 		eb.setWork_end_dath(work_list.get(0).getEnd_time());
+		eb.setPath(pathList.get(pager.getCurrentItem()));
 		startActivity(intent);
-		HomeWorkIngActivity.this.finish();
+		this.finish();
 	}
 
-	public void Start_History_Acvivity(int i) {// 历史记录跳转
+	public void Start_History_Acvivity(int i, List<Integer> questiontype_list) {// 历史记录跳转
 		switch (questiontype_list.get(i)) {
 		case 0:
-			intent.setClass(this, AnswerDictationPrepareActivity.class);
+			intent.setClass(this, AnswerDictationBeginActivity.class);
 			break;
 		case 1:
 			intent.setClass(this, SpeakPrepareActivity.class);
@@ -439,22 +538,23 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 			break;
 		}
 		intent.putExtra("json", json_list.get(questiontype_list.get(i)));
-		intent.putExtra("path", path + "/student_" + eb.getUid() + ".json");
+		intent.putExtra("path", pathList.get(pager.getCurrentItem())
+				+ "/student_" + eb.getUid() + ".json");
 		intent.putExtra("type", 0);// 0 今日任务列表跳转 1历史记录列表跳转
 		intent.putExtra("status", status);// 0表示第一次做 1表示重做 2历史
-		Log.i("aaa", json_list.get(questiontype_list.get(i)));
 		eb.setWork_end_dath(work_list.get(0).getEnd_time());
+		eb.setPath(pathList.get(pager.getCurrentItem()));
 		startActivity(intent);
-		HomeWorkIngActivity.this.finish();
+		this.finish();
 	}
 
 	// 自定义dialog设置
-	private void MyDialog(final int type) {
+	private void MyDialog(final int type, final List<Integer> questiontype_list) {
 		// type :0表示退出 1表示结束
 		final Dialog dialog = new Dialog(this, R.style.Transparent);
 		dialog.setContentView(R.layout.my_dialog_main);
 		dialog.setCancelable(true);
-
+		Log.i("Ax", questiontype_list.size() + ",.,.");
 		ImageView close = (ImageView) dialog.findViewById(R.id.close);
 		close.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -467,14 +567,14 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 			public void onClick(View v) {
 				dialog.dismiss();
 				status = 2;
-				Start_History_Acvivity(type);
+				Start_History_Acvivity(type, questiontype_list);
 			}
 		});
 		working.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				dialog.dismiss();
 				status = 1;// 0表示第一次做 1表示重做 2历史
-				Start_Acvivity(type);
+				Start_Acvivity(type, questiontype_list);
 			}
 		});
 		dialog.show();
@@ -500,7 +600,6 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 			}
 		});
 		mDownloadDialog = builder.create();
-		mDownloadDialog.setCanceledOnTouchOutside(false);
 		mDownloadDialog.show();
 		// 下载文件
 		downloadApk();
@@ -524,13 +623,14 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 					// 创建输入流
 					InputStream is = conn.getInputStream();
 					Log.i("suanfa", "1====");
-					File file = new File(path);
+					File file = new File(pathList.get(pager.getCurrentItem()));
 					// 判断文件目录是否存在
 					if (!file.exists()) {
 						file.mkdir();
 					}
 					Log.i("suanfa", "2====");
-					File apkFile = new File(path, download_name);
+					File apkFile = new File(
+							pathList.get(pager.getCurrentItem()), download_name);
 					FileOutputStream fos = new FileOutputStream(apkFile);
 					int count = 0;
 					// 缓存
@@ -557,8 +657,10 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 					fos.close();
 					is.close();
 					if (download_name.equals("resourse.zip")) {
-						ExerciseBookTool
-								.unZip(path + "/" + download_name, path);
+						ExerciseBookTool.unZip(
+								pathList.get(pager.getCurrentItem()) + "/"
+										+ download_name,
+								pathList.get(pager.getCurrentItem()));
 						getJsonPath();
 					} else {
 						handler.sendEmptyMessage(6);
