@@ -16,17 +16,16 @@
 
     <LinearLayout
         android:id="@+id/answer_select_answerLinearLayout"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/answer_select_laba"
-        android:gravity="center_horizontal"
+        android:layout_centerHorizontal="true"
         android:orientation="vertical"
         android:paddingTop="25dp"
         android:visibility="gone" >
 
         <TextView
             android:id="@+id/answer_select_text"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:textColor="#595c5e"
