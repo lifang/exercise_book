@@ -54,7 +54,6 @@ public class RankingOfPointsActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);// 去掉标题栏
 		setContentView(R.layout.ranking_points);
-		memoryCache = HomePageMainActivity.instance.memoryCache;
 		Intent intent = getIntent();//
 		types = intent.getIntExtra("types", -1); // 获得上个页面传过来的
 		pub_id = intent.getIntExtra("pub_id", -1);
@@ -62,6 +61,7 @@ public class RankingOfPointsActivity extends Activity {
 		// 序号
 
 		exerciseBook = (ExerciseBook) getApplication();
+		memoryCache = exerciseBook.getMemoryCache();
 		rank_title = (TextView) findViewById(R.id.rank_title);
 		rank_title.setText(Urlinterface.namearr[types] + "当日排名");
 		rankingLv = (ListView) findViewById(R.id.rankingLv);
@@ -88,10 +88,12 @@ public class RankingOfPointsActivity extends Activity {
 		super.onResume();
 		JPushInterface.onResume(this);
 	}
+
 	protected void onPause() {
 		super.onPause();
 		JPushInterface.onPause(this);
 	}
+
 	Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -103,11 +105,12 @@ public class RankingOfPointsActivity extends Activity {
 					String status = obj.getString("status");
 					String notice = obj.getString("notice");
 					if ("success".equals(status)) {
-						
-//						{"status":"success","notice":"\u83b7\u53d6\u5b8c\u6210\uff01",
-//						"record_details":[{"avatar_url":"/assets/default_avater.jpg","name":"nan","score":1,"student_id":1}]}
-						
-						JSONArray jsonarray = obj.getJSONArray("record_details");
+
+						// {"status":"success","notice":"\u83b7\u53d6\u5b8c\u6210\uff01",
+						// "record_details":[{"avatar_url":"/assets/default_avater.jpg","name":"nan","score":1,"student_id":1}]}
+
+						JSONArray jsonarray = obj
+								.getJSONArray("record_details");
 						for (int i = 0; i < jsonarray.length(); i++) {
 							JSONObject jsonobject2 = jsonarray.getJSONObject(i);
 							String avatar_url = jsonobject2
@@ -117,8 +120,9 @@ public class RankingOfPointsActivity extends Activity {
 							rankinglist
 									.add(new Ranking(avatar_url, name, point));
 						}
-					}else {
-						Toast.makeText(getApplicationContext(), notice, 0).show();
+					} else {
+						Toast.makeText(getApplicationContext(), notice, 0)
+								.show();
 					}
 				} catch (JSONException e) {
 					Toast.makeText(getApplicationContext(), "获取排名失败", 0).show();

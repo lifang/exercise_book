@@ -18,6 +18,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginRight="15dp"
         android:layout_marginTop="5dp"
-        android:src="@drawable/mark" />
+        android:src="@drawable/mark"
+        android:visibility="gone" />
 
 </RelativeLayout>
