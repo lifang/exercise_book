@@ -1,11 +1,11 @@
 package com.comdosoft.ExerciseBook.tools;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -44,7 +44,6 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
@@ -60,7 +59,6 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.comdosoft.ExerciseBook.MCardBagActivity;
 import com.comdosoft.ExerciseBook.pojo.AnswerJson;
 import com.comdosoft.ExerciseBook.pojo.AnswerPojo;
 import com.comdosoft.ExerciseBook.pojo.Answer_QuestionsPojo;
@@ -161,6 +159,7 @@ public class ExerciseBookTool implements Urlinterface {
 	 * @throws FileNotFoundException
 	 * @throws Exception
 	 */
+	@SuppressWarnings("resource")
 	public static void unZip(String unZipfileName, String mDestPath)
 			throws Exception {
 		FileOutputStream fileOut = null;
@@ -684,8 +683,7 @@ public class ExerciseBookTool implements Urlinterface {
 			url_con.getOutputStream().write(b, 0, b.length);
 			url_con.getOutputStream().flush();
 			url_con.getOutputStream().close();
-			Log.i("linshi","linshi-------dopost---try" 
-					);
+			Log.i("linshi", "linshi-------dopost---try");
 			InputStream in = url_con.getInputStream();
 			BufferedReader rd = new BufferedReader(new InputStreamReader(in,
 					"UTF-8"));
@@ -694,7 +692,7 @@ public class ExerciseBookTool implements Urlinterface {
 			in.close();
 			Log.i("linshi", tempLine);
 		} catch (IOException e) {
-			 Log.i("linshi", "发生异常");
+			Log.i("linshi", "发生异常");
 			e.printStackTrace();
 		}
 		Log.i("linshi", tempLine);

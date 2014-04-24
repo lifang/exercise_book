@@ -106,6 +106,7 @@ public class AnswerSelectActivity extends AnswerBaseActivity implements
 			answerLaba.setVisibility(View.VISIBLE);
 			if (content != null && !content.equals("")) {
 				answerText.setText(content);
+				answerText.setVisibility(View.VISIBLE);
 				answerImg.setVisibility(View.GONE);
 				answer_select_answerLinearLayout.setVisibility(View.VISIBLE);
 			}

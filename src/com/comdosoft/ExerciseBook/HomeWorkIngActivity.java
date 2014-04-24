@@ -63,8 +63,6 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	private List<Integer> questiontype_list = new ArrayList<Integer>();
 	private List<Integer> finish_list = new ArrayList<Integer>();
 	private List<WorkPoJo> work_list = new ArrayList<WorkPoJo>();
-	private TextView start_time;
-	private TextView end_time;
 	static HomeWorkIngActivity instance = null;
 	private String path;
 	private String downPath;
@@ -81,6 +79,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	private boolean out_time;
 	private int layout_index;// 记录点击
 	private int width;
+	private TextView time;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			Builder builder = new Builder(HomeWorkIngActivity.this);
@@ -89,9 +88,9 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 			case 0:
 				prodialog.dismiss();
 				if (work_list.size() != 0) {
-					start_time.setText("发布时间为"
-							+ work_list.get(0).getStart_time());
-					end_time.setText(work_list.get(0).getEnd_time());
+					// start_time.setText("发布时间为"
+					// + work_list.get(0).getStart_time());
+					time.setText(work_list.get(0).getEnd_time());
 					questiontype_list = work_list.get(0).getQuestion_types();
 					finish_list = work_list.get(0).getFinish_types();
 					eb.setToday_newer_id(work_list.get(0).getId());
@@ -182,8 +181,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	// 初始化
 	public void initialize() {
 		mylayout = (LinearLayout) findViewById(R.id.mylayout);
-		start_time = (TextView) findViewById(R.id.start_time);
-		end_time = (TextView) findViewById(R.id.end_time);
+		time = (TextView) findViewById(R.id.time);
 	}
 
 	private void getJsonPath() {
@@ -262,7 +260,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 		if (width == 1200) {
 			param = new AbsListView.LayoutParams(290, 300);
 		} else {
-			param = new AbsListView.LayoutParams(210, 220);
+			param = new AbsListView.LayoutParams(190, 200);
 		}
 		layout.setLayoutParams(param);
 		if (i == 0 || i % 3 == 0) {

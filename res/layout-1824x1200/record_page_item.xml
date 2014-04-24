@@ -5,13 +5,30 @@
     android:gravity="center_horizontal"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/start_date"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50px"
-        android:textColor="#9EA4AB"
-        android:textSize="33px" />
+        android:layout_marginTop="40px"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/chapter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="第一章第一节"
+            android:textColor="#727271"
+            android:textSize="14dp" />
+
+        <TextView
+            android:id="@+id/start_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="发布日期 ---"
+            android:textColor="#727271"
+            android:textSize="14dp" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/mylayout"

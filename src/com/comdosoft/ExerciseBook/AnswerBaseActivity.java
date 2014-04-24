@@ -564,6 +564,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 								mHandler.sendEmptyMessage(4);
 							}
 							Del_Prop();// 清除道具列表
+							// UpdateCardNumber();
 						}
 					}
 				} catch (Exception e) {

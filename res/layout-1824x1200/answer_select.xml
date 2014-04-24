@@ -1,25 +1,28 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="#eeecec"
     android:gravity="center_horizontal"
     android:orientation="vertical" >
 
+    <ImageView
+        android:id="@+id/answer_select_laba"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/xiao2"
+        android:visibility="visible" />
+
     <LinearLayout
         android:id="@+id/answer_select_answerLinearLayout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingLeft="20dp"
-        android:paddingTop="20dp"
+        android:layout_toRightOf="@id/answer_select_laba"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingTop="25dp"
         android:visibility="gone" >
-
-        <ImageView
-            android:id="@+id/answer_select_img"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_marginRight="10dp"
-            android:src="@drawable/test" />
 
         <TextView
             android:id="@+id/answer_select_text"
@@ -28,14 +31,22 @@
             android:text="This is an ____ apple?"
             android:textColor="#595c5e"
             android:textSize="24dp" />
+
+        <ImageView
+            android:id="@+id/answer_select_img"
+            android:layout_width="150dp"
+            android:layout_height="150dp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:layout_below="@id/answer_select_answerLinearLayout"
+        android:layout_marginTop="25dp"
+        android:gravity="center_horizontal"
         android:orientation="horizontal"
         android:paddingLeft="58px"
-         android:paddingRight="58px"
+        android:paddingRight="58px"
         android:paddingTop="58px" >
 
         <ImageView
@@ -43,12 +54,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="29px"
-            android:src="@drawable/laba1"
+            android:src="@drawable/xiao2"
             android:visibility="visible" />
 
         <ListView
             android:id="@+id/answer_select_listview"
-            android:layout_width="fill_parent"
+            android:layout_width="400dp"
             android:layout_height="fill_parent"
             android:cacheColorHint="#00000000"
             android:divider="@null"
@@ -57,4 +68,4 @@
             android:scrollbars="none" />
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>
