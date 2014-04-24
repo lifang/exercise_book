@@ -148,13 +148,7 @@ public class CalendarAdapter extends BaseAdapter {
 					R.layout.calendar_item, null);
 		}
 		TextView textView = (TextView) convertView.findViewById(R.id.tvtext);
-		ImageView status = (ImageView) convertView.findViewById(R.id.status);
-		for (int i = 0; i < datelist.size(); i++) {
-			Log.i("Ax", datelist.get(i).getStart_time());
-			if (isLeapyear) {
 
-			}
-		}
 		String d = dayNumber[position].split("\\.")[0];
 		String dv = dayNumber[position].split("\\.")[1];
 
@@ -165,7 +159,25 @@ public class CalendarAdapter extends BaseAdapter {
 				Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 		textView.setText(sp);
 		textView.setTextColor(0xffABEBD0);
-
+		ImageView status = (ImageView) convertView.findViewById(R.id.status);
+		StringBuffer dateTime = new StringBuffer(showYear);
+		if (showMonth.length() < 2) {
+			dateTime.append("-").append("0" + showMonth);
+		} else {
+			dateTime.append("-").append(showMonth);
+		}
+		if (sp.length() < 2) {
+			dateTime.append("-").append("0" + sp);
+		} else {
+			dateTime.append("-").append(sp);
+		}
+		Log.i("Ax", dateTime.toString() + "==");
+		for (int i = 0; i < datelist.size(); i++) {
+			Log.i("Ax", datelist.get(i).getStart_time());
+			if (datelist.get(i).getStart_time().contains(dateTime.toString())) {
+				status.setVisibility(View.VISIBLE);
+			}
+		}
 		if (position < daysOfMonth + dayOfWeek && position >= dayOfWeek) {
 			// 当前月信息显示
 			textView.setTextColor(Color.WHITE);// 当月字体设黑

@@ -80,6 +80,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	private int layout_index;// 记录点击
 	private int width;
 	private TextView time;
+	private TextView chapter;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			Builder builder = new Builder(HomeWorkIngActivity.this);
@@ -100,9 +101,13 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 						}
 					} else {
 						mylayout.setVisibility(View.GONE);
+						time.setVisibility(View.GONE);
+						chapter.setVisibility(View.GONE);
 					}
 				} else {
 					mylayout.setVisibility(View.GONE);
+					time.setVisibility(View.GONE);
+					chapter.setVisibility(View.GONE);
 				}
 				break;
 			case 1:
@@ -181,6 +186,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	// 初始化
 	public void initialize() {
 		mylayout = (LinearLayout) findViewById(R.id.mylayout);
+		chapter = (TextView) findViewById(R.id.chapter);
 		time = (TextView) findViewById(R.id.time);
 	}
 

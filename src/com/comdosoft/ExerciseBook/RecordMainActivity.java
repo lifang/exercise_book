@@ -129,7 +129,6 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 					left.setVisibility(View.VISIBLE);
 					right.setVisibility(View.VISIBLE);
 				}
-				initDate();
 				break;
 			case 1:
 				prodialog.dismiss();
@@ -182,6 +181,9 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 						pathList.get(pager.getCurrentItem()) + "/student_"
 								+ eb.getUid() + ".json");
 				startDekaron(layout_index);
+				break;
+			case 8:
+				initDate();
 				break;
 			}
 		};
@@ -695,6 +697,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 									work_list.get(i).getId() + "", eb.getUid());// 初始化answer
 						}
 					}
+					handler.sendEmptyMessage(8);
 					handler.sendEmptyMessage(0);
 				} else {
 					notice = obj.getString("notice");
@@ -879,10 +882,6 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 					String scheduleMonth = calV.getShowMonth();
 					date = scheduleYear + "-" + scheduleMonth + "-"
 							+ scheduleDay;
-					Toast.makeText(
-							RecordMainActivity.this,
-							scheduleYear + "-" + scheduleMonth + "-"
-									+ scheduleDay, Toast.LENGTH_SHORT).show();
 					date_ll.setVisibility(View.GONE);
 					date_type = false;
 					prodialog.show();

@@ -104,7 +104,7 @@ public class AnswerOrderActivity extends AnswerBaseActivity {
 		mAnswerList.clear();
 		for (int i = 0; i < mSubjectEditList.size(); i++) {
 			EditText et = mSubjectEditList.get(i);
-			et.setText(answerArr[i]);
+			et.setText(isEndSymbol(answerArr[i]));
 			// et.setBackgroundResource(R.drawable.answer_wire_item_check_style);
 
 			TextView tv = mOptionTextList.get(i);
