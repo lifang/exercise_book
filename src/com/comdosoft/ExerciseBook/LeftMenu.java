@@ -166,6 +166,19 @@ public class LeftMenu extends Activity implements Urlinterface {
 			}
 		});
 		ll2.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				LeftMenu.this.finish();
+				overridePendingTransition(R.anim.slide_in_left,
+						R.anim.slide_out_right);
+				eb.setMneu(true);
+				eb.setMenu_num(2);
+				clearActivity();
+				Intent intent = new Intent(LeftMenu.this,
+						HomePageMainActivity.class);
+				startActivity(intent);
+			}
+		});
+		ll3.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
 				LeftMenu.this.finish();
@@ -173,7 +186,7 @@ public class LeftMenu extends Activity implements Urlinterface {
 						R.anim.slide_out_right);
 				Intent intent = new Intent(LeftMenu.this,
 						ReplyListViewActivity.class);
-				eb.setMenu_num(2);
+				eb.setMenu_num(3);
 				clearActivity();
 				startActivity(intent);
 				eb.setMneu(true);
@@ -184,13 +197,13 @@ public class LeftMenu extends Activity implements Urlinterface {
 			}
 
 		});
-		ll3.setOnClickListener(new OnClickListener() {
+		ll4.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
 				LeftMenu.this.finish();
 				overridePendingTransition(R.anim.slide_in_left,
 						R.anim.slide_out_right);
-				eb.setMenu_num(3);
+				eb.setMenu_num(4);
 				eb.setMneu(true);
 				clearActivity();
 				Intent intent = new Intent(LeftMenu.this,
@@ -198,19 +211,7 @@ public class LeftMenu extends Activity implements Urlinterface {
 				startActivity(intent);
 			}
 		});
-		ll4.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				LeftMenu.this.finish();
-				overridePendingTransition(R.anim.slide_in_left,
-						R.anim.slide_out_right);
-				eb.setMneu(true);
-				eb.setMenu_num(4);
-				clearActivity();
-				Intent intent = new Intent(LeftMenu.this,
-						HomePageMainActivity.class);
-				startActivity(intent);
-			}
-		});
+
 		ll6.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				LeftMenu.this.finish();

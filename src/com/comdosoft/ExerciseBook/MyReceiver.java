@@ -127,7 +127,7 @@ public class MyReceiver extends BroadcastReceiver implements Urlinterface {
 					editor0.putString(school_class_id + "ReplyMenu", "none");
 					editor0.commit();
 					// eb.setMneu(true);
-					eb.setMenu_num(2);
+					eb.setMenu_num(3);
 					Intent intent0 = new Intent(context, MessageActivity.class);
 					intent0.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					context.startActivity(intent0);
@@ -147,7 +147,7 @@ public class MyReceiver extends BroadcastReceiver implements Urlinterface {
 					editor1.putString(school_class_id + "ReplyMenu", "none");
 					editor1.commit();
 					// eb.setMneu(true);
-					eb.setMenu_num(2);
+					eb.setMenu_num(3);
 					Intent intent2 = new Intent(context,
 							ReplyListViewActivity.class);
 					intent2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
