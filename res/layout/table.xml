@@ -34,15 +34,14 @@
             android:id="@+id/activity_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="100px"
-            android:layout_marginTop="30px"
+            android:layout_marginLeft="89.5px"
+            android:layout_marginTop="37.68px"
             android:gravity="center"
             android:maxLines="1"
             android:text="丁作强"
             android:textColor="@color/white"
-            android:textSize="21px" />
-
-        <LinearLayout
+            android:textSize="16.8px" />
+        <LinearLayout
             android:layout_width="231px"
             android:layout_height="fill_parent"
             android:layout_alignParentRight="true"

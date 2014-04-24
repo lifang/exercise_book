@@ -13,41 +13,52 @@
 
         <ImageView
             android:id="@+id/question_number"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="80dp"
+            android:layout_height="80dp" />
     </LinearLayout>
-
-    <Button
-        android:id="@+id/one_btn"
-        android:layout_width="650px"
-        android:layout_height="220px"
-        android:layout_marginTop="80px"
-        android:background="@drawable/loginbtn_hui"
-        android:gravity="center"
-        android:onClick="btnonclick"
-        android:text="True"
-        android:textColor="@color/white"
-        android:textSize="130px" />
 
     <TextView
         android:id="@+id/question"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50px"
+        android:padding="20dp"
         android:text="马龙是狗？"
         android:textColor="@color/question_color"
-        android:textSize="60px" />
+        android:textSize="70px" />
 
-    <Button
-        android:id="@+id/two_btn"
-        android:layout_width="650px"
-        android:layout_height="220px"
-        android:layout_marginTop="50px"
-        android:background="@drawable/loginbtn_hui"
-        android:gravity="center"
-        android:onClick="btnonclick"
-        android:text="False"
-        android:textColor="@color/white"
-        android:textSize="130px" />
+    <LinearLayout
+        android:layout_width="500dp"
+        android:layout_height="150px"
+        android:layout_marginTop="100dp"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/one_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@drawable/loginbtn_hui"
+            android:gravity="center"
+            android:onClick="btnonclick"
+            android:text="True"
+            android:textColor="@color/white"
+            android:textSize="65px" />
+
+        <View
+            android:layout_width="20dp"
+            android:layout_height="fill_parent" />
+
+        <Button
+            android:id="@+id/two_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@drawable/loginbtn_hui"
+            android:gravity="center"
+            android:onClick="btnonclick"
+            android:text="False"
+            android:textColor="@color/white"
+            android:textSize="65px" />
+    </LinearLayout>
 
 </LinearLayout>

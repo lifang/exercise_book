@@ -28,7 +28,7 @@
             android:layout_marginTop="20dp"
             android:background="#1E7552"
             android:gravity="center"
-            android:text="查看做题记录"
+            android:text="查看答案"
             android:textColor="@color/white"
             android:textSize="18sp" />
 
