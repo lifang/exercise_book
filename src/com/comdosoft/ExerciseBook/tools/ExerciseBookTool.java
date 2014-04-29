@@ -1,11 +1,11 @@
 package com.comdosoft.ExerciseBook.tools;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -44,6 +44,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
@@ -57,7 +58,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.comdosoft.ExerciseBook.pojo.AnswerJson;
 import com.comdosoft.ExerciseBook.pojo.AnswerPojo;
@@ -71,7 +71,7 @@ public class ExerciseBookTool implements Urlinterface {
 	private static int connectTimeOut = 5000;
 	private static int readTimeOut = 10000;
 	private static String requestEncoding = "UTF-8";
-
+	private static Bitmap bm = null;
 	public static String timeSecondToString(int t) {
 		StringBuffer sb = new StringBuffer();
 		if (t >= 60) {
@@ -843,6 +843,7 @@ public class ExerciseBookTool implements Urlinterface {
 				case 0:
 					Drawable drawable = (Drawable) msg.obj;
 					imageView.setImageDrawable(drawable);
+				 
 					break;
 				default:
 					break;
@@ -854,45 +855,49 @@ public class ExerciseBookTool implements Urlinterface {
 			public void run() {
 				HttpClient hc = new DefaultHttpClient();
 
-				// HttpGet hg = new HttpGet(url);//
 				Drawable face_drawable;
 				try {
 					// HttpResponse hr = hc.execute(hg);
 					// Bitmap bm = BitmapFactory.decodeStream(hr.getEntity()
 					// .getContent());
-					Bitmap bm = getURLimage(url);
-					int itemw = 159;
-					int itemh = 159;
-					int zoom = 2;
-					// if (bm != null)
-					// {
-					// int h = bm.getHeight();
-					// int w = bm.getWidth();
-					//
-					// float ft = (float) ((float) w / (float) h);
-					// float fs = (float) ((float) itemw / (float) itemh);
-					//
-					// int neww = ft >= fs ? itemw * zoom : (int) (itemh * zoom
-					// * ft);
-					// int newh = ft >= fs ? (int) (itemw * zoom / ft) : itemh *
-					// zoom;
-					//
-					// float scaleWidth = ((float) neww) / w;
-					// float scaleHeight = ((float) newh) / h;
-					//
-					// Matrix matrix = new Matrix();
-					// matrix.postScale(scaleWidth, scaleHeight);
-					// bm = Bitmap.createBitmap(bm, 0, 0, w, h, matrix, true);
-					//
-					// }
-					memoryCache.addBitmapToCache(url, bm);
-					face_drawable = new BitmapDrawable(bm);
-					Message msg = new Message();// 创建Message 对象
-					msg.what = 0;
-					msg.obj = face_drawable;
-					mHandler.sendMessage(msg);
+					// Bitmap bm = getURLimage(url);
+
+					Log.i("linshi------------", url);
+					
+					URL myurl = new URL(url);
+					// 获得连接
+					HttpURLConnection conn = (HttpURLConnection) myurl
+							.openConnection();
+					conn.setConnectTimeout(6000);// 设置超时
+					conn.setDoInput(true);
+					conn.setUseCaches(false);// 不缓存
+					conn.connect();
+					InputStream is = conn.getInputStream();// 获得图片的数据流
+//						bm =decodeSampledBitmapFromStream(is,150,150);
+					
+					BitmapFactory.Options options = new BitmapFactory.Options();
+					options.inJustDecodeBounds = false;
+					// options.outWidth = 159;
+					// options.outHeight = 159;
+					options.inSampleSize = 2;
+					bm = BitmapFactory.decodeStream(is, null, options);
+					
+					is.close();
+					if (bm!=null) {
+						Log.i("linshi", bm.getWidth()+"---"+bm.getHeight());
+						memoryCache.addBitmapToCache(url, bm);
+						face_drawable = new BitmapDrawable(bm);
+						Message msg = new Message();// 创建Message 对象
+						msg.what = 0;
+						msg.obj = face_drawable;
+//						msg.obj = bm;
+						mHandler.sendMessage(msg);
+					
+					}
+					 
 				} catch (Exception e) {
-					Toast.makeText(null, "aa", Toast.LENGTH_SHORT).show();
+					Log.i("linshi", "发生异常");
+					// Log.i("linshi", url);
 				}
 
 			}
@@ -938,4 +943,59 @@ public class ExerciseBookTool implements Urlinterface {
 		}
 		return bmp;
 	}
+	
+	public static synchronized Bitmap decodeSampledBitmapFromStream(  
+	        InputStream in, int reqWidth, int reqHeight) {  
+	  
+	    // First decode with inJustDecodeBounds=true to check dimensions  
+	    final BitmapFactory.Options options = new BitmapFactory.Options();  
+	    options.inJustDecodeBounds = true;  
+	    BitmapFactory.decodeStream(in, null, options);  
+	  
+	    // Calculate inSampleSize  
+	    options.inSampleSize = calculateInSampleSize(options, reqWidth,  
+	            reqHeight);  
+	  
+	    // Decode bitmap with inSampleSize set  
+	    options.inJustDecodeBounds = false;  
+	    return BitmapFactory.decodeStream(in, null, options);  
+	}  
+	  
+	/** 
+	 * Calculate an inSampleSize for use in a {@link BitmapFactory.Options} 
+	 * object when decoding bitmaps using the decode* methods from 
+	 * {@link BitmapFactory}. This implementation calculates the closest 
+	 * inSampleSize that will result in the final decoded bitmap having a width 
+	 * and height equal to or larger than the requested width and height. This 
+	 * implementation does not ensure a power of 2 is returned for inSampleSize 
+	 * which can be faster when decoding but results in a larger bitmap which 
+	 * isn't as useful for caching purposes. 
+	 *  
+	 * @param options 
+	 *            An options object with out* params already populated (run 
+	 *            through a decode* method with inJustDecodeBounds==true 
+	 * @param reqWidth 
+	 *            The requested width of the resulting bitmap 
+	 * @param reqHeight 
+	 *            The requested height of the resulting bitmap 
+	 * @return The value to be used for inSampleSize 
+	 */  
+	public static int calculateInSampleSize(BitmapFactory.Options options,  
+	        int reqWidth, int reqHeight) {  
+	    // Raw height and width of image  
+	    final int height = options.outHeight;  
+	    final int width = options.outWidth;  
+	    int inSampleSize = 1;  
+	  
+	    //先根据宽度进行缩小  
+	    while (width / inSampleSize > reqWidth) {  
+	        inSampleSize++;  
+	    }  
+	    //然后根据高度进行缩小  
+	    while (height / inSampleSize > reqHeight) {  
+	        inSampleSize++;  
+	    }  
+	    return inSampleSize;  
+	}  
+	
 }

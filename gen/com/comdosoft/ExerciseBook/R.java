@@ -664,6 +664,7 @@ public final class R {
         public static final int nextstep=0x7f0a0055;
         public static final int nicheng=0x7f0a0003;
         public static final int null_message=0x7f0a0059;
+        public static final int null_message2=0x7f0a005a;
         public static final int nulls=0x7f0a0050;
         public static final int prop_number_error=0x7f0a004f;
         public static final int pull_to_refresh_footer_pull_label=0x7f0a0016;

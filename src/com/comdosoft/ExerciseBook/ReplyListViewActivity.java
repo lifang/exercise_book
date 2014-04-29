@@ -22,6 +22,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
@@ -29,53 +30,47 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import cn.jpush.android.api.JPushInterface;
 
-import com.comdosoft.ExerciseBook.ReplyListView.IXListViewListener;
+import com.comdosoft.ExerciseBook.MessageActivity.ViewHolder;
 import com.comdosoft.ExerciseBook.pojo.Reply;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
 import com.comdosoft.ExerciseBook.tools.ImageMemoryCache;
 import com.comdosoft.ExerciseBook.tools.OpenInputMethod;
+import com.comdosoft.ExerciseBook.tools.PullToRefreshView;
+import com.comdosoft.ExerciseBook.tools.PullToRefreshView.OnFooterRefreshListener;
+import com.comdosoft.ExerciseBook.tools.PullToRefreshView.OnHeaderRefreshListener;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
-
 
 /**
  * @作者 丁作强
- * @时间 2014-4-17 下午12:12:51
+ * @时间 2014-4-29 上午9:50:55
  */
 public class ReplyListViewActivity extends Table_TabHost implements
-		IXListViewListener, Urlinterface, OnGestureListener {
-	private ReplyListView mListView;
+		OnHeaderRefreshListener, OnFooterRefreshListener, Urlinterface,
+		OnGestureListener {
 	private List<Reply> replyList = new ArrayList<Reply>();
-	private Handler mHandler;
-	private int start = 0;
 	private int page = 1;
-	private static int refreshCnt = 0;
 	private String user_id;
 	private String school_class_id;
 	private int mShowPosition = -1;
 	private Boolean isShow = false;
-	ReplyAdapter madapter = new ReplyAdapter();
 	private GestureDetector gd;
 	private final char FLING_CLICK = 0;
 	private final char FLING_LEFT = 1;
 	private final char FLING_RIGHT = 2;
 	private char flingState = FLING_CLICK;
+	private List<HorizontalScrollView> HorizontalScrollView_list;// 主消息 滑动块 集合
+	public List<Boolean> gk_list;// 主消息 点击操作 开关集合
 	private String replyContent;
 	private String micropost_id;
 	private String reciver_id;
@@ -91,7 +86,7 @@ public class ReplyListViewActivity extends Table_TabHost implements
 	private Handler handler1 = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
-			case 0:
+			case 0://   第一次加载
 				prodialog.dismiss();
 				final String json_all2 = (String) msg.obj;
 
@@ -100,50 +95,75 @@ public class ReplyListViewActivity extends Table_TabHost implements
 					replyList = new ArrayList<Reply>();
 					getNewsJson(json_all2);
 				}
-				int a = replyList.size();
-				if (a == 0) {
-					Toast.makeText(ReplyListViewActivity.this, "暂无任何通知",
-							Toast.LENGTH_SHORT).show();
-				} else {
-					mListView.setAdapter(madapter);
-				}
-				onLoad();
+				init();
 
 				break;
-			case 1:
-				Toast.makeText(ReplyListViewActivity.this, "未开启网络",
-						Toast.LENGTH_SHORT).show();
+			case 1://   刷新
+//				focus = -1;
+				replyList.clear();
+				click_list();
+				final String json_all = (String) msg.obj;
+				getNewsJson(json_all);
+				if (replyList.size() != 0) {
+					for (int i = 0; i < replyList.size(); i++) {
+						setlayout(i);
+					}
+					class_middle_null_message.setVisibility(View.GONE);
+				} else {
+					class_middle_null_message.setVisibility(View.VISIBLE);
+				}
+				mPullToRefreshView.onHeaderRefreshComplete();
 				break;
-			case 2:
+			case 2: //  回复
 				Log.i("aa", String.valueOf(msg.obj));
 				Toast.makeText(ReplyListViewActivity.this,
 						String.valueOf(msg.obj), Toast.LENGTH_SHORT).show();
 				break;
-			case 3:
+			case 3://  删除
 				prodialog.dismiss();
-				// madapter.notifyDataSetChanged();
-				mListView.setAdapter(madapter);
+				click_list();
+				if (replyList.size() != 0) {
+					for (int i = 0; i < replyList.size(); i++) {
+						setlayout(i);
+					}
+					class_middle_null_message.setVisibility(View.GONE);
+				} else {
+					class_middle_null_message.setVisibility(View.VISIBLE);
+				}
 				Toast.makeText(ReplyListViewActivity.this,
 						String.valueOf(msg.obj), Toast.LENGTH_SHORT).show();
+				
 				break;
-			case 4:
+			case 4: //  加载更多
 				final String json4 = (String) msg.obj;
 
 				if (json4.length() == 0) {
 				} else {
 					getNewsJson(json4);
 				}
-				handler.post(runnableUi);
-				// madapter.notifyDataSetChanged();
-				// onLoad();
+				if (replyList.size() != 0) {
+					for (int i = list_item; i < replyList.size(); i++) {
+						setlayout(i);
+					}
+					class_middle_null_message.setVisibility(View.GONE);
+				} else {
+					class_middle_null_message.setVisibility(View.VISIBLE);
+				}
+				mPullToRefreshView.onFooterRefreshComplete();
+				break;
+			case 7:
+				Toast.makeText(getApplicationContext(),
+						ExerciseBookParams.INTERNET, Toast.LENGTH_SHORT).show();
 				break;
 			}
 		}
 	};
 	private Handler handler = null;
-	private ImageLoadingListener animateFirstListener = new AnimateFirstDisplayListener();
-	private DisplayImageOptions options;
-	public ImageLoader imageLoader;
+
+	public PullToRefreshView mPullToRefreshView;
+	public LinearLayout Linear_layout;
+	private int list_item;// list集合的最后一位索引
+	private TextView class_middle_null_message;// 没有消息时显示 提示信息
 
 	/** Called when the activity is first created. */
 	@Override
@@ -158,8 +178,9 @@ public class ReplyListViewActivity extends Table_TabHost implements
 		school_class_id = preferences.getString("school_class_id", "106");
 		handler = new Handler();
 		memoryCache = exerciseBook.getMemoryCache();
-		mListView = (ReplyListView) findViewById(R.id.xListView);
-		mListView.setPullLoadEnable(true);
+		class_middle_null_message = (TextView) findViewById(R.id.class_middle_null_message);
+		gk_list = new ArrayList<Boolean>();
+		HorizontalScrollView_list = new ArrayList<HorizontalScrollView>();
 		topTv2 = (TextView) findViewById(R.id.topTv2);
 		topTv2.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -170,13 +191,6 @@ public class ReplyListViewActivity extends Table_TabHost implements
 				overridePendingTransition(R.anim.fade, R.anim.hold);
 			}
 		});
-		imageLoader = ImageLoader.getInstance();
-		options = new DisplayImageOptions.Builder()
-				.showImageOnLoading(R.drawable.moren)
-				.showImageForEmptyUri(R.drawable.moren)
-				.showImageOnFail(R.drawable.moren).considerExifParams(true)
-				.displayer(new RoundedBitmapDisplayer(0)).cacheInMemory(false)
-				.cacheOnDisc(false).build();
 		if (ExerciseBookTool.isConnect(ReplyListViewActivity.this)) {
 			page = 1;
 			prodialog = new ProgressDialog(ReplyListViewActivity.this);
@@ -187,38 +201,229 @@ public class ReplyListViewActivity extends Table_TabHost implements
 			thread.start();
 
 		} else {
-			handler1.sendEmptyMessage(1);
-			onLoad();
+			handler1.sendEmptyMessage(7);
 		}
 		active = true;
 		instance = this;
 		exerciseBook = (ExerciseBook) getApplication();
 		exerciseBook.getActivityList().add(this);
-		mListView.setXListViewListener(this);
-		mListView.setDividerHeight(0);
-		mHandler = new Handler();
 	}
 
-	protected void onResume() {
-		super.onResume();
-		JPushInterface.onResume(this);
-	}
 
-	protected void onPause() {
-		super.onPause();
-		JPushInterface.onPause(this);
-	}
+	public void init() {
 
-	// 构建Runnable对象，在runnable中更新界面
-	Runnable runnableUi = new Runnable() {
-		@Override
-		public void run() {
-			// 更新界面
-			madapter.notifyDataSetChanged();
-			onLoad();
+		mPullToRefreshView = (PullToRefreshView) findViewById(R.id.main_pull_refresh_view);
+		mPullToRefreshView.setOnHeaderRefreshListener(this);
+		mPullToRefreshView.setOnFooterRefreshListener(this);
+		Linear_layout = (LinearLayout) findViewById(R.id.layout);
+		click_list();
+		Log.i("aaa", replyList.size() + "====");
+		if (replyList.size() != 0) {
+			for (int i = 0; i < replyList.size(); i++) {
+				setlayout(i);
+			}
+			class_middle_null_message.setVisibility(View.GONE);
+		} else {
+			class_middle_null_message.setVisibility(View.VISIBLE);
 		}
 
-	};
+	}
+
+	/**
+	 * 动态加载
+	 * 
+	 * */
+	public void setlayout(final int i) {
+
+		final Reply rep = replyList.get(i);
+		final View convertView = LayoutInflater
+				.from(ReplyListViewActivity.this).inflate(
+						R.layout.reply_layout_iteam, null);
+
+		final HorizontalScrollView hSView = (HorizontalScrollView) convertView
+				.findViewById(R.id.hsv2);
+
+		ImageView use_face = (ImageView) convertView
+				.findViewById(R.id.child_user_face);
+		TextView sender = (TextView) convertView
+				.findViewById(R.id.child_message_senderName);
+		TextView reciver = (TextView) convertView
+				.findViewById(R.id.child_message_reciverName);
+		TextView date = (TextView) convertView
+				.findViewById(R.id.child_message_date);
+		TextView content = (TextView) convertView
+				.findViewById(R.id.child_micropost_content);
+		ImageView imgbtn1 = (ImageView) convertView
+				.findViewById(R.id.child_micropost_huifu);
+		ImageView imgbtn2 = (ImageView) convertView
+				.findViewById(R.id.child_micropost_delete);
+		final View ll_action2 = convertView.findViewById(R.id.ll_action2);
+		DisplayMetrics dm = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(dm);
+		gk_list.add(true);
+		HorizontalScrollView_list.add(hSView);
+		hSView.setOnTouchListener(new View.OnTouchListener() {
+
+			public boolean onTouch(View v, MotionEvent event) {
+				int actionW = ll_action2.getWidth();
+				switch (event.getAction()) {
+				case MotionEvent.ACTION_UP:
+					
+
+					switch (flingState) {
+					case FLING_LEFT:
+					case FLING_RIGHT:
+					case FLING_CLICK:
+						if (gk_list.get(i) == true) {
+							hSView.smoothScrollTo(actionW, 0);
+							gk_list.set(i, false);
+							for (int j = 0; j < gk_list.size(); j++) {
+								if (j != i) {
+									gk_list.set(j, true);
+									HorizontalScrollView_list.get(j)
+											.smoothScrollTo(0, 0);
+								}
+							}
+						} else {
+							gk_list.set(i, true);
+							hSView.smoothScrollTo(0, 0);
+						}
+						break;
+					}
+				}
+				return false;
+
+			}
+		});
+		
+		
+		if (rep.getSender_avatar_url().length() > 4) {
+			// ExerciseBookTool.set_background(Urlinterface.IP
+			// + replyList.get(position).getSender_avatar_url(),
+			// holder.use_face);
+			String url = IP + rep.getSender_avatar_url();
+			Bitmap result = memoryCache.getBitmapFromCache(url);
+			if (result == null) {
+				ExerciseBookTool.set_bk(url, use_face, memoryCache);
+				Log.i("aa", " 适配器    网络网络   " + i);
+			} else {
+				Log.i("aa", " 缓存缓存缓存缓存   " + i);
+				use_face.setImageDrawable(new BitmapDrawable(result));
+			}
+			// String url = IP + rep.getSender_avatar_url();
+			// imageLoader.displayImage(url, holder.use_face, options,
+			// animateFirstListener);
+		}
+		imgbtn1.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				micropost_id = rep.getMicropost_id();
+				reciver_id = rep.getReciver_id();
+				reciver_types = rep.getReciver_types();
+				Intent intent = new Intent(ReplyListViewActivity.this,
+						OpenInputMethod.class);
+				startActivityForResult(intent, 0);
+			}
+		});
+		imgbtn2.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+
+				Dialog dialog = new AlertDialog.Builder(
+						ReplyListViewActivity.this)
+						.setTitle("提示")
+						.setMessage("您确认要删除么?")
+						.setPositiveButton("确认",
+								new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+										del(i);
+									}
+								})
+						.setNegativeButton("取消",
+								new DialogInterface.OnClickListener() {
+
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+										dialog.dismiss();
+									}
+								}).create();
+				dialog.show();
+
+			}
+		});
+		sender.setText(rep.getSender_name());
+		reciver.setText(rep.getStatus());
+		content.setText(rep.getContent());
+		date.setText(rep.getCreated_at());
+		RelativeLayout vew = (RelativeLayout) convertView
+				.findViewById(R.id.child_user_left);
+
+		if (i % 2 == 0) {
+			vew.setBackgroundResource(R.color.before_click);
+		} else {
+			vew.setBackgroundResource(R.color.huse);
+		}
+		Linear_layout.addView(convertView);
+	}
+
+	/*
+	 * 清空 各个集合中的数据
+	 */
+	public void click_list() {
+		Linear_layout.removeAllViews();
+		gk_list.clear();
+		HorizontalScrollView_list.clear();
+	}
+
+	/*
+	 * 上拉加载更多
+	 */
+	public void onFooterRefresh(PullToRefreshView view) {
+		list_item = replyList.size();
+		Log.i("aaa", "onLoadMore（）");
+		if (ExerciseBookTool.isConnect(ReplyListViewActivity.this)) {
+			page = page + 1;
+			Log.i("aaa", "onLoadMore（）--page：" + page);
+			Thread thread = new Thread(new get_news2());
+			thread.start();
+
+		} else {
+			mPullToRefreshView.onFooterRefreshComplete();
+			handler1.sendEmptyMessage(7);
+		}
+	}
+
+	/*
+	 * 下拉刷新
+	 */
+	public void onHeaderRefresh(PullToRefreshView view) {
+		if (ExerciseBookTool.isConnect(ReplyListViewActivity.this)) {
+			shuaxin();
+		} else {
+
+			handler1.sendEmptyMessage(7);
+			mPullToRefreshView.onHeaderRefreshComplete();
+		}
+
+	}
+
+	/*
+	 * 重新加载页面中的数据
+	 */
+	public void shuaxin() {
+
+		if (ExerciseBookTool.isConnect(ReplyListViewActivity.this)) {
+			page = 1;
+			Log.i("aaa", "onLoadMore（）--page：" + page);
+			Thread thread = new Thread(new get_news1());
+			thread.start();
+
+		} else {
+			mPullToRefreshView.onFooterRefreshComplete();
+			handler1.sendEmptyMessage(7);
+		}
+	}
 
 	// 解析获取到的Json
 	public int getNewsJson(String json) {
@@ -286,8 +491,26 @@ public class ReplyListViewActivity extends Table_TabHost implements
 				msg.obj = json;
 				handler1.sendMessage(msg);
 			} catch (Exception e) {
-				onLoad();
-				handler1.sendEmptyMessage(1);
+				handler1.sendEmptyMessage(7);
+			}
+		}
+	}
+	class get_news1 implements Runnable {
+		public void run() {
+			try {
+				HashMap<String, String> mp = new HashMap<String, String>();
+				mp.put("user_id", user_id);
+				mp.put("school_class_id", school_class_id);
+				mp.put("page", "1");
+				String json = ExerciseBookTool.sendGETRequest(
+						Urlinterface.get_News, mp);
+
+				Message msg = new Message();// 创建Message 对象
+				msg.what = 1;
+				msg.obj = json;
+				handler1.sendMessage(msg);
+			} catch (Exception e) {
+				handler1.sendEmptyMessage(7);
 			}
 		}
 	}
@@ -312,8 +535,7 @@ public class ReplyListViewActivity extends Table_TabHost implements
 				handler1.sendMessage(msg);
 
 			} catch (Exception e) {
-				onLoad();
-				handler1.sendEmptyMessage(1);
+				handler1.sendEmptyMessage(7);
 			}
 		}
 	}
@@ -345,59 +567,7 @@ public class ReplyListViewActivity extends Table_TabHost implements
 		return list;
 	}
 
-	private void onLoad() {
-		mListView.stopRefresh();
-		mListView.stopLoadMore();
-		mListView.setRefreshTime("刚刚");
-	}
 
-	@Override
-	public void onRefresh() {
-
-		// SharedPreferences userInfo = getSharedPreferences("replyMenu", 0);
-		// Editor editor = userInfo.edit();// 获取编辑器
-		// editor.putBoolean("ReplyMenu", true);
-		// editor.commit();
-		page = 1;
-		if (ExerciseBookTool.isConnect(ReplyListViewActivity.this)) {
-
-			Thread thread = new Thread(new get_news());
-			thread.start();
-
-		} else {
-			handler1.sendEmptyMessage(1);
-			onLoad();
-		}
-	}
-
-	@Override
-	public void onLoadMore() {
-
-		Log.i("aaa", "onLoadMore（）");
-		if (ExerciseBookTool.isConnect(ReplyListViewActivity.this)) {
-			page = page + 1;
-			Log.i("aaa", "onLoadMore（）--page：" + page);
-			Thread thread = new Thread(new get_news2());
-			thread.start();
-
-		} else {
-			handler1.sendEmptyMessage(1);
-			onLoad();
-		}
-
-	}
-
-	public static class ViewHolder {
-		public HorizontalScrollView hSView;
-		public ImageView use_face;
-		public TextView sender;
-		public TextView reciver;
-		public TextView date;
-		public TextView content;
-		public ImageView imgbtn1;
-		public ImageView imgbtn2;
-		private View ll_action2;
-	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -438,218 +608,7 @@ public class ReplyListViewActivity extends Table_TabHost implements
 
 	}
 
-	class ReplyAdapter extends BaseAdapter {
-		ExerciseBook hw = (ExerciseBook) getApplication();
-
-		public ReplyAdapter() {
-		}
-
-		public ReplyAdapter(Context context) {
-		}
-
-		public int getCount() {
-			return replyList.size();
-		}
-
-		public Object getItem(int position) {
-			return replyList.get(position);
-		}
-
-		public long getItemId(int position) {
-			return position;
-		}
-
-		public View getView(final int position, View convertView,
-				ViewGroup parent) {
-			LayoutInflater inflater = LayoutInflater
-					.from(getApplicationContext());
-			final int showPosition = position;
-			ViewHolder holder = null;
-			final Reply rep = replyList.get(position);
-			if (convertView == null) {
-				convertView = inflater.inflate(R.layout.reply_layout_iteam,
-						null);
-				holder = new ViewHolder();
-
-				holder.hSView = (HorizontalScrollView) convertView
-						.findViewById(R.id.hsv2);
-
-				holder.use_face = (ImageView) convertView
-						.findViewById(R.id.child_user_face);
-				holder.sender = (TextView) convertView
-						.findViewById(R.id.child_message_senderName);
-				holder.reciver = (TextView) convertView
-						.findViewById(R.id.child_message_reciverName);
-				holder.date = (TextView) convertView
-						.findViewById(R.id.child_message_date);
-				holder.content = (TextView) convertView
-						.findViewById(R.id.child_micropost_content);
-				holder.imgbtn1 = (ImageView) convertView
-						.findViewById(R.id.child_micropost_huifu);
-				holder.imgbtn2 = (ImageView) convertView
-						.findViewById(R.id.child_micropost_delete);
-				holder.ll_action2 = convertView.findViewById(R.id.ll_action2);
-
-				convertView.setTag(holder);
-			} else {
-				holder = (ViewHolder) convertView.getTag();
-			}
-
-			convertView.setOnTouchListener(new View.OnTouchListener() {
-				final int showPosition = position;
-
-				public boolean onTouch(View v, MotionEvent event) {
-					ViewHolder viewHolder = (ViewHolder) v.getTag();
-					int scrollX = viewHolder.hSView.getScrollX();
-					int actionW = viewHolder.ll_action2.getWidth();
-					switch (event.getAction()) {
-					case MotionEvent.ACTION_UP:
-						if (scrollX == 0) {
-							viewHolder.hSView.smoothScrollTo(actionW, 0);
-							mShowPosition = showPosition;
-							notifyDataSetChanged();
-							isShow = true;
-						} else if (scrollX < actionW / 2) {
-							viewHolder.hSView.smoothScrollTo(0, 0);
-							isShow = false;
-						} else if (scrollX == actionW || scrollX >= actionW / 2) {
-							if (isShow) {
-								viewHolder.hSView.smoothScrollTo(0, 0);
-								isShow = false;
-							} else {
-								viewHolder.hSView.smoothScrollTo(actionW, 0);
-								mShowPosition = showPosition;
-								notifyDataSetChanged();
-								isShow = true;
-							}
-						}
-						return true;
-					}
-					return false;
-
-				}
-			});
-			if (holder.hSView.getScrollX() != 0 && position != mShowPosition) {
-				holder.hSView.scrollTo(0, 0);
-			}
-			if (holder.hSView.getScrollX() != 0) {
-				holder.hSView.scrollTo(0, 0);
-			}
-			if (rep.getSender_avatar_url().length() > 4) {
-				// ExerciseBookTool.set_background(Urlinterface.IP
-				// + replyList.get(position).getSender_avatar_url(),
-				// holder.use_face);
-				String url = IP + rep.getSender_avatar_url();
-				Bitmap result = memoryCache.getBitmapFromCache(url);
-				if (result == null) {
-					ExerciseBookTool.set_bk(url, holder.use_face, memoryCache);
-					Log.i("aa", " 适配器    网络网络   " + position);
-				} else {
-					Log.i("aa", " 缓存缓存缓存缓存   " + position);
-					holder.use_face
-							.setImageDrawable(new BitmapDrawable(result));
-				}
-				// String url = IP + rep.getSender_avatar_url();
-				// imageLoader.displayImage(url, holder.use_face, options,
-				// animateFirstListener);
-			}
-			holder.imgbtn1.setOnClickListener(new OnClickListener() {
-				public void onClick(View v) {
-					micropost_id = rep.getMicropost_id();
-					reciver_id = rep.getReciver_id();
-					reciver_types = rep.getReciver_types();
-					Intent intent = new Intent(ReplyListViewActivity.this,
-							OpenInputMethod.class);
-					startActivityForResult(intent, 0);
-				}
-			});
-			holder.imgbtn2.setOnClickListener(new OnClickListener() {
-				public void onClick(View v) {
-
-					Dialog dialog = new AlertDialog.Builder(
-							ReplyListViewActivity.this)
-							.setTitle("提示")
-							.setMessage("您确认要删除么?")
-							.setPositiveButton("确认",
-									new DialogInterface.OnClickListener() {
-										@Override
-										public void onClick(
-												DialogInterface dialog,
-												int which) {
-											del(position);
-										}
-									})
-							.setNegativeButton("取消",
-									new DialogInterface.OnClickListener() {
-
-										@Override
-										public void onClick(
-												DialogInterface dialog,
-												int which) {
-											dialog.dismiss();
-										}
-									}).create();
-					dialog.show();
-
-				}
-			});
-			holder.sender.setText(rep.getSender_name());
-			holder.reciver.setText(rep.getStatus());
-			holder.content.setText(rep.getContent());
-			holder.date.setText(rep.getCreated_at());
-			RelativeLayout vew = (RelativeLayout) convertView
-					.findViewById(R.id.child_user_left);
-
-			if (position % 2 == 0) {
-				vew.setBackgroundResource(R.color.before_click);
-			} else {
-				vew.setBackgroundResource(R.color.huse);
-			}
-			return convertView;
-		}
-
-		public void del(final int position) {
-
-			Thread thread = new Thread() {
-				public void run() {
-					try {
-						HashMap<String, String> mp = new HashMap<String, String>();
-						mp.put("user_id", user_id);
-						mp.put("school_class_id", school_class_id);
-						mp.put("message_id", replyList.get(position).getId());
-						String json = ExerciseBookTool.sendGETRequest(
-								delete_message, mp);
-						JSONObject jsonobject = new JSONObject(json);
-						String notice = jsonobject.getString("notice");
-						if (jsonobject.getString("status").equals("success")) {
-							replyList.remove(position);
-						}
-						Message msg = new Message();
-						msg.obj = notice;
-						msg.what = 3;
-						handler1.sendMessage(msg);
-					} catch (JSONException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-
-				}
-			};
-			if (ExerciseBookTool.isConnect(ReplyListViewActivity.this)) {
-				prodialog = new ProgressDialog(ReplyListViewActivity.this);
-				prodialog.setMessage("正在删除消息");
-				prodialog.setCanceledOnTouchOutside(false);
-				prodialog.show();
-				thread.start();
-			} else {
-				handler1.sendEmptyMessage(1);
-			}
-		}
-
-	}
+	
 
 	public boolean dispatchTouchEvent(MotionEvent event) {
 		this.gd.onTouchEvent(event);
@@ -728,6 +687,47 @@ public class ReplyListViewActivity extends Table_TabHost implements
 					displayedImages.add(imageUri);
 				}
 			}
+		}
+	}
+
+	public void del(final int position) {
+
+		Thread thread = new Thread() {
+			public void run() {
+				try {
+					HashMap<String, String> mp = new HashMap<String, String>();
+					mp.put("user_id", user_id);
+					mp.put("school_class_id", school_class_id);
+					mp.put("message_id", replyList.get(position).getId());
+					String json = ExerciseBookTool.sendGETRequest(
+							delete_message, mp);
+					JSONObject jsonobject = new JSONObject(json);
+					String notice = jsonobject.getString("notice");
+					if (jsonobject.getString("status").equals("success")) {
+						replyList.remove(position);
+					}
+					Message msg = new Message();
+					msg.obj = notice;
+					msg.what = 3;
+					handler1.sendMessage(msg);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+		};
+		if (ExerciseBookTool.isConnect(ReplyListViewActivity.this)) {
+			prodialog = new ProgressDialog(ReplyListViewActivity.this);
+			prodialog.setMessage("正在删除消息");
+			prodialog.setCanceledOnTouchOutside(false);
+			prodialog.show();
+			thread.start();
+		} else {
+			handler1.sendEmptyMessage(7);
 		}
 	}
 
