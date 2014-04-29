@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
@@ -71,6 +74,8 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	private String[] recordMesArr;
 	public String json;
 	public String path;
+	private String REG = "(?i)[^a-zA-Z0-9\u4E00-\u9FA5]";
+	private String regEx = "[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
 	private String[] answerArr = new String[] { "你的作答: ", " ", "你的选择: ",
 			"你的选择: ", "你的搭配: ", "你的选择: ", "你的排序: " };
 	private String[] questionArr = new String[] { "listening", "reading",
@@ -341,7 +346,8 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		if (s == null || s.equals("")) {
 			base_answer_text.setText("没有答题记录!");
 		} else {
-			base_answer_text.setText(answerArr[mQuestionType] + s);
+			base_answer_text
+					.setText(filterString(answerArr[mQuestionType] + s));
 		}
 	}
 
@@ -385,6 +391,15 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		}
 		sb.append("\"");
 		return sb.toString();
+	}
+
+	// 过滤英文数字以外的字符
+	public String filterString(String s) {
+		s = s.replaceAll(REG, "");
+		Pattern p = Pattern.compile(regEx);
+		Matcher m = p.matcher(s);
+		s = m.replaceAll("").trim();
+		return s;
 	}
 
 	// 暂停计时

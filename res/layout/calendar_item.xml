@@ -12,13 +12,13 @@
 
     <ImageView
         android:id="@+id/status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_marginRight="15dp"
         android:layout_marginTop="5dp"
-        android:src="@drawable/mark" 
-        android:visibility="gone"/>
+        android:src="@drawable/mark"
+        android:visibility="gone" />
 
 </RelativeLayout>

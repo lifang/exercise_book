@@ -176,22 +176,16 @@ public class CalendarAdapter extends BaseAdapter {
 			Log.i("Ax", datelist.get(i).getStart_time());
 			if (datelist.get(i).getStart_time().contains(dateTime.toString())) {
 				status.setVisibility(View.VISIBLE);
+				status.setBackgroundResource(R.drawable.mark);
 			}
 		}
 		if (position < daysOfMonth + dayOfWeek && position >= dayOfWeek) {
 			// 当前月信息显示
 			textView.setTextColor(Color.WHITE);// 当月字体设黑
+			status.setBackgroundResource(R.drawable.mark2);
 			drawable = res.getDrawable(R.drawable.current_day_bgc);
+		}
 
-		}
-		if (schDateTagFlag != null && schDateTagFlag.length > 0) {
-			for (int i = 0; i < schDateTagFlag.length; i++) {
-				if (schDateTagFlag[i] == position) {
-					// 设置日程标记背景
-					textView.setBackgroundResource(R.drawable.mark);
-				}
-			}
-		}
 		if (currentFlag == position) {
 			// 设置当天的背景
 			drawable = res.getDrawable(R.drawable.current_day_bgc);

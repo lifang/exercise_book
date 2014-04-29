@@ -64,6 +64,7 @@ import com.comdosoft.ExerciseBook.pojo.AnswerPojo;
 import com.comdosoft.ExerciseBook.pojo.Answer_QuestionsPojo;
 import com.comdosoft.ExerciseBook.pojo.Branch_AnswerPoJo;
 import com.comdosoft.ExerciseBook.pojo.PropPojo;
+import com.comdosoft.ExerciseBook.pojo.WorkPoJo;
 import com.google.gson.Gson;
 
 public class ExerciseBookTool implements Urlinterface {
@@ -72,6 +73,20 @@ public class ExerciseBookTool implements Urlinterface {
 	private static int readTimeOut = 10000;
 	private static String requestEncoding = "UTF-8";
 	private static Bitmap bm = null;
+
+	public static List<Boolean> getTypeList(WorkPoJo pojo) {
+		List<Boolean> list = new ArrayList<Boolean>();
+		for (int i = 0; i < pojo.getQuestion_types().size(); i++) {
+			if (ExerciseBookTool.getExist(pojo.getQuestion_types().get(i),
+					pojo.getFinish_types())) {
+				list.add(true);
+			} else {
+				list.add(false);
+			}
+		}
+		return list;
+	}
+
 	public static String timeSecondToString(int t) {
 		StringBuffer sb = new StringBuffer();
 		if (t >= 60) {
@@ -879,7 +894,7 @@ public class ExerciseBookTool implements Urlinterface {
 					options.inJustDecodeBounds = false;
 					// options.outWidth = 159;
 					// options.outHeight = 159;
-					options.inSampleSize = 2;
+					options.inSampleSize = 1;
 					bm = BitmapFactory.decodeStream(is, null, options);
 					
 					is.close();
