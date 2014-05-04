@@ -22,9 +22,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -40,19 +38,15 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.Animation;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import cn.jpush.android.api.JPushInterface;
 
-import com.comdosoft.ExerciseBook.HomepageAllActivity.get_class_info;
 import com.comdosoft.ExerciseBook.pojo.knowledges_card;
 import com.comdosoft.ExerciseBook.pojo.tags;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
@@ -100,7 +94,11 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 	int width;
 	Boolean fanzhuan = true;
 	int btnNum = -1;
+	private RelativeLayout spin;
+	private TextView spinner_text;
 
+	// private static final String[] m={"A型","B型","O型","AB型","其他"};
+	// private ArrayAdapter<String> adapter;
 	@Override
 	@SuppressWarnings("rawtypes")
 	protected void onCreate(Bundle savedInstanceState) {
@@ -126,14 +124,35 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 		btnList.add(button1);
 		btnList.add(button2);
 		btnList.add(button3);
-		changeBtn(0);
+
+		// 将可选内容与ArrayAdapter连接起来
+		// adapter = new
+		// ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,m);
+
+		spin = (RelativeLayout) findViewById(R.id.spinner);
+		spinner_text = (TextView) findViewById(R.id.spinner_text);
+		spin.setOnClickListener(listener);
+
 		initbtn();
 		getKonwledges();
 		btnlistClick();
 	}
 
-	public void initbtn() {
+	private View.OnClickListener listener = new View.OnClickListener() {
 
+		@Override
+		public void onClick(View v) {
+
+			Intent intentp = new Intent();
+			intentp.setClass(MCardBagActivity.this, CardTypeActivity.class);//
+			startActivityForResult(intentp, 0);
+		}
+	};
+
+	public void initbtn() {
+		if (mediaplay.isPlaying()) {
+			mediaplay.stop();
+		}
 		mindex = 0;
 		fanzhuan = true;
 		Allmap = new HashMap<Integer, List<knowledges_card>>();
@@ -175,14 +194,16 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 						}
 					}
 				};
-
+				if (mediaplay.isPlaying()) {
+					mediaplay.stop();
+				}
 				if (ExerciseBookTool.isConnect(MCardBagActivity.this)) {
 					if (cardbagEt.getText().toString().length() == 0) {
 						Toast.makeText(getApplicationContext(), "搜索框不能为空",
 								Toast.LENGTH_SHORT).show();
 					} else {
 						showdialog();
-						changeBtn(-1);
+//						changeBtn(-1);
 						thread.start();
 					}
 				} else {
@@ -190,49 +211,6 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 				}
 			}
 		});
-		btnList.get(0).setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				initbtn();
-				changeBtn(0);
-				page = 0;
-				getKonwledges();
-			}
-		});
-		for (int i = 1; i < btnList.size(); i++) {
-			final String mistype = String.valueOf(i);
-			btnNum = i;
-			btnList.get(i).setOnClickListener(new OnClickListener() {
-				public void onClick(View v) {
-					showdialog();
-					changeBtn(Integer.parseInt(mistype));
-					Thread thread = new Thread() {
-						String json;
-
-						public void run() {
-							try {
-								viewPager = (ViewPager) findViewById(R.id.guidePages);
-								Map<String, String> map = new HashMap<String, String>();
-								map.put("student_id", student_id);
-								map.put("school_class_id", school_class_id);
-								map.put("mistake_types", mistype);
-
-								json = ExerciseBookTool.sendGETRequest(
-										get_knowledges_card, map);
-								initbtn();
-								page = 0;
-								parsejson(json, false);
-								handler.sendEmptyMessage(1);
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-						}
-					};
-					//
-					thread.start();
-				}
-			});
-
-		}
 	}
 
 	protected void onResume() {
@@ -480,7 +458,6 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 			FontCard.put(i, fontlist);
 			eb.setFontCard(FontCard);
 			viewList.add(view);
-			oneClick();
 		}
 		if (Allmap.size() == 0) {
 			TextView textview = new TextView(MCardBagActivity.this);
@@ -490,17 +467,6 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 			viewList.add(textview);
 		}
 
-	}
-
-	public void NoClick(int page, int index) {
-		List<View> fontlist = FontCard.get(page);
-		List<View> backlist = FontCard.get(page);
-		for (int i = 0; i < fontlist.size(); i++) {
-			if (i != index) {
-				backlist.get(i).setClickable(false);
-				fontlist.get(i).setClickable(false);
-			}
-		}
 	}
 
 	// TYPES_NAME = {0 => "听力", 1 => "朗读", 2 => "十速挑战", 3 => "选择", 4 => "连线", 5
@@ -558,7 +524,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 			// "your_answer": "</><=>%$&!@#$;||;%$&!@#$<=>***;||;***<=></>",
 			strarr = str.split(";\\|\\|;");
 			for (int i = 0; i < strarr.length; i++) {
-				content += strarr[i].replace("<=>", "  ") + " \n";
+				content += strarr[i].replace("<=>", "--") + "\n";
 			}
 			content = content.substring(4, content.length());
 			return content;
@@ -593,35 +559,24 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 
 	}
 
-	public void oneClick() {
-		for (int i = 0; i < FontCard.size(); i++) {
-			for (int j = 0; j < FontCard.get(i).size(); j++) {
-				final int j1 = j;
-				final View view = FontCard.get(i).get(j);
-				view.setOnClickListener(new OnClickListener() {
-					public void onClick(View v1) {
-						if (fanzhuan) {
-							fanzhuan = false;
-							mindex = j1;
-							mediaplay.stop();
-							NoClick(page, j1);
-							applyRotation(0, 90, view);
-						}
-					}
-				});
-			}
-		}
-	}
-
-	// MISTAKE_TYPES_NAME = {0 => "默认", 1 => "读错",2 => '写错',3 => '选错'}
-	public String setWrong(String miskatype) {
-		switch (Integer.valueOf(miskatype)) {
+	// TYPES_NAME = {0 => "听力", 1 => "朗读", 2 => "十速挑战", 3 => "选择", 4 => "连线", 5
+	// => "完型填空", 6 => "排序"}
+	public String setType(String type) {
+		switch (Integer.valueOf(type)) {
+		case 0:
+			return "听写:";
 		case 1:
-			return "朗读错误";
+			return "朗读:";
 		case 2:
-			return "拼写错误";
+			return "十速:";
 		case 3:
-			return "选择错误";
+			return "选择:";
+		case 4:
+			return "连线:";
+		case 5:
+			return "完型:";
+		case 6:
+			return "排序:";
 		default:
 			break;
 		}
@@ -630,7 +585,6 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 
 	// TYPES_NAME = {0 => "听力", 1 => "朗读", 2 => "十速挑战", 3 => "选择", 4 => "连线", 5
 	// => "完型填空", 6 => "排序"}
-	// 背面
 	public String setback(String str, String types) {
 		String content = null;
 		int types2 = 0;
@@ -659,7 +613,10 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 			for (int i = 0; i < strarr.length; i++) {
 				String[] strarr1 = strarr[i].split("<=>");
 				for (int j = 0; j < strarr1.length; j++) {
-					content += strarr1[j] + " ";
+					content += strarr1[j];
+					if (j == 0) {
+						content += "--";
+					}
 				}
 				content += "\n";
 			}
@@ -673,11 +630,6 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 	// 完形填空
 	public String settypes5(String full_text, String answer,
 			TextView Lookcontent) {
-		// tv_msg.append(content.substring(count, start));
-
-		// tv_msg.append(Html.fromHtml("<a href=" + start + " ><u>" + key
-
-		// + "</u></a>"));
 
 		List arrs = new ArrayList<String>();
 		JSONArray answerarray;
@@ -702,7 +654,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 
 			Lookcontent.append(textarr[i]);
 			if (i <= arrs.size() - 1) {
-				Lookcontent.append(Html.fromHtml("<u>" + arrs.get(i) + "</u>"));
+				Lookcontent.append(Html.fromHtml("<u>" + "___" + "</u>"));
 				// content += arrs.get(i);
 			}
 			// content += textarr[i];
@@ -720,143 +672,66 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 	public void setFontCard(ViewGroup v1, final knowledges_card card,
 			final int index, final int page) {
 		TextView reson = null;
-		TextView wronganswer;
-		ImageView fontIv;
+		TextView all_content;
+		ImageView look_all_mes, cardbatread, rightIv;
+		ImageView cardbatdel;
 		TextView rightanswer;
-		TextView answer;
 		TextView rightanswers;
 		ViewGroup v = v1;
-		TextView bqtv; // 显示已添加的标签
-		ImageView rightIv; // 显示图片
 		if (PageBool[page][index]) {
-			bqtv = (TextView) v.findViewById(R.id.bqtv1);
-			String bqtvStr = "  ";
-			for (int i = 0; i < tagsList.size(); i++) {
-				for (int j = 0; j < card.getTagsarr().size(); j++) {
-					if (card.getTagsarr().get(j) == Integer.valueOf(tagsList
-							.get(i).getId())) {
-						bqtvStr = bqtvStr + tagsList.get(i).getName() + ",";
-					}
-				}
-			}
-
-			if (bqtvStr.length() > 2) {
-				bqtvStr = bqtvStr.substring(0, bqtvStr.length() - 1);
-				bqtv.setVisibility(View.VISIBLE);
-				bqtv.setText(bqtvStr);
-			}
 
 			reson = (TextView) v.findViewById(R.id.reson);
-			wronganswer = (TextView) v.findViewById(R.id.youranswer);
-			fontIv = (ImageView) v.findViewById(R.id.fontIv);
-			rightanswer = (TextView) v.findViewById(R.id.rightanswer);
-			answer = (TextView) v.findViewById(R.id.answer);
-			reson.setText(setWrong(card.getMistake_types())); // 错误类型
-			// reson.setText(setWrong(card.getMistake_types()) +
-			// card.getTypes()); // 错误类型
-			wronganswer.setText(checkAns(card.getYour_answer(), // 你的错误
-					card.getTypes()));
-			if (card.getTypes().equals("1")) {
-				rightanswer.setVisibility(View.GONE);
-				answer.setVisibility(View.GONE);
-			} else {
-				rightanswer.setText("正确答案");
-
-				if (card.getTypes().equals("0") || card.getTypes().equals("4")) {
-					answer.setText(setback(card.getContent(), card.getTypes()));
-				} else if (card.getTypes().equals("5")) {
-
-					JSONArray answerarray;
-					try {
-						answerarray = new JSONArray(card.getAnswer());
-						for (int j = 0; j < answerarray.length(); j++) {
-							JSONObject ob = answerarray.getJSONObject(j);
-							String contentStr = ob.getString("content");
-							if (card.getContent().equals(contentStr)) {
-								answer.setText(ob.getString("answer"));
-								break;
-							}
-						}
-					} catch (JSONException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-
-				} else {
-					String ans = FormatAns(card.getAnswer());
-					answer.setText(ans);
-				}
-
-			}
-
-			fontIv.setOnClickListener(new OnClickListener() { // 标签按钮监听
-				// Integer.valueOf((card.getTypes() == null || card.getTypes()
-				// .equals("null")) ? "0" : card.getTypes())));
-				// fontIv.setOnClickListener(new OnClickListener() {
-				public void onClick(View arg0) {
-					Log.i("asd", "page:" + page + "index:" + index);
-					Intent intent = new Intent(MCardBagActivity.this,
-							MCardTag.class);
-					Bundle mBundle = new Bundle();
-					eb.setAllmap(Allmap.get(page + 1));
-					tagsList = eb.getTagsList();
-					eb.setTagsarr(card.getTagsarr());
-					mBundle.putInt("page", page);
-					mBundle.putInt("index", index);
-					mBundle.putString("getid", card.getId());
-					intent.putExtras(mBundle);
-					startActivityForResult(intent, 1);
-				}
-			});
-		} else {
-			int type3_yinpin = 0;
-			ImageView cardbatread;
-			ImageView cardbatdel;
-			Button button1;
-			button1 = (Button) v.findViewById(R.id.button1);
-			button1.setOnClickListener(new OnClickListener() { // 标签按钮监听
-				// Integer.valueOf((card.getTypes() == null || card.getTypes()
-				// .equals("null")) ? "0" : card.getTypes())));
-				// fontIv.setOnClickListener(new OnClickListener() {
-				public void onClick(View arg0) {
-					Log.i("asd", "page:" + page + "index:" + index);
-					Intent intent = new Intent(MCardBagActivity.this,
-							LookAllContentActivity.class);
-					intent.putExtra("content", card.getContent());
-					intent.putExtra("types", card.getTypes());
-					intent.putExtra("full_text", card.getFull_text());
-					intent.putExtra("answer", card.getAnswer());
-					startActivity(intent);
-				}
-			});
-			reson = (TextView) v.findViewById(R.id.backreson);
-			rightanswers = (TextView) v.findViewById(R.id.rightanswerb);
-			cardbatread = (ImageView) v.findViewById(R.id.cardbatread);
-			cardbatdel = (ImageView) v.findViewById(R.id.cardbatdel);
+			all_content = (TextView) v.findViewById(R.id.youranswer);// 题目 原文
+			look_all_mes = (ImageView) v.findViewById(R.id.look_all_mes);// 完形填空查看全文
+			cardbatdel = (ImageView) v.findViewById(R.id.cardbatdel); // 删除按钮
+			cardbatread = (ImageView) v.findViewById(R.id.cardbatread);// 音频按钮
 			rightIv = (ImageView) v.findViewById(R.id.rightIv);
-
-			if (card.getResource_url().equals("")
-					|| card.getResource_url().equals("null"))
-				cardbatread.setVisibility(View.GONE);
+			reson.setText(setType(card.getTypes())); // 题目类型
+			// all_content.setText(checkAns(card.getYour_answer(), // 你的错误
+			// card.getTypes()));
 			String playerIP = IP + card.getResource_url();
-			reson.setText("原题:");
-			if (card.getTypes().equals("5")) { // 完形填空 显示 查看全部 按钮
-				rightanswers.setText("");
-				// settypes5(full_text, answer, Lookcontent);
-				settypes5(card.getFull_text(), card.getAnswer(), rightanswers);
-				button1.setVisibility(View.VISIBLE);
+			if (card.getResource_url().equals("")
+					|| card.getResource_url().equals("null")) {
 			} else {
-				rightanswers
-						.setText(setback(card.getContent(), card.getTypes()));
+				cardbatread.setVisibility(View.VISIBLE);
+				final String IP2 = playerIP;
+				cardbatread.setOnClickListener(new OnClickListener() {
+					public void onClick(View v) {
+						try {
+							if (mediaplay.isPlaying()) {
+								mediaplay.stop();
+							}
+							mediaplay = new MediaPlayer();
+							mediaplay.setDataSource(IP2);
+							mediaplay.prepare();
+							mediaplay.start();
+							// mediaplay
+							// .setOnCompletionListener(new
+							// OnCompletionListener() {
+							// public void onCompletion(MediaPlayer mp) {
+							// mediaplay.release();
+							// }
+							// });
+						} catch (IllegalArgumentException e) {
+							e.printStackTrace();
+						} catch (SecurityException e) {
+							e.printStackTrace();
+						} catch (IllegalStateException e) {
+							e.printStackTrace();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				});
 			}
 
-			if (card.getTypes().equals("1") || card.getTypes().equals("0")) { // 0
-																				// =>
-																				// "听力",
-																				// 1
-																				// =>
-																				// "朗读"
-				cardbatread.setVisibility(View.VISIBLE); // 小喇叭 出现
+			if (card.getTypes().equals("5")) { // 完形填空 显示 查看全部 按钮
+				all_content.setText("");
+				look_all_mes.setVisibility(View.VISIBLE);
+				settypes5(card.getFull_text(), card.getAnswer(), all_content);
+			} else {
+				all_content
+						.setText(setback(card.getContent(), card.getTypes()));
 			}
 			if (card.getTypes().equals("3")) {
 				if ((card.getContent().indexOf("<file>") != -1)) { // 包含文件
@@ -864,8 +739,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 					if ((card.getContent().indexOf(".mp3") != -1)
 							|| (card.getContent().indexOf(".amr") != -1)
 							|| (card.getContent().indexOf(".wav") != -1)) {
-						type3_yinpin = 1;
-						cardbatread.setVisibility(View.VISIBLE);
+						cardbatread.setVisibility(View.VISIBLE); // 显示 音频 按钮
 						playerIP = IP
 								+ card.getContent().substring(
 										"<file>".length(),
@@ -878,7 +752,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 										"<file>".length(),
 										card.getContent()
 												.lastIndexOf("</file>"));
-						rightIv.setVisibility(View.VISIBLE);
+						rightIv.setVisibility(View.VISIBLE); // 显示 查看图片 按钮
 						rightIv.setOnClickListener(new OnClickListener() {
 
 							@Override
@@ -914,128 +788,149 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 							}
 						});
 
-						Bitmap result = memoryCache.getBitmapFromCache(url);
-						if (result == null) {
-							ExerciseBookTool.set_bk(url, rightIv, memoryCache);
-						} else {
-							rightIv.setImageDrawable(new BitmapDrawable(result));
-						}
+						// Bitmap result = memoryCache.getBitmapFromCache(url);
+						// if (result == null) {
+						// ExerciseBookTool.set_bk(url, rightIv, memoryCache);
+						// } else {
+						// rightIv.setImageDrawable(new BitmapDrawable(result));
+						// }
 						cardbatread.setVisibility(View.GONE);
 					}
 					String st = card.getContent().substring(
 							card.getContent().lastIndexOf("</file>")
 									+ "</file>".length(),
 							card.getContent().length());
-					rightanswers.setText(st);
+					all_content.setText(st);
 					if (st.length() == 0) {
-						rightanswers.setText(setback(card.getOptions(),
+						all_content.setText(setback(card.getOptions(),
 								card.getTypes()));
 					}
 
 				} else { // 不包含文件 信息，直接显示原题
-					rightanswers.setText(card.getContent());
+					all_content.setText(card.getContent());
 					// + setback(card.getOptions(), card.getTypes()));
 				}
 			}
+			// if (card.getTypes().equals("1")) {
+			// rightanswer.setVisibility(View.GONE);
+			// answer.setVisibility(View.GONE);
+			// } else {
+			// rightanswer.setText("正确答案");
+			//
+			// if (card.getTypes().equals("0") || card.getTypes().equals("4")) {
+			// answer.setText(setback(card.getContent(), card.getTypes()));
+			// } else if (card.getTypes().equals("5")) {
+			//
+			// JSONArray answerarray;
+			// try {
+			// answerarray = new JSONArray(card.getAnswer());
+			// for (int j = 0; j < answerarray.length(); j++) {
+			// JSONObject ob = answerarray.getJSONObject(j);
+			// String contentStr = ob.getString("content");
+			// if (card.getContent().equals(contentStr)) {
+			// answer.setText(ob.getString("answer"));
+			// break;
+			// }
+			// }
+			// } catch (JSONException e) {
+			// // TODO Auto-generated catch block
+			// e.printStackTrace();
+			// }
+			//
+			// } else {
+			// String ans = FormatAns(card.getAnswer());
+			// answer.setText(ans);
+			// }
+			//
+			// }
 
-			final String IP2 = playerIP;
-			cardbatread.setOnClickListener(new OnClickListener() {
-				public void onClick(View v) {
-					try {
-						mediaplay = new MediaPlayer();
-						mediaplay.setDataSource(IP2);
-						mediaplay.prepare();
-						mediaplay.start();
-						// mediaplay
-						// .setOnCompletionListener(new OnCompletionListener() {
-						// public void onCompletion(MediaPlayer mp) {
-						// mediaplay.release();
-						// }
-						// });
-					} catch (IllegalArgumentException e) {
-						e.printStackTrace();
-					} catch (SecurityException e) {
-						e.printStackTrace();
-					} catch (IllegalStateException e) {
-						e.printStackTrace();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-			});
-			cardbatdel.setOnClickListener(new OnClickListener() {
-				public void onClick(View v) {
-					Dialog dialog = new AlertDialog.Builder(
-							MCardBagActivity.this)
-							.setTitle("提示")
-							.setMessage("您确认要删除么?")
-							.setPositiveButton("确认",
-									new DialogInterface.OnClickListener() {
-										public void onClick(
-												DialogInterface dialog,
-												int which) {
-											Thread thread = new Thread() {
-												public void run() {
-													try {
-														Map<String, String> map = new HashMap<String, String>();
-														map.put("knowledges_card_id",
-																card.getId());
-														String json = ExerciseBookTool
-																.sendGETRequest(
-																		delete_knowledges_card,
-																		map);
-														JSONObject jsonobj = new JSONObject(
-																json);
-														String notice = jsonobj
-																.getString("notice");
-														Message msg = new Message();
-														if (jsonobj
-																.getString(
-																		"status")
-																.equals("success")) {
-															Map<String, String> map1 = new HashMap<String, String>();
-															map1.put(
-																	"student_id",
-																	student_id);
-															map1.put(
-																	"school_class_id",
-																	school_class_id);
-															json = ExerciseBookTool
-																	.sendGETRequest(
-																			get_knowledges_card,
-																			map1);
-															parsejson(json,
-																	false);
-															
-															msg.what = 2;
-															msg.obj = notice;
-															handler.sendMessage(msg);
-														} else {
-															msg.what = 0;
-															msg.obj = notice;
-															handler.sendMessage(msg);
-														}
-													} catch (Exception e) {
-														e.printStackTrace();
-													}
+			look_all_mes.setOnClickListener(new OnClickListener() { // 完形查看全文
+																	// 按钮监听
+						public void onClick(View arg0) {
+							Log.i("asd", "page:" + page + "index:" + index);
+							Intent intent = new Intent(MCardBagActivity.this,
+									LookAllContentActivity.class);
+							intent.putExtra("content", card.getContent());
+							intent.putExtra("types", card.getTypes());
+							intent.putExtra("full_text", card.getFull_text());
+							intent.putExtra("answer", card.getAnswer());
+							startActivity(intent);
+						}
+					});
+
+			cardbatdel.setOnClickListener(new OnClickListener() { // 删除按钮
+						public void onClick(View v) {
+							Dialog dialog = new AlertDialog.Builder(
+									MCardBagActivity.this)
+									.setTitle("提示")
+									.setMessage("您确认要删除么?")
+									.setPositiveButton(
+											"确认",
+											new DialogInterface.OnClickListener() {
+												public void onClick(
+														DialogInterface dialog,
+														int which) {
+													del(card.getId() + "");
 												}
+											})
+									.setNegativeButton(
+											"取消",
+											new DialogInterface.OnClickListener() {
+												public void onClick(
+														DialogInterface dialog,
+														int which) {
+													dialog.dismiss();
+												}
+											}).create();
+							dialog.show();
 
-											};
-											thread.start();
-										}
-									})
-							.setNegativeButton("取消",
-									new DialogInterface.OnClickListener() {
-										public void onClick(
-												DialogInterface dialog,
-												int which) {
-											dialog.dismiss();
-										}
-									}).create();
-					dialog.show();
+						}
+					});
 
+		}
+	}
+
+	/*
+	 * 删除 卡片
+	 */
+	public void del(final String id) {
+		Thread thread = new Thread() {
+			public void run() {
+				try {
+					Map<String, String> map = new HashMap<String, String>();
+					map.put("knowledges_card_id", id);
+					String json = ExerciseBookTool.sendGETRequest(
+							delete_knowledges_card, map);
+					JSONObject jsonobj = new JSONObject(json);
+					String notice = jsonobj.getString("notice");
+					Message msg = new Message();
+					if (jsonobj.getString("status").equals("success")) {
+						Map<String, String> map1 = new HashMap<String, String>();
+						map1.put("student_id", student_id);
+						map1.put("school_class_id", school_class_id);
+						json = ExerciseBookTool.sendGETRequest(
+								get_knowledges_card, map1);
+						parsejson(json, false);
+
+						msg.what = 2;
+						msg.obj = notice;
+						handler.sendMessage(msg);
+					} else {
+						msg.what = 0;
+						msg.obj = notice;
+						handler.sendMessage(msg);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-			});
+			}
+
+		};
+		if (ExerciseBookTool.isConnect(MCardBagActivity.this)) {
+
+			thread.start();
+		} else {
+			handler.sendEmptyMessage(7);
 		}
 	}
 
@@ -1098,85 +993,64 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 		}
 	}
 
-	private void applyRotation(float start, float end, View selectview) {
-		// // 计算中心点
-		final float centerX = selectview.getWidth() / 2.0f;
-		final float centerY = selectview.getHeight() / 2.0f;
-		final Rotate3dAnimation rotation = new Rotate3dAnimation(start, end,
-				centerX, centerY, 310.0f, true);
-		rotation.setDuration(500);
-		rotation.setFillAfter(true);
-		rotation.setInterpolator(new AccelerateInterpolator());
-		// 设置监听
-		rotation.setAnimationListener(new DisplayNextView());
-		selectview.startAnimation(rotation);
+	public int cardType(String type) {
 
-	}
-
-	private final class DisplayNextView implements Animation.AnimationListener {
-
-		public void onAnimationStart(Animation animation) {
+		if (type.equals("默认")) {
+			return -1;
+		} else if (type.equals("听写")) {
+			return 0;
+		} else if (type.equals("朗读")) {
+			return 1;
+		} else if (type.equals("十速")) {
+			return 2;
+		} else if (type.equals("选择")) {
+			return 3;
+		} else if (type.equals("连线")) {
+			return 4;
+		} else if (type.equals("完型")) {
+			return 5;
+		} else if (type.equals("排序")) {
+			return 6;
 		}
-
-		// 动画结束
-		public void onAnimationEnd(Animation animation) {
-			List<View> fontlist = FontCard.get(page);
-			if (mediaplay.isPlaying()) {
-				mediaplay.stop();
-			}
-			List<knowledges_card> cardl = Allmap.get(page + 1);
-			Log.i("3", "page:" + page + "mindex:" + mindex + "FontCard:"
-					+ FontCard.get(page).size());
-			View view;
-			ViewGroup viewgroup = (ViewGroup) fontlist.get(mindex);
-			if (PageBool[page][mindex]) {
-				PageBool[page][mindex] = false;
-				view = (ViewGroup) inflater2.inflate(
-						R.layout.cardbag_gridview_back, null);
-			} else {
-				PageBool[page][mindex] = true;
-				view = (ViewGroup) inflater2.inflate(
-						R.layout.cardbag_grdiview_iteam, null);
-			}
-			if (width == 800) {
-				view.setPadding(33, 23, 23, 23);
-			} else {
-				view.setPadding(53, 23, 23, 23);
-			}
-			viewgroup.removeAllViews();
-			viewgroup.addView(view);
-			setFontCard((ViewGroup) view, cardl.get(mindex), mindex, page);
-			for (int i = 0; i < fontlist.size(); i++) {
-				fontlist.get(i).setClickable(true);
-			}
-			final float centerX = viewgroup.getWidth() / 2.0f;
-			final float centerY = viewgroup.getHeight() / 2.0f;
-			Rotate3dAnimation rotation = null;
-			viewgroup.requestFocus();
-			rotation = new Rotate3dAnimation(-90, 0, centerX, centerY, 310.0f,
-					false);
-			rotation.setDuration(500);
-			rotation.setFillAfter(true);
-			rotation.setInterpolator(new DecelerateInterpolator());
-			// 开始动画
-			viewgroup.startAnimation(rotation);
-			fanzhuan = true;
-		}
-
-		public void onAnimationRepeat(Animation animation) {
-			// TODO Auto-generated method stub
-
-		}
+		return -1;
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 		switch (resultCode) {
-		case -12:
+		case -10:
+			Bundle bundle = data.getExtras();
+			String cardtype = bundle.getString("cardtype");
+			spinner_text.setText(cardtype);
+			showdialog();
 			initbtn();
-			getKonwledges();
-			btnlistClick();
+			final int mistype = cardType(cardtype);
+			Thread thread = new Thread() {
+				String json;
+
+				public void run() {
+					try {
+						viewPager = (ViewPager) findViewById(R.id.guidePages);
+						Map<String, String> map = new HashMap<String, String>();
+						map.put("student_id", student_id);
+						map.put("school_class_id", school_class_id);
+						if (mistype!=-1) {
+							map.put("mistake_types", mistype+"");
+						}
+						json = ExerciseBookTool.sendGETRequest(
+								get_knowledges_card, map);
+						initbtn();
+						page = 0;
+						parsejson(json, false);
+						handler.sendEmptyMessage(1);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			};
+			//
+			thread.start();
 			break;
 		default:
 			break;
@@ -1186,22 +1060,5 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 
 	}
 
-	@SuppressLint("ResourceAsColor")
-	public void changeBtn(int num) {
-
-		for (int i = 0; i < btnList.size(); i++) {
-			if (i == num) {
-				btnList.get(i).setBackgroundResource(
-						R.drawable.cardchoice_pressed);
-				int b = getResources().getColor(R.color.white);// 得到配置文件里的颜色
-				btnList.get(i).setTextColor(b);
-			} else {
-				btnList.get(i).setBackgroundResource(R.drawable.cardchoice);
-				int b = getResources().getColor(R.color.cardchoice_c);// 得到配置文件里的颜色
-				btnList.get(i).setTextColor(b);
-			}
-		}
-
-	}
 
 }

@@ -30,64 +30,59 @@
                 android:layout_height="200px"
                 android:layout_below="@id/reson"
                 android:layout_marginLeft="38px"
-                android:layout_marginRight="38px"
-                android:layout_marginTop="20.1px"
+                android:layout_marginRight="104px"
+                android:layout_marginTop="0.7px"
                 android:ellipsize="end"
                 android:lines="3"
                 android:text="tagether1111111111111111111111111111"
-                android:textColor="@color/quescontent"
-                android:textSize="40px" />
+                android:textColor="@color/black"
+                android:textSize="30px" />
 
-            <ImageView
-                android:id="@+id/fontIv"
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="30px"
-                android:layout_marginTop="30px"
-                android:src="@drawable/ques_reson" />
+                android:layout_marginTop="111px" >
+
+                <ImageView
+                    android:id="@+id/look_all_mes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ques_reson"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/cardbatread"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/cardbatread"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/rightIv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/picture"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:orientation="vertical" >
+
+                <ImageView
+                    android:id="@+id/cardbatdel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="38px"
+                    android:layout_marginRight="38px"
+                    android:src="@drawable/cardbagdel" />
+            </LinearLayout>
         </RelativeLayout>
-
-        <TextView
-            android:id="@+id/bqtv1"
-            android:layout_width="513px"
-            android:layout_height="59px"
-            android:layout_alignParentBottom="true"
-            android:background="@drawable/bqtv"
-            android:gravity="center_vertical"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:visibility="gone"
-            android:textColor="@color/white" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="280px"
-        android:orientation="vertical" >
-
-        <TextView
-            android:id="@+id/rightanswer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="38px"
-            android:text="正确拼写"
-            android:textColor="@color/quesreson"
-            android:textSize="33px" />
-
-        <TextView
-            android:id="@+id/answer"
-            android:layout_width="435px"
-            android:layout_height="135px"
-            android:layout_below="@id/rightanswer"
-            android:layout_marginLeft="38px"
-            android:layout_marginRight="38px"
-            android:ellipsize="end"
-            android:lines="2"
-            android:text="together111111111111111111111111111111111111111111111"
-            android:textColor="@color/quesreson"
-            android:textSize="45px" />
     </RelativeLayout>
 
 </RelativeLayout>

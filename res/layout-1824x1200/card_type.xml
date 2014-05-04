@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:id="@+id/switchclass"
+        android:layout_width="390px"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="120px"
+        android:layout_marginTop="200px"
+        android:background="@drawable/userinfo_bg1"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingLeft="13.32px"
+        android:paddingRight="31px" >
+
+        <ListView
+            android:id="@+id/switchclassLv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:cacheColorHint="#00000000"
+            android:fadingEdge="none"
+            android:listSelector="#00000000"
+            android:layout_marginTop="23px"
+            android:scrollbars="none"
+            android:textSize="26px" >
+        </ListView>
+
+    </LinearLayout>
+
+</RelativeLayout>

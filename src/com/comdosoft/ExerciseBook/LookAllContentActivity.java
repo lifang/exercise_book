@@ -159,7 +159,8 @@ public class LookAllContentActivity extends Activity implements Urlinterface {
 			
 			Lookcontent.append(textarr[i]);
 			if (i <= arrs.size() - 1) {
-				Lookcontent.append(Html.fromHtml("<u>" + arrs.get(i)+ "</u>"));
+//				Lookcontent.append(Html.fromHtml("<u>" + arrs.get(i)+ "</u>"));
+				Lookcontent.append("____");
 //				content += arrs.get(i);
 			}
 //			content += textarr[i];
