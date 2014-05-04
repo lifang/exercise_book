@@ -91,5 +91,6 @@
     <string name="classcode2">功能，首先请加入一个班级方能正常使用全部功能。</string>
     <string name="guide_page_text">点击此按钮，可以展开导航栏</string>
     <string name="null_message">当前暂无任何问答...</string>
+    <string name="null_message2">当前暂无任何通知...</string>
 
 </resources>

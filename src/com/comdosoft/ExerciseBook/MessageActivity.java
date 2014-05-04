@@ -18,6 +18,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
@@ -25,14 +26,12 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import cn.jpush.android.api.JPushInterface;
 
 import com.comdosoft.ExerciseBook.ReplyListView.IXListViewListener;
@@ -40,11 +39,14 @@ import com.comdosoft.ExerciseBook.pojo.SysMessage;
 import com.comdosoft.ExerciseBook.tools.ExerciseBook;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookParams;
 import com.comdosoft.ExerciseBook.tools.ExerciseBookTool;
+import com.comdosoft.ExerciseBook.tools.PullToRefreshView;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
+import com.comdosoft.ExerciseBook.tools.PullToRefreshView.OnFooterRefreshListener;
+import com.comdosoft.ExerciseBook.tools.PullToRefreshView.OnHeaderRefreshListener;
 
 
 public class MessageActivity extends Table_TabHost implements
-IXListViewListener, Urlinterface, OnGestureListener {
+OnHeaderRefreshListener, OnFooterRefreshListener, Urlinterface, OnGestureListener {
 	private ReplyListView mListView;
 	private List<SysMessage> replyList = new ArrayList<SysMessage>();;
 	private Handler mHandler;
@@ -56,7 +58,7 @@ IXListViewListener, Urlinterface, OnGestureListener {
 	private String school_class_id;
 	private int mShowPosition = -1;
 	private Boolean isShow = false;
-	ReplyAdapter madapter = new ReplyAdapter();
+
 	private GestureDetector gd;
 	private final char FLING_CLICK = 0;
 	private final char FLING_LEFT = 1;
@@ -65,10 +67,18 @@ IXListViewListener, Urlinterface, OnGestureListener {
 	private TextView topTv1;
 	private ExerciseBook exerciseBook;
 	private ProgressDialog prodialog;
+	
+	private List<HorizontalScrollView> HorizontalScrollView_list;// 主消息 滑动块 集合
+	public List<Boolean> gk_list;// 主消息 点击操作 开关集合
+	public PullToRefreshView mPullToRefreshView;
+	public LinearLayout Linear_layout;
+	private int list_item;// list集合的最后一位索引
+	private TextView class_middle_null_message;// 没有消息时显示 提示信息
+	
 	private Handler handler1 = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
-			case 0:
+			case 0://   第一次加载
 				prodialog.dismiss();
 				final String json_all2 = (String) msg.obj;
 
@@ -77,38 +87,65 @@ IXListViewListener, Urlinterface, OnGestureListener {
 					replyList = new ArrayList<SysMessage>();
 					getNewsJson(json_all2);
 				}
-				int a = replyList.size();
-				if (a==0) {
-					Toast.makeText(MessageActivity.this, "暂无任何通知",
-							Toast.LENGTH_SHORT).show();
-				}else {
-					mListView.setAdapter(madapter);
-				}
-				
-				onLoad();
+				init();
 
 				break;
-			case 1:
-				Toast.makeText(MessageActivity.this, "未开启网络",
-						Toast.LENGTH_SHORT).show();
+			case 1://   刷新
+//				focus = -1;
+				replyList.clear();
+				click_list();
+				final String json_all = (String) msg.obj;
+				getNewsJson(json_all);
+				if (replyList.size() != 0) {
+					for (int i = 0; i < replyList.size(); i++) {
+						setlayout(i);
+					}
+					class_middle_null_message.setVisibility(View.GONE);
+				} else {
+					class_middle_null_message.setVisibility(View.VISIBLE);
+				}
+				mPullToRefreshView.onHeaderRefreshComplete();
 				break;
-			case 3://  删除
-				prodialog.dismiss();
-//				madapter.notifyDataSetChanged();
-				mListView.setAdapter(madapter);
+			case 2: //  回复
+				Log.i("aa", String.valueOf(msg.obj));
 				Toast.makeText(MessageActivity.this,
 						String.valueOf(msg.obj), Toast.LENGTH_SHORT).show();
 				break;
-			case 4:
+			case 3://  删除
+				prodialog.dismiss();
+				click_list();
+				if (replyList.size() != 0) {
+					for (int i = 0; i < replyList.size(); i++) {
+						setlayout(i);
+					}
+					class_middle_null_message.setVisibility(View.GONE);
+				} else {
+					class_middle_null_message.setVisibility(View.VISIBLE);
+				}
+				Toast.makeText(MessageActivity.this,
+						String.valueOf(msg.obj), Toast.LENGTH_SHORT).show();
+				
+				break;
+			case 4: //  加载更多
 				final String json4 = (String) msg.obj;
 
 				if (json4.length() == 0) {
 				} else {
 					getNewsJson(json4);
 				}
-				 handler.post(runnableUi);  
-//				madapter.notifyDataSetChanged();
-//				onLoad();
+				if (replyList.size() != 0) {
+					for (int i = list_item; i < replyList.size(); i++) {
+						setlayout(i);
+					}
+					class_middle_null_message.setVisibility(View.GONE);
+				} else {
+					class_middle_null_message.setVisibility(View.VISIBLE);
+				}
+				mPullToRefreshView.onFooterRefreshComplete();
+				break;
+			case 7:
+				Toast.makeText(getApplicationContext(),
+						ExerciseBookParams.INTERNET, Toast.LENGTH_SHORT).show();
 				break;
 			}
 		}
@@ -120,8 +157,7 @@ IXListViewListener, Urlinterface, OnGestureListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.message_listview);
 		gd = new GestureDetector(this);
-		mListView = (ReplyListView) findViewById(R.id.xListView);
-		mListView.setPullLoadEnable(true);
+		
 		topTv1=(TextView) findViewById(R.id.topTv1);
 		handler=new Handler(); 
 		SharedPreferences preferences = getSharedPreferences(SHARED,
@@ -129,6 +165,11 @@ IXListViewListener, Urlinterface, OnGestureListener {
 		student_id = preferences.getString("id", "1");
 		user_id= preferences.getString("user_id", "1");
 		school_class_id = preferences.getString("school_class_id", "1");
+		
+		class_middle_null_message = (TextView) findViewById(R.id.class_middle_null_message);
+		gk_list = new ArrayList<Boolean>();
+		HorizontalScrollView_list = new ArrayList<HorizontalScrollView>();
+		
 		topTv1.setOnClickListener(new OnClickListener()
 		{
 			public void onClick(View v) {
@@ -151,35 +192,12 @@ IXListViewListener, Urlinterface, OnGestureListener {
 			thread.start();
 
 		} else {
-			handler1.sendEmptyMessage(1);
-			onLoad();
+			handler1.sendEmptyMessage(7);
+		
 		}
-		// mListView.setPullLoadEnable(false);
-		// mListView.setPullRefreshEnable(false);
-		mListView.setXListViewListener(this);
-		mListView.setDividerHeight(0);
-		mHandler = new Handler();
+	
 	}
-
-	protected void onResume() {
-		super.onResume();
-		JPushInterface.onResume(this);
-	}
-
-	protected void onPause() {
-		super.onPause();
-		JPushInterface.onPause(this);
-	}
-	 // 构建Runnable对象，在runnable中更新界面  
-    Runnable   runnableUi=new  Runnable(){  
-        @Override  
-        public void run() {  
-            //更新界面  
-			madapter.notifyDataSetChanged();
-			onLoad();
-        }  
-          
-    }; 
+ 
 	
 	// 解析获取到的Json
 	public int getNewsJson(String json) {
@@ -214,7 +232,190 @@ IXListViewListener, Urlinterface, OnGestureListener {
 		return 0;
 	}
 
+	public void init() {
 
+		mPullToRefreshView = (PullToRefreshView) findViewById(R.id.main_pull_refresh_view);
+		mPullToRefreshView.setOnHeaderRefreshListener(this);
+		mPullToRefreshView.setOnFooterRefreshListener(this);
+		Linear_layout = (LinearLayout) findViewById(R.id.layout);
+		click_list();
+		Log.i("aaa", replyList.size() + "====");
+		if (replyList.size() != 0) {
+			for (int i = 0; i < replyList.size(); i++) {
+				setlayout(i);
+			}
+			class_middle_null_message.setVisibility(View.GONE);
+		} else {
+			class_middle_null_message.setVisibility(View.VISIBLE);
+		}
+
+	}
+
+	/**
+	 * 动态加载
+	 * 
+	 * */
+	public void setlayout(final int i) {
+
+		final SysMessage rep = replyList.get(i);
+		final View convertView = LayoutInflater
+				.from(MessageActivity.this).inflate(
+						R.layout.message_layout_iteam, null);
+
+		
+		final HorizontalScrollView hSView = (HorizontalScrollView) convertView
+				.findViewById(R.id.hsv2);
+		TextView date = (TextView) convertView
+				.findViewById(R.id.child_message_date);
+		TextView content = (TextView) convertView
+				.findViewById(R.id.child_micropost_content);
+		ImageView imgbtn2 = (ImageView) convertView
+				.findViewById(R.id.child_micropost_delete);
+		final View ll_action2 = convertView.findViewById(R.id.ll_action2);
+		DisplayMetrics dm = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(dm);
+		gk_list.add(true);
+		HorizontalScrollView_list.add(hSView);
+		
+		imgbtn2.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View v) {
+				
+				Dialog dialog = new AlertDialog.Builder(
+						MessageActivity.this)
+						.setTitle("提示")
+						.setMessage("您确认要删除么?")
+						.setPositiveButton("确认",
+								new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+										del(i);
+									}
+								})
+						.setNegativeButton("取消",
+								new DialogInterface.OnClickListener() {
+
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+										dialog.dismiss();
+									}
+								}).create();
+				dialog.show();
+				
+			}
+
+		});
+
+		
+		convertView.setOnTouchListener(new View.OnTouchListener() {
+			
+
+			public boolean onTouch(View v, MotionEvent event) {
+				int actionW = ll_action2.getWidth();
+				switch (event.getAction()) {
+				case MotionEvent.ACTION_UP:
+					
+
+					switch (flingState) {
+					case FLING_LEFT:
+					case FLING_RIGHT:
+					case FLING_CLICK:
+						if (gk_list.get(i) == true) {
+							hSView.smoothScrollTo(actionW, 0);
+							gk_list.set(i, false);
+							for (int j = 0; j < gk_list.size(); j++) {
+								if (j != i) {
+									gk_list.set(j, true);
+									HorizontalScrollView_list.get(j)
+											.smoothScrollTo(0, 0);
+								}
+							}
+						} else {
+							gk_list.set(i, true);
+							hSView.smoothScrollTo(0, 0);
+						}
+						break;
+					}
+				}
+				return false;
+
+			}
+		});
+		content.setText(replyList.get(i).getContent());
+		date.setText(replyList.get(i).getCreated_at());
+		RelativeLayout vew = (RelativeLayout) convertView.findViewById(R.id.child_user_left);
+
+		if (i % 2 == 0) {
+			vew.setBackgroundResource(R.color.before_click);
+		} else {
+			vew.setBackgroundResource(R.color.huse);
+		}
+		Linear_layout.addView(convertView);
+	}
+	
+	/*
+	 * 清空 各个集合中的数据
+	 */
+	public void click_list() {
+		Linear_layout.removeAllViews();
+		gk_list.clear();
+		HorizontalScrollView_list.clear();
+	}
+
+	/*
+	 * 上拉加载更多
+	 */
+	public void onFooterRefresh(PullToRefreshView view) {
+		list_item = replyList.size();
+		Log.i("aaa", "onLoadMore（）");
+		if (ExerciseBookTool.isConnect(MessageActivity.this)) {
+			page = page + 1;
+			Log.i("aaa", "onLoadMore（）--page：" + page);
+			Thread thread = new Thread(new get_news2());
+			thread.start();
+
+		} else {
+			mPullToRefreshView.onFooterRefreshComplete();
+			handler1.sendEmptyMessage(7);
+		}
+	}
+
+	/*
+	 * 下拉刷新
+	 */
+	public void onHeaderRefresh(PullToRefreshView view) {
+		if (ExerciseBookTool.isConnect(MessageActivity.this)) {
+			shuaxin();
+		} else {
+
+			handler1.sendEmptyMessage(7);
+			mPullToRefreshView.onHeaderRefreshComplete();
+		}
+
+	}
+
+	/*
+	 * 重新加载页面中的数据
+	 */
+	public void shuaxin() {
+
+		if (ExerciseBookTool.isConnect(MessageActivity.this)) {
+			page = 1;
+			Log.i("aaa", "onLoadMore（）--page：" + page);
+			Thread thread = new Thread(new get_news1());
+			thread.start();
+
+		} else {
+			mPullToRefreshView.onFooterRefreshComplete();
+			handler1.sendEmptyMessage(7);
+		}
+	}
+
+	
+	
+	
 	/*
 	 * 获得第一页信息
 	 */
@@ -232,12 +433,33 @@ IXListViewListener, Urlinterface, OnGestureListener {
 				msg.obj = json;
 				handler1.sendMessage(msg);
 			} catch (Exception e) {
-				onLoad();
-				handler1.sendEmptyMessage(1);
+				
+				handler1.sendEmptyMessage(7);
 			}
 		}
 	}
-
+	/*
+	 * 获得第一页信息
+	 */
+	class get_news1 implements Runnable {
+		public void run() {
+			try {
+				HashMap<String, String> mp = new HashMap<String, String>();
+				mp.put("student_id", student_id);
+				mp.put("school_class_id", school_class_id);
+				mp.put("page","1" );
+				String json = ExerciseBookTool
+						.sendGETRequest(Urlinterface.get_sysmessage, mp);
+				Message msg = new Message();// 创建Message 对象
+				msg.what = 1;
+				msg.obj = json;
+				handler1.sendMessage(msg);
+			} catch (Exception e) {
+				
+				handler1.sendEmptyMessage(7);
+			}
+		}
+	}
 	/*
 	 * 获得 更多 信息
 	 */
@@ -257,237 +479,57 @@ IXListViewListener, Urlinterface, OnGestureListener {
 				msg.obj = json;
 				handler1.sendMessage(msg);
 			} catch (Exception e) {
-				onLoad();
-				handler1.sendEmptyMessage(1);
-			}
-		}
-	}
-
-
-
-	private void onLoad() {
-		mListView.stopRefresh();
-		mListView.stopLoadMore();
-		mListView.setRefreshTime("刚刚");
-	}
-
-	@Override
-	public void onRefresh() {
-		page = 1;
-		if (ExerciseBookTool.isConnect(MessageActivity.this)) {
-
-			Thread thread = new Thread(new get_news());
-			thread.start();
-
-		} else {
-			handler1.sendEmptyMessage(1);
-			onLoad();
-		}
-	}
-
-	@Override
-	public void onLoadMore() {
-		Log.i("aaa",  "onLoadMore（）");
-		if (ExerciseBookTool.isConnect(MessageActivity.this)) {
-			page = page + 1;
-			Log.i("aaa",  "onLoadMore（）--page："+page);
-			Thread thread = new Thread(new get_news2());
-			thread.start();
-
-		} else {
-			handler1.sendEmptyMessage(1);
-			onLoad();
-		}
-
-	}
-
-	public static class ViewHolder {
-		public HorizontalScrollView hSView;
-		public TextView date;
-		public TextView content;
-		public ImageView imgbtn2;
-		private View ll_action2;
-	}
-
-	class ReplyAdapter extends BaseAdapter {
-		ExerciseBook hw = (ExerciseBook) getApplication();
-
-		public ReplyAdapter() {
-		}
-
-		public ReplyAdapter(Context context) {
-		}
-
-		public int getCount() {
-			return replyList.size();
-		}
-
-		public Object getItem(int position) {
-			return replyList.get(position);
-		}
-
-		public long getItemId(int position) {
-			return position;
-		}
-
-		public View getView(final int position, View convertView,
-				ViewGroup parent) {
-			LayoutInflater inflater = LayoutInflater
-					.from(getApplicationContext());
-			final int showPosition = position;
-			ViewHolder holder = null;
-			if (convertView == null) {
-				convertView = inflater.inflate(R.layout.message_layout_iteam,
-						null);
 				
-				holder = new ViewHolder();
-				holder.hSView = (HorizontalScrollView) convertView
-						.findViewById(R.id.hsv2);
-				holder.date = (TextView) convertView
-						.findViewById(R.id.child_message_date);
-				holder.content = (TextView) convertView
-						.findViewById(R.id.child_micropost_content);
-				holder.imgbtn2 = (ImageView) convertView
-						.findViewById(R.id.child_micropost_delete);
-				holder.ll_action2 = convertView.findViewById(R.id.ll_action2);
-				
-				convertView.setTag(holder);
-			} else {
-				holder = (ViewHolder) convertView.getTag();
+				handler1.sendEmptyMessage(7);
 			}
-
-			holder.imgbtn2.setOnClickListener(new OnClickListener() {
-
-				public void onClick(View v) {
-					
-					Dialog dialog = new AlertDialog.Builder(
-							MessageActivity.this)
-							.setTitle("提示")
-							.setMessage("您确认要删除么?")
-							.setPositiveButton("确认",
-									new DialogInterface.OnClickListener() {
-										@Override
-										public void onClick(DialogInterface dialog,
-												int which) {
-											del(position);
-										}
-									})
-							.setNegativeButton("取消",
-									new DialogInterface.OnClickListener() {
-
-										@Override
-										public void onClick(DialogInterface dialog,
-												int which) {
-											dialog.dismiss();
-										}
-									}).create();
-					dialog.show();
-					
-				}
-
-			});
-
-			
-			convertView.setOnTouchListener(new View.OnTouchListener() {
-				final int showPosition = position;
-
-				public boolean onTouch(View v, MotionEvent event) {
-					ViewHolder viewHolder = (ViewHolder) v.getTag();
-					int scrollX = viewHolder.hSView.getScrollX();
-					int actionW = viewHolder.ll_action2.getWidth();
-					switch (event.getAction()) {
-					case MotionEvent.ACTION_UP:
-						if (scrollX == 0) {
-							viewHolder.hSView.smoothScrollTo(actionW, 0);
-							mShowPosition = showPosition;
-							notifyDataSetChanged();
-							isShow = true;
-						} else if (scrollX < actionW / 2) {
-							viewHolder.hSView.smoothScrollTo(0, 0);
-							isShow = false;
-						} else if (scrollX == actionW || scrollX >= actionW / 2) {
-							if (isShow) {
-								viewHolder.hSView.smoothScrollTo(0, 0);
-								isShow = false;
-							} else {
-								viewHolder.hSView.smoothScrollTo(actionW, 0);
-								mShowPosition = showPosition;
-								notifyDataSetChanged();
-								isShow = true;
-							}
-						}
-						return true;
-					}
-					return false;
-
-				}
-			});
-			if (holder.hSView.getScrollX() != 0 && position != mShowPosition) {
-				holder.hSView.scrollTo(0, 0);
-			}
-			if (holder.hSView.getScrollX() != 0) {
-				holder.hSView.scrollTo(0, 0);
-			}
-			holder.content.setText(replyList.get(position).getContent());
-			holder.date.setText(replyList.get(position).getCreated_at());
-			RelativeLayout vew = (RelativeLayout) convertView.findViewById(R.id.child_user_left);
-
-			if (position % 2 == 0) {
-				vew.setBackgroundResource(R.color.before_click);
-			} else {
-				vew.setBackgroundResource(R.color.huse);
-			}
-			return convertView;
 		}
-		
-		
-		
-
-		public void del(final int position){
-			
-			
-			Thread thread = new Thread() {
-				public void run() {
-					try {
-						HashMap<String, String> mp = new HashMap<String, String>();
-						mp.put("user_id", user_id);
-						mp.put("sys_message_id",
-								replyList.get(position).getId());
-						mp.put("school_class_id",school_class_id);
-						String json = ExerciseBookTool
-								.doPost(Urlinterface.delete_sys_message,
-										mp);
-						JSONObject jsonobejct;
-						jsonobejct = new JSONObject(json);
-						String status = jsonobejct.getString("status");
-						String notice = jsonobejct.getString("notice");
-						if (status.equals("success")) {
-							replyList.remove(position);
-							
-						} 
-						Message msg=new Message();
-						msg.obj=notice;
-						msg.what=3;
-						handler1.sendMessage(msg);
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			};
-			if (ExerciseBookTool.isConnect(MessageActivity.this)) {
-				prodialog = new ProgressDialog(MessageActivity.this);
-				prodialog.setMessage("正在删除消息");
-				prodialog.setCanceledOnTouchOutside(false);
-				prodialog.show();
-			thread.start();	
-			}else {
-				handler1.sendEmptyMessage(1);
-			}
-			
-		}
-
 	}
+
+	public void del(final int position){
+		
+		
+		Thread thread = new Thread() {
+			public void run() {
+				try {
+					HashMap<String, String> mp = new HashMap<String, String>();
+					mp.put("user_id", user_id);
+					mp.put("sys_message_id",
+							replyList.get(position).getId());
+					mp.put("school_class_id",school_class_id);
+					String json = ExerciseBookTool
+							.doPost(Urlinterface.delete_sys_message,
+									mp);
+					JSONObject jsonobejct;
+					jsonobejct = new JSONObject(json);
+					String status = jsonobejct.getString("status");
+					String notice = jsonobejct.getString("notice");
+					if (status.equals("success")) {
+						replyList.remove(position);
+						
+					} 
+					Message msg=new Message();
+					msg.obj=notice;
+					msg.what=3;
+					handler1.sendMessage(msg);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		};
+		if (ExerciseBookTool.isConnect(MessageActivity.this)) {
+			prodialog = new ProgressDialog(MessageActivity.this);
+			prodialog.setMessage("正在删除消息");
+			prodialog.setCanceledOnTouchOutside(false);
+			prodialog.show();
+		thread.start();	
+		}else {
+			handler1.sendEmptyMessage(7);
+		}
+		
+	}
+
+
 
 	public boolean dispatchTouchEvent(MotionEvent event) {
 		this.gd.onTouchEvent(event);
