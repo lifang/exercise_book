@@ -80,10 +80,6 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 	private String school_class_id;
 	private EditText cardbagEt;
 	private ImageView cardbatFind;
-	private Button button1;
-	private Button button2;
-	private Button button3;
-	private Button button4;
 	private ExerciseBook eb;
 	private ProgressDialog progressDialog;
 	List<Button> btnList;
@@ -116,14 +112,6 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 		btnList = new ArrayList<Button>();
 		cardbagEt = (EditText) findViewById(R.id.cardbagEt);
 		cardbatFind = (ImageView) findViewById(R.id.cardbatFind);
-		button1 = (Button) findViewById(R.id.button1);// 读错
-		button2 = (Button) findViewById(R.id.button2);// 拼错
-		button3 = (Button) findViewById(R.id.button3);// 选错
-		button4 = (Button) findViewById(R.id.button4); // 默认
-		btnList.add(button4);
-		btnList.add(button1);
-		btnList.add(button2);
-		btnList.add(button3);
 
 		// 将可选内容与ArrayAdapter连接起来
 		// adapter = new

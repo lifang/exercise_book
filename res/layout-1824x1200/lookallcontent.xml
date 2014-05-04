@@ -3,24 +3,30 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/lookL"
-        android:layout_width="900px"
-        android:layout_height="900px"
+        android:layout_width="850px"
+        android:layout_height="500px"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_marginRight="150px"
-        android:layout_marginTop="300px"
+        android:layout_marginRight="175px"
+        android:layout_marginTop="401px"
         android:background="@color/top_qianlv"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:padding="31px" >
+        android:paddingBottom="50px"
+        >
 
         <ImageView
-            android:id="@+id/lookIv"
-            android:layout_width="180px"
-            android:layout_height="180px"
-            android:visibility="gone" />
+            android:id="@+id/look_all_close"
+            android:layout_width="40px"
+            android:layout_height="40px"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="20px"
+            android:layout_marginRight="20px"
+            android:src="@drawable/rank_close" />
+
+        
 
         <ScrollView
             android:layout_width="wrap_content"
@@ -28,6 +34,9 @@
             android:cacheColorHint="#00000000"
             android:fadingEdge="none"
             android:listSelector="#00000000"
+            android:layout_marginTop="100px"
+            android:layout_marginLeft="50px"
+            android:layout_marginRight="50px"
             android:scrollbars="none" >
 
             <TextView
@@ -38,6 +47,6 @@
                 android:textColor="@color/white"
                 android:textSize="47px" />
         </ScrollView>
-    </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

@@ -4,13 +4,13 @@
     android:layout_height="fill_parent" >
 
     <LinearLayout
-        android:id="@+id/switchclass"
-        android:layout_width="390px"
-        android:layout_height="wrap_content"
+         android:id="@+id/switchclass"
+        android:layout_width="322px"
+        android:layout_height="600px"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_marginRight="120px"
-        android:layout_marginTop="200px"
+        android:layout_marginRight="55px"
+        android:layout_marginTop="230px"
         android:background="@drawable/userinfo_bg1"
         android:gravity="center_horizontal"
         android:orientation="vertical"
