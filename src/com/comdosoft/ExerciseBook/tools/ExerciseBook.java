@@ -52,6 +52,7 @@ public class ExerciseBook extends Application {
 	private int usertime;
 	ImageMemoryCache memoryCache;
 	private boolean Update;
+	private String active_status;
 
 	public Map<Integer, List<View>> getFontCard() {
 		return FontCard;
@@ -310,6 +311,14 @@ public class ExerciseBook extends Application {
 
 	public void setUpdate(boolean update) {
 		Update = update;
+	}
+
+	public String getActive_status() {
+		return active_status;
+	}
+
+	public void setActive_status(String active_status) {
+		this.active_status = active_status;
 	}
 
 	public void onCreate() {

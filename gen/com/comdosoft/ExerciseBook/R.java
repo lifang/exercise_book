@@ -620,13 +620,14 @@ public final class R {
         public static final int switchclass_one=0x7f030042;
         public static final int table=0x7f030043;
         public static final int ten_speed=0x7f030044;
-        public static final int text_spinner=0x7f030045;
-        public static final int text_view=0x7f030046;
-        public static final int userinfo=0x7f030047;
-        public static final int work_end=0x7f030048;
-        public static final int work_item=0x7f030049;
-        public static final int xlistview_footer=0x7f03004a;
-        public static final int xlistview_header=0x7f03004b;
+        public static final int ten_speed_history=0x7f030045;
+        public static final int text_spinner=0x7f030046;
+        public static final int text_view=0x7f030047;
+        public static final int userinfo=0x7f030048;
+        public static final int work_end=0x7f030049;
+        public static final int work_item=0x7f03004a;
+        public static final int xlistview_footer=0x7f03004b;
+        public static final int xlistview_header=0x7f03004c;
     }
     public static final class raw {
         public static final int false_mp3=0x7f060000;

@@ -74,7 +74,7 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 	private String[] recordMesArr;
 	public String json;
 	public String path;
-	private String REG = "(?i)[^a-zA-Z0-9\u4E00-\u9FA5]";
+	private String REG = "(?i)[^a-zA-Z0-9\u4E00-\u9FA5\u0020]";
 	private String regEx = "[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
 	private String[] answerArr = new String[] { "你的作答: ", " ", "你的选择: ",
 			"你的选择: ", "你的搭配: ", "你的选择: ", "你的排序: " };
@@ -346,8 +346,12 @@ public class AnswerBaseActivity extends Activity implements OnClickListener,
 		if (s == null || s.equals("")) {
 			base_answer_text.setText("没有答题记录!");
 		} else {
-			base_answer_text
-					.setText(filterString(answerArr[mQuestionType] + s));
+			if (mQuestionType == 0) {
+				base_answer_text.setText(answerArr[mQuestionType] + s);
+			} else {
+				base_answer_text.setText(answerArr[mQuestionType]
+						+ filterString(s));
+			}
 		}
 	}
 
