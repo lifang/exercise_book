@@ -332,38 +332,47 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 
 		layout.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View arg0) {
-				eb.setWork_number(number);
-				eb.setWork_id(work_list.get(pager.getCurrentItem()).getId()
-						+ "");
-				eb.setActivity_item(1);
-				typeList = ExerciseBookTool.getTypeList(pojo);
-				question_type = questiontype_list;
-				layout_index = i;
-				Log.i("suanfa", "worknumber:" + number);
-				Log.i("suanfa", "类型:" + typeList.size());
-				Log.i("suanfa", "任务ID:" + pojo.getId());
-				Log.i("suanfa", "保存路径:" + pathList.get(pager.getCurrentItem()));
-				Log.i("suanfa", "下载路径:" + pojo.getQuestion_packages_url());
-				Log.i("suanfa", "Question_types:"
-						+ pojo.getQuestion_types().size() + "/"
-						+ pojo.getQuestion_types().get(i));
-				Log.i("suanfa", "Finish_types:" + pojo.getFinish_types().size());
-				out_time = ExerciseBookTool.Comparison_Time(
-						ExerciseBookTool.getTimeIng(),
-						work_list.get(pager.getCurrentItem()).getEnd_time());
-				if (ExerciseBookTool.FileExist(
-						pathList.get(pager.getCurrentItem()), "questions.json")) {// 判断question文件是否存在
-					getJsonPath();
+				if (eb.getActive_status().equals("1")
+						|| eb.getActive_status().equals("null")) {
+					eb.setWork_number(number);
+					eb.setWork_id(work_list.get(pager.getCurrentItem()).getId()
+							+ "");
+					eb.setActivity_item(1);
+					typeList = ExerciseBookTool.getTypeList(pojo);
+					question_type = questiontype_list;
+					layout_index = i;
+					Log.i("suanfa", "worknumber:" + number);
+					Log.i("suanfa", "类型:" + typeList.size());
+					Log.i("suanfa", "任务ID:" + pojo.getId());
+					Log.i("suanfa",
+							"保存路径:" + pathList.get(pager.getCurrentItem()));
+					Log.i("suanfa", "下载路径:" + pojo.getQuestion_packages_url());
+					Log.i("suanfa", "Question_types:"
+							+ pojo.getQuestion_types().size() + "/"
+							+ pojo.getQuestion_types().get(i));
+					Log.i("suanfa", "Finish_types:"
+							+ pojo.getFinish_types().size());
+					out_time = ExerciseBookTool.Comparison_Time(
+							ExerciseBookTool.getTimeIng(),
+							work_list.get(pager.getCurrentItem()).getEnd_time());
 					if (ExerciseBookTool.FileExist(
-							pathList.get(pager.getCurrentItem()), "student_"
-									+ eb.getUid() + ".json")) {// 判断answer文件是否存在
-						startDekaron(i);
+							pathList.get(pager.getCurrentItem()),
+							"questions.json")) {// 判断question文件是否存在
+						getJsonPath();
+						if (ExerciseBookTool.FileExist(
+								pathList.get(pager.getCurrentItem()),
+								"student_" + eb.getUid() + ".json")) {// 判断answer文件是否存在
+							startDekaron(i);
+						} else {
+							Log.i("suanfa", "answer文件不存在,正在下载");
+							handler.sendEmptyMessage(6);
+						}
 					} else {
-						Log.i("suanfa", "answer文件不存在,正在下载");
-						handler.sendEmptyMessage(6);
+						handler.sendEmptyMessage(4);
 					}
 				} else {
-					handler.sendEmptyMessage(4);
+					Toast.makeText(RecordMainActivity.this, "暂未进行激活，无法作答作业",
+							Toast.LENGTH_SHORT).show();
 				}
 			}
 		});
@@ -453,7 +462,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 	public void Start_Acvivity(int i, List<Integer> questiontype_list) {// 做题跳转
 		switch (questiontype_list.get(i)) {
 		case 0:
-			intent.setClass(this, AnswerDictationBeginActivity.class);
+			intent.setClass(this, AnswerDictationPrepareActivity.class);
 			break;
 		case 1:
 			intent.setClass(this, SpeakPrepareActivity.class);
@@ -489,7 +498,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 	public void Start_History_Acvivity(int i, List<Integer> questiontype_list) {// 历史记录跳转
 		switch (questiontype_list.get(i)) {
 		case 0:
-			intent.setClass(this, AnswerDictationBeginActivity.class);
+			intent.setClass(this, AnswerDictationPrepareActivity.class);
 			break;
 		case 1:
 			intent.setClass(this, SpeakPrepareActivity.class);

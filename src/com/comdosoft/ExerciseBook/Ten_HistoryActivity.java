@@ -71,7 +71,7 @@ public class Ten_HistoryActivity extends AnswerBaseActivity implements
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		super.setContentView(R.layout.ten_speed);
+		super.setContentView(R.layout.ten_speed_history);
 		findViewById(R.id.base_back_linearlayout).setOnClickListener(this);
 		findViewById(R.id.base_check_linearlayout).setOnClickListener(this);
 		setTimePropEnd();// 禁用道具
