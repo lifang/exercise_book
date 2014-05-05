@@ -38,5 +38,6 @@
 
     <drawable name="green">#0f0</drawable>
     <color name="cardchoice_c">#9a9d9e</color>
+    <color name="card_red">#F20318</color>
 
 </resources>

@@ -43,7 +43,7 @@ import com.comdosoft.ExerciseBook.tools.ImageMemoryCache;
 import com.comdosoft.ExerciseBook.tools.Urlinterface;
 
 public class LookAllContentActivity extends Activity implements Urlinterface {
-	private LinearLayout layout;
+	private ImageView layout;
 	private ListView switchclassLv;
 	private ExerciseBook exerciseBook;
 	private ImageView add_newclass;
@@ -53,7 +53,6 @@ public class LookAllContentActivity extends Activity implements Urlinterface {
 	private String types = "";
 	private String full_text = "";
 	String answer = "";
-	ImageView LookIv;
 	ImageMemoryCache memoryCache;
 	TextView Lookcontent;
 
@@ -72,14 +71,12 @@ public class LookAllContentActivity extends Activity implements Urlinterface {
 		answer = intent.getStringExtra("answer");
 
 		Lookcontent = (TextView) findViewById(R.id.lookcontent);
-		LookIv = (ImageView) findViewById(R.id.lookIv);
-		layout = (LinearLayout) findViewById(R.id.lookL);
+		layout = (ImageView) findViewById(R.id.look_all_close);
 		layout.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				// Toast.makeText(getApplicationContext(), "点击别的地方本界面消失",
-				// Toast.LENGTH_SHORT).show();
+				LookAllContentActivity.this.finish();
 			}
 		});
 
@@ -90,38 +87,6 @@ public class LookAllContentActivity extends Activity implements Urlinterface {
 			// Lookcontent.setText(Html.fromHtml("<u>"+"hahaha"+"</u>"));
 		} else {
 			Lookcontent.setText(setback(content, types));
-		}
-
-		String playerIP = "";
-		if (types.equals("3")) {
-			if ((content.indexOf("<file>") != -1)) {
-				if ((content.indexOf(".mp3") != -1)
-						|| (content.indexOf(".amr") != -1)
-						|| (content.indexOf(".wav") != -1)) {
-					playerIP = IP
-							+ content.substring("<file>".length(),
-									content.lastIndexOf("</file>"));
-				} else if ((content.indexOf(".png") != -1)
-						|| (content.indexOf(".jpg") != -1)) {
-					LookIv.setVisibility(View.VISIBLE);
-					String url = IP
-							+ content.substring("<file>".length(),
-									content.lastIndexOf("</file>"));
-					Bitmap result = memoryCache.getBitmapFromCache(url);
-					if (result == null) {
-						ExerciseBookTool.set_bk(url, LookIv, memoryCache);
-					} else {
-						LookIv.setImageDrawable(new BitmapDrawable(result));
-					}
-				}
-				Lookcontent.setText(content.substring(
-						content.lastIndexOf("</file>") + "</file>".length(),
-						content.length()));
-				// + setback(card.getOptions(), types));
-			} else {
-				Lookcontent.setText(content);
-				// + setback(card.getOptions(), types));
-			}
 		}
 
 	}
@@ -159,7 +124,8 @@ public class LookAllContentActivity extends Activity implements Urlinterface {
 			
 			Lookcontent.append(textarr[i]);
 			if (i <= arrs.size() - 1) {
-				Lookcontent.append(Html.fromHtml("<u>" + arrs.get(i)+ "</u>"));
+//				Lookcontent.append(Html.fromHtml("<u>" + arrs.get(i)+ "</u>"));
+				Lookcontent.append("____");
 //				content += arrs.get(i);
 			}
 //			content += textarr[i];
@@ -226,12 +192,12 @@ public class LookAllContentActivity extends Activity implements Urlinterface {
 		JPushInterface.onPause(this);
 	}
 
-	// 点击空白处 本界面消失
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		finish();
-		return true;
-	}
+//	// 点击空白处 本界面消失
+//	@Override
+//	public boolean onTouchEvent(MotionEvent event) {
+//		finish();
+//		return true;
+//	}
 
 	Handler handler = new Handler() {
 		public void handleMessage(Message msg) {

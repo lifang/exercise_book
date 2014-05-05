@@ -35,53 +35,34 @@
                 android:src="@drawable/cardfind" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/button1"
-            android:layout_width="91.12px"
-            android:layout_height="34.17px"
-            android:layout_marginLeft="76.38px"
-            android:layout_marginTop="33.43px"
-            android:layout_toRightOf="@id/cardbatll1"
-            android:background="@drawable/button_selector"
-            android:text="读错"
-            android:textColor="@drawable/button_color"
-            android:textSize="21px" />
+        <RelativeLayout
+            android:id="@+id/spinner"
+            android:layout_width="170px"
+            android:layout_height="45px"
+            android:layout_alignBottom="@+id/cardbatll1"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="40.2px"
+            android:background="@drawable/cardchoice">
 
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="91.12px"
-            android:layout_height="34.17px"
-            android:layout_marginLeft="18.09px"
-            android:layout_marginTop="33.45px"
-            android:layout_toRightOf="@id/button1"
-            android:background="@drawable/button_selector"
-            android:text="拼错"
-            android:textColor="@drawable/button_color"
-            android:textSize="21px" />
+            <TextView
+                android:id="@+id/spinner_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="默认"
+                android:textColor="#858c94"
+                android:textSize="25px	" />
+            <ImageView
+                    android:layout_width="30px"
+                    android:layout_height="20px"
+                    android:layout_marginRight="19.045px"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="15px"
+                    android:background="@drawable/card_spinner" />
 
-        <Button
-            android:id="@+id/button3"
-            android:layout_width="91.12px"
-            android:layout_height="34.17px"
-            android:layout_marginLeft="18.09px"
-            android:layout_marginTop="33.45px"
-            android:layout_toRightOf="@id/button2"
-            android:background="@drawable/button_selector"
-            android:text="选错"
-            android:textColor="@drawable/button_color"
-            android:textSize="21px" />
+        </RelativeLayout>
 
-        <Button
-            android:id="@+id/button4"
-            android:layout_width="91.12px"
-            android:layout_height="34.17px"
-            android:layout_marginLeft="18.09px"
-            android:layout_marginTop="33.45px"
-            android:layout_toRightOf="@id/button3"
-            android:background="@drawable/button_selector"
-            android:text="默认"
-            android:textColor="@drawable/button_color"
-            android:textSize="21px" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -101,7 +82,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="23.78px"
-                android:text="\t\t卡包中的卡包为作业时出现的错误，记录下来便于复习和巩固，若以后遇到同类问题，不再\n犯同样的错误，卡片自动消失"
+                android:text="\t卡包中的卡包为作业时出现的错误，记录下来便于复习和巩固，它积到20张时将影响用户不能\n进行作业，请及时清理卡包内的错题卡(题卡中绿色字体为正确答案，红色为你的错误答案)。"
                 android:textColor="#858c94"
                 android:textSize="15.4px	" />
         </LinearLayout>

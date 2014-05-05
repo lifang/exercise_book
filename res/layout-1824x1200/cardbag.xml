@@ -1,127 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+	android:layout_width="match_parent" android:layout_height="match_parent"
+	android:orientation="vertical">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="141.44px"
-        android:background="@color/white" >
+	<RelativeLayout android:layout_width="match_parent"
+		android:layout_height="141.44px" android:background="@color/white">
 
-        <LinearLayout
-            android:id="@+id/cardbatll1"
-            android:layout_width="358px"
-            android:layout_height="71px"
-            android:layout_marginLeft="60.88px"
-            android:layout_marginTop="40.94px"
-            android:background="@drawable/cardet"
-            android:gravity="center_vertical"
-            android:orientation="horizontal" >
+		<LinearLayout android:id="@+id/cardbatll1"
+			android:layout_width="358px" android:layout_height="71px"
+			android:layout_marginLeft="60.88px" android:layout_marginTop="40.94px"
+			android:background="@drawable/cardet" android:gravity="center_vertical"
+			android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/cardbagEt"
-                android:windowSoftInputMode="stateHidden|adjustResize"  
-                android:layout_width="306px"
-                android:layout_height="71px"
-                android:background="@drawable/cardet"
-                android:maxLines="1" />
+			<EditText android:id="@+id/cardbagEt"
+				android:windowSoftInputMode="stateHidden|adjustResize"
+				android:layout_width="306px" android:layout_height="71px"
+				android:background="@drawable/cardet" android:maxLines="1" />
 
-            <ImageView
-                android:id="@+id/cardbatFind"
-                android:layout_width="47px"
-                android:layout_height="47px"
-                android:layout_marginRight="5px"
-                android:src="@drawable/cardfind" />
-        </LinearLayout>
+			<ImageView android:id="@+id/cardbatFind"
+				android:layout_width="47px" android:layout_height="47px"
+				android:layout_marginRight="5px" android:src="@drawable/cardfind" />
+		</LinearLayout>
 
-        <Button
-            android:id="@+id/button1"
-            android:layout_width="136px"
-            android:layout_height="51px"
-            android:layout_marginLeft="114px"
-            android:layout_marginTop="49.91px"
-            android:layout_toRightOf="@id/cardbatll1"
-            android:background="@drawable/button_selector"
-            android:text="读错"
-            android:textColor="@drawable/button_color"
-            android:textSize="33px" />
+		<RelativeLayout
+            android:id="@+id/spinner"
+            android:layout_width="260px"
+            android:layout_height="60px"
+            android:layout_alignBottom="@+id/cardbatll1"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="55px"
+            android:background="@drawable/cardchoice">
 
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="136px"
-            android:layout_height="51px"
-            android:layout_marginLeft="27px"
-            android:layout_marginTop="49.91px"
-            android:layout_toRightOf="@id/button1"
-            android:background="@drawable/button_selector"
-            android:text="拼错"
-            android:textColor="@drawable/button_color"
-            android:textSize="33px" />
-
-        <Button
-            android:id="@+id/button3"
-            android:layout_width="136px"
-            android:layout_height="51px"
-            android:layout_marginLeft="27px"
-            android:layout_marginTop="49.91px"
-            android:layout_toRightOf="@id/button2"
-            android:background="@drawable/button_selector"
-            android:text="选错"
-            android:textColor="@drawable/button_color"
-            android:textSize="33px" />
-
-        <Button
-            android:id="@+id/button4"
-            android:layout_width="136px"
-            android:layout_height="51px"
-            android:layout_marginLeft="27px"
-            android:layout_marginTop="49.91px"
-            android:layout_toRightOf="@id/button3"
-            android:background="@drawable/button_selector"
-            android:text="默认"
-            android:textColor="@drawable/button_color"
-            android:textSize="33px" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="1577px"
-        android:background="#dcdbdb"
-        android:orientation="vertical" >
-
-        <LinearLayout
-            android:id="@+id/ll2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="vertical" >
             <TextView
+                android:id="@+id/spinner_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="35.50px"
-                android:text="\t\t卡包中的卡包为作业时出现的错误，记录下来便于复习和巩固，若以后遇到同类问题，不再\n犯同样的错误，卡片自动消失"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="默认"
                 android:textColor="#858c94"
-                android:textSize="22px	" />
-        </LinearLayout>
+                android:textSize="37px	" />
+            <ImageView
+                    android:layout_width="40px"
+                    android:layout_height="27px"
+                    android:layout_marginRight="28px"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="22.4px"
+                    android:background="@drawable/card_spinner" />
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/guidePages"
-            android:layout_width="fill_parent"
-            android:layout_height="1200px"
-            android:layout_below="@id/ll2"
-            android:layout_marginTop="41.86px" />
+        </RelativeLayout>
+	</RelativeLayout>
 
-        <LinearLayout
-            android:id="@+id/viewGroup"
-            android:layout_width="fill_parent"
-            android:layout_height="50px"
-            android:layout_alignParentBottom="true"
-            android:layout_below="@id/guidePages"
-            android:layout_marginBottom="40dp"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal" >
-        </LinearLayout>
-    </RelativeLayout>
+	<RelativeLayout android:layout_width="match_parent"
+		android:layout_height="1577px" android:background="#dcdbdb"
+		android:orientation="vertical">
+
+		<LinearLayout android:id="@+id/ll2" android:layout_width="match_parent"
+			android:layout_height="wrap_content" android:gravity="center_horizontal"
+			android:orientation="vertical">
+			<TextView android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:layout_marginTop="35.50px"
+				android:text="\t卡包中的卡包为作业时出现的错误，记录下来便于复习和巩固，它积到20张时将影响用户不能\n进行作业，请及时清理卡包内的错题卡(题卡中绿色字体为正确答案，红色为你的错误答案)。"
+				android:textColor="#858c94" android:textSize="22px	" />
+		</LinearLayout>
+
+		<android.support.v4.view.ViewPager
+			android:id="@+id/guidePages" android:layout_width="fill_parent"
+			android:layout_height="1200px" android:layout_below="@id/ll2"
+			android:layout_marginTop="41.86px" />
+
+		<LinearLayout android:id="@+id/viewGroup"
+			android:layout_width="fill_parent" android:layout_height="50px"
+			android:layout_alignParentBottom="true" android:layout_below="@id/guidePages"
+			android:layout_marginBottom="40dp" android:gravity="center_horizontal"
+			android:orientation="horizontal">
+		</LinearLayout>
+	</RelativeLayout>
 
 </LinearLayout>
