@@ -334,19 +334,19 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 					count1++;
 					Allmap.put(count1, cardList);
 				}
-				JSONArray tags = jsonobject.getJSONArray("tags");// 全部标签
-				for (int i = 0; i < tags.length(); i++) {
-					Log.i("2222222222222222222", i + "");
-					JSONObject jsonobject2 = tags.getJSONObject(i);
-					String card_bag_id = jsonobject2.getString("card_bag_id");
-					String created_at = jsonobject2.getString("created_at");
-					String id = jsonobject2.getString("id");
-					String name = jsonobject2.getString("name");
-					String update_at = jsonobject2.getString("updated_at");
-					tagsList.add(new tags(card_bag_id, created_at, id, name,
-							update_at));
-					Log.i("22----------", i + "");
-				}
+//				JSONArray tags = jsonobject.getJSONArray("tags");// 全部标签
+//				for (int i = 0; i < tags.length(); i++) {
+//					Log.i("2222222222222222222", i + "");
+//					JSONObject jsonobject2 = tags.getJSONObject(i);
+//					String card_bag_id = jsonobject2.getString("card_bag_id");
+//					String created_at = jsonobject2.getString("created_at");
+//					String id = jsonobject2.getString("id");
+//					String name = jsonobject2.getString("name");
+//					String update_at = jsonobject2.getString("updated_at");
+//					tagsList.add(new tags(card_bag_id, created_at, id, name,
+//							update_at));
+//					Log.i("22----------", i + "");
+//				}
 				eb.setTagsList(tagsList);
 				if (flag) {
 					handler.sendEmptyMessage(1);
