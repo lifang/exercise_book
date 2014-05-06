@@ -47,6 +47,7 @@
                 android:layout_marginRight="70px"
                 android:layout_marginTop="20px"
                 android:ellipsize="end"
+                android:maxLines="6"
                 android:text="tagether1111111111111111111111111111"
                 android:textColor="@color/black"
                 android:textSize="20px" />

@@ -234,6 +234,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 						Toast.makeText(getApplicationContext(), "搜索框不能为空",
 								Toast.LENGTH_SHORT).show();
 					} else {
+						spinner_text.setText("");
 						showdialog();
 						// changeBtn(-1);
 						thread.start();
@@ -558,7 +559,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 	// TYPES_NAME = {0 => "听力", 1 => "朗读", 2 => "十速挑战", 3 => "选择", 4 => "连线", 5
 	// => "完型填空", 6 => "排序"}
 	public String setback(String str, String types) {
-		String content = null;
+		String content = "";
 		int types2 = 0;
 		if ("null".equals(types)) {
 			types2 = -1;
@@ -579,7 +580,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 			for (int i = 0; i < strarr.length; i++) {
 				content += strarr[i] + "\n";
 			}
-			return content.substring(4, content.length());
+			return content.substring(0, content.length());
 		case 4:
 			strarr = str.split(";\\|\\|;");
 			for (int i = 0; i < strarr.length; i++) {
@@ -592,7 +593,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 				}
 				content += "\n";
 			}
-			return content.substring(4, content.length());
+			return content.substring(0, content.length());
 		case 6:
 			return str;
 		}
@@ -601,7 +602,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 
 	// 完形填空
 	public String settypes5(String full_text, String answer,
-			TextView Lookcontent) {
+			TextView Lookcontent, String index) {
 
 		List arrs = new ArrayList<String>();
 		JSONArray answerarray;
@@ -618,24 +619,91 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 			e.printStackTrace();
 		}
 		String content = "";
-		full_text = full_text.replaceAll("\\[\\[sign\\]\\]",
-				" \\[\\[sign\\]\\] ");
+//		full_text = full_text.replaceAll("\\[\\[sign\\]\\]",
+//				" \\[\\[sign\\]\\] ");
 		full_text = ExerciseBookTool.del_tag(full_text);
 		Log.i("22", full_text + "");
 
-		String[] textarr = full_text.split("\\[\\[sign\\]\\]");
-		for (int i = 0; i < textarr.length; i++) {
-
-			Lookcontent.append(textarr[i]);
-			if (i <= arrs.size() - 1) {
-				Lookcontent.append("___");
-				// content += arrs.get(i);
-			}
-		}
-		// content = full_text.replace("[[sign]]", "___");
+//		String[] textarr = full_text.split("\\[\\[sign\\]\\]");
+//		for (int i = 0; i < textarr.length; i++) {
+//
+//			Lookcontent.append(textarr[i]);
+//			if (i <= arrs.size() - 1) {
+//				Lookcontent.append("___");
+//				// content += arrs.get(i);
+//			}
+//		}
+		String str = JiSuan(full_text,Integer.parseInt(index)).replaceAll("\\[\\[sign\\]\\]", "___");
+		Lookcontent.append(str);
 		return content;
 	}
 
+	
+	public static String JiSuan(String content, int index) {
+
+		String strnull = getStringCL(content);
+		String[] str_arr = strnull.split(" ");
+		int sign_item = 0;// sign是第几个
+		int item = 0;// sign所在的索引
+		for (int i = 0; i < str_arr.length; i++) {
+			if (str_arr[i].equals("[[sign]]")) {
+				sign_item += 1;
+				if (sign_item == index) {
+					item = i;
+				}
+			}
+		}
+		int left = left(str_arr, item);
+		int right = right(str_arr, item);
+		System.out.println(left + "-" + right);
+		StringBuffer sb = new StringBuffer("");
+		for (int i = left; i <= right; i++) {
+			if (!str_arr[i].equals("")) {
+				sb.append(str_arr[i]).append(" ");
+			}
+		}
+		sb.deleteCharAt(sb.length() - 1);
+		System.out.println(sb.toString());
+		return sb.toString();
+	}
+
+	public static String getStringCL(String content) {// 处理字符串
+		String str = content.replaceAll("\\[\\[sign\\]\\]", " [[sign]] ");
+		for (int i = 0; i < BD.length; i++) {
+			String bd = BD[i];
+			if (str.contains(bd)) {
+				str = str.replaceAll("\\" + bd, " " + bd + " ");// 前后追加空格
+			}
+		}
+		String strnull = str.replaceAll("\\s", " ");
+		System.out.println(strnull);
+		return strnull;
+	}
+
+	public static int left(String[] str_arr, int item) {
+		for (int i = item; i > 0; i--) {
+			for (int j = 0; j < BD.length; j++) {
+				if (str_arr[i].contains(BD[j])) {
+					return i + 1;
+				}
+			}
+		}
+		return 0;
+	}
+
+	public static int right(String[] str_arr, int item) {
+		for (int i = item; i < str_arr.length; i++) {
+			for (int j = 0; j < BD.length; j++) {
+				if (str_arr[i].contains(BD[j])) {
+					return i;
+				}
+			}
+		}
+		return str_arr.length - 1;
+	}
+
+	public static String[] BD = new String[] { ",", ".", "!", "?","，","。","！","？" };
+	
 	/*
 	 * 显示选项 正确 错误分别显示
 	 */
@@ -824,6 +892,9 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 
 	}
 
+	/*
+	 * 设置卡片内容
+	 */
 	public void setFontCard(ViewGroup v1, final knowledges_card card,
 			final int index, final int page) {
 		TextView reson = null;
@@ -876,7 +947,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 			if (card.getTypes().equals("5")) { // 完形填空 显示 查看全部 按钮
 				all_content.setText("");
 				look_all_mes.setVisibility(View.VISIBLE);
-				settypes5(card.getFull_text(), card.getAnswer(), all_content);
+				settypes5(card.getFull_text(), card.getAnswer(), all_content,card.getContent());
 			} else {
 				all_content
 						.setText(setback(card.getContent(), card.getTypes()));

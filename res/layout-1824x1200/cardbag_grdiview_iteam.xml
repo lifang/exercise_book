@@ -27,7 +27,7 @@
             <TextView
                 android:id="@+id/youranswer"
                 android:layout_width="wrap_content"
-                android:layout_height="200px"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/reson"
                 android:layout_marginLeft="38px"
                 android:layout_marginRight="104px"
@@ -47,6 +47,7 @@
                 android:layout_marginRight="104px"
                 android:layout_marginTop="30px"
                 android:ellipsize="end"
+                android:maxLines="6"
                 android:text="tagether1111111111111111111111111111"
                 android:textColor="@color/black"
                 android:textSize="30px" />
