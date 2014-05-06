@@ -6,7 +6,7 @@
     <LinearLayout
          android:id="@+id/switchclass"
         android:layout_width="322px"
-        android:layout_height="600px"
+        android:layout_height="630px"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_marginRight="55px"
