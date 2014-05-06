@@ -311,13 +311,13 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 
 					String options = jsonobject2.getString("options");
 					String full_text = jsonobject2.getString("full_text");
-					JSONArray tagsarray = jsonobject2 // 当前卡片 已选中的 标签 id
-							.getJSONArray("card_tags_id");
+//					JSONArray tagsarray = jsonobject2 // 当前卡片 已选中的 标签 id
+//							.getJSONArray("card_tags_id");
+//					List<Integer> intlist = new ArrayList<Integer>();
+//					for (int j = 0; j < tagsarray.length(); j++) {
+//						intlist.add(tagsarray.getInt(j));
+//					}
 					List<Integer> intlist = new ArrayList<Integer>();
-					for (int j = 0; j < tagsarray.length(); j++) {
-						intlist.add(tagsarray.getInt(j));
-					}
-
 					cardList.add(new knowledges_card(id, card_bag_id,
 							mistake_types, branch_question_id, your_answer,
 							created_at, updated_at, content, question_id,
