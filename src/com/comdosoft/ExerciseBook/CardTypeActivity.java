@@ -47,7 +47,7 @@ public class CardTypeActivity extends Activity {
 	private ExerciseBook exerciseBook;
 	// TYPES_NAME = {0 => "听力", 1 => "朗读", 2 => "十速挑战", 3 => "选择", 4 => "连线", 5
 	// => "完型填空", 6 => "排序"}
-	private static final String[] m={"默认","听力","朗读","选择","连线","完形","排序"};
+	private static final String[] m={"默认","听写","朗读","十速","选择","连线","完型","排序"};
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
