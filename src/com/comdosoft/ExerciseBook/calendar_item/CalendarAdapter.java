@@ -181,9 +181,10 @@ public class CalendarAdapter extends BaseAdapter {
 		}
 		if (position < daysOfMonth + dayOfWeek && position >= dayOfWeek) {
 			// 当前月信息显示
-			textView.setTextColor(Color.WHITE);// 当月字体设黑
-			status.setBackgroundResource(R.drawable.mark2);
+			textView.setTextColor(Color.WHITE);// 当月字体设白
 			drawable = res.getDrawable(R.drawable.current_day_bgc);
+		} else {
+			status.setVisibility(View.GONE);
 		}
 
 		if (currentFlag == position) {

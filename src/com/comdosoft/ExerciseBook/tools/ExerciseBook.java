@@ -74,6 +74,7 @@ public class ExerciseBook extends Application {
 		this.setPropTime_Number(0);
 		this.setUsertime(0);
 		this.setUpdate(true);
+		this.setActive_status("null");
 	}
 
 	public int getWork_number() {
