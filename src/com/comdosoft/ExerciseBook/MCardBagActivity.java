@@ -12,7 +12,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -21,6 +20,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -31,6 +31,10 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.BackgroundColorSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -92,9 +96,53 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 	int btnNum = -1;
 	private RelativeLayout spin;
 	private TextView spinner_text;
+	private Handler handler = new Handler() {
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			switch (msg.what) {
+			case 0:
+				progressDialog.dismiss();
+				Toast.makeText(MCardBagActivity.this, String.valueOf(msg.obj),
+						Toast.LENGTH_SHORT).show();
+				break;
+			case 1:
+				// page = 0;
+				cardbagEt.setText("");
 
-	// private static final String[] m={"A型","B型","O型","AB型","其他"};
-	// private ArrayAdapter<String> adapter;
+				setViewPager();
+				progressDialog.dismiss();
+				GuidePageAdapter gpa = new GuidePageAdapter();
+				viewPager.setAdapter(gpa);
+
+				viewPager.setCurrentItem(page);
+				viewPager
+						.setOnPageChangeListener(new GuidePageChangeListener());
+				break;
+			case 2:
+				Toast.makeText(MCardBagActivity.this, String.valueOf(msg.obj),
+						Toast.LENGTH_SHORT).show();
+				setViewPager();
+				viewPager.setAdapter(new GuidePageAdapter());
+				int a = 4 * (page - 1);
+				if (a == cardList.size()) {
+					viewPager.setCurrentItem(page - 1);
+				} else {
+					viewPager.setCurrentItem(page);
+				}
+
+				viewPager
+						.setOnPageChangeListener(new GuidePageChangeListener());
+				break;
+			case 7:
+				Toast.makeText(getApplicationContext(),
+						ExerciseBookParams.INTERNET, Toast.LENGTH_SHORT).show();
+				break;
+			default:
+				break;
+			}
+		}
+	};
+
 	@Override
 	@SuppressWarnings("rawtypes")
 	protected void onCreate(Bundle savedInstanceState) {
@@ -112,10 +160,6 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 		btnList = new ArrayList<Button>();
 		cardbagEt = (EditText) findViewById(R.id.cardbagEt);
 		cardbatFind = (ImageView) findViewById(R.id.cardbatFind);
-
-		// 将可选内容与ArrayAdapter连接起来
-		// adapter = new
-		// ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,m);
 
 		spin = (RelativeLayout) findViewById(R.id.spinner);
 		spinner_text = (TextView) findViewById(R.id.spinner_text);
@@ -156,7 +200,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 		progressDialog.show();
 	}
 
-	public void btnlistClick() {
+	public void btnlistClick() { // 搜索框 设置监听
 		cardbatFind.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 
@@ -191,7 +235,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 								Toast.LENGTH_SHORT).show();
 					} else {
 						showdialog();
-//						changeBtn(-1);
+						// changeBtn(-1);
 						thread.start();
 					}
 				} else {
@@ -244,19 +288,6 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 		tagsList.clear();
 		try {
 			JSONObject jsonobject = new JSONObject(json);
-			// {"tags":[{"id":1,"created_at":"2014-03-09T17:06:53+08:00","updated_at":"2014-03-17T17:06:59+08:00","card_bag_id":1,"name":"bag1"},{"id":2,"created_at":"2014-03-12T09:29:40+08:00","updated_at":"2014-03-12T09:29:40+08:00","card_bag_id":1,"name":"第一个"},{"id":3,"created_at":"2014-03-12T09:48:53+08:00","updated_at":"2014-03-12T09:48:53+08:00","card_bag_id":1,"name":null},{"id":4,"created_at":"2014-03-12T10:04:52+08:00","updated_at":"2014-03-12T10:04:52+08:00","card_bag_id":1,"name":"一饿的"},{"id":5,"created_at":"2014-03-12T10:05:19+08:00","updated_at":"2014-03-12T10:05:19+08:00","card_bag_id":1,"name":"一饿的地方 "},{"id":6,"created_at":"2014-03-12T10:07:33+08:00","updated_at":"2014-03-12T10:07:33+08:00","card_bag_id":1,"name":"似懂非懂分"},{"id":7,"created_at":"2014-03-12T10:09:25+08:00","updated_at":"2014-03-12T10:09:25+08:00","card_bag_id":1,"name":"就看看"},{"id":8,"created_at":"2014-03-12T10:15:23+08:00","updated_at":"2014-03-12T10:15:23+08:00","card_bag_id":1,"name":"第er个"},{"id":9,"created_at":"2014-03-12T10:16:08+08:00","updated_at":"2014-03-12T10:16:08+08:00","card_bag_id":1,"name":"第x个"},{"id":10,"created_at":"2014-03-12T10:18:05+08:00","updated_at":"2014-03-12T10:18:05+08:00","card_bag_id":1,"name":"第y个"},{"id":11,"created_at":"2014-03-12T10:20:55+08:00","updated_at":"2014-03-12T10:20:55+08:00","card_bag_id":1,"name":"hh"},{"id":12,"created_at":"2014-03-19T10:51:54+08:00","updated_at":"2014-03-19T10:51:54+08:00","card_bag_id":1,"name":"??"},{"id":13,"created_at":"2014-03-19T10:55:14+08:00","updated_at":"2014-03-19T10:55:14+08:00","card_bag_id":1,"name":"???"},{"id":14,"created_at":"2014-03-19T11:02:20+08:00","updated_at":"2014-03-19T11:02:20+08:00","card_bag_id":1,"name":"????"},{"id":15,"created_at":"2014-03-19T11:09:21+08:00","updated_at":"2014-03-19T11:09:21+08:00","card_bag_id":1,"name":"fghhg"},{"id":16,"created_at":"2014-03-19T11:11:30+08:00","updated_at":"2014-03-19T11:11:30+08:00","card_bag_id":1,"name":"fghh"},{"id":17,"created_at":"2014-03-19T11:12:38+08:00","updated_at":"2014-03-19T11:12:38+08:00","card_bag_id":1,"name":"a"},{"id":18,"created_at":"2014-03-19T11:14:17+08:00","updated_at":"2014-03-19T11:14:17+08:00","card_bag_id":1,"name":"b"},{"id":19,"created_at":"2014-03-19T11:15:32+08:00","updated_at":"2014-03-19T11:15:32+08:00","card_bag_id":1,"name":"c"},{"id":20,"created_at":"2014-03-19T11:17:51+08:00","updated_at":"2014-03-19T11:17:51+08:00","card_bag_id":1,"name":"d"},{"id":21,"created_at":"2014-03-19T11:19:27+08:00","updated_at":"2014-03-19T11:19:27+08:00","card_bag_id":1,"name":"e"},{"id":22,"created_at":"2014-03-19T11:20:38+08:00","updated_at":"2014-03-19T11:20:38+08:00","card_bag_id":1,"name":"f"},{"id":23,"created_at":"2014-03-19T11:23:13+08:00","updated_at":"2014-03-19T11:23:13+08:00","card_bag_id":1,"name":"g"},{"id":24,"created_at":"2014-03-19T11:25:36+08:00","updated_at":"2014-03-19T11:25:36+08:00","card_bag_id":1,"name":"h"},{"id":25,"created_at":"2014-03-19T11:33:26+08:00","updated_at":"2014-03-19T11:33:26+08:00","card_bag_id":1,"name":"j"},{"id":26,"created_at":"2014-03-19T11:34:05+08:00","updated_at":"2014-03-19T11:34:05+08:00","card_bag_id":1,"name":"k"},{"id":27,"created_at":"2014-03-19T11:39:44+08:00","updated_at":"2014-03-19T11:39:44+08:00","card_bag_id":1,"name":"l"},{"id":28,"created_at":"2014-03-19T11:42:02+08:00","updated_at":"2014-03-19T11:42:02+08:00","card_bag_id":1,"name":"o"},{"id":29,"created_at":"2014-03-19T11:49:29+08:00","updated_at":"2014-03-19T11:49:29+08:00","card_bag_id":1,"name":"第sdfds"},{"id":30,"created_at":"2014-03-19T11:49:49+08:00","updated_at":"2014-03-19T11:49:49+08:00","card_bag_id":1,"name":"第三四十"},{"id":31,"created_at":"2014-03-19T11:50:34+08:00","updated_at":"2014-03-19T11:50:34+08:00","card_bag_id":1,"name":"??????"},{"id":32,"created_at":"2014-03-19T11:50:55+08:00","updated_at":"2014-03-19T11:50:55+08:00","card_bag_id":1,"name":"共用回家"},{"id":33,"created_at":"2014-03-19T13:55:15+08:00","updated_at":"2014-03-19T13:55:15+08:00","card_bag_id":1,"name":"tty"},{"id":34,"created_at":"2014-03-19T13:56:03+08:00","updated_at":"2014-03-19T13:56:03+08:00","card_bag_id":1,"name":"fas"},{"id":35,"created_at":"2014-03-19T13:57:28+08:00","updated_at":"2014-03-19T13:57:28+08:00","card_bag_id":1,"name":"iyt"},{"id":36,"created_at":"2014-03-19T14:00:53+08:00","updated_at":"2014-03-19T14:00:53+08:00","card_bag_id":1,"name":"uuiiy"},{"id":37,"created_at":"2014-03-19T14:05:51+08:00","updated_at":"2014-03-19T14:05:51+08:00","card_bag_id":1,"name":"rty"},{"id":38,"created_at":"2014-03-19T14:08:49+08:00","updated_at":"2014-03-19T14:08:49+08:00","card_bag_id":1,"name":"rtyu"},{"id":39,"created_at":"2014-03-19T14:09:57+08:00","updated_at":"2014-03-19T14:09:57+08:00","card_bag_id":1,"name":"jh"},{"id":40,"created_at":"2014-03-19T14:12:59+08:00","updated_at":"2014-03-19T14:12:59+08:00","card_bag_id":1,"name":"dfgt"},{"id":41,"created_at":"2014-03-19T14:17:05+08:00","updated_at":"2014-03-19T14:17:05+08:00","card_bag_id":1,"name":"errt"},{"id":42,"created_at":"2014-03-19T14:18:31+08:00","updated_at":"2014-03-19T14:18:31+08:00","card_bag_id":1,"name":"uhnk"},{"id":43,"created_at":"2014-03-19T14:20:19+08:00","updated_at":"2014-03-19T14:20:19+08:00","card_bag_id":1,"name":"bgjnf"},{"id":44,"created_at":"2014-03-19T14:21:37+08:00","updated_at":"2014-03-19T14:21:37+08:00","card_bag_id":1,"name":"xxdfv"},{"id":45,"created_at":"2014-03-19T14:22:47+08:00","updated_at":"2014-03-19T14:22:47+08:00","card_bag_id":1,"name":"bcxzs"},{"id":46,"created_at":"2014-03-19T14:28:52+08:00","updated_at":"2014-03-19T14:28:52+08:00","card_bag_id":1,"name":"rtyy"},{"id":47,"created_at":"2014-03-25T17:14:46+08:00","updated_at":"2014-03-25T17:14:46+08:00","card_bag_id":1,"name":"秋雨鱼"},{"id":48,"created_at":"2014-03-25T17:16:14+08:00","updated_at":"2014-03-25T17:16:14+08:00","card_bag_id":1,"name":"秋"},{"id":49,"created_at":"2014-03-28T10:47:46+08:00","updated_at":"2014-03-28T10:47:46+08:00","card_bag_id":1,"name":"ffff"}],"notice":"获取成功！！","status":"success","knowledges_card":[{"card_bag_id":1,"answer":null,"branch_question_id":556,"mistake_types":2,"content":"This is an apple!","id":2,"card_tags_id":[3],"updated_at":"2014-03-12T15:58:49+08:00","your_answer":"ww","created_at":"2014-03-12T15:58:49+08:00","types":null,"resource_url":"\/question_packages\/201402\/questions_package_222\/media_186.mp3","question_id":357,"full_text":null,"options":null},{"card_bag_id":1,"answer":null,"branch_question_id":554,"mistake_types":1,"content":"This
-			// is an
-			// apple4!","id":3,"card_tags_id":[1,1,1,29,30],"updated_at":"2014-03-12T15:58:49+08:00","your_answer":"ww","created_at":"2014-03-12T15:58:49+08:00","types":null,"resource_url":"\/question_packages\/201402\/questions_package_222\/media_184.mp3","question_id":356,"full_text":null,"options":null},{"card_bag_id":1,"answer":null,"branch_question_id":551,"mistake_types":1,"content":"This
-			// is an
-			// apple1!","id":4,"card_tags_id":[1,3,6,10,11,5,7,8,12,13,14,15,16,17,18,19,20,21,23,24,25,26,27,28,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46],"updated_at":"2014-03-12T15:58:49+08:00","your_answer":"qq","created_at":"2014-03-12T15:58:49+08:00","types":null,"resource_url":"\/question_packages\/201402\/questions_package_222\/media_181.mp3","question_id":356,"full_text":null,"options":null},{"card_bag_id":1,"answer":null,"branch_question_id":536,"mistake_types":2,"content":"I
-			// write very
-			// hard","id":5,"card_tags_id":[1,2,3,5],"updated_at":"2014-03-12T15:58:49+08:00","your_answer":"qq","created_at":"2014-03-12T15:58:49+08:00","types":null,"resource_url":"\/question_packages\/62\/questions_package_275\/media_536.wav","question_id":351,"full_text":null,"options":null},{"card_bag_id":1,"answer":null,"branch_question_id":538,"mistake_types":2,"content":"I
-			// write you a
-			// work","id":6,"card_tags_id":[7,4,1,5],"updated_at":"2014-03-12T15:58:49+08:00","your_answer":"ww","created_at":"2014-03-12T15:58:49+08:00","types":null,"resource_url":"\/question_packages\/62\/questions_package_274\/media_538.wav","question_id":352,"full_text":null,"options":null},{"card_bag_id":1,"answer":"apple","branch_question_id":558,"mistake_types":3,"content":"<file>apple.jpg<\/file>","id":7,"card_tags_id":[11,1,4],"updated_at":"2014-03-12T15:58:49+08:00","your_answer":"ee","created_at":"2014-03-12T15:58:49+08:00","types":null,"resource_url":null,"question_id":358,"full_text":null,"options":"apple;||;banana;||;orange"},{"card_bag_id":1,"answer":"apple","branch_question_id":559,"mistake_types":3,"content":"<file>apple.wav<\/file>","id":8,"card_tags_id":[],"updated_at":"2014-03-12T15:58:49+08:00","your_answer":"ee","created_at":"2014-03-12T15:58:49+08:00","types":null,"resource_url":null,"question_id":358,"full_text":null,"options":"apple;||;banana;||;orange"},{"card_bag_id":1,"answer":null,"branch_question_id":553,"mistake_types":1,"content":"This
-			// is an
-			// apple3!","id":9,"card_tags_id":[],"updated_at":"2014-03-12T15:58:49+08:00","your_answer":"ee","created_at":"2014-03-12T15:58:49+08:00","types":null,"resource_url":"\/question_packages\/201402\/questions_package_222\/media_183.mp3","question_id":356,"full_text":null,"options":null},{"card_bag_id":1,"answer":null,"branch_question_id":552,"mistake_types":1,"content":"This
-			// is an
-			// apple2!","id":10,"card_tags_id":[],"updated_at":"2014-03-12T15:58:49+08:00","your_answer":"e","created_at":"2014-03-12T15:58:49+08:00","types":null,"resource_url":"\/question_packages\/201402\/questions_package_222\/media_182.mp3","question_id":356,"full_text":null,"options":null}]}
 			if (jsonobject.getString("status").equals("success")) {
 				JSONArray jsonarray = jsonobject
 						.getJSONArray("knowledges_card");
@@ -329,53 +360,6 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 			e.printStackTrace();
 		}
 	}
-
-	Handler handler = new Handler() {
-		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-			switch (msg.what) {
-			case 0:
-				progressDialog.dismiss();
-				Toast.makeText(MCardBagActivity.this, String.valueOf(msg.obj),
-						Toast.LENGTH_SHORT).show();
-				break;
-			case 1:
-				// page = 0;
-				cardbagEt.setText("");
-
-				setViewPager();
-				progressDialog.dismiss();
-				GuidePageAdapter gpa = new GuidePageAdapter();
-				viewPager.setAdapter(gpa);
-
-				viewPager.setCurrentItem(page);
-				viewPager
-						.setOnPageChangeListener(new GuidePageChangeListener());
-				break;
-			case 2:
-				Toast.makeText(MCardBagActivity.this, String.valueOf(msg.obj),
-						Toast.LENGTH_SHORT).show();
-				setViewPager();
-				viewPager.setAdapter(new GuidePageAdapter());
-				int a = 4 * (page - 1);
-				if (a == cardList.size()) {
-					viewPager.setCurrentItem(page - 1);
-				} else {
-					viewPager.setCurrentItem(page);
-				}
-
-				viewPager
-						.setOnPageChangeListener(new GuidePageChangeListener());
-				break;
-			case 7:
-				Toast.makeText(getApplicationContext(),
-						ExerciseBookParams.INTERNET, Toast.LENGTH_SHORT).show();
-				break;
-			default:
-				break;
-			}
-		}
-	};
 
 	public void setViewPager() {
 		group = (ViewGroup) findViewById(R.id.viewGroup);
@@ -461,7 +445,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 	// => "完型填空", 6 => "排序"}
 	// 根据错误类型，卡包正面分割 content
 	public String checkAns(String str, String types) {
-		String content = null;
+		String content = "";
 		int types2 = 0;
 		if ("null".equals(types)) {
 			types2 = -1;
@@ -474,9 +458,9 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 			if (str.indexOf(";||;") != -1) {
 				strarr = str.split(";\\|\\|;");
 				// for (int i = 0; i < strarr.length; i++) {
-				content += strarr[0] + " ";
+				content += strarr[0] + "";
 				// }
-				content = content.substring(4, content.length());
+				content = content.substring(0, content.length());
 			} else {
 				if (str.indexOf(";&&;") != -1) {
 					content = str.substring(0, str.lastIndexOf(";&&;"));
@@ -492,8 +476,8 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 			// for (int i = 0; i < strarr.length; i++) {
 			// content += strarr[i] + " ";
 			// }
-			content += strarr[0] + " ";
-			content = content.substring(4, content.length());
+			content += strarr[0] + "";
+			content = content.substring(0, content.length());
 			return content;
 		case 2:
 			return str;
@@ -506,7 +490,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 			} else {
 				content += str;
 			}
-			content = content.substring(4, content.length());
+			content = content.substring(0, content.length());
 			return content;
 		case 4: // "your_answer": "333<=>555;||;555<=>333;||;444<=>444",
 			// "your_answer": "</><=>%$&!@#$;||;%$&!@#$<=>***;||;***<=></>",
@@ -514,7 +498,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 			for (int i = 0; i < strarr.length; i++) {
 				content += strarr[i].replace("<=>", "--") + "\n";
 			}
-			content = content.substring(4, content.length());
+			content = content.substring(0, content.length());
 			return content;
 		case 5:
 			return str;
@@ -523,7 +507,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 			for (int i = 0; i < strarr.length; i++) {
 				content += strarr[i] + " ";
 			}
-			content = content.substring(4, content.length());
+			content = content.substring(0, content.length());
 			return content;
 		}
 		return null;
@@ -637,24 +621,207 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 		full_text = full_text.replaceAll("\\[\\[sign\\]\\]",
 				" \\[\\[sign\\]\\] ");
 		full_text = ExerciseBookTool.del_tag(full_text);
+		Log.i("22", full_text + "");
+
 		String[] textarr = full_text.split("\\[\\[sign\\]\\]");
 		for (int i = 0; i < textarr.length; i++) {
 
 			Lookcontent.append(textarr[i]);
 			if (i <= arrs.size() - 1) {
-				Lookcontent.append(Html.fromHtml("<u>" + "___" + "</u>"));
+				Lookcontent.append("___");
 				// content += arrs.get(i);
 			}
-			// content += textarr[i];
-			// if (i <= arrs.size() - 1) {
-			// content += arrs.get(i);
-			// }
-			// for (int j = 0; j < arrs.length; j++) {
-			// content += (Html.fromHtml("<u>" + arrs[j] + "</u>"));
-			// }
 		}
 		// content = full_text.replace("[[sign]]", "___");
 		return content;
+	}
+
+	/*
+	 * 显示选项 正确 错误分别显示
+	 */
+	// TYPES_NAME = {0 => "听力", 1 => "朗读", 2 => "十速挑战", 3 => "选择", 4 => "连线", 5
+	// => "完型填空", 6 => "排序"}
+	public void set_item(knowledges_card card, TextView textview) {
+		String content = null;
+		textview.setText("");
+		int types2 = 0;
+		if ("null".equals(card.getTypes())) {
+			types2 = -1;
+		} else {
+			types2 = Integer.parseInt(card.getTypes());
+		}
+		String Str2 = "";
+		// String content = null;
+		String[] strarr1;
+		String[] strarr2;
+		switch (types2) {
+		case 0:
+		case 1:
+		case 6:
+			strarr1 = card.getContent().split(" ");
+			String str = checkAns(card.getYour_answer(), types2 + "");
+			str = str.replaceAll("  ", " ");
+			str = str.replaceAll("  ", " ");
+			strarr2 = str.split(" ");
+			SpannableStringBuilder style1 = new SpannableStringBuilder(str);
+
+			for (int i = 0; i < strarr2.length; i++) {
+				if (strarr1[i].equals(strarr2[i])) {
+
+					style1.setSpan(new ForegroundColorSpan(Color.GREEN),
+							Str2.length(), Str2.length() + strarr2[i].length(),
+							Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+					Str2 = Str2 + strarr2[i] + " ";
+				} else {
+					style1.setSpan(new ForegroundColorSpan(Color.RED),
+							Str2.length(), Str2.length() + strarr2[i].length(),
+							Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+					Str2 = Str2 + strarr2[i] + " ";
+				}
+			}
+			textview.setText(style1);
+			break;
+		case 2:
+			String s1 = card.getAnswer();
+			String s2 = card.getYour_answer();
+			String s3 = s1 + "\n" + s2;
+			SpannableStringBuilder style2 = new SpannableStringBuilder(s3);
+			style2.setSpan(new ForegroundColorSpan(Color.GREEN), 0,
+					s1.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+			style2.setSpan(new ForegroundColorSpan(Color.RED), s1.length() + 1,
+					s3.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+			textview.setText(style2);
+			break;
+		case 3:
+			String yourA_3[] = card.getYour_answer().split(";\\|\\|;");// 错误答案
+			String rightA_3[] = card.getAnswer().split(";\\|\\|;"); // 正确答案
+			String options_3[] = null; // 选项 数组
+			options_3 = card.getOptions().split(";\\|\\|;");
+			String s3_1 = getOptionsStr(options_3);
+			String s3_2 = "";
+			String s3_3 = "";
+			SpannableStringBuilder style3 = new SpannableStringBuilder(s3_1);
+			for (int i = 65; i < 65 + options_3.length; i++) {
+				for (int j = 0; j < yourA_3.length; j++) {
+					Log.i("22----------", yourA_3[j] + "------yourA_3[j]");
+					Log.i("22----------", options_3[i - 65]
+							+ "-------options_3[i - 65]");
+					Log.i("22----------", s3_1 + "-------s3_1");
+					if (yourA_3[j].equals(options_3[i - 65])) { // 先设置自己的错误答案颜色
+						style3.setSpan(new ForegroundColorSpan(Color.RED),
+								s3_2.length(), s3_2.length()
+										+ options_3[i - 65].length() + 2,
+								Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+
+					}
+				}
+				s3_2 = s3_2 + (char) i + "." + options_3[i - 65] + "\n";
+			}
+			for (int i = 65; i < 65 + options_3.length; i++) {
+				for (int j = 0; j < rightA_3.length; j++) {
+					if (rightA_3[j].equals(options_3[i - 65])) { // 再设置正确的答案颜色
+						style3.setSpan(new ForegroundColorSpan(Color.GREEN),
+								s3_3.length(), s3_3.length()
+										+ options_3[i - 65].length() + 2,
+								Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+					}
+				}
+				s3_3 = s3_3 + (char) i + "." + options_3[i - 65] + "\n";
+			}
+			textview.setText(style3);
+
+			break;
+		case 4:
+			Str2 = "";
+			String s4_1 = card.getContent();
+			String s4_2 = card.getYour_answer();
+			s4_1 = s4_1.replaceAll("<=>", "--");
+			strarr1 = s4_1.split(";\\|\\|;");
+			s4_2 = s4_2.replaceAll("<=>", "--");
+			strarr2 = s4_2.split(";\\|\\|;");
+			String str4 = checkAns(card.getYour_answer(), types2 + "");
+
+			SpannableStringBuilder style4 = new SpannableStringBuilder(str4);
+			Boolean tf = false;
+			for (int i = 0; i < strarr2.length; i++) {
+				tf = false;
+				for (int j = 0; j < strarr1.length; j++) {
+					if (strarr2[i].equals(strarr1[j])) {
+						tf = true;
+						break;
+					}
+				}
+				if (tf) {
+
+					style4.setSpan(new ForegroundColorSpan(Color.GREEN),
+							Str2.length(), Str2.length() + strarr2[i].length(),
+							Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+					Str2 = Str2 + strarr2[i] + "\n";
+				} else {
+					style4.setSpan(new ForegroundColorSpan(Color.RED),
+							Str2.length(), Str2.length() + strarr2[i].length(),
+							Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+					Str2 = Str2 + strarr2[i] + "\n";
+				}
+
+			}
+			textview.setText(style4);
+			break;
+		case 5: // A 65
+			String yourA = card.getYour_answer();// 错误答案
+			String rightA = ""; // 正确答案
+			String options[] = null; // 选项 数组
+			if (card.getOptions().indexOf(";||;") != -1) {
+				options = card.getOptions().split(";\\|\\|;");
+			} else {
+				options[0] = card.getOptions();
+			}
+			String s5_1 = getOptionsStr(options);
+			String s5_2 = "";
+			JSONArray answerarray;
+			try {
+				answerarray = new JSONArray(card.getAnswer());
+				for (int j = 0; j < answerarray.length(); j++) {
+					JSONObject ob = answerarray.getJSONObject(j);
+					String contentStr = ob.getString("content");
+					if (card.getContent().equals(contentStr)) {
+						rightA = ob.getString("answer");
+						break;
+					}
+				}
+			} catch (JSONException e) {
+			}
+			SpannableStringBuilder style5 = new SpannableStringBuilder(s5_1);
+
+			for (int i = 65; i < 65 + options.length; i++) {
+				if (rightA.equals(options[i - 65])) {
+
+					style5.setSpan(new ForegroundColorSpan(Color.GREEN),
+							s5_2.length(),
+							s5_2.length() + options[i - 65].length() + 2,
+							Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+				} else if (yourA.equals(options[i - 65])) {
+					style5.setSpan(new ForegroundColorSpan(Color.RED),
+							s5_2.length(),
+							s5_2.length() + options[i - 65].length() + 2,
+							Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+
+				}
+				s5_2 = s5_2 + (char) i + "." + options[i - 65] + "\n";
+			}
+			textview.setText(style5);
+
+			break;
+		}
+	}
+
+	public String getOptionsStr(String[] options) {
+		String s = "";
+		for (int i = 65; i < 65 + options.length; i++) {
+			s = s + (char) i + "." + options[i - 65] + "\n";
+		}
+		return s;
+
 	}
 
 	public void setFontCard(ViewGroup v1, final knowledges_card card,
@@ -663,20 +830,20 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 		TextView all_content;
 		ImageView look_all_mes, cardbatread, rightIv;
 		ImageView cardbatdel;
-		TextView rightanswer;
-		TextView rightanswers;
+		TextView select_item; // 正错误答案
 		ViewGroup v = v1;
 		if (PageBool[page][index]) {
 
 			reson = (TextView) v.findViewById(R.id.reson);
 			all_content = (TextView) v.findViewById(R.id.youranswer);// 题目 原文
+			select_item = (TextView) v.findViewById(R.id.select_item);// 正错误答案
 			look_all_mes = (ImageView) v.findViewById(R.id.look_all_mes);// 完形填空查看全文
 			cardbatdel = (ImageView) v.findViewById(R.id.cardbatdel); // 删除按钮
 			cardbatread = (ImageView) v.findViewById(R.id.cardbatread);// 音频按钮
 			rightIv = (ImageView) v.findViewById(R.id.rightIv);
 			reson.setText(setType(card.getTypes())); // 题目类型
-			// all_content.setText(checkAns(card.getYour_answer(), // 你的错误
-			// card.getTypes()));
+			set_item(card, select_item);
+
 			String playerIP = IP + card.getResource_url();
 			if (card.getResource_url().equals("")
 					|| card.getResource_url().equals("null")) {
@@ -693,13 +860,6 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 							mediaplay.setDataSource(IP2);
 							mediaplay.prepare();
 							mediaplay.start();
-							// mediaplay
-							// .setOnCompletionListener(new
-							// OnCompletionListener() {
-							// public void onCompletion(MediaPlayer mp) {
-							// mediaplay.release();
-							// }
-							// });
 						} catch (IllegalArgumentException e) {
 							e.printStackTrace();
 						} catch (SecurityException e) {
@@ -799,38 +959,6 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 					// + setback(card.getOptions(), card.getTypes()));
 				}
 			}
-			// if (card.getTypes().equals("1")) {
-			// rightanswer.setVisibility(View.GONE);
-			// answer.setVisibility(View.GONE);
-			// } else {
-			// rightanswer.setText("正确答案");
-			//
-			// if (card.getTypes().equals("0") || card.getTypes().equals("4")) {
-			// answer.setText(setback(card.getContent(), card.getTypes()));
-			// } else if (card.getTypes().equals("5")) {
-			//
-			// JSONArray answerarray;
-			// try {
-			// answerarray = new JSONArray(card.getAnswer());
-			// for (int j = 0; j < answerarray.length(); j++) {
-			// JSONObject ob = answerarray.getJSONObject(j);
-			// String contentStr = ob.getString("content");
-			// if (card.getContent().equals(contentStr)) {
-			// answer.setText(ob.getString("answer"));
-			// break;
-			// }
-			// }
-			// } catch (JSONException e) {
-			// // TODO Auto-generated catch block
-			// e.printStackTrace();
-			// }
-			//
-			// } else {
-			// String ans = FormatAns(card.getAnswer());
-			// answer.setText(ans);
-			// }
-			//
-			// }
 
 			look_all_mes.setOnClickListener(new OnClickListener() { // 完形查看全文
 																	// 按钮监听
@@ -1023,8 +1151,8 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 						Map<String, String> map = new HashMap<String, String>();
 						map.put("student_id", student_id);
 						map.put("school_class_id", school_class_id);
-						if (mistype!=-1) {
-							map.put("mistake_types", mistype+"");
+						if (mistype != -1) {
+							map.put("mistake_types", mistype + "");
 						}
 						json = ExerciseBookTool.sendGETRequest(
 								get_knowledges_card, map);
@@ -1047,6 +1175,5 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 		super.onActivityResult(requestCode, resultCode, data);
 
 	}
-
 
 }

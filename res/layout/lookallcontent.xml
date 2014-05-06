@@ -10,7 +10,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_marginRight="115.5px"
-        android:layout_marginTop="268.67px"
+        android:layout_marginTop="279px"
         android:background="@color/top_qianlv"
         android:gravity="center_horizontal"
         android:orientation="vertical"
