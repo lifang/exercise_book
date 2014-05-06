@@ -265,6 +265,8 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 			if (work_list.size() > 0) {
 				TextView time = (TextView) nl.findViewById(R.id.start_date);
 				time.setText("截止日期：" + work_list.get(arg1).getEnd_time());
+				TextView chapter = (TextView)nl.findViewById(R.id.chapter);
+				chapter.setText(work_list.get(arg1).getName());
 				LinearLayout mylayout = (LinearLayout) nl
 						.findViewById(R.id.mylayout);
 				linearList.clear();
@@ -756,9 +758,24 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	}
 
 	public void onclick(View v) {
-		intent.setClass(HomeWorkIngActivity.this, RecordMainActivity.class);
-		startActivity(intent);
-		HomeWorkIngActivity.this.finish();
+		int item = pager.getCurrentItem();
+		switch (v.getId()) {
+		case R.id.left:
+			if (item > 0) {
+				pager.setCurrentItem(item - 1);
+			}
+			break;
+		case R.id.right:
+			if (item + 1 < number) {
+				pager.setCurrentItem(item + 1);
+			}
+			break;
+		case R.id.history:
+			intent.setClass(HomeWorkIngActivity.this, RecordMainActivity.class);
+			startActivity(intent);
+			HomeWorkIngActivity.this.finish();
+			break;
+		}
 	}
 
 	protected void onResume() {

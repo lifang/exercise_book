@@ -290,6 +290,8 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 			if (work_list.size() > 0) {
 				TextView time = (TextView) nl.findViewById(R.id.start_date);
 				time.setText(work_list.get(arg1).getStart_time() + " 发布");
+				TextView chapter = (TextView) nl.findViewById(R.id.chapter);
+				chapter.setText(work_list.get(arg1).getName());
 				LinearLayout mylayout = (LinearLayout) nl
 						.findViewById(R.id.mylayout);
 				linearList.clear();
