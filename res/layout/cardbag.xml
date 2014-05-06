@@ -38,7 +38,7 @@
         <RelativeLayout
             android:id="@+id/spinner"
             android:layout_width="170px"
-            android:layout_height="45px"
+            android:layout_height="40px"
             android:layout_alignBottom="@+id/cardbatll1"
             android:layout_alignParentRight="true"
             android:layout_marginRight="40.2px"
@@ -54,8 +54,8 @@
                 android:textColor="#858c94"
                 android:textSize="25px	" />
             <ImageView
-                    android:layout_width="30px"
-                    android:layout_height="20px"
+                    android:layout_width="26px"
+                    android:layout_height="17px"
                     android:layout_marginRight="19.045px"
                     android:layout_alignParentRight="true"
                     android:layout_marginTop="15px"

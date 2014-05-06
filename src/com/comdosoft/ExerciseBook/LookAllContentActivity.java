@@ -108,14 +108,13 @@ public class LookAllContentActivity extends Activity implements Urlinterface {
 			for (int j = 0; j < answerarray.length(); j++) {
 				JSONObject ob = answerarray.getJSONObject(j);
 				String contentStr = ob.getString("content");
-				arrs.add("<u>" + ob.getString("answer") + "</u>");
+				arrs.add(ob.getString("answer"));
 				Log.i("22----------", ob.getString("answer") + "");
 			}
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		String content = "";
 		full_text = full_text.replaceAll("\\[\\[sign\\]\\]",
 				" \\[\\[sign\\]\\] ");
 		full_text = ExerciseBookTool.del_tag(full_text);
@@ -124,20 +123,15 @@ public class LookAllContentActivity extends Activity implements Urlinterface {
 			
 			Lookcontent.append(textarr[i]);
 			if (i <= arrs.size() - 1) {
-//				Lookcontent.append(Html.fromHtml("<u>" + arrs.get(i)+ "</u>"));
-				Lookcontent.append("____");
-//				content += arrs.get(i);
+				if (((i+1)+"").equals(content)) {
+					Lookcontent.append("____");
+				}else {
+					Lookcontent.append(Html.fromHtml("<u>" + arrs.get(i)+ "</u>"));
+				}
 			}
-//			content += textarr[i];
-//			if (i <= arrs.size() - 1) {
-//				content += arrs.get(i);
-//			}
-			// for (int j = 0; j < arrs.length; j++) {
-			// content += (Html.fromHtml("<u>" + arrs[j] + "</u>"));
-			// }
 		}
 		// content = full_text.replace("[[sign]]", "___");
-		return content;
+		return null;
 	}
 
 	// TYPES_NAME = {0 => "听力", 1 => "朗读", 2 => "十速挑战", 3 => "选择", 4 => "连线", 5
