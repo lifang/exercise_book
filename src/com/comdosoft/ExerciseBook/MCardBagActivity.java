@@ -184,7 +184,6 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 
 	private View.OnClickListener listener = new View.OnClickListener() {
 
-		@Override
 		public void onClick(View v) {
 
 			Intent intentp = new Intent();
@@ -207,10 +206,11 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 		tagsList = new ArrayList<tags>();
 		FontCard = new HashMap<Integer, List<View>>();
 	}
+
 	/*
 	 * 搜索框 设置监听
 	 */
-	public void btnlistClick() { // 
+	public void btnlistClick() { //
 		cardbatFind.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 
@@ -265,6 +265,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 		super.onPause();
 		JPushInterface.onPause(this);
 	}
+
 	/*
 	 * 获得所有卡片
 	 */
@@ -293,6 +294,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 		};
 		thread.start();
 	}
+
 	/*
 	 * 解析json
 	 */
@@ -375,6 +377,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 			e.printStackTrace();
 		}
 	}
+
 	/*
 	 * 加载滑动页面
 	 */
@@ -471,6 +474,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 		}
 		String[] strarr;
 		switch (types2) {
+		case 1: // "your_answer": "Dad;||;come;||;and;||;sit;||;here;||;",
 		case 0: // "your_answer": "where;||;Where?",
 			if (str.indexOf(";||;") != -1) {
 				strarr = str.split(";\\|\\|;");
@@ -487,11 +491,6 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 
 			}
 			Log.i("asd", "正面听力case0:" + content);
-			return content;
-		case 1: // "your_answer": "Dad;||;come;||;and;||;sit;||;here;||;",
-			strarr = str.split(";\\|\\|;");
-			content += strarr[0] + "";
-			content = content.substring(0, content.length());
 			return content;
 		case 2:
 			return str;
@@ -725,10 +724,43 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 		String[] strarr1;
 		String[] strarr2;
 		switch (types2) {
-		case 0:
 		case 1:
+			String del_con = card.getContent().replaceAll(
+					"(?i)[^a-zA-Z0-9\u4E00-\u9FA5\\s]", "");// 去除标点符号
+			String str_content = del_con.replaceAll("\\s", " ");
+			strarr1 = str_content.split(" ");
+			String str_1 = checkAns(card.getYour_answer(), types2 + "");
+			str_1 = str_1.replaceAll("  ", " ");
+			strarr2 = str_1.split(" ");
+			SpannableStringBuilder style_1 = new SpannableStringBuilder(
+					card.getContent());
+			style_1.setSpan(new ForegroundColorSpan(Color.GREEN), 0, card
+					.getContent().length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+			for (int i = 0; i < strarr1.length; i++) {
+				Log.i("Ax", strarr1[i] + "-");
+			}
+			for (int i = 0; i < strarr2.length; i++) {
+				Log.i("Ax", strarr2[i]);
+			}
+			for (int i = 0; i < strarr1.length; i++) {
+				for (int j = 0; j < strarr2.length; j++) {
+					if (strarr1[i].equals(strarr2[j])) {
+						style_1.setSpan(new ForegroundColorSpan(Color.RED),
+								Str2.length(),
+								Str2.length() + strarr2[j].length(),
+								Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+						Str2 = Str2 + strarr2[j] + " ";
+					}
+				}
+			}
+			textview.setText(style_1);
+			break;
+		case 0:
 		case 6:
-			strarr1 = card.getContent().split(" ");
+			String del_con2 = card.getContent().replaceAll(
+					"(?i)[^a-zA-Z0-9\u4E00-\u9FA5\\s]", "");// 去除标点符号
+			String str_content2 = del_con2.replaceAll("\\s", " ");
+			strarr1 = str_content2.split(" ");
 			String str = checkAns(card.getYour_answer(), types2 + "");
 			str = str.replaceAll("  ", " ");
 			str = str.replaceAll("  ", " ");
@@ -737,7 +769,6 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 
 			for (int i = 0; i < strarr2.length; i++) {
 				if (strarr1[i].equals(strarr2[i])) {
-
 					style1.setSpan(new ForegroundColorSpan(Color.GREEN),
 							Str2.length(), Str2.length() + strarr2[i].length(),
 							Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
@@ -877,6 +908,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 			break;
 		}
 	}
+
 	/*
 	 * 将所有的选项拼成一个字符串："aaa\nbbb\nccc\n"
 	 */
@@ -890,6 +922,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 	}
 
 	public void getMediaPlayer(String IP2) {
+		Log.i("Max", IP2);
 		try {
 			mediaplay.reset();
 			mediaplay.setDataSource(IP2);
@@ -930,14 +963,13 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 			reson.setText(setType(card.getTypes())); // 题目类型
 			set_item(card, select_item);
 
-			String playerIP = IP + card.getResource_url();
 			if (card.getResource_url().equals("")
 					|| card.getResource_url().equals("null")) {
 			} else {
 				cardbatread.setVisibility(View.VISIBLE);
-				IP2 = playerIP;
 				cardbatread.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {
+						IP2 = IP + card.getResource_url();
 						audio(card.getId());
 					}
 				});
@@ -959,14 +991,15 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 							|| (card.getContent().indexOf(".amr") != -1)
 							|| (card.getContent().indexOf(".wav") != -1)) {
 						cardbatread.setVisibility(View.VISIBLE); // 显示 音频 按钮
-						playerIP = IP
-								+ card.getContent().substring(
-										"<file>".length(),
-										card.getContent()
-												.lastIndexOf("</file>"));
-						IP2 = playerIP;
 						cardbatread.setOnClickListener(new OnClickListener() {
 							public void onClick(View v) {
+								IP2 = IP
+										+ IP
+										+ card.getContent().substring(
+												"<file>".length(),
+												card.getContent().lastIndexOf(
+														"</file>"));
+								;
 								audio(card.getId());
 							}
 						});
@@ -1207,7 +1240,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 		switch (resultCode) {
-		case -10:  // 根据下拉框中返回的字符串加载对应题型的卡片
+		case -10: // 根据下拉框中返回的字符串加载对应题型的卡片
 			Bundle bundle = data.getExtras();
 			String cardtype = bundle.getString("cardtype");
 			spinner_text.setText(cardtype);
@@ -1216,6 +1249,7 @@ public class MCardBagActivity extends Table_TabHost implements Urlinterface,
 			final int mistype = cardType(cardtype);
 			Thread thread = new Thread() {
 				String json;
+
 				public void run() {
 					try {
 						viewPager = (ViewPager) findViewById(R.id.guidePages);

@@ -87,7 +87,6 @@ public class LoginActivity extends Activity implements OnClickListener,
 						Appstart.class);
 				startActivity(intent);
 			}
-
 		}
 	}
 

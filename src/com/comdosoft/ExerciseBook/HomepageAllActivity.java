@@ -110,7 +110,7 @@ public class HomepageAllActivity extends Activity implements
 	private char flingState = FLING_CLICK;
 	public static HomepageAllActivity instance = null;
 	int errS = 0;
-	private TextView class_middle_null_message;//  没有消息时显示  提示信息
+	private TextView class_middle_null_message;// 没有消息时显示 提示信息
 	private Handler handler = new Handler() {
 		/*
 		 * (non-Javadoc)
@@ -123,10 +123,10 @@ public class HomepageAllActivity extends Activity implements
 				prodialog.dismiss();
 				final String json = (String) msg.obj;
 				setJson(json);
-				if (errS==1) {
+				if (errS == 1) {
 					init();
 				}
-				
+
 				break;
 			case 2:
 				focus = -1;
@@ -175,6 +175,8 @@ public class HomepageAllActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.class_middle);
 		exerciseBook = (ExerciseBook) getApplication();
+		exerciseBook.getActivityList().add(this);
+		exerciseBook.setMenu_num(2);
 		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		instance = this;
 		gd = new GestureDetector(this);
@@ -182,39 +184,17 @@ public class HomepageAllActivity extends Activity implements
 		memoryCache = exerciseBook.getMemoryCache();
 		SharedPreferences preferences = getSharedPreferences(SHARED,
 				Context.MODE_PRIVATE);
-//		exerciseBook.setMenu_num(3);
+		// exerciseBook.setMenu_num(3);
 		user_id = preferences.getString("user_id", "130");
 		id = preferences.getString("id", "73");
 		school_class_id = preferences.getString("school_class_id", "83");
 		class_middle_null_message = (TextView) findViewById(R.id.class_middle_null_message);
 		initialize(); // 初始化参数
 		page = 1;
-		// if (ExerciseBookTool.isConnect(HomepageAllActivity.this)) {
-		// prodialog = new ProgressDialog(HomepageAllActivity.this);
-		// prodialog.setMessage(ExerciseBookParams.PD_CLASS_INFO);
-		// prodialog.setCanceledOnTouchOutside(false);
-		// prodialog.show();
-		// Thread thread = new Thread(new get_class_info());
-		// thread.start();
-		//
-		// } else {
-		// handler.sendEmptyMessage(7);
-		// }
-	}
-
-	protected void onResume() {
-		super.onResume();
-		JPushInterface.onResume(this);
-		// page = 1;
-		class_middle_null_message.setVisibility(View.GONE);
-		SharedPreferences preferences = getSharedPreferences(SHARED,
-				Context.MODE_PRIVATE);
-
-		user_id = preferences.getString("user_id", "130");
-		id = preferences.getString("id", "73");
-		school_class_id = preferences.getString("school_class_id", "83");
-		int refresh = exerciseBook.getRefresh();
-		if (refresh == 1) {
+		if (ExerciseBookTool.isConnect(HomepageAllActivity.this)) {
+			// class_middle_null_message.setVisibility(View.GONE);
+			// int refresh = exerciseBook.getRefresh();
+			// if (refresh == 1) {
 			if (ExerciseBookTool.isConnect(HomepageAllActivity.this)) {
 				prodialog = new ProgressDialog(HomepageAllActivity.this);
 				prodialog.setMessage(ExerciseBookParams.PD_CLASS_INFO);
@@ -226,7 +206,14 @@ public class HomepageAllActivity extends Activity implements
 			} else {
 				handler.sendEmptyMessage(7);
 			}
+			// }
 		}
+	}
+
+	protected void onResume() {
+		super.onResume();
+		JPushInterface.onResume(this);
+		// page = 1;
 	}
 
 	protected void onPause() {
@@ -751,7 +738,7 @@ public class HomepageAllActivity extends Activity implements
 			String notice = obj.getString("notice");
 
 			if ("success".equals(status)) {
-				errS=1;
+				errS = 1;
 				// // 学生信息
 				JSONObject student = obj.getJSONObject("student"); // 获得学生的信息
 				// id = student.getString("id");
@@ -802,8 +789,8 @@ public class HomepageAllActivity extends Activity implements
 					String fmi = follow_microposts_id.getInt(i) + "";
 					care.add(fmi);
 				}
-//				Toast.makeText(getApplicationContext(), notice,
-//						Toast.LENGTH_SHORT).show();
+				// Toast.makeText(getApplicationContext(), notice,
+				// Toast.LENGTH_SHORT).show();
 			} else {
 				SharedPreferences preferences = getSharedPreferences(SHARED,
 						Context.MODE_PRIVATE);
@@ -1090,9 +1077,11 @@ public class HomepageAllActivity extends Activity implements
 									for (int i = 0; i < list.size(); i++) {
 										setlayout(i);
 									}
-									class_middle_null_message.setVisibility(View.GONE);
+									class_middle_null_message
+											.setVisibility(View.GONE);
 								} else {
-									class_middle_null_message.setVisibility(View.VISIBLE);
+									class_middle_null_message
+											.setVisibility(View.VISIBLE);
 								}
 							}
 							Toast.makeText(getApplicationContext(), notice,

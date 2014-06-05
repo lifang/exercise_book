@@ -87,18 +87,10 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 	private String avatar_url = "/avatars/students/2014-02/student_73.jpg"; // 用户头像
 	private String nickName = "丁作"; // 用户昵称
 	private String name = "丁作";
-	TextView userName,activity_title;//
+	TextView userName, activity_title;//
 	private String edu_number = "";
 	static boolean active = false;
 	ImageMemoryCache memoryCache;
-	/* 更新进度条 */
-	private ProgressBar mProgress;
-	private Dialog mDownloadDialog;
-	private boolean cancelUpdate = false;
-	/* 下载保存路径 */
-	private String mSavePath;
-	/* 记录进度条数量 */
-	private int progress;
 	Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -144,34 +136,6 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 				Toast.makeText(getApplicationContext(),
 						ExerciseBookParams.INTERNET, Toast.LENGTH_SHORT).show();
 				break;
-			case 8:
-
-				Builder builder = new Builder(HomePageMainActivity.this);
-				builder.setTitle("提示");
-				builder.setMessage("检测到新版本,您需要更新吗？");
-				builder.setPositiveButton("确定",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int which) {
-								showDownloadDialog();
-							}
-						});
-				builder.setNegativeButton("下次再说",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int which) {
-								exerciseBook.setUpdate(false);
-							}
-						}).show();
-				break;
-			case 9:
-				// 设置进度条位置
-				mProgress.setProgress(progress);
-				break;
-			case 10:
-				// 安装文件
-				installApk();
-				break;
 			default:
 				break;
 			}
@@ -211,7 +175,8 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 			userName.setText(name);
 		}
 		activity_title = (TextView) findViewById(R.id.activity_title);
-		activity_title.setText(Urlinterface.left_menu[exerciseBook.getMenu_num()-1]);
+		activity_title.setText(Urlinterface.left_menu[exerciseBook
+				.getMenu_num() - 1]);
 		userInfo = (LinearLayout) findViewById(R.id.user_button);
 		faceImage = (CircularImage) findViewById(R.id.user_face);
 		if (ExerciseBookTool.isConnect(getApplicationContext())) {
@@ -257,12 +222,6 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 
 		tabhost.setCurrentTab(exerciseBook.getMainItem());
 		updateTabStyle(tabhost);
-
-		if (ExerciseBookTool.isConnect(HomePageMainActivity.this)) {
-			if (exerciseBook.isUpdate()) {
-				GetCurrent_Version.start();
-			}
-		}
 
 	}
 
@@ -577,139 +536,6 @@ public class HomePageMainActivity extends TabActivity implements Urlinterface {
 				mHandler.sendEmptyMessage(7);
 			}
 		}
-	}
-
-	Thread GetCurrent_Version = new Thread() {
-		public void run() {
-			Map<String, String> mp = new HashMap<String, String>();
-			try {
-				String json = ExerciseBookTool.sendGETRequest(version, mp);
-				if (!json.equals("")) {
-					JSONObject obj = new JSONObject(json);
-					double version = obj.getDouble("current_version");
-					if (version > Urlinterface.current_version) {
-						mHandler.sendEmptyMessage(8);
-					}
-				}
-			} catch (Exception e) {
-			}
-		}
-	};
-
-	public void showDownloadDialog() {
-		// 构造软件下载对话框
-		AlertDialog.Builder builder = new Builder(HomePageMainActivity.this);
-		builder.setTitle("正在更新");
-		// 给下载对话框增加进度条
-		final LayoutInflater inflater = LayoutInflater
-				.from(HomePageMainActivity.this);
-		View v = inflater.inflate(R.layout.softupdate_progress, null);
-		mProgress = (ProgressBar) v.findViewById(R.id.update_progress);
-		builder.setView(v);
-		// 取消更新
-		builder.setNegativeButton("取消", new OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.dismiss();
-				// 设置取消状态
-				cancelUpdate = true;
-			}
-		});
-		mDownloadDialog = builder.create();
-		mDownloadDialog.setCanceledOnTouchOutside(false);
-		mDownloadDialog.show();
-		// 现在文件
-		downloadApk();
-	}
-
-	/**
-	 * 下载文件线程
-	 * 
-	 * @author coolszy
-	 * @date 2012-4-26
-	 * @blog http://blog.92coding.com
-	 */
-	public class downloadApkThread extends Thread {
-		@Override
-		public void run() {
-			try {
-				// 判断SD卡是否存在，并且是否具有读写权限
-				if (Environment.getExternalStorageState().equals(
-						Environment.MEDIA_MOUNTED)) {
-					// 获得存储卡的路径
-					String sdpath = Environment.getExternalStorageDirectory()
-							+ "/";
-					mSavePath = sdpath + "download";
-					URL url = new URL(fileurl);
-					// 创建连接
-					HttpURLConnection conn = (HttpURLConnection) url
-							.openConnection();
-					conn.connect();
-					// 获取文件大小
-					int length = conn.getContentLength();
-					// 创建输入流
-					InputStream is = conn.getInputStream();
-
-					File file = new File(mSavePath);
-					// 判断文件目录是否存在
-					if (!file.exists()) {
-						file.mkdir();
-					}
-					File apkFile = new File(mSavePath, filename);
-					FileOutputStream fos = new FileOutputStream(apkFile);
-					int count = 0;
-					// 缓存
-					byte buf[] = new byte[1024];
-					// 写入到文件中
-					do {
-						int numread = is.read(buf);
-						count += numread;
-						// 计算进度条位置
-						progress = (int) (((float) count / length) * 100);
-						// 更新进度
-						mHandler.sendEmptyMessage(9);
-						if (numread <= 0) {
-							// 下载完成
-							mHandler.sendEmptyMessage(10);
-							break;
-						}
-						// 写入文件
-						fos.write(buf, 0, numread);
-					} while (!cancelUpdate);// 点击取消就停止下载.
-					fos.close();
-					is.close();
-				}
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			// 取消下载对话框显示
-			mDownloadDialog.dismiss();
-		}
-	};
-
-	/**
-	 * 下载apk文件
-	 */
-	public void downloadApk() {
-		// 启动新线程下载软件
-		new downloadApkThread().start();
-	}
-
-	/**
-	 * 安装APK文件
-	 */
-	private void installApk() {
-		File apkfile = new File(mSavePath, filename);
-		if (!apkfile.exists()) {
-			return;
-		}
-		// 通过Intent安装APK文件
-		Intent i = new Intent(Intent.ACTION_VIEW);
-		i.setDataAndType(Uri.parse("file://" + apkfile.toString()),
-				"application/vnd.android.package-archive");
-		startActivity(i);
 	}
 
 }

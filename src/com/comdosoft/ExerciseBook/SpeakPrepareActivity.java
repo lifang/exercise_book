@@ -199,6 +199,8 @@ public class SpeakPrepareActivity extends AnswerBaseActivity implements
 			case 2:
 				// setType(1);
 				type = 2;
+				TextView tou = (TextView) findViewById(R.id.tou);
+				tou.setText("重听");
 				questionlist = list.get(eb.getQuestion_item())
 						.getQuesttionList();
 				eb.setQuestion_id(list.get(eb.getQuestion_item()).getId());

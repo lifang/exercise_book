@@ -89,6 +89,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 	private ImagePagerAdapter ipa;
 	private List<Integer> question_type;
 	private LinearLayout ll;
+	private boolean unzip_type;
 	private Handler handler = new Handler() {
 
 		public void handleMessage(android.os.Message msg) {
@@ -295,6 +296,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 		ImageView imageView = (ImageView) view.findViewById(R.id.image);
 		TextView work_name = (TextView) view.findViewById(R.id.work_name);
 		TextView top = (TextView) view.findViewById(R.id.top);
+		top.setVisibility(View.GONE);
 		ImageView over_img = (ImageView) view.findViewById(R.id.over_img);
 		work_name.setText(namearr[pojo.getQuestion_types().get(i)].toString());
 		top.setOnClickListener(new View.OnClickListener() {
@@ -368,10 +370,10 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 		if (ExerciseBookTool.getExist(pojo.getQuestion_types().get(i),
 				pojo.getFinish_types())) {// 排行标志的隐藏与显示
 			over_img.setVisibility(View.VISIBLE);
-			top.setVisibility(View.VISIBLE);
+			// top.setVisibility(View.VISIBLE);
 		} else {
 			over_img.setVisibility(View.GONE);
-			top.setVisibility(View.GONE);
+			// top.setVisibility(View.GONE);
 		}
 		AbsListView.LayoutParams param;
 		if (width == 1200) {
@@ -664,6 +666,15 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 				dialog.dismiss();
 				// 设置取消状态
 				cancelUpdate = true;
+				unzip_type = false;
+				File f = new File(pathList.get(pager.getCurrentItem())
+						+ "/questions.json");
+				Log.i("suanfa", pathList.get(pager.getCurrentItem())
+						+ "/questions.json---");
+				if (f.exists()) {
+					boolean cg = f.delete();
+					Log.i("suanfa", cg + "");
+				}
 			}
 		});
 		mDownloadDialog = builder.create();
@@ -679,6 +690,8 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 				// 判断SD卡是否存在，并且是否具有读写权限
 				if (Environment.getExternalStorageState().equals(
 						Environment.MEDIA_MOUNTED)) {
+					unzip_type = true;
+					cancelUpdate = false;
 					Log.i("suanfa", downPath);
 					URL url = new URL(downPath);
 					// 创建连接
@@ -687,6 +700,7 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 					conn.connect();
 					// 获取文件大小
 					int length = conn.getContentLength();
+					Log.i("suanfa", "length=" + length);
 					// 创建输入流
 					InputStream is = conn.getInputStream();
 					Log.i("suanfa", "1====");
@@ -723,14 +737,16 @@ public class HomeWorkIngActivity extends Table_TabHost implements Urlinterface {
 					} while (!cancelUpdate);// 点击取消就停止下载.
 					fos.close();
 					is.close();
-					if (download_name.equals("resourse.zip")) {
-						ExerciseBookTool.unZip(
-								pathList.get(pager.getCurrentItem()) + "/"
-										+ download_name,
-								pathList.get(pager.getCurrentItem()));
-						getJsonPath();
-					} else {
-						handler.sendEmptyMessage(6);
+					if (unzip_type) {
+						if (download_name.equals("resourse.zip")) {
+							ExerciseBookTool.unZip(
+									pathList.get(pager.getCurrentItem()) + "/"
+											+ download_name,
+									pathList.get(pager.getCurrentItem()));
+							getJsonPath();
+						} else {
+							handler.sendEmptyMessage(6);
+						}
 					}
 				}
 			} catch (MalformedURLException e) {

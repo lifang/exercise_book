@@ -110,6 +110,7 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 	private int layout_index;
 	private List<Boolean> typeList;
 	private List<Integer> question_type;
+	private boolean unzip_type = true;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -580,6 +581,13 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 				dialog.dismiss();
 				// 设置取消状态
 				cancelUpdate = true;
+				unzip_type = false;
+				File f = new File(pathList.get(pager.getCurrentItem())
+						+ "/questions.json");
+				if (f.exists()) {
+					boolean cg = f.delete();
+					Log.i("suanfa", cg + "");
+				}
 			}
 		});
 		mDownloadDialog = builder.create();
@@ -595,6 +603,8 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 				// 判断SD卡是否存在，并且是否具有读写权限
 				if (Environment.getExternalStorageState().equals(
 						Environment.MEDIA_MOUNTED)) {
+					unzip_type = true;
+					cancelUpdate = false;
 					Log.i("suanfa", downPath);
 					URL url = new URL(downPath);
 					// 创建连接
@@ -639,14 +649,16 @@ public class RecordMainActivity extends Table_TabHost implements Urlinterface,
 					} while (!cancelUpdate);// 点击取消就停止下载.
 					fos.close();
 					is.close();
-					if (download_name.equals("resourse.zip")) {
-						ExerciseBookTool.unZip(
-								pathList.get(pager.getCurrentItem()) + "/"
-										+ download_name,
-								pathList.get(pager.getCurrentItem()));
-						getJsonPath();
-					} else {
-						handler.sendEmptyMessage(7);
+					if (unzip_type = true) {
+						if (download_name.equals("resourse.zip")) {
+							ExerciseBookTool.unZip(
+									pathList.get(pager.getCurrentItem()) + "/"
+											+ download_name,
+									pathList.get(pager.getCurrentItem()));
+							getJsonPath();
+						} else {
+							handler.sendEmptyMessage(7);
+						}
 					}
 				}
 			} catch (MalformedURLException e) {
